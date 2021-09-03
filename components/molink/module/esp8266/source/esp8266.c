@@ -74,10 +74,16 @@ static const struct mo_netconn_ops gs_netconn_ops = {
 #ifdef ESP8266_USING_DNS
     .gethostbyname        = esp8266_netconn_gethostbyname,
 #endif
+#ifdef ESP8266_USING_SERVER_MODE
     .bind                 = esp8266_netconn_bind,
+#endif
     .connect              = esp8266_netconn_connect,
+#ifdef ESP8266_USING_UDP
     .sendto               = esp8266_netconn_sendto,
+#endif
+#ifdef ESP8266_USING_TCP
     .send                 = esp8266_netconn_send,
+#endif
     .get_info             = esp8266_netconn_get_info,
 };
 #endif /* ESP8266_USING_NETCONN_OPS */

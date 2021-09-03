@@ -437,6 +437,7 @@ __exit:
 }
 #endif
 
+#ifdef A7670X_USING_TCP
 static os_err_t a7670x_tcp_connect(mo_object_t *module, mo_netconn_t *netconn, char *ip_addr, os_uint16_t port)
 {
     mo_a7670x_t *a7670x    = os_container_of(module, mo_a7670x_t, parent);
@@ -495,7 +496,9 @@ __exit:
 
     return result;
 }
+#endif
 
+#ifdef A7670X_USING_UDP
 static os_err_t a7670x_udp_connect(mo_object_t *module, mo_netconn_t *netconn)
 {
     at_parser_t *parser = &module->parser;
@@ -520,6 +523,7 @@ static os_err_t a7670x_udp_connect(mo_object_t *module, mo_netconn_t *netconn)
 
     return result;
 }
+#endif
 
 os_err_t a7670x_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port)
 {
@@ -531,13 +535,17 @@ os_err_t a7670x_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_a
 
     switch (netconn->type)
     {
+#ifdef A7670X_USING_TCP
     case NETCONN_TYPE_TCP:
         result = a7670x_tcp_connect(module, netconn, remote_ip, port);
         break;
+#endif
 
+#ifdef A7670X_USING_UDP
     case NETCONN_TYPE_UDP:
         result = a7670x_udp_connect(module, netconn);
         break;
+#endif
 
     default:
         result = OS_ERROR;
@@ -603,6 +611,7 @@ os_size_t a7670x_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const 
 
         switch (netconn->type)
         {
+#ifdef A7670X_USING_TCP
         case NETCONN_TYPE_TCP:
             result = at_parser_exec_cmd(parser, &resp, "AT+CIPSEND=%d,%d", netconn->connect_id, cur_pkt_size);
             if (result != OS_EOK)
@@ -611,7 +620,9 @@ os_size_t a7670x_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const 
                 goto __exit;
             }
             break;
+#endif
 
+#ifdef A7670X_USING_UDP
         case NETCONN_TYPE_UDP:
             /* Set command to sent UDP data: AT+CIPSEND=1,64,"121.89.166.244",6589 */
             result = at_parser_exec_cmd(parser,
@@ -631,6 +642,7 @@ os_size_t a7670x_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const 
                 goto __exit;
             }
             break;
+#endif
 
         default:
             result = OS_ERROR;

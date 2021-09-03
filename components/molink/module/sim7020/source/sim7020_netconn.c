@@ -130,12 +130,18 @@ mo_netconn_t *sim7020_netconn_create(mo_object_t *module, mo_netconn_type_t type
 
     switch (type)
     {
+#ifdef SIM7020_USING_TCP
     case NETCONN_TYPE_TCP:
         result = at_parser_exec_cmd(parser, &resp, "AT+CSOC=1,1,1");
         break;
+#endif
+
+#ifdef SIM7020_USING_UDP
     case NETCONN_TYPE_UDP:
         result = at_parser_exec_cmd(parser, &resp, "AT+CSOC=1,2,1");
         break;
+#endif
+
     default:
         result = OS_ERROR;
         ERROR("Module %s create netconn failed, type [%d] error", module->name, type);

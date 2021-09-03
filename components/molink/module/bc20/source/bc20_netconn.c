@@ -278,6 +278,7 @@ os_err_t bc20_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_add
 
     switch (netconn->type)
     {
+#ifdef BC20_USING_TCP
     case NETCONN_TYPE_TCP:
         result = at_parser_exec_cmd(parser,
                                     &resp,
@@ -286,6 +287,9 @@ os_err_t bc20_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_add
                                     remote_ip,
                                     port);
         break;
+#endif
+
+#ifdef BC20_USING_UDP
     case NETCONN_TYPE_UDP:
         result = at_parser_exec_cmd(parser,
                                     &resp,
@@ -294,6 +298,8 @@ os_err_t bc20_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_add
                                     remote_ip,
                                     port);
         break;
+#endif
+
     default:
         ERROR("Module %s connect to %s:%d failed!", module->name, remote_ip, port);
         result = OS_ERROR;

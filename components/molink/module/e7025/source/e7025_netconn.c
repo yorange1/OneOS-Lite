@@ -292,13 +292,17 @@ os_err_t e7025_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_ad
 
     switch (netconn->type)
     {
+#ifdef E7025_USING_TCP
     case NETCONN_TYPE_TCP:
         result = at_parser_exec_cmd(parser, &resp, "AT+ECSOCO=%d,\"%s\",%u", netconn->connect_id, remote_ip, port);
         break;
+#endif
 
+#ifdef E7025_USING_UDP
     case NETCONN_TYPE_UDP:
         result = OS_EOK;
         break;
+#endif
 
     default:
         result = OS_ERROR;
@@ -360,10 +364,13 @@ static os_size_t e7025_tcp_udp_send(at_parser_t *parser, mo_netconn_t *netconn, 
 
         switch (netconn->type)
         {
+#ifdef E7025_USING_TCP
         case NETCONN_TYPE_TCP:
             snprintf(send_cmd, sizeof(send_cmd), "AT+ECSOSD=%d,%d,", netconn->connect_id, (int)cur_pkt_size / 2);
             break;
+#endif
 
+#ifdef E7025_USING_UDP
         case NETCONN_TYPE_UDP:
             snprintf(send_cmd, sizeof(send_cmd), "AT+ECSOST=%d,\"%s\",%u,%d,",
                      netconn->connect_id,
@@ -371,6 +378,7 @@ static os_size_t e7025_tcp_udp_send(at_parser_t *parser, mo_netconn_t *netconn, 
                      netconn->remote_port,
                      (int)cur_pkt_size / 2);
             break;
+#endif
 
         default:
             LOG_EXT_E("Module %s send data failed, netconn type[%d] error", parser->name, netconn->type);

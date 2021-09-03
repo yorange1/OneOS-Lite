@@ -404,6 +404,7 @@ os_err_t me3630_w_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip
 
     switch (netconn->type)
     {
+#ifdef ME3630_W_USING_TCP
     case NETCONN_TYPE_TCP:
         result = at_parser_exec_cmd(parser,
                                     &resp,
@@ -412,6 +413,9 @@ os_err_t me3630_w_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip
                                     remote_ip,
                                     port);
         break;
+#endif
+
+#ifdef ME3630_W_USING_UDP
     case NETCONN_TYPE_UDP:
         result = at_parser_exec_cmd(parser,
                                     &resp,
@@ -420,6 +424,8 @@ os_err_t me3630_w_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip
                                     remote_ip,
                                     port);
         break;
+#endif
+
     default:
         result = OS_ERROR;
         goto __exit;

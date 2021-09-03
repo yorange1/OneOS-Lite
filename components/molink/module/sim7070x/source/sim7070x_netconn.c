@@ -287,13 +287,17 @@ os_err_t sim7070x_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip
 
     switch (netconn->type)
     {
+#ifdef SIM7070X_USING_TCP
     case NETCONN_TYPE_TCP:
         result = at_parser_exec_cmd(parser, &resp, "AT+CAOPEN=%d,0,\"TCP\",\"%s\",%u,1", connect_id, remote_ip, port);
         break;
+#endif
 
+#ifdef SIM7070X_USING_UDP
     case NETCONN_TYPE_UDP:
         result = at_parser_exec_cmd(parser, &resp, "AT+CAOPEN=%d,0,\"UDP\",\"%s\",%u,1", connect_id, remote_ip, port);
         break;
+#endif
 
     default:
         result = OS_ERROR;

@@ -102,7 +102,6 @@ static mo_sock_t *mo_tryget_socket(int socket)
     return &gs_sockets[socket];
 }
 
-#ifdef MOLINK_USING_SELECT
 /**
  * Callback registered in the netconn layer for each socket-netconn.
  * Processes recvevent (data available) and wakes up tasks waiting for select.
