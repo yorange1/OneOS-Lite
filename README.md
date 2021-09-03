@@ -26,7 +26,7 @@
 
 ## 文档在线浏览
 
-访问`OneOS Lite`网站：[文件 · comp-m · 赵娟 / OneOS-M2.0 · GitLab](http://10.12.3.86/zhaojuan/oneos-2.0/-/tree/comp-m)
+访问`OneOS Lite`网站：[正在申请page](http://)
 
 ![访问](docs/_media/访问.png)
 
