@@ -227,6 +227,7 @@ os_err_t esp8266_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
     return OS_EOK;
 }
 
+#ifdef ESP8266_USING_SERVER_MODE
 os_err_t esp8266_netconn_bind(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port)
 {
     at_parser_t *parser = &module->parser;
@@ -289,6 +290,7 @@ __exit:
 
     return result;
 }
+#endif
 
 os_err_t esp8266_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port)
 {
@@ -306,6 +308,7 @@ os_err_t esp8266_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_
 
     switch (netconn->type)
     {
+#ifdef ESP8266_USING_TCP
     case NETCONN_TYPE_TCP:
         result = at_parser_exec_cmd(parser,
                                     &resp,
@@ -314,7 +317,9 @@ os_err_t esp8266_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_
                                     remote_ip,
                                     port);
         break;
+#endif
 
+#ifdef ESP8266_USING_UDP
     case NETCONN_TYPE_UDP:
         result = at_parser_exec_cmd(parser,
                                     &resp,
@@ -323,6 +328,7 @@ os_err_t esp8266_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_
                                     remote_ip,
                                     port);
         break;
+#endif
 
     default:
         ERROR("Module %s connect to %s:%d failed!", module->name, remote_ip, port);
@@ -352,6 +358,7 @@ __exit:
     return result;
 }
 
+#ifdef ESP8266_USING_UDP
 os_size_t esp8266_netconn_sendto(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port, const char *data, os_size_t size)
 {
     char remote_ip[IPADDR_MAX_STR_LEN + 1] = {0};
@@ -454,7 +461,9 @@ __exit:
 
     return sent_size;
 }
+#endif
 
+#ifdef ESP8266_USING_TCP
 os_size_t esp8266_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
     at_parser_t *parser    = &module->parser;
@@ -562,6 +571,7 @@ __exit:
 
     return sent_size;
 }
+#endif
 
 #ifdef ESP8266_USING_DNS
 os_err_t esp8266_netconn_gethostbyname(mo_object_t *module, const char *domain_name, ip_addr_t *addr)

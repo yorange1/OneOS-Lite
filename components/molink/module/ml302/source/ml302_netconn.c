@@ -291,6 +291,7 @@ os_err_t ml302_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_ad
 
     switch (netconn->type)
     {
+#ifdef ML302_USING_TCP
     case NETCONN_TYPE_TCP:
         result = at_parser_exec_cmd(parser,
                                     &resp,
@@ -299,6 +300,9 @@ os_err_t ml302_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_ad
                                     remote_ip,
                                     port);
         break;
+#endif
+
+#ifdef ML302_USING_UDP
     case NETCONN_TYPE_UDP:
         result = at_parser_exec_cmd(parser,
                                     &resp,
@@ -307,6 +311,8 @@ os_err_t ml302_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_ad
                                     remote_ip,
                                     port);
         break;
+#endif
+
     default:
         result = OS_ERROR;
         goto __exit;

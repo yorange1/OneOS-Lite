@@ -298,6 +298,7 @@ __exit:
 }
 #endif
 
+#ifdef M5311_USING_TCP
 static os_err_t m5311_tcp_connect(mo_object_t *module, os_int32_t connect_id, char *ip_addr, os_uint16_t port)
 {
     os_err_t     result = OS_EOK;
@@ -348,7 +349,9 @@ __exit:
 
     return result;
 }
+#endif
 
+#ifdef M5311_USING_UDP
 static os_err_t m5311_udp_connect(mo_object_t *module, os_int32_t connect_id, char *ip_addr, os_uint16_t port)
 {
     at_parser_t *parser = &module->parser;
@@ -361,6 +364,7 @@ static os_err_t m5311_udp_connect(mo_object_t *module, os_int32_t connect_id, ch
 
     return result;
 }
+#endif
 
 os_err_t m5311_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port)
 {
@@ -372,16 +376,18 @@ os_err_t m5311_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_ad
 
     switch (netconn->type)
     {
-    #ifdef MOLINK_USING_TCP
+#ifdef M5311_USING_TCP
     case NETCONN_TYPE_TCP:
         result = m5311_tcp_connect(module, netconn->connect_id, remote_ip, port);
         break;
-	#endif
-	#ifdef MOLINK_USING_UDP
+#endif
+
+#ifdef M5311_USING_UDP
     case NETCONN_TYPE_UDP:
         result = m5311_udp_connect(module, netconn->connect_id, remote_ip, port);
         break;
-	#endif
+#endif
+
     default:
         result = OS_ERROR;
         break;

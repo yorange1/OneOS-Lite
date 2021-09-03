@@ -327,15 +327,19 @@ os_err_t n58_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr
 
     switch (netconn->type)
     {
+#ifdef N58_USING_TCP
     case NETCONN_TYPE_TCP:
         /* AT+TCPSETUP=<n>,<ip>,<port> */
         result = at_parser_exec_cmd(parser, &resp, "AT+TCPSETUP=%d,%s,%d", netconn->connect_id, remote_ip, port);
         break;
+#endif
 
+#ifdef N58_USING_UDP
     case NETCONN_TYPE_UDP:
         /* AT+UDPSETUP=<n>,<ip>,<port> */
         result = at_parser_exec_cmd(parser, &resp, "AT+UDPSETUP=%d,%s,%d", netconn->connect_id, remote_ip, port);
         break;
+#endif
 
     default:
         ERROR("Module %s netconn id %d, netconn type error", module->name, netconn->connect_id);
@@ -418,15 +422,19 @@ os_size_t n58_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const cha
 
     switch (netconn->type)
     {
+#ifdef N58_USING_TCP
     case NETCONN_TYPE_TCP:
         /* AT+TCPSEND=<n>,<length> */
         strncpy(cmd_format, "AT+TCPSEND=%d,%d", 16);
         break;
+#endif
 
+#ifdef N58_USING_UDP
     case NETCONN_TYPE_UDP:
         /* AT+UDPSETUP=<n>,<length>  */
         strncpy(cmd_format, "AT+UDPSEND=%d,%d", 16);
         break;
+#endif
 
     default:
         ERROR("Module %s netconn id %d, netconn type error", module->name, netconn->connect_id);

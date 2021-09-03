@@ -286,6 +286,7 @@ __exit:
 }
 #endif
 
+#ifdef M5310A_USING_TCP
 static os_err_t m5310a_tcp_connect(at_parser_t *parser, os_int32_t connect_id, char *ip_addr, os_uint16_t port)
 {
     char resp_buff[AT_RESP_BUFF_SIZE_128] = {0};
@@ -320,6 +321,7 @@ __exit:
 
     return result;
 }
+#endif
 
 os_err_t m5310a_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port)
 {
@@ -332,12 +334,18 @@ os_err_t m5310a_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_a
 
     switch (netconn->type)
     {
+#ifdef M5310A_USING_TCP
     case NETCONN_TYPE_TCP:
         result = m5310a_tcp_connect(parser, netconn->connect_id, remote_ip, port);
         break;
+#endif
+
+#ifdef M5310A_USING_UDP
     case NETCONN_TYPE_UDP:
         result = OS_EOK;    /* UDP does not need to connect */
         break;
+#endif
+
     default:
         result = OS_ERROR;
         break;
@@ -434,10 +442,13 @@ os_size_t m5310a_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const 
 
         switch (netconn->type)
         {
+#ifdef M5310A_USING_TCP
         case NETCONN_TYPE_TCP:
             snprintf(send_cmd, sizeof(send_cmd), "AT+NSOSD=%d,%d,", netconn->connect_id, (int)cur_pkt_size);
             break;
+#endif
 
+#ifdef M5310A_USING_UDP
         case NETCONN_TYPE_UDP:
             snprintf(send_cmd,
                      sizeof(send_cmd),
@@ -447,6 +458,7 @@ os_size_t m5310a_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const 
                      netconn->remote_port,
                      (int)cur_pkt_size);
             break;
+#endif
 
         default:
             ERROR("Module %s netconn %d type error!", parser->name, netconn->connect_id);

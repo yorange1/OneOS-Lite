@@ -160,12 +160,18 @@ mo_netconn_t *bc28_netconn_create(mo_object_t *module, mo_netconn_type_t type)
 
     switch (type)
     {
+#ifdef BC28_USING_TCP
     case NETCONN_TYPE_TCP:
         result = at_parser_exec_cmd(parser, &resp, "AT+NSOCR=STREAM,%d,0,1", PROTOCOL_TYPE_TCP);
         break;
+#endif
+
+#ifdef BC28_USING_UDP
     case NETCONN_TYPE_UDP:
         result = at_parser_exec_cmd(parser, &resp, "AT+NSOCR=DGRAM,%d,%hu,1", PROTOCOL_TYPE_UDP, netconn->local_port);
         break;
+#endif
+
     default:
         result = OS_ERROR;
         break;
@@ -328,6 +334,7 @@ __exit:
 }
 #endif
 
+#ifdef BC28_USING_TCP
 static os_err_t bc28_tcp_connect(at_parser_t *parser, os_int32_t connect_id, char *ip_addr, os_uint16_t port)
 {
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
@@ -338,6 +345,7 @@ static os_err_t bc28_tcp_connect(at_parser_t *parser, os_int32_t connect_id, cha
 
     return result;
 }
+#endif
 
 os_err_t bc28_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port)
 {
@@ -350,12 +358,18 @@ os_err_t bc28_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_add
 
     switch (netconn->type)
     {
+#ifdef BC28_USING_TCP
     case NETCONN_TYPE_TCP:
         result = bc28_tcp_connect(parser, netconn->connect_id, remote_ip, port);
         break;
+#endif
+
+#ifdef BC28_USING_UDP
     case NETCONN_TYPE_UDP:
         result = OS_EOK;    /* UDP does not need to connect */
         break;
+#endif
+
     default:
         result = OS_ERROR;
         break;
