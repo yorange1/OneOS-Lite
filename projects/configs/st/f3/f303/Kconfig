@@ -1,0 +1,10 @@
+choice
+    prompt "|------SUB MODEL"
+        default TEMP_stm32f303-k8t6-nucleo
+    help
+        Select the device in STM32F303xx
+
+    config TEMP_stm32f303-k8t6-nucleo
+        bool "stm32f303-k8t6-nucleo"
+
+endchoice

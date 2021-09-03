@@ -1,0 +1,22 @@
+choice
+    prompt "|--SERIES"
+        default SERIES_NXP_LPC
+    help
+        Select the device in nxp series
+        
+    config SERIES_NXP_LPC
+        bool "LPC"
+    
+    config SERIES_NXP_IMXRT
+        bool "IMXRT"
+        
+endchoice
+
+if SERIES_NXP_LPC
+    source "$OS_ROOT/templates/configs/nxp/lpc/Kconfig"
+endif
+
+if SERIES_NXP_IMXRT
+    source "$OS_ROOT/templates/configs/nxp/imxrt/Kconfig"
+endif
+        

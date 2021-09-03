@@ -1,0 +1,16 @@
+config MOLINK_PLATFORM_MCU
+    bool
+    select MOLINK_USING_PARSER
+    default n
+
+config MOLINK_PLATFORM_OPENCPU
+    bool
+    default n
+
+config MOLINK_USING_MO_LIB
+    bool
+    default n
+
+config MOLINK_USING_MO_TIME
+    bool
+    default n

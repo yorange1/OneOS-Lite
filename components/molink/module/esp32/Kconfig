@@ -1,0 +1,72 @@
+menu "Config"
+
+    config ESP32_CONNECT_SSID
+        string "AP SSID"
+        default "ssid"
+
+    config ESP32_CONNECT_PASSWORD
+        string "AP Password"
+        default "password"
+
+    config ESP32_USING_GENERAL_OPS
+        bool "General Operates"
+        select MOLINK_USING_GENERAL_OPS
+        default n
+
+    config ESP32_USING_WIFI_OPS
+        bool "WiFi"
+        select MOLINK_USING_WIFI_OPS
+        default n
+
+    config ESP32_USING_PING_OPS
+        bool #"Ping"
+        select MOLINK_USING_PING_OPS
+        default n
+
+    config ESP32_USING_IFCONFIG_OPS
+        bool #"Ifconfig"
+        select MOLINK_USING_IFCONFIG_OPS
+        select ESP32_USING_WIFI_OPS
+        default n
+
+    config ESP32_USING_NETCONN_OPS
+        bool "Netconn Options"
+        select OS_USING_EVENT
+        select MOLINK_USING_NETCONN_OPS
+        default y
+
+    if ESP32_USING_NETCONN_OPS
+        config ESP32_USING_TCP
+            bool "TCP"
+            select MOLINK_USING_TCP
+            default y
+
+        config ESP32_USING_UDP
+            bool "UDP"
+            select MOLINK_USING_UDP
+            default y
+
+        config ESP32_USING_SELECT
+            bool "Select"
+            select MOLINK_USING_SELECT
+            default n
+
+        config ESP32_USING_DNS
+            bool "DNS"
+            select MOLINK_USING_DNS
+            default y
+
+        config ESP32_USING_ADDRINFO
+            bool "AddrInfo"
+            select ESP32_USING_DNS
+            select MOLINK_USING_ADDRINFO
+            default n
+    endif
+
+    config ESP32_USING_SOCKETS_OPS
+        bool "BSD Socket"
+        select ESP32_USING_NETCONN_OPS
+        select MOLINK_USING_SOCKETS_OPS
+        default n
+
+endmenu

@@ -1,0 +1,25 @@
+menu "Drivers"
+menu "Device"
+    config OS_USING_DEVICE
+        bool "using device"
+        default y
+    config OS_DEVICE_NAME_MAX
+        int "max device length"
+        default 15
+
+    config OS_USING_DEVICE_BLOCK
+        bool "device block"
+        default n
+    config OS_USING_DRIVER_SIMPLE
+        bool "device simple"
+        default y
+endmenu
+    source "$OS_ROOT/drivers/fal/Kconfig"
+    source "$OS_ROOT/drivers/console/Kconfig"
+    source "$OS_ROOT/drivers/serial/Kconfig"
+    source "$OS_ROOT/drivers/timer/Kconfig"
+    source "$OS_ROOT/drivers/lpmgr/Kconfig"
+    source "$OS_ROOT/drivers/misc/Kconfig"
+    source "$OS_ROOT/drivers/pin/Kconfig"
+    source "$OS_ROOT/drivers/hal/Kconfig"
+endmenu

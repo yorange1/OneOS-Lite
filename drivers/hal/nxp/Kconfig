@@ -1,0 +1,170 @@
+config OS_SDIO_DEVICE_SD
+    bool
+    default n
+config OS_SDIO_DEVICE_MMC
+    bool
+    default n
+config OS_SDIO_DEVICE_SDIO
+    bool
+    default n
+    
+if  OS_USING_SDIO_NXP
+    menu "nxp sdio config"
+        menuconfig OS_USDHC1_ENABLE
+            bool "USDHC1 enable"
+            default n
+            if OS_USDHC1_ENABLE
+                config OS_USDHC1_TYPE
+                    bool "select usdhc type"
+                    default y
+                    if OS_USDHC1_TYPE
+                        config OS_USDHC1_SD
+                            bool "USDHC1 type: sd"
+                            select OS_SDIO_DEVICE_SD
+                            default n
+                        config OS_USDHC1_SDIO
+                            bool "USDHC1 type: sdio"
+                            select OS_SDIO_DEVICE_SDIO
+                            default n
+                            if OS_USDHC1_SDIO
+                                config OS_SDIO_USDHC2_BLOCK_SIZE
+                                int "sdio device block size"
+                                default 512
+                            endif
+                        config OS_USDHC1_MMC
+                            bool "USDHC1 type: mmc"
+                            select OS_SDIO_DEVICE_MMC
+                            default n
+                    endif
+                config OS_USDHC1_DMA_BUFF_SIZE
+                    int "nxp USDHC1 dma buff size"
+                    default 32
+                config OS_USDHC1_PWR_EN
+                    bool "enable nxp USDHC1 pwr"
+                    default n
+                    if OS_USDHC1_PWR_EN
+                        config OS_USDHC1_PWR_PIN
+                            int "nxp USDHC1 pwr pin"
+                            default 10
+                        config OS_USDHC1_PWR_PIN_LEVEL
+                            int "nxp USDHC1 pwr pin enable level"
+                            default 1
+                    endif
+                config OS_USDHC1_IRQ_EN
+                    bool "enable nxp USDHC1 irq"
+                    default n
+                    if OS_USDHC1_IRQ_EN
+                        config OS_USDHC1_IRQ_PIN
+                            int "nxp USDHC1 irq pin"
+                            default 10
+                        config OS_USDHC1_IRQ_PIN_LEVEL
+                            int "nxp USDHC1 irq pin level"
+                            default 1
+                    endif
+            endif
+        menuconfig OS_USDHC2_ENABLE
+            bool "USDHC2 enable"
+            select OS_USDHC1_TYPE
+            default n
+            if OS_USDHC2_ENABLE
+                if OS_USDHC2_TYPE
+                    config OS_USDHC2_SD
+                        select OS_SDIO_DEVICE_SD
+                        bool "USDHC2 type: sd"
+                        default n
+                    config OS_USDHC2_SDIO
+                        bool "USDHC2 type: sdio"
+                        select OS_SDIO_DEVICE_SDIO
+                        default n
+                        if OS_USDHC2_SDIO
+                            config OS_SDIO_USDHC2_BLOCK_SIZE
+                            int "sdio device block size"
+                            default 512
+                        endif
+                    config OS_USDHC2_MMC
+                        bool "USDHC2 type: mmc"
+                        select OS_SDIO_DEVICE_MMC
+                        default n
+                endif
+                config OS_USDHC2_DMA_BUFF_SIZE
+                    int "nxp USDHC2 dma buff size"
+                    default 32
+                config OS_USDHC2_PWR_EN
+                    bool "enable nxp USDHC2 pwr"
+                    default n
+                    if OS_USDHC2_PWR_EN
+                        config OS_USDHC1_PWR_PIN
+                            int "nxp USDHC2 pwr pin"
+                            default 10
+                        config OS_USDHC2_PWR_PIN_LEVEL
+                            int "nxp USDHC2 pwr pin enable level"
+                            default 1
+                    endif
+                config OS_USDHC2_IRQ_EN
+                    bool "enable nxp USDHC2 irq"
+                    default n
+                    if OS_USDHC2_IRQ_EN
+                        config OS_USDHC2_IRQ_PIN
+                            int "nxp USDHC2 irq pin"
+                            default 10
+                        config OS_USDHC2_IRQ_PIN_LEVEL
+                            int "nxp USDHC2 irq pin level"
+                            default 1
+                    endif
+            endif
+        menuconfig OS_USDHC3_ENABLE
+            bool "USDHC3 enable"
+            select OS_USDHC1_TYPE
+            default n
+            if OS_USDHC3_ENABLE
+                if OS_USDHC3_TYPE
+                    config OS_USDHC3_SD
+                        bool "USDHC3 type: sd"
+                        select OS_SDIO_DEVICE_SD
+                        default n
+                    config OS_USDHC3_SDIO
+                        bool "USDHC3 type: sdio"
+                        select OS_SDIO_DEVICE_SDIO
+                        default n
+                        if OS_USDHC3_SDIO
+                            config OS_SDIO_USDHC2_BLOCK_SIZE
+                            int "sdio device block size"
+                            default 512
+                        endif
+                    config OS_USDHC3_MMC
+                        bool "USDHC3 type: mmc"
+                        select OS_SDIO_DEVICE_MMC
+                        default n
+                endif
+                config OS_USDHC3_DMA_BUFF_SIZE
+                    int "nxp USDHC3 dma buff size"
+                    default 32
+                config OS_USDHC3_PWR_EN
+                    bool "enable nxp USDHC3 pwr"
+                    default n
+                    if OS_USDHC3_PWR_EN
+                        config OS_USDHC3_PWR_PIN
+                            int "nxp USDHC3 pwr pin"
+                            default 10
+                        config OS_USDHC3_PWR_PIN_LEVEL
+                            int "nxp USDHC3 pwr pin enable level"
+                            default 1
+                    endif
+                config OS_USDHC3_IRQ_EN
+                    bool "enable nxp USDHC3 irq"
+                    default n
+                    if OS_USDHC3_IRQ_EN
+                        config OS_USDHC1_IRQ_PIN
+                            int "nxp USDHC3 irq pin"
+                            default 10
+                        config OS_USDHC3_IRQ_PIN_LEVEL
+                            int "nxp USDHC3 irq pin level"
+                            default 1
+                    endif
+            endif
+        menu "help: more sdio config param in drv_sdio_common.h"
+        endmenu
+    endmenu
+endif
+
+source "$OS_ROOT/drivers/hal/nxp/*/Kconfig"

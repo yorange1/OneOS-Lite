@@ -1,0 +1,13 @@
+config OS_USING_PUSH_BUTTON
+    bool 
+    default y
+        
+config OS_USING_LED
+    bool 
+    default y
+        
+menu "ADC"
+config OS_USING_ADC
+    bool "ADC"
+    default n
+endmenu

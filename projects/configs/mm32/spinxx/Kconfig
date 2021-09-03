@@ -1,0 +1,19 @@
+choice
+    prompt "|----MODEL"
+        default TEMP_MM32SPIN320B
+    help
+        Select the device in MM32SPINXX
+
+    config TEMP_MM32SPIN320B
+        bool "MM32SPIN320B"
+        
+    config TEMP_MM32SPIN360C
+        bool "MM32SPIN360C"
+        
+    config TEMP_MM32SPIN422C
+        bool "MM32SPIN422C"
+        
+    config TEMP_MM32SPIN423C
+        bool "MM32SPIN423C"
+        
+endchoice

@@ -1,0 +1,10 @@
+choice
+    prompt "|------SUB MODEL"
+        default TEMP_apollo_th
+    help
+        Select the device in apollo512-xx
+        
+    config TEMP_apollo-th
+        bool "apollo-th"
+        
+endchoice

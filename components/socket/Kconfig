@@ -1,0 +1,17 @@
+menu "Socket"
+
+config NET_USING_BSD
+    bool "BSD socket"
+    default n
+
+    if NET_USING_BSD
+        if NET_USING_MOLINK
+
+            config BSD_USING_MOLINK
+                bool #"Molink"
+                default y
+                depends on MOLINK_USING_SOCKETS_OPS
+        endif
+    endif
+
+endmenu

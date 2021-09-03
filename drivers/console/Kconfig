@@ -1,0 +1,18 @@
+menu "Console"
+    config OS_USING_CONSOLE
+        bool "console"
+        depends on OS_USING_DEVICE
+        select OS_DEBUG
+        default y
+
+    if OS_USING_CONSOLE
+        config OS_CONSOLE_DEVICE_NAME
+            string "name"
+            default "uart1"
+
+        config OS_LOG_BUFF_SIZE
+            int "os_kprintf buffer size"
+            range 128 384
+            default 256
+    endif
+endmenu

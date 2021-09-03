@@ -1,0 +1,13 @@
+menu "Components"
+if !OS_MINIMAL_CONFIG
+    source "$OS_ROOT/components/atest/Kconfig"
+    source "$OS_ROOT/components/dlog/Kconfig"
+endif
+    source "$OS_ROOT/components/libc/Kconfig"
+    source "$OS_ROOT/components/molink/Kconfig"
+    source "$OS_ROOT/components/ota/Kconfig"
+    source "$OS_ROOT/components/shell/Kconfig"
+    source "$OS_ROOT/components/socket/Kconfig"
+    source "$OS_ROOT/components/cplusplus/Kconfig"
+endmenu
+

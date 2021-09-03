@@ -1,0 +1,684 @@
+menu "Modules"
+
+config MOLINK_USING_EC200X_600S
+    bool
+    default n
+config MOLINK_USING_ML302
+    bool
+    default n
+config MOLINK_USING_GM190
+    bool
+    default n
+config MOLINK_USING_A7600X
+    bool
+    default n
+config MOLINK_USING_A7670X
+    bool
+    default n
+config MOLINK_USING_L610
+    bool
+    default n
+config MOLINK_USING_AIR723UG
+    bool
+    default n
+config MOLINK_USING_N58
+    bool
+    default n
+config MOLINK_USING_CLM920RV3
+    bool
+    default n
+config MOLINK_USING_AIR720UH
+    bool
+    default n
+config MOLINK_USING_GM510
+    bool
+    default n
+config MOLINK_USING_EC20
+    bool
+    default n
+config MOLINK_USING_SIM7600CE
+    bool
+    default n
+config MOLINK_USING_ME3630_W
+    bool
+    default n
+config MOLINK_USING_M5310A
+    bool
+    default n
+config MOLINK_USING_M5311
+    bool
+    default n
+config MOLINK_USING_BC95
+    bool
+    default n
+config MOLINK_USING_BC28
+    bool
+    default n
+config MOLINK_USING_BC26
+    bool
+    default n
+config MOLINK_USING_BC20
+    bool
+    default n
+config MOLINK_USING_SIM7020
+    bool
+    default n
+#config MOLINK_USING_E7025
+#   bool
+#   default n
+config MOLINK_USING_SIM7070X
+    bool
+    default n
+config MOLINK_USING_N21
+    bool
+    default n
+#config MOLINK_USING_MB26
+#   bool
+#   default n
+config MOLINK_USING_GM120
+    bool
+    default n
+config MOLINK_USING_ME3616
+    bool
+    default n
+config MOLINK_USING_ESP8266
+    bool
+    default n
+config MOLINK_USING_ESP32
+    bool
+    default n
+
+
+choice
+    prompt "Single/Multi Module"
+    config MOLINK_USING_SINGLE_MODULE
+        bool "Single"
+
+    config MOLINK_USING_MULTI_MODULES
+        bool "Multi"
+endchoice
+
+if MOLINK_USING_SINGLE_MODULE
+
+choice
+    prompt "Select module"
+
+    comment "4G CAT1"
+    config MODULE_SINGLE_USING_EC200X_600S
+        bool "EC200X_600s"
+        select MOLINK_USING_EC200X_600S
+        select MOLINK_PLATFORM_MCU
+
+        if MODULE_SINGLE_USING_EC200X_600S
+            source "$OS_ROOT/components/molink/module/ec200x_600s/Kconfig"
+        endif
+
+    config MODULE_SINGLE_USING_ML302
+        bool "ML302"
+        select MOLINK_USING_ML302
+        select MOLINK_PLATFORM_MCU
+
+        if MODULE_SINGLE_USING_ML302
+            source "$OS_ROOT/components/molink/module/ml302/Kconfig"
+        endif
+
+    config MODULE_SINGLE_USING_GM190
+        bool "GM190"
+        select MOLINK_USING_USING_GM190
+        select MOLINK_PLATFORM_MCU
+
+        if MODULE_SINGLE_USING_GM190
+            source "$OS_ROOT/components/molink/module/gm190/Kconfig"
+        endif
+
+   config MODULE_SINGLE_USING_A7600X
+       bool "A7600X"
+       select MOLINK_USING_A7600X
+       select MOLINK_PLATFORM_MCU
+
+       if MODULE_SINGLE_USING_A7600X
+           source "$OS_ROOT/components/molink/module/a7600x/Kconfig"
+       endif
+
+   config MODULE_SINGLE_USING_A7670X
+       bool "A7670X"
+       select MOLINK_USING_A7670X
+       select MOLINK_PLATFORM_MCU
+
+       if MODULE_SINGLE_USING_A7670X
+           source "$OS_ROOT/components/molink/module/a7670x/Kconfig"
+       endif
+
+   config MODULE_SINGLE_USING_L610
+       bool "L610"
+       select MOLINK_USING_L610
+       select MOLINK_PLATFORM_MCU
+
+       if MODULE_SINGLE_USING_L610
+           source "$OS_ROOT/components/molink/module/l610/Kconfig"
+       endif
+
+   config MODULE_SINGLE_USING_AIR723UG
+       bool "AIR723UG"
+       select MOLINK_USING_AIR723UG
+       select MOLINK_PLATFORM_MCU
+
+       if MODULE_SINGLE_USING_AIR723UG
+           source "$OS_ROOT/components/molink/module/air723ug/Kconfig"
+
+      endif
+
+   config MODULE_SINGLE_USING_N58
+       bool "N58"
+       select MOLINK_USING_N58
+       select MOLINK_PLATFORM_MCU
+
+       if MODULE_SINGLE_USING_N58
+           source "$OS_ROOT/components/molink/module/n58/Kconfig"
+       endif
+
+   config MODULE_SINGLE_USING_CLM920RV3
+       bool "CLM920RV3"
+       select MOLINK_USING_CLM920RV3
+       select MOLINK_PLATFORM_MCU
+
+       if MODULE_SINGLE_USING_CLM920RV3
+           source "$OS_ROOT/components/molink/module/clm920rv3/Kconfig"
+       endif
+
+   config MODULE_SINGLE_USING_AIR720UH
+       bool "AIR720UH"
+       select MOLINK_USING_AIR720UH
+       select MOLINK_PLATFORM_MCU
+
+       if MODULE_SINGLE_USING_AIR720UH
+           source "$OS_ROOT/components/molink/module/air720uh/Kconfig"
+
+       endif
+
+    comment "4G CAT4"
+    config MODULE_SINGLE_USING_GM510
+        bool "GM510"
+        select MOLINK_USING_GM510
+        select MOLINK_PLATFORM_MCU
+
+        if MODULE_SINGLE_USING_GM510
+            source "$OS_ROOT/components/molink/module/gm510/Kconfig"
+        endif
+
+    config MODULE_SINGLE_USING_EC20
+        bool "EC20"
+        select MOLINK_USING_EC20
+        select MOLINK_PLATFORM_MCU
+
+        if MODULE_SINGLE_USING_EC20
+            source "$OS_ROOT/components/molink/module/ec20/Kconfig"
+        endif
+
+    config MODULE_SINGLE_USING_SIM7600CE
+        bool "SIM7600CE"
+        select MOLINK_USING_SIM7600CE
+        select MOLINK_PLATFORM_MCU
+
+        if MODULE_SINGLE_USING_SIM7600CE
+            source "$OS_ROOT/components/molink/module/sim7600ce/Kconfig"
+        endif
+
+    config MODULE_SINGLE_USING_ME3630_W
+        bool "ME3630_W"
+        select MOLINK_USING_ME3630_W
+        select MOLINK_PLATFORM_MCU
+
+        if MODULE_SINGLE_USING_ME3630_W
+            source "$OS_ROOT/components/molink/module/me3630_w/Kconfig"
+        endif
+
+    comment "NB-IoT"
+    config MODULE_SINGLE_USING_M5310A
+        bool "M5310A"
+        select MOLINK_USING_M5310A
+        select MOLINK_PLATFORM_MCU
+
+        if MODULE_SINGLE_USING_M5310A
+            source "$OS_ROOT/components/molink/module/m5310a/Kconfig"
+        endif
+
+    config MODULE_SINGLE_USING_M5311
+        bool "M5311"
+        select MOLINK_USING_M5311
+        select MOLINK_PLATFORM_MCU
+
+        if MODULE_SINGLE_USING_M5311
+            source "$OS_ROOT/components/molink/module/m5311/Kconfig"
+        endif
+
+    config MODULE_SINGLE_USING_BC95
+        bool "BC95"
+        select MOLINK_USING_BC95
+        select MOLINK_PLATFORM_MCU
+
+        if MODULE_SINGLE_USING_BC95
+            source "$OS_ROOT/components/molink/module/bc95/Kconfig"
+        endif
+
+    config MODULE_SINGLE_USING_BC28
+        bool "BC28"
+        select MOLINK_USING_BC28
+        select MOLINK_PLATFORM_MCU
+
+        if MODULE_SINGLE_USING_BC28
+            source "$OS_ROOT/components/molink/module/bc28/Kconfig"
+        endif
+
+    config MODULE_SINGLE_USING_BC26
+        bool "BC26"
+        select MOLINK_USING_BC26
+        select MOLINK_PLATFORM_MCU
+
+        if MODULE_SINGLE_USING_BC26
+            source "$OS_ROOT/components/molink/module/bc26/Kconfig"
+        endif
+
+    config MODULE_SINGLE_USING_BC20
+        bool "BC20"
+        select MOLINK_USING_BC20
+        select MOLINK_PLATFORM_MCU
+
+        if MODULE_SINGLE_USING_BC20
+            source "$OS_ROOT/components/molink/module/bc20/Kconfig"
+        endif
+
+    config MODULE_SINGLE_USING_SIM7020
+        bool "SIM7020"
+        select MOLINK_USING_SIM7020
+        select MOLINK_PLATFORM_MCU
+
+        if MODULE_SINGLE_USING_SIM7020
+            source "$OS_ROOT/components/molink/module/sim7020/Kconfig"
+        endif
+
+#    config MODULE_SINGLE_USING_E7025
+#        bool "E7025"
+#        select MOLINK_USING_E7025
+#        select MOLINK_PLATFORM_MCU
+#
+#        if MODULE_SINGLE_USING_E7025
+#            source "$OS_ROOT/components/molink/module/e7025/Kconfig"
+#        endif
+
+    config MODULE_SINGLE_USING_SIM7070X
+        bool "SIM7070X"
+        select MOLINK_USING_SIM7070X
+        select MOLINK_PLATFORM_MCU
+
+        if MODULE_SINGLE_USING_SIM7070X
+            source "$OS_ROOT/components/molink/module/sim7070x/Kconfig"
+        endif
+
+    config MODULE_SINGLE_USING_N21
+        bool "N21"
+        select MOLINK_USING_N21
+        select MOLINK_PLATFORM_MCU
+
+        if MODULE_SINGLE_USING_N21
+            source "$OS_ROOT/components/molink/module/n21/Kconfig"
+        endif
+
+#    config MODULE_SINGLE_USING_MB26
+#        bool "MB26"
+#        select MOLINK_USING_MB26
+#        select MOLINK_PLATFORM_MCU
+#
+#        if MODULE_SINGLE_USING_MB26
+#            source "$OS_ROOT/components/molink/module/mb26/Kconfig"
+#        endif
+#
+    config MODULE_SINGLE_USING_GM120
+        bool "GM120"
+        select MOLINK_USING_GM120
+        select MOLINK_PLATFORM_MCU
+
+        if MODULE_SINGLE_USING_GM120
+            source "$OS_ROOT/components/molink/module/gm120/Kconfig"
+        endif
+
+    config MODULE_SINGLE_USING_ME3616
+        bool "ME3616"
+        select MOLINK_USING_ME3616
+        select MOLINK_PLATFORM_MCU
+
+        if MODULE_SINGLE_USING_ME3616
+            source "$OS_ROOT/components/molink/module/me3616/Kconfig"
+        endif
+
+    comment "WiFi"
+    config MODULE_SINGLE_USING_ESP8266
+        bool "ESP8266"
+        select MOLINK_USING_ESP8266
+        select MOLINK_PLATFORM_MCU
+
+        if MODULE_SINGLE_USING_ESP8266
+            source "$OS_ROOT/components/molink/module/esp8266/Kconfig"
+        endif
+
+    config MODULE_SINGLE_USING_ESP32
+        bool "ESP32"
+        select MOLINK_USING_ESP32
+        select MOLINK_PLATFORM_MCU
+
+        if MODULE_SINGLE_USING_ESP32
+            source "$OS_ROOT/components/molink/module/esp32/Kconfig"
+        endif
+endchoice
+endif
+
+if MOLINK_USING_MULTI_MODULES
+    menu "4G Cat1"
+    depends on MOLINK_USING_MULTI_MODULES
+       config MOLINK_MULTI_USING_EC200X_600S
+           bool "EC200X_600s"
+           select MOLINK_USING_EC200X_600S
+           select MOLINK_PLATFORM_MCU
+           default n
+
+           if MOLINK_MULTI_USING_EC200X_600S
+               source "$OS_ROOT/components/molink/module/ec200x_600s/Kconfig"
+           endif
+
+        config MOLINK_MULTI_USING_ML302
+            bool "ML302"
+            select MOLINK_USING_ML302
+            select MOLINK_PLATFORM_MCU
+            default n
+
+            if MOLINK_MULTI_USING_ML302
+                source "$OS_ROOT/components/molink/module/ml302/Kconfig"
+            endif
+
+        config MOLINK_MULTI_USING_GM190
+            bool "GM190"
+            select MOLINK_USING_GM190
+            select MOLINK_PLATFORM_MCU
+            default n
+
+            if MOLINK_MULTI_USING_GM190
+                source "$OS_ROOT/components/molink/module/gm190/Kconfig"
+            endif
+
+       config MOLINK_MULTI_USING_A7600X
+           bool "A7600X"
+           select MOLINK_USING_A7600X
+           select MOLINK_PLATFORM_MCU
+           default n
+
+           if MOLINK_MULTI_USING_A7600X
+               source "$OS_ROOT/components/molink/module/a7600x/Kconfig"
+           endif
+
+       config MOLINK_MULTI_USING_A7670X
+           bool "A7670X"
+           select MOLINK_USING_A7670X
+           select MOLINK_PLATFORM_MCU
+           default n
+
+           if MOLINK_MULTI_USING_A7670X
+               source "$OS_ROOT/components/molink/module/a7670x/Kconfig"
+           endif
+
+       config MOLINK_MULTI_USING_L610
+           bool "L610"
+           select MOLINK_USING_L610
+           select MOLINK_PLATFORM_MCU
+           default n
+
+           if MOLINK_MULTI_USING_L610
+               source "$OS_ROOT/components/molink/module/l610/Kconfig"
+           endif
+
+       config MOLINK_MULTI_USING_AIR723UG
+           bool "AIR723UG"
+           select MOLINK_USING_AIR723UG
+           select MOLINK_PLATFORM_MCU
+           default n
+
+           if MOLINK_MULTI_USING_AIR723UG
+               source "$OS_ROOT/components/molink/module/air723ug/Kconfig"
+
+          endif
+
+       config MOLINK_MULTI_USING_N58
+           bool "N58"
+           select MOLINK_USING_N58
+           select MOLINK_PLATFORM_MCU
+           default n
+
+           if MOLINK_MULTI_USING_N58
+               source "$OS_ROOT/components/molink/module/n58/Kconfig"
+           endif
+
+       config MOLINK_MULTI_USING_CLM920RV3
+           bool "CLM920RV3"
+           select MOLINK_USING_CLM920RV3
+           select MOLINK_PLATFORM_MCU
+           default n
+
+           if MOLINK_MULTI_USING_CLM920RV3
+               source "$OS_ROOT/components/molink/module/clm920rv3/Kconfig"
+           endif
+
+       config MOLINK_MULTI_USING_AIR720UH
+           bool "AIR720UH"
+           select MOLINK_USING_AIR720UH
+           select MOLINK_PLATFORM_MCU
+           default n
+
+           if MOLINK_MULTI_USING_AIR720UH
+               source "$OS_ROOT/components/molink/module/air720uh/Kconfig"
+
+          endif
+
+    endmenu
+
+    menu "4G Cat4"
+        depends on MOLINK_USING_MULTI_MODULES
+        config MOLINK_MULTI_USING_GM510
+            bool "GM510"
+            select MOLINK_USING_GM510
+            select MOLINK_PLATFORM_MCU
+            default n
+
+            if MOLINK_MULTI_USING_GM510
+                source "$OS_ROOT/components/molink/module/gm510/Kconfig"
+            endif
+
+        config MOLINK_MULTI_USING_EC20
+            bool "EC20"
+            select MOLINK_USING_EC20
+            select MOLINK_PLATFORM_MCU
+            default n
+
+            if MOLINK_MULTI_USING_EC20
+                source "$OS_ROOT/components/molink/module/ec20/Kconfig"
+            endif
+
+        config MOLINK_MULTI_USING_SIM7600CE
+            bool "SIM7600CE"
+            select MOLINK_USING_SIM7600CE
+            select MOLINK_PLATFORM_MCU
+            default n
+
+            if MOLINK_MULTI_USING_SIM7600CE
+                source "$OS_ROOT/components/molink/module/sim7600ce/Kconfig"
+            endif
+
+        config MOLINK_MULTI_USING_ME3630_W
+            bool "ME3630_W"
+            select MOLINK_USING_ME3630_W
+            select MOLINK_PLATFORM_MCU
+            default n
+
+            if MOLINK_MULTI_USING_ME3630_W
+                source "$OS_ROOT/components/molink/module/me3630_w/Kconfig"
+            endif
+    endmenu
+
+    menu "NB-IOT"
+        depends on MOLINK_USING_MULTI_MODULES
+        config MOLINK_MULTI_USING_M5310A
+            bool "M5310A"
+            select MOLINK_USING_M5310A
+            select MOLINK_PLATFORM_MCU
+            default n
+
+            if MOLINK_MULTI_USING_M5310A
+                source "$OS_ROOT/components/molink/module/m5310a/Kconfig"
+            endif
+
+        config MOLINK_MULTI_USING_M5311
+            bool "M5311"
+            select MOLINK_USING_M5311
+            select MOLINK_PLATFORM_MCU
+            default n
+
+            if MOLINK_MULTI_USING_M5311
+                source "$OS_ROOT/components/molink/module/m5311/Kconfig"
+            endif
+
+        config MOLINK_MULTI_USING_BC95
+            bool "BC95"
+            select MOLINK_USING_BC95
+            select MOLINK_PLATFORM_MCU
+            default n
+
+            if MOLINK_MULTI_USING_BC95
+                source "$OS_ROOT/components/molink/module/bc95/Kconfig"
+            endif
+
+        config MOLINK_MULTI_USING_BC28
+            bool "BC28"
+            select MOLINK_USING_BC28
+            select MOLINK_PLATFORM_MCU
+            default n
+
+            if MOLINK_MULTI_USING_BC28
+                source "$OS_ROOT/components/molink/module/bc28/Kconfig"
+            endif
+
+        config MOLINK_MULTI_USING_BC26
+            bool "BC26"
+            select MOLINK_USING_BC26
+            select MOLINK_PLATFORM_MCU
+            default n
+
+            if MOLINK_MULTI_USING_BC26
+                source "$OS_ROOT/components/molink/module/bc26/Kconfig"
+            endif
+
+        config MOLINK_MULTI_USING_BC20
+            bool "BC20"
+            select MOLINK_USING_BC20
+            select MOLINK_PLATFORM_MCU
+            default n
+
+            if MOLINK_MULTI_USING_BC20
+                source "$OS_ROOT/components/molink/module/bc20/Kconfig"
+            endif
+
+        config MOLINK_MULTI_USING_SIM7020
+            bool "SIM7020"
+            select MOLINK_USING_SIM7020
+            select MOLINK_PLATFORM_MCU
+            default n
+
+            if MOLINK_MULTI_USING_SIM7020
+                source "$OS_ROOT/components/molink/module/sim7020/Kconfig"
+            endif
+
+    #    config MOLINK_MULTI_USING_E7025
+    #        bool "E7025"
+    #        select MOLINK_USING_E7025
+    #        select MOLINK_PLATFORM_MCU
+    #        default n
+    #
+    #        if MOLINK_MULTI_USING_E7025
+    #            source "$OS_ROOT/components/molink/module/e7025/Kconfig"
+    #        endif
+
+        config MOLINK_MULTI_USING_SIM7070X
+            bool "SIM7070X"
+            select MOLINK_USING_SIM7070X
+            select MOLINK_PLATFORM_MCU
+            default n
+
+            if MOLINK_MULTI_USING_SIM7070X
+                source "$OS_ROOT/components/molink/module/sim7070x/Kconfig"
+            endif
+
+        config MOLINK_MULTI_USING_N21
+            bool "N21"
+            select MOLINK_USING_N21
+            select MOLINK_PLATFORM_MCU
+            default n
+
+            if MOLINK_MULTI_USING_N21
+                source "$OS_ROOT/components/molink/module/n21/Kconfig"
+            endif
+
+    #    config MOLINK_MULTI_USING_MB26
+    #        bool "MB26"
+    #        select MOLINK_USING_MB26
+    #        select MOLINK_PLATFORM_MCU
+    #        default n
+    #
+    #        if MOLINK_MULTI_USING_MB26
+    #            source "$OS_ROOT/components/molink/module/mb26/Kconfig"
+    #        endif
+    #
+        config MOLINK_MULTI_USING_GM120
+            bool "GM120"
+            select MOLINK_USING_GM120
+            select MOLINK_PLATFORM_MCU
+            default n
+
+            if MOLINK_MULTI_USING_GM120
+                source "$OS_ROOT/components/molink/module/gm120/Kconfig"
+            endif
+
+        config MOLINK_MULTI_USING_ME3616
+            bool "ME3616"
+            select MOLINK_USING_ME3616
+            select MOLINK_PLATFORM_MCU
+            default n
+
+            if MOLINK_MULTI_USING_ME3616
+                source "$OS_ROOT/components/molink/module/me3616/Kconfig"
+            endif
+    endmenu
+
+    menu "WiFi"
+        depends on MOLINK_USING_MULTI_MODULES
+        config MOLINK_MULTI_USING_ESP8266
+            bool "ESP8266"
+            select MOLINK_USING_ESP8266
+            select MOLINK_PLATFORM_MCU
+            default n
+
+            if MOLINK_MULTI_USING_ESP8266
+                source "$OS_ROOT/components/molink/module/esp8266/Kconfig"
+            endif
+
+        config MOLINK_MULTI_USING_ESP32
+            bool "ESP32"
+            select MOLINK_USING_ESP32
+            select MOLINK_PLATFORM_MCU
+            default n
+
+            if MOLINK_MULTI_USING_ESP32
+                source "$OS_ROOT/components/molink/module/esp32/Kconfig"
+            endif
+
+    endmenu
+endif
+
+endmenu
+

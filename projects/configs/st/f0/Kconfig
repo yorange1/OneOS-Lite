@@ -1,0 +1,15 @@
+choice
+    prompt "|----MODEL"
+        default MODEL_STM32F091
+    help
+        Select the device in STM32F0xx
+
+    config MODEL_STM32F091
+        bool "STM32F091"
+
+endchoice
+
+if MODEL_STM32F091
+    source "$OS_ROOT/templates/configs/st/f0/f091/Kconfig"
+endif
+

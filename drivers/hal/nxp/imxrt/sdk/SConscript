@@ -1,0 +1,80 @@
+# for module compiling
+import os
+import osconfig
+Import('OS_ROOT')
+from build_tools import *
+
+pwd = PresentDir()
+
+src = []
+path = []
+
+path = [pwd + '/CMSIS/Include']
+path += [pwd + '/devices']
+    
+if IsDefined(['OS_USING_AUDIO']):
+    src += [pwd + '/components/codec/wm8960/fsl_wm8960.c']
+    
+if IsDefined(['BSP_USING_USB']):
+    src += [pwd + '/middleware/usb/device/usb_device_dci.c']
+    src += [pwd + '/middleware/usb/device/usb_device_ehci.c']
+    src += [pwd + '/components/osa/fsl_os_abstraction_bm.c']
+    src += [pwd + '/middleware/usb/output/source/device/class/usb_device_class.c']
+    src += [pwd + '/middleware/usb/output/source/device/usb_device_ch9.c']
+    if IsDefined(['OS_USB_DEVICE_HID']):
+        src += [pwd + '/middleware/usb/output/source/device/class/usb_device_hid.c']
+    if IsDefined(['OS_USB_DEVICE_AUDIO']):
+        src += [pwd + '/middleware/usb/output/source/device/class/usb_device_audio.c']
+    if IsDefined(['OS_USB_DEVICE_CDC']):
+        src += [pwd + '/middleware/usb/output/source/device/class/usb_device_cdc.c']  
+    path += [pwd + '/middleware/usb/include']     
+    path += [pwd + '/middleware/usb/device']
+    path += [pwd + '/middleware/usb/output/source/device']
+    path += [pwd + '/middleware/usb/output/source/device/class']
+    path += [pwd + '/components/osa']
+    path += [pwd + '/components/lists']
+    
+if IsDefined(['OS_USING_SDIO_NXP']):
+    if IsDefined(['OS_SDIO_DEVICE_SD']):
+        src += [pwd + '/middleware/sdmmc/sd/fsl_sd.c']
+    if IsDefined(['OS_SDIO_DEVICE_MMC']):
+        src += [pwd + '/middleware/sdmmc/mmc/fsl_mmc.c']
+    if IsDefined(['OS_SDIO_DEVICE_SDIO']):
+        src += [pwd + '/middleware/sdmmc/sdio/fsl_sdio.c']
+    src += [pwd + '/middleware/sdmmc/common/fsl_sdmmc_common.c']
+    src += [pwd + '/middleware/sdmmc/osa/fsl_sdmmc_osa.c']
+    path += [pwd + '/middleware/sdmmc/sd']
+    path += [pwd + '/middleware/sdmmc/mmc']
+    path += [pwd + '/middleware/sdmmc/sdio']
+    path += [pwd + '/middleware/sdmmc/common']
+    path += [pwd + '/middleware/sdmmc/host/usdhc']
+    path += [pwd + '/middleware/sdmmc/osa']
+    if IsDefined(['OS_SDIO_MODE_BLOCKING']):
+        src += [pwd + '/middleware/sdmmc/host/usdhc/blocking/fsl_sdmmc_host.c']
+    if IsDefined(['OS_SDIO_MODE_NONBLOCKING']):
+        src += [pwd + '/middleware/sdmmc/host/usdhc/non_blocking/fsl_sdmmc_host_blcoking.c']
+'''
+if IsDefined(['OS_STARTUP_NOR_FLASH']):
+    src += [pwd + '/components/flash/nor/flexspi/fsl_flexspi_nor_flash.c']
+    path += [pwd + '/components/flash/nor/']
+    path += [pwd + '/components/flash/nor/flexspi']
+if IsDefined(['OS_STARTUP_NAND_FLASH_FLEXSPI']):
+    src += [pwd + '/components/flash/nand/flexspi/fsl_flexspi_nand_flash.c']
+    path += [pwd + '/components/flash/nand/']
+    path += [pwd + '/components/flash/nand/flexspi']
+if IsDefined(['OS_STARTUP_NAND_FLASH_SEMC']):
+    src += [pwd + '/components/flash/nand/semc/fsl_semc_nand_flash.c']
+    path += [pwd + '/components/flash/nand/']
+    path += [pwd + '/components/flash/nand/semc']    
+if IsDefined(['OS_STARTUP_MFLASH']):
+    src += [pwd + '/components/flash/mflash/mflash_file.c']
+    src += [pwd + '/components/flash/mflash/mimxrt1052/mflash_drv.c']
+    path += [pwd + '/components/flash/mflash']
+    path += [pwd + '/components/flash/mflash/mimxrt1052']
+'''    
+group = AddCodeGroup('hal/lowlevel', src, depend = ['SERIES_NXP_IMXRT'], CPPPATH = path)
+
+if IsDefined(['SOC_IMXRT1052']):
+    group += SConscript(os.path.join(pwd, 'devices/SConscript'))
+    
+Return('group')

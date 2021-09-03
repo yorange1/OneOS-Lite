@@ -1,0 +1,10 @@
+choice
+    prompt "|------SUB MODEL"
+        default TEMP_stm32l562e-dk
+    help
+        Select the device in STM32L562xx
+
+    config TEMP_stm32l562e-dk
+        bool "stm32l562e-dk"
+          
+endchoice

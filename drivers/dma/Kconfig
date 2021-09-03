@@ -1,0 +1,20 @@
+menu "DMA"
+
+    config OS_USING_DMA
+        bool "Enable DMA"
+        default n
+        
+        
+    if OS_USING_DMA
+    
+        config OS_USING_DMA_RAM
+            bool "Enable DMA RAM"
+            default y
+        
+        config OS_USING_SOFT_DMA
+            bool "Enable soft DMA"
+            default n
+        
+    endif
+        
+endmenu

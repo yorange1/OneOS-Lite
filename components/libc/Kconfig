@@ -1,0 +1,10 @@
+config OS_USING_NEWLIB_ADAPTER
+    bool
+
+config OS_USING_ARMCCLIB_ADAPTER
+    bool
+
+config OS_USING_LIBC_ADAPTER
+    bool
+    select OS_USING_NEWLIB_ADAPTER
+    select OS_USING_ARMCCLIB_ADAPTER

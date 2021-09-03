@@ -1,0 +1,25 @@
+choice
+    prompt "|--------SUB MODEL"
+        default TEMP_IMXRT1052CVJ5B
+    help
+        Select the device in IMXRT1052
+
+    config TEMP_IMXRT1052CVJ5B
+        bool "IMXRT1052CVJ5B"
+        
+    config TEMP_IMXRT1052CVL5B
+        bool "IMXRT1052CVL5B"
+
+    config TEMP_IMXRT1052DVJ5B
+        bool "IMXRT1052DVJ5B"
+     
+    config TEMP_IMXRT1052DVL5B
+        bool "IMXRT1052DVL5B"
+        
+    config TEMP_imxrt1052-nxp-evk
+        bool "imxrt1052-nxp-evk"
+        
+    config TEMP_imxrt1052-nxp-evk-gcc
+        bool "imxrt1052-nxp-evk-gcc"
+        
+endchoice

@@ -1,0 +1,25 @@
+if SERIES_GD32F30X
+source "$OS_ROOT/drivers/hal/gd/drivers/f30x/Kconfig"
+endif
+
+if SERIES_GD32F4XX
+source "$OS_ROOT/drivers/hal/gd/drivers/f4xx/Kconfig"
+endif
+
+if SERIES_GD32F403
+source "$OS_ROOT/drivers/hal/gd/drivers/f403/Kconfig"
+endif
+
+if SERIES_GD32F3X0
+source "$OS_ROOT/drivers/hal/gd/drivers/f3x0/Kconfig"
+endif
+
+if SERIES_GD32E10X
+source "$OS_ROOT/drivers/hal/gd/drivers/e10x/Kconfig"
+endif
+
+if SERIES_GD32E50X
+source "$OS_ROOT/drivers/hal/gd/drivers/e50x/Kconfig"
+endif
+
+source "$OS_ROOT/drivers/hal/gd/drivers/usb/Kconfig"

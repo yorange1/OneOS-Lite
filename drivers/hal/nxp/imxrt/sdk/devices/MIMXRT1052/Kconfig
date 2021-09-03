@@ -1,0 +1,19 @@
+config SOC_IMXRT1052
+    bool
+    select SERIES_NXP_IMXRT
+    default n
+    
+if SOC_IMXRT1052
+    menu "board boot up config"
+        config BOARD_BOOTUP_NOR_FLASH
+            bool "board use nor flash to boot up"
+            default y
+        config BOARD_BOOTUP_NAND_FLASH_SEMC
+            bool "board use nand flash in semc to boot up"
+            default n
+        config BOARD_FLASH_SIZE
+            hex "flash sdram size"
+            default 0x4000000
+    endmenu
+endif
+

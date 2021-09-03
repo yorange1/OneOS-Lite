@@ -1,0 +1,18 @@
+choice
+    prompt "|--------SUB MODEL"
+        default TEMP_LPC55S69JBD
+    help
+        Select the device in LPC55S69xx
+
+    config TEMP_LPC55S69JBD
+        bool "LPC55S69JBD"
+        
+    config TEMP_LPC55S69JET
+        bool "LPC55S69JET"
+
+    config TEMP_lpc55s69-nxp-evk
+        bool "lpc55s69-nxp-exk"
+        
+    config TEMP_lpc55s69-cmcc-oneos
+        bool "lpc55s69-cmcc-oneos"
+endchoice

@@ -1,0 +1,25 @@
+menu "Serial"
+    config OS_USING_SERIAL
+        bool "serial drivers"
+        default y
+        
+    if OS_USING_SERIAL
+        config OS_SERIAL_IDLE_TIMER
+            bool "serial idle timer"
+            default n
+            select OS_USING_TIMER_SOFT
+            
+        config OS_SERIAL_DELAY_CLOSE
+            bool "serial close after sending"
+            default y
+            
+        config OS_SERIAL_RX_BUFSZ
+            int "RX buffer size"
+            default 64
+            
+        config OS_SERIAL_TX_BUFSZ
+            int "TX buffer size"
+            default 64
+    endif
+    
+endmenu

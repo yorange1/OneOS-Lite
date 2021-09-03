@@ -1,0 +1,14 @@
+menu "Molink"
+
+config NET_USING_MOLINK
+    bool "molink"
+    select OS_USING_SYS_HEAP
+    default n
+
+if NET_USING_MOLINK
+
+    source "$OS_ROOT/components/molink/*/Kconfig"
+
+endif
+
+endmenu 

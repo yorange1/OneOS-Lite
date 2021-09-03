@@ -1,0 +1,14 @@
+choice
+    prompt "|----MODEL"
+        default MODEL_STM32L152
+    help
+        Select the device in STM32L0xx
+
+    config MODEL_STM32L152
+        bool "STM32L152"
+
+endchoice
+
+if MODEL_STM32L152
+    source "$OS_ROOT/templates/configs/st/l1/l152/Kconfig"
+endif

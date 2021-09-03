@@ -1,0 +1,64 @@
+menu "Config"
+
+    config SIM7070X_USING_GENERAL_OPS
+        bool "General Operates"
+        select MOLINK_USING_GENERAL_OPS
+        default n
+
+    config SIM7070X_USING_NETSERV_OPS
+        bool "Network Service"
+        select MOLINK_USING_NETSERV_OPS
+        default n
+
+    config SIM7070X_USING_PING_OPS
+        bool #"Ping"
+        select MOLINK_USING_PING_OPS
+        default n
+
+    config SIM7070X_USING_IFCONFIG_OPS
+        bool #"Ifconfig"
+        select MOLINK_USING_IFCONFIG_OPS
+        select SIM7070X_USING_GENERAL_OPS
+        select SIM7070X_USING_NETSERV_OPS
+        default n
+
+    config SIM7070X_USING_NETCONN_OPS
+        bool "Netconn Options"
+        select MOLINK_USING_NETCONN_OPS
+        default y
+
+    if SIM7070X_USING_NETCONN_OPS
+        config SIM7070X_USING_TCP
+            bool "TCP"
+            select MOLINK_USING_TCP
+            default y
+
+        config SIM7070X_USING_UDP
+            bool "UDP"
+            select MOLINK_USING_UDP
+            default y
+
+        config SIM7070X_USING_SELECT
+            bool "Select"
+            select MOLINK_USING_SELECT
+            default n
+
+        config SIM7070X_USING_DNS
+            bool "DNS"
+            select MOLINK_USING_DNS
+            default y
+
+        config SIM7070X_USING_ADDRINFO
+            bool "AddrInfo"
+            select SIM7070X_USING_DNS
+            select MOLINK_USING_ADDRINFO
+            default n
+    endif
+
+    config SIM7070X_USING_SOCKETS_OPS
+        bool "BSD Socket"
+        select SIM7070X_USING_NETCONN_OPS
+        select MOLINK_USING_SOCKETS_OPS
+        default n
+
+endmenu

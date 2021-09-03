@@ -1,0 +1,24 @@
+menu "LPMGR"
+    if OS_USING_HRTIMER_FOR_SYSTICK
+        comment "please close <Using high-resolution timer for systick> [Drivers --> Timer]"
+    endif
+    
+    if !OS_USING_HRTIMER_FOR_SYSTICK
+        config OS_USING_LPMGR
+        bool "low power manager drivers"
+        default n
+        select OS_TIMER_SORT
+        
+        if OS_USING_LPMGR
+            choice
+                prompt "Low power options"
+                default OS_USING_TICKLESS_LPMGR
+
+                config OS_USING_TICKLESS_LPMGR
+                    bool "tickless"
+                config OS_USING_SIMPLE_LPM
+                    bool "simple"
+            endchoice
+        endif    
+    endif
+endmenu

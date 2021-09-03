@@ -1,0 +1,15 @@
+choice
+    prompt "|----MODEL"
+        default MODEL_STM32G071
+    help
+        Select the device in STM32G0xx
+
+    config MODEL_STM32G071
+        bool "STM32G071"
+
+endchoice
+
+if MODEL_STM32G071
+    source "$OS_ROOT/templates/configs/st/g0/g071/Kconfig"
+endif
+

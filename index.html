@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>OneOS Lite开发文档</title>
+    <link rel="icon" href="docs/_media/logo_one.png" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta
+      name="keywords"
+      content="doc,docs,documentation,gitbook,creator,generator,github,jekyll,github-pages"
+    />
+    <meta name="description" content="A magical documentation generator." />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+    />
+    <link
+      rel="stylesheet"
+      href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css"
+      title="vue"
+      disabled
+    />
+    <link
+      rel="stylesheet"
+      href="docs/style/pink.css"
+      title="pink"
+      disabled
+    />
+    <link
+      rel="stylesheet"
+      href="docs/style/blue.css"
+      title="pink"
+    />
+    <link
+      rel="stylesheet"
+      href="docs/style/sidebar.min.css"
+      title="pink"
+    />
+    
+    <style>
+      nav.app-nav li ul {
+        min-width: 100px;
+      }
+
+      #carbonads {
+        box-shadow: none !important;
+        width: auto !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">ε=ε=ε=(~￣▽￣)~加载中 ...</div>
+    <script src="//cdn.jsdelivr.net/npm/docsify-plugin-carbon@1/index.js"></script>
+    <script>
+      window.$docsify = {
+        auto2top: true,
+        coverpage: true,
+        executeScript: true,
+        loadSidebar: true,
+        loadNavbar: true,
+        mergeNavbar: true,
+        maxLevel: 6,
+        subMaxLevel: 3,
+        repo: 'http://10.12.3.86/zhaojuan/oneos-2.0/-/tree/comp-m',
+        name: '<b><font color="#2775b6">OneOS Lite开发文档</font></b>',
+        search: {
+          placeholder: '🔍 搜索',
+          noData: '没有结果',
+          paths: 'auto',
+          depth: 8,
+        },
+          scrollToTop: {
+          auto: true,
+          text: 'Top',
+          right: 15,
+          bottom: 15,
+          offset: 500
+        },
+        'flexible-alerts': {
+          style: 'flat'
+        },
+        plugins: [
+          function(hook, vm) {
+            hook.beforeEach(function(html) {
+              var url =
+                  'http://10.12.3.86/zhaojuan/oneos-2.0/-/tree/comp-m/' +
+                  vm.route.file;
+              var editHtml = '[:memo: Edit Document](' + url + ')\n';
+              return (
+                editHtml +
+                html +
+                '\n\n----\n\n' +
+                '<a href="https://os.iot.10086.cn/oneos-doc-2.0/" target="_blank" style="color: inherit; font-weight: normal; text-decoration: none;">Powered by OneOS</a>'
+              );
+            }),
+              hook.afterEach(function(html) {
+                if (vm.route.path === '/') {
+                  return html;
+                }
+                return html;
+              });
+          },
+        ],
+      };
+    </script>
+    <!-- Docsify v4 -->
+    <script src="docs/style/docsify@4"></script>
+    <script src="docs/style/search.min.js"></script>
+    <script src="docs/style/prism-markdown.min.js"></script>
+    <script src="docs/style/docsify-copy-code"></script>
+    <script src="docs/style/jquery-1.11.3.min.js"></script>
+    <script src="docs/style/docsify-scroll-to-top.min.js"></script>
+    <script src="docs/style/docsify-sidebar-collapse.min.js"></script>
+    <script src="docs/style/prism-c.min.js"></script>
+    <!-- Markdown 引用样式美化 -->
+    <script src="docs/style/docsify-plugin-flexible-alerts"></script>
+  </body>
+</html>

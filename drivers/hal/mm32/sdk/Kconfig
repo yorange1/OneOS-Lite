@@ -1,0 +1,1 @@
+source "$OS_ROOT/drivers/hal/mm32/sdk/*/Kconfig"

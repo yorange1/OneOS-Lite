@@ -1,0 +1,9 @@
+config MANUFACTOR_HC32
+    bool
+    default n
+
+source "$OS_ROOT/drivers/hal/hdsc/HC32L19x_HAL/*/Kconfig"
+
+
+
+

@@ -1,0 +1,89 @@
+menu "Config" 
+
+    config ESP8266_CONNECT_SSID
+        string "AP SSID"
+        default "ssid"
+
+    config ESP8266_CONNECT_PASSWORD
+        string "AP Password"
+        default "password"
+
+    config ESP8266_USING_GENERAL_OPS
+        bool "General Operates"
+        select MOLINK_USING_GENERAL_OPS
+        default n
+
+    config ESP8266_USING_WIFI_OPS
+        bool "WiFi"
+        select MOLINK_USING_WIFI_OPS
+        default n
+
+    config ESP8266_USING_PING_OPS
+        bool #"Ping"
+        select MOLINK_USING_PING_OPS
+        default n
+
+    config ESP8266_USING_IFCONFIG_OPS
+        bool #"Ifconfig"
+        select MOLINK_USING_IFCONFIG_OPS
+        select ESP8266_USING_WIFI_OPS
+        default n
+
+    config ESP8266_USING_NETCONN_OPS
+        bool "Netconn Options"
+        select OS_USING_EVENT
+        select MOLINK_USING_NETCONN_OPS
+        default y
+
+    if ESP8266_USING_NETCONN_OPS
+        config ESP8266_USING_IPV6
+            bool #"IPv6"
+            default n
+
+        config ESP8266_USING_TCP
+            bool "TCP"
+            select MOLINK_USING_TCP
+            default y
+
+        config ESP8266_USING_UDP
+            bool "UDP"
+            select MOLINK_USING_UDP
+            default y
+
+        config ESP8266_USING_SELECT
+            bool "Select"
+            select MOLINK_USING_SELECT
+            default n
+
+        config ESP8266_USING_DNS
+            bool "DNS"
+            select MOLINK_USING_DNS
+            default y
+
+        config ESP8266_USING_ADDRINFO
+            bool "AddrInfo"
+            select ESP8266_USING_DNS
+            select MOLINK_USING_ADDRINFO
+            default n
+    endif
+
+    config ESP8266_USING_SOCKETS_OPS
+        bool "BSD Socket"
+        select ESP8266_USING_NETCONN_OPS
+        select MOLINK_USING_SOCKETS_OPS
+        default n
+
+    config ESP8266_USING_HW_CONTROL
+        bool "Hardware Control"
+        select OS_USING_PIN
+        default n
+
+        if ESP8266_USING_HW_CONTROL
+            config ESP8266_RST_PIN_NUM
+                int "Reset Pin Number"
+                help 
+                    This can be calculated using GET_PIN(PORTx, PIN)
+                default -1
+
+        endif
+endmenu

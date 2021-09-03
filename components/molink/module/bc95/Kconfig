@@ -1,0 +1,89 @@
+menu "Config" 
+
+    config BC95_USING_GENERAL_OPS
+        bool "General Operates"
+        select MOLINK_USING_GENERAL_OPS
+        default n
+    
+    config BC95_USING_NETSERV_OPS
+        bool "Network Service"
+        select MOLINK_USING_NETSERV_OPS
+        default n
+
+    config BC95_USING_PING_OPS
+        bool #"Ping"
+        select BC95_USING_NETSERV_OPS
+        select BC95_USING_NETCONN_OPS
+        select MOLINK_USING_PING_OPS
+        default n
+
+    config BC95_USING_IFCONFIG_OPS
+        bool #"Ifconfig"
+        select MOLINK_USING_IFCONFIG_OPS
+        select BC95_USING_GENERAL_OPS
+        select BC95_USING_NETSERV_OPS
+        default n
+
+    config BC95_USING_NETCONN_OPS
+        bool "Netconn Options"
+        select BC95_USING_NETSERV_OPS
+        select MOLINK_USING_NETCONN_OPS
+        select MOLINK_USING_MO_LIB
+        default y
+
+    if BC95_USING_NETCONN_OPS
+        config BC95_USING_TCP
+            bool "TCP"
+            select MOLINK_USING_TCP
+            default y
+
+        config BC95_USING_UDP
+            bool "UDP"
+            select MOLINK_USING_UDP
+            default y
+
+        config BC95_USING_SELECT
+            bool "Select"
+            select MOLINK_USING_SELECT
+            default n
+
+        config BC95_USING_DNS
+            bool "DNS"
+            select MOLINK_USING_DNS
+            default y
+
+        config BC95_USING_ADDRINFO
+            bool "AddrInfo"
+            select BC95_USING_DNS
+            select MOLINK_USING_ADDRINFO
+            default n
+    endif
+
+    config BC95_USING_SOCKETS_OPS
+        bool "BSD Socket"
+        select BC95_USING_NETCONN_OPS
+        select MOLINK_USING_SOCKETS_OPS
+        default n
+
+#    config BC95_USING_ONENET_NB_OPS
+#        bool "Onenet Nb"
+#        select MOLINK_USING_ONENET_NB_OPS
+#        default y
+#
+#    if BC95_USING_ONENET_NB_OPS
+#
+#        config BC95_RESP_BUFF_SIZE
+#            int "OneNET AT Parser stack size"
+#            default 128
+#
+#        config BC95_URC_MANAGER_TASK_PRIORITY
+#            hex "URC manager task priority"
+#            default 0x10
+#
+#        config BC95_URC_MANAGER_STACK_SIZE
+#            int "URC manager task stack size"
+#            default 2048
+#
+#    endif
+
+endmenu

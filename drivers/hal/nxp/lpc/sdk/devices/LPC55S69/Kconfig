@@ -1,0 +1,6 @@
+config SOC_LPC55S69
+    bool
+    select SERIES_NXP_LPC
+    default n
+
+

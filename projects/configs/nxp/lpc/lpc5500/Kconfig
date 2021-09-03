@@ -1,0 +1,21 @@
+choice
+    prompt "|------MODEL"
+        default MODEL_LPC55S69
+    help
+        Select the device in LPC5500
+
+    config MODEL_LPC55S69
+        bool "LPC55S69"
+        
+    config MODEL_LPC55S66
+        bool "LPC55S66"
+
+endchoice
+
+if MODEL_LPC55S69
+    source "$OS_ROOT/templates/configs/nxp/lpc/lpc5500/lpc55s69/Kconfig"
+endif
+
+if MODEL_LPC55S66
+    source "$OS_ROOT/templates/configs/nxp/lpc/lpc5500/lpc55s66/Kconfig"
+endif

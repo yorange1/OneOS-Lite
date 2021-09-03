@@ -1,0 +1,22 @@
+if OS_USING_SDIO_MM32
+    menuconfig BSP_USING_SDIO
+        bool "Enable SDIO"
+        select OS_USING_BLOCK
+        default n
+        if BSP_USING_SDIO
+            config BSP_USING_SDIO_SD
+                bool "mm32 sdio use in sd"
+                select OS_USING_SDIO_SD
+                default n
+            config BSP_USING_SDIO_MMC
+                bool "mm32 sdio use in mmc"
+                select OS_USING_SDIO_MMC
+                default n
+            config BSP_USING_SDIO_SDIO
+                bool "mm32 sdio use in sdio"
+                select OS_USING_SDIO_SDIO
+                default n
+        endif
+endif
+    
+    

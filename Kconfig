@@ -1,0 +1,5 @@
+source "$OS_ROOT/arch/Kconfig"
+source "$OS_ROOT/kernel/Kconfig"
+source "$OS_ROOT/drivers/Kconfig"
+source "$OS_ROOT/components/Kconfig"
+source "$OS_ROOT/thirdparty/Kconfig"

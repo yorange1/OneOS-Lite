@@ -1,0 +1,10 @@
+choice
+    prompt "|------SUB MODEL"
+        default TEMP_stm32f334-r8t6-nucleo
+    help
+        Select the device in STM32F334xx
+
+    config TEMP_stm32f334-r8t6-nucleo
+        bool "stm32f334-r8t6-nucleo"
+
+endchoice

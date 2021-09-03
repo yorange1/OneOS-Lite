@@ -1,0 +1,21 @@
+choice
+    prompt "|------MODEL"
+        default MODEL_IMXRT1052
+    help
+        Select the device in IMXRT1050
+
+    config MODEL_IMXRT1052
+        bool "IMXRT1052"
+        
+    config MODEL_IMXRT1051
+        bool "IMXRT1051"
+
+endchoice
+
+if MODEL_IMXRT1052
+    source "$OS_ROOT/templates/configs/nxp/imxrt/imxrt1050/imxrt1052/Kconfig"
+endif
+
+if MODEL_IMXRT1051
+    #source "$OS_ROOT/templates/configs/nxp/imxrt/imxrt1050/imxrt1051/Kconfig"
+endif

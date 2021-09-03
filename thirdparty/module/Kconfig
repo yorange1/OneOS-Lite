@@ -1,0 +1,5 @@
+menu "Submodule"
+    config OS_USING_SUBMODULE
+        bool "submodule"
+        default y
+endmenu

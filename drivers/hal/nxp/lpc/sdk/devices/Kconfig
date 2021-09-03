@@ -1,0 +1,3 @@
+source "$OS_ROOT/drivers/hal/nxp/lpc/sdk/devices/*/Kconfig"
+
+

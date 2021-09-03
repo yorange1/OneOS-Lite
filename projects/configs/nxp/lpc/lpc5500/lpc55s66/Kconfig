@@ -1,0 +1,13 @@
+choice
+    prompt "|--------SUB MODEL"
+        default TEMP_LPC55S66JBD
+    help
+        Select the device in LPC55S66xx
+
+    config TEMP_LPC55S66JBD
+        bool "LPC55S66JBD"
+        
+    config TEMP_LPC55S66JET
+        bool "LPC55S66JET"
+        
+endchoice

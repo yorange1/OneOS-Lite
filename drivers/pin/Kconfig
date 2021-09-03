@@ -1,0 +1,9 @@
+config OS_USING_PIN
+    bool 
+    default y
+        
+config OS_PIN_MAX_CHIP
+    int 
+    default 1
+    depends on OS_USING_PIN
+

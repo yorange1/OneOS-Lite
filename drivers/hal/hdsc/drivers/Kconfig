@@ -1,0 +1,89 @@
+menuconfig BSP_BOOT_OPTION
+    bool "boot config"
+    default n
+    
+    if BSP_BOOT_OPTION
+        config BSP_TEXT_SECTION_ADDR
+            hex "text section addr"
+            default 0x08000000
+            
+        config BSP_TEXT_SECTION_SIZE
+            hex "text section size"
+            default 0x00080000
+            
+        config BSP_DATA_SECTION_ADDR
+            hex "data section addr"
+            default 0x20000000
+            
+        config BSP_DATA_SECTION_SIZE
+            hex "data section size"
+            default 0x00008000
+    endif
+    config BSP_USING_GPIO
+        bool "GPIO"
+        select OS_USING_PIN
+        default y
+	
+    menuconfig BSP_USING_UART
+        bool "UART"
+        default y
+        select OS_USING_SERIAL
+        if BSP_USING_UART
+            config BSP_USING_LPUART0
+                bool "LPUART0"
+                default n
+            config BSP_USING_LPUART1
+                bool "LPUART1"
+                default n
+            config BSP_USING_UART0
+                bool "UART0"
+                default n
+            config BSP_USING_UART1
+                bool "UART1"
+                default y
+            config BSP_USING_UART2
+                bool "UART2"
+                default n
+            config BSP_USING_UART3
+                bool "UART3"
+                default n
+        endif
+
+    menu "Select I2C port"
+        depends on OS_USING_I2C
+        config BSP_USING_I2C0
+            bool "I2C0"
+            default y
+
+        config BSP_USING_I2C1
+            bool "I2C1"
+            default n
+    endmenu
+
+    menu "Select SPI port"
+        depends on OS_USING_SPI
+        config BSP_USING_SPI0
+            bool "SPI0"
+            default y
+
+        config BSP_USING_SPI1
+            bool "SPI1"
+            default n
+    endmenu
+
+    menu "Select LPTIMER port"
+        depends on OS_USING_CLOCKEVENT
+        config BSP_USING_LPTIM0
+            bool "LPTIM0"
+            default y
+
+        config BSP_USING_LPTIM1
+            bool "LPTIM1"
+            default n
+    endmenu
+
+    config BSP_USING_ON_CHIP_FLASH
+        bool "on-chip FLASH"
+        select OS_USING_FAL
+        default y
+

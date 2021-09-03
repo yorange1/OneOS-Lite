@@ -1,0 +1,10 @@
+choice
+    prompt "|------SUB MODEL"
+        default TEMP_stm32f302-nucleo
+    help
+        Select the device in STM32F302xx
+
+    config TEMP_stm32f302-nucleo
+        bool "stm32f302-nucleo"
+        
+endchoice

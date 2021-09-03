@@ -1,0 +1,3 @@
+source "$OS_ROOT/drivers/hal/nxp/imxrt/sdk/devices/*/Kconfig"
+
+

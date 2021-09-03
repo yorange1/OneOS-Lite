@@ -1,0 +1,22 @@
+choice
+    prompt "|----SERIES"
+        default SERIES_NXP_IMXRT1050
+    help
+        Select the device in nxp imxrt series
+        
+    config SERIES_NXP_IMXRT1050
+        bool "IMXRT1050"
+    
+    config SERIES_NXP_IMXRT1020
+        bool "IMXRT1020"
+        
+endchoice
+
+if SERIES_NXP_IMXRT1050
+    source "$OS_ROOT/templates/configs/nxp/imxrt/imxrt1050/Kconfig"
+endif
+
+if SERIES_NXP_IMXRT1020
+    #source "$OS_ROOT/templates/configs/nxp/imxrt/imxrt1020/Kconfig"
+endif
+        

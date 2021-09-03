@@ -1,0 +1,74 @@
+menu "Shell"
+    config OS_USING_SHELL
+        bool "shell"
+        default n
+
+    if OS_USING_SHELL
+        config SHELL_TASK_NAME
+            string #"shell task name"
+            default "shell"
+
+        config SHELL_TASK_PRIORITY
+            int #"priority level value of shell task"
+            default 5  if OS_MINIMAL_CONFIG
+            default 5   if OS_TASK_PRIORITY_8
+            default 10  if OS_TASK_PRIORITY_16
+            default 20  if OS_TASK_PRIORITY_32
+            default 40  if OS_TASK_PRIORITY_64
+            default 80  if OS_TASK_PRIORITY_128
+            default 160 if OS_TASK_PRIORITY_256
+
+        config SHELL_TASK_STACK_SIZE
+            int "shell task stack size"
+            default 1024
+
+        config SHELL_USING_HISTORY
+            bool #"command history feature"
+            default n
+
+        if SHELL_USING_HISTORY
+            config SHELL_HISTORY_LINES
+                int #"command history line number"
+                default 5
+        endif
+
+        config SHELL_USING_DESCRIPTION
+            bool #"Keep description in symbol table"
+            default y
+
+        config SHELL_CMD_SIZE
+            int "command line size"
+            default 80
+
+        config SHELL_PROMPT_SIZE
+            int "prompt line size"
+            default 256
+
+        config SHELL_ARG_MAX
+            int #"command arg num"
+            default 10
+
+        config SHELL_PROMPT_DISABLE
+            bool "disable prompt mode"
+            default n
+
+        config SHELL_ECHO_DISABLE
+            bool "disable echo mode"
+            default n
+
+        config SHELL_USING_AUTH
+            bool #"Shell support authentication"
+            default n
+        if SHELL_USING_AUTH
+            config SHELL_PASSWORD_MIN
+                int #"password min length"
+                default 6
+            config SHELL_PASSWORD_MAX
+                int #"password max length"
+                default OS_NAME_MAX
+            config SHELL_DEFAULT_PASSWORD
+                string #"default password for shell authentication"
+                default ""
+        endif
+    endif
+endmenu

@@ -1,0 +1,16 @@
+choice
+    prompt "|--SERIES"
+        default SERIES_NRF5
+    help
+        Select the device in NRF
+
+    config SERIES_NRF5
+        bool "NRF5"
+		
+endchoice
+
+if SERIES_NRF5
+    source "$OS_ROOT/templates/configs/nrf/nrf5/Kconfig"
+	#source "$OS_ROOT/templates/configs/st/mp1/Kconfig"
+endif
+

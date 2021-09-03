@@ -1,0 +1,16 @@
+choice
+    prompt "|----MODEL"
+        default MODEL_APOLLO512
+    help
+        Select the device in MODEL_APOLLO512
+
+    config MODEL_APOLLO512
+        bool "APOLLO512"
+
+endchoice
+
+if MODEL_APOLLO512
+    source "$OS_ROOT/templates/configs/apollo/apollo512/Kconfig"
+endif
+
+

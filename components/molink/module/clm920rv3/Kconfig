@@ -1,0 +1,66 @@
+menu "Config" 
+
+    config CLM920RV3_USING_GENERAL_OPS
+        bool "General Operates"
+        select MOLINK_USING_GENERAL_OPS
+        default n
+    
+    config CLM920RV3_USING_NETSERV_OPS
+        bool "Network Service"
+        select MOLINK_USING_NETSERV_OPS
+        default n
+
+    config CLM920RV3_USING_PING_OPS
+        bool "test Ping(Only for test use)"
+        select MOLINK_USING_PING_OPS
+        default n
+
+    config CLM920RV3_USING_IFCONFIG_OPS
+        bool #"Ifconfig"
+        select MOLINK_USING_IFCONFIG_OPS
+        select CLM920RV3_USING_GENERAL_OPS
+        select CLM920RV3_USING_NETSERV_OPS
+        select CLM920RV3_USING_NETCONN_OPS
+        default n
+
+    config CLM920RV3_USING_NETCONN_OPS
+        bool "Netconn Options"
+        select OS_USING_EVENT
+        select MOLINK_USING_NETCONN_OPS
+        default y
+
+    if CLM920RV3_USING_NETCONN_OPS
+        config CLM920RV3_USING_TCP
+            bool "TCP"
+            select MOLINK_USING_TCP
+            default y
+
+        config CLM920RV3_USING_UDP
+            bool "UDP"
+            select MOLINK_USING_UDP
+            default y
+
+        config CLM920RV3_USING_SELECT
+            bool "Select"
+            select MOLINK_USING_SELECT
+            default n
+
+        config CLM920RV3_USING_DNS
+            bool "DNS"
+            select MOLINK_USING_DNS
+            default y
+
+        config CLM920RV3_USING_ADDRINFO
+            bool "AddrInfo"
+            select CLM920RV3_USING_DNS
+            select MOLINK_USING_ADDRINFO
+            default n
+    endif
+
+    config CLM920RV3_USING_SOCKETS_OPS
+        bool "BSD Socket"
+        select CLM920RV3_USING_NETCONN_OPS
+        select MOLINK_USING_SOCKETS_OPS
+        default n
+
+endmenu
