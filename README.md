@@ -2,7 +2,7 @@
 
 ## 简介
 
-`OneOS Lite`是`OneOS2.0`的`lite`版本，针对`OneOS2.0`进行了裁剪，专用于资源受限的MCU。
+`OneOS Lite`专用于资源受限的MCU。定位精简、易用、创新。
 
 **内核部分**：支持`OneOS2.0`的全部功能，针对配置进行了更小粒度的`menuconfig`配置。
 
