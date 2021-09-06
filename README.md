@@ -26,7 +26,7 @@
 
 ## 文档在线浏览
 
-访问`OneOS Lite`网站：[正在申请page](http://)
+访问`OneOS Lite`网站：[https://www.oneos-lite.com/](https://www.oneos-lite.com/)
 
 ![访问](docs/_media/访问.png)
 
