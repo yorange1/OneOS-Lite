@@ -1,4 +1,4 @@
-![logo](docs/_media/logo.png)
+![logo](docs/_media/logo-lite.png)
 
 > <font color="#1661ab">OneOS-Lite轻量版</font>
 
