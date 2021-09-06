@@ -1,4 +1,4 @@
-mainmenu "OneOS Lite Configuration"
+mainmenu "OneOS-Lite Configuration"
 
 #Define the relative path to root directory of os code
 OS_ROOT=../..

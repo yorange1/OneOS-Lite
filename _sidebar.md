@@ -1,7 +1,7 @@
 <!-- OneOS-2.0/_sidebar.md -->
 
 - **简介**
-  - [OneOS Lite概述](/README.md)
+  - [OneOS-Lite概述](/README.md)
 
 - **内核**
   - [内核基础](/kernel/README.md)
