@@ -316,7 +316,11 @@ int select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset, st
 #else
 int select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset, struct timeval *timeout)
 {
+#ifdef MOLINK_USING_SELECT
     return mo_select(maxfdp1, readset, writeset, exceptset, timeout);
+#else
+    return -1;
+#endif
 }
 #endif
 
@@ -370,7 +374,7 @@ int closesocket(int fd)
 #ifdef OS_USING_VFS_DEVFS
     ret = close(fd);
 #else
-    ret    = mo_closesocket(default_module, fd);
+    ret = mo_closesocket(default_module, fd);
 #endif
 
     return ret;
@@ -421,6 +425,7 @@ int connect(int fd, const struct sockaddr *name, socklen_t namelen)
 
 int sendto(int fd, const void *data, size_t size, int flags, const struct sockaddr *to, socklen_t tolen)
 {
+#ifdef MOLINK_USING_UDP
     int socket;
 
     mo_object_t *default_module = mo_get_default();
@@ -436,10 +441,15 @@ int sendto(int fd, const void *data, size_t size, int flags, const struct sockad
 #endif
 
     return mo_sendto(default_module, socket, data, size, flags, to, tolen);
+
+#else
+    return -1;
+#endif
 }
 
 int send(int fd, const void *data, size_t size, int flags)
 {
+#ifdef MOLINK_USING_TCP
     int socket;
 
     mo_object_t *default_module = mo_get_default();
@@ -455,10 +465,15 @@ int send(int fd, const void *data, size_t size, int flags)
 #endif
 
     return mo_send(default_module, socket, data, size, flags);
+
+#else
+    return -1;
+#endif
 }
 
 int recvfrom(int fd, void *mem, size_t len, int flags, struct sockaddr *from, socklen_t *fromlen)
 {
+#ifdef MOLINK_USING_UDP
     int socket;
 
     mo_object_t *default_module = mo_get_default();
@@ -474,10 +489,15 @@ int recvfrom(int fd, void *mem, size_t len, int flags, struct sockaddr *from, so
 #endif
 
     return mo_recvfrom(default_module, socket, mem, len, flags, from, fromlen);
+
+#else
+    return -1;
+#endif
 }
 
 int recv(int fd, void *mem, size_t len, int flags)
 {
+#ifdef MOLINK_USING_TCP
     int socket;
 
     mo_object_t *default_module = mo_get_default();
@@ -493,6 +513,10 @@ int recv(int fd, void *mem, size_t len, int flags)
 #endif
 
     return mo_recv(default_module, socket, mem, len, flags);
+
+#else
+    return -1;
+#endif
 }
 
 int getsockopt(int fd, int level, int optname, void *optval, socklen_t *optlen)
@@ -535,6 +559,7 @@ int setsockopt(int fd, int level, int optname, const void *optval, socklen_t opt
 
 struct hostent *gethostbyname(const char *name)
 {
+#ifdef MOLINK_USING_DNS
     mo_object_t *default_module = mo_get_default();
     if (OS_NULL == default_module)
     {
@@ -542,16 +567,27 @@ struct hostent *gethostbyname(const char *name)
     }
 
     return mo_gethostbyname(default_module, name);
+#else
+    return OS_NULL;
+#endif
 }
 
 int getaddrinfo(const char *nodename, const char *servname, const struct addrinfo *hints, struct addrinfo **res)
 {
+#ifdef MOLINK_USING_ADDRINFO
     return mo_getaddrinfo(nodename, servname, hints, res);
+#else
+    return -1;
+#endif
 }
 
 void freeaddrinfo(struct addrinfo *ai)
 {
+#ifdef MOLINK_USING_ADDRINFO
     mo_freeaddrinfo(ai);
+#else
+    return;
+#endif
 }
 
 int getpeername(int fd, struct sockaddr *name, socklen_t *namelen)
