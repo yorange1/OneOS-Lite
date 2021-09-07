@@ -409,7 +409,7 @@ int getsockname (int fd, struct sockaddr *name, socklen_t *namelen);
 
 ```
 (Top) → Components→ Network→ Socket
-                             OneOS Lite Configuration
+                             OneOS-Lite Configuration
 [*] Enable BSD socket API
         protocol stack implement (Support OneOS modules stack)  --->
 ```

@@ -1,8 +1,8 @@
-# OneOS Lite概述
+# OneOS-Lite概述
 
 ## 简介
 
-`OneOS Lite`专用于资源受限的MCU。定位精简、易用、创新。
+`OneOS-Lite`专用于资源受限的MCU。定位精简、易用、创新。
 
 **内核部分**：支持`OneOS2.0`的全部功能，针对配置进行了更小粒度的`menuconfig`配置。
 
@@ -20,13 +20,13 @@
 
 **行业应用**：目前主要关注于可穿戴和表计行业。
 
-**`OneOS Lite`版本**处于迭代中，欢迎开发者提出宝贵意见，也希望点击右上角，一键三连(`fork`、`star`、`follow`)。
+**`OneOS-Lite`版本**处于迭代中，欢迎开发者提出宝贵意见，也希望点击右上角，一键三连(`fork`、`star`、`follow`)。
 
 
 
 ## 文档在线浏览
 
-访问`OneOS Lite`网站：[https://www.oneos-lite.com/](https://www.oneos-lite.com/)
+访问`OneOS-Lite`网站：[https://oneos-lite.com/](https://oneos-lite.com/)
 
 ![访问](docs/_media/访问.png)
 
