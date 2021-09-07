@@ -21,28 +21,23 @@ OneOS团队已经为开发者适配了几十款通信模组，涵盖`WiFi`、`NB
 - **模组实例管理接口** 基于模组实例管理框架，调用`MoLink API`轻松实现模组管理及具体业务，包括模组对象的创建、销毁、获取、设置。
 - **通用控制接口** 提供模组相关基本信息及功能查询设置，模组创建后，按需调用即可，支持测试`AT`指令、获取`IMEI`、获取`IMSI`、获取`ICCID`、获取/设置射频模式、获取模组固件信息、获取`SIM eID`。
 - **网络服务接口** 提供模组网络服务相关基本信息及功能查询设置，包括获取网络注册状态、获取信号强度、获取`IP`地址、查询/设置`DNS`服务器地址、获取`cell`信息等功能。
-- **套接字接口** 提供套接字接口，命名上区分于通用套接字接口，以``mo_``作标志，使用方式与通用套接字接口基本无异，区别在于某些接口需要传入模组实例。
+- **套接字接口** 提供套接字接口，命名上区分于通用套接字接口，以`mo_`作标志，使用方式与通用套接字接口基本无异，区别在于某些接口需要传入模组实例。特殊的是：当配置为单模组情形，`Molink`即可兼容`BSD Socket`接口；当配置为多模组情形，要[Socket套件](https://os.iot.10086.cn/doc/user_guide/components/ug_socket.html)来支持`BSD Socket`接口。
 - **云接入接口** 提供云接入相关的接口，前提是模组本身支持上云功能。
 
 本节目标是让开发者快速熟悉`OneOS Molink`组件的配置方法，根据通用接口类型进行不同示例的演示，并最后提供新模组的适配方法。
 
 ## 准备工作
 
-2. 中移万耦开发板`（MCU: STM32L475）`；
-
-3. `4G Cat4`模组`SIM7600CE`开发板；
-
+1. 中移万耦开发板`（MCU: STM32L475）`；
+2. `4G Cat4`模组`SIM7600CE`开发板；
 3. `TCP`测试服务器；
-
-4. 杜邦线`4`根；
-
+4. 杜邦线`3`根；
 5. `USB`线一根；
-
 6. `J-Link`仿真器一个。
 
-   **实验搭建图**
+**实验搭建图**
 
-   ![lite_molink_board](images/lite_molink_board.png)
+![lite_molink_board](images/lite_molink_board.png)
 
 ## 工程配置
 
@@ -52,29 +47,49 @@ OneOS团队已经为开发者适配了几十款通信模组，涵盖`WiFi`、`NB
 
 1. **模组选择与配置**
 
-   ![lite_molink_option1](images/lite_molink_option1.png)
+   该演示工程选择的是`4G Cat4`模组`SIM7600CE`。由于是单模组通信，选择`Single/Multi module` 中的`single`（若配置为`Multi`，则允许同时配置多个通信模组）。在`Select module`配置项中进行模组型号的选择与功能配置。
 
-   该演示工程选择的是`4G Cat4`模组`SIM7600CE`，勾选`Object Auto Create`，正确设置串口号和波特率，让模组在`OneOS`操作系统启动时自动完成初始化，使`Molink`组件与模组之间建连，当然用户也可以采用手动初始化方式，即在应用初始阶段调用模组的初始化接口。
+   ![lite_molink_singlemulti](images/lite_molink_singlemulti.png)
 
-   正确设置串口号和波特率，这里采用`uart2`。
+   进入到`Select module`配置项，可以看到已经适配了的`4G Cat4`、`4G Cat1`、`NB`、`WiFi`类型的模组。
 
-   勾选` TCP/IP`选项，会出现`TCP`、`UDP`、`Select`配置项，用户按需配置即可。
+   ![lite_molink_module](images/lite_molink_module.png)
 
-   采用`BSD`的标准接口进行网络的连接和数据收发则需要勾选`BSD Socket`。若不勾选则只能采用`Molink`提供的`mo_socket`网络接口，详见`components\molink\api\include\mo_socket.h`
+   选择`SIM7600CE`，在`Config`中进行功能配置。
 
-3. **串口驱动配置**
+   ![lite_molink_config](images/lite_molink_config.png)
+
+   `General Operates`：使能通用控制，提供模组基本信息相关查询功能，如获取`IMEI`、获取`IMSI`、获取`ICCID`等。
+
+   `Network Service`：使能网络服务控制，提供网络服务相关信息查询及设置功能，包括获取网络注册状态、获取信号强度等。
+
+   `Netconn option`：使能网络连接与通信，提供`mo_netconn api`，是偏底层的一套API接口，通信效率更高，资源占用更少，但易用性相比`Socket`接口稍差。`Netconn option`中的功能项用户按需配置即可。
+
+   ​        `TCP`：提供`TCP`通信功能。
+
+   ​        `UDP`：提供`UDP`通信功能。
+
+   ​        `Select`：提供`select`接口，如未配置，也可以采用类`setsockopt`接口。
+
+   ​        `DNS`：提供域名解析功能。
+
+   ​        `AddrInfo`：提供独立于协议的名称解析，包括处理名字到地址以及服务到端口的转换。
+
+   `BSD Socket`：使能套接字功能，提供一套`mo_socket`接口，详见`components\molink\api\include\mo_socket.h`，在单模组情形可以兼容了`BSD Socket`接口，在多模组情形如需使用`BSD Socket`，还需另外配置`Socket`套件。
+
+2. **串口驱动配置**
 
    串口的`RX buffer`是接收数据的缓存区，需要调大，默认为`64KB`，这里设置为`1024KB`。发送`TX buffer`可以不调大，实际没有利用发送缓存区，而是直接从应用的发送数据`buffer`获取数据直接发送。
 
    ![lite_molink_serial_option](images/lite_molink_serial_option.png)
-   
-3. **socket套件配置**
 
-   若用户使用`mo_socket`，则只需进行下面这个选项的配置。
+3. **socket配置**
+
+   若用户使用`mo_socket`，或者单模组情形使用`BSD Socket`，则只需进行下面这个选项的配置。
 
    ![lite_molink_option2](images/lite_molink_option2.png)
 
-   若用户需要采用BSD Socket，除在 `Molink → molink → Module → 4G Cat4 → SIM7600CE → Config`设置项中要勾选`BSD Socket`选项，在`Components → Socket`下的`BSD Socket`选项也要勾选。
+   只有在多模组情形，用户需要采用`BSD Socket`，除在 ` Components → Molink → molink → Modu→ Select module→ SIM7600CE → Config`设置项中要勾选`BSD Socket`选项，在`Components → Socket`下的`BSD Socket`选项也要勾选。演示实验为单模组情形，则`molink`套件就可以兼容`BSD Socket`，这里无需配置。
 
    ![lite_molink_bsd_option](images/lite_molink_bsd_option.png)
 
@@ -88,9 +103,11 @@ OneOS团队已经为开发者适配了几十款通信模组，涵盖`WiFi`、`NB
 
 #### 模组实例管理
 
-MoLink提供自动创建和手动创建模组实例的功能，在这里演示手动创建模组的流程（前提是模组没有开启自动创建功能）。在单模组情形，可以不需要设置默认模组,直接获取默认模组即为已经创建的模组 。
+在数据通信前，首先要完成模组实例创建。在单模组情形，可以不需要设置默认模组，直接获取默认模组即为已经创建的模组 。
 
-`Demo`流程：`手动创建模组 → 设置默认模组 → 获取默认模组对象/通过命名获取模组对象 → 销毁模组`。
+`Demo`流程：添加模组实例：`创建模组 → (多模组情形)设置默认模组 → 获取默认模组对象 → 通过命名获取模组对象`。
+
+​                     销毁模组实例：`获取默认模组对象 → 销毁模组`。
 
 ```c
 #include <stdlib.h>
@@ -108,20 +125,20 @@ MoLink提供自动创建和手动创建模组实例的功能，在这里演示�
 #define MODULE_AT_DEVICE_NAME "uart2"
 #define MODULE_AT_DEVICE_RATE (115200)
 
+
 static struct serial_configure uart_config = OS_SERIAL_CONFIG_DEFAULT;
 
-/* manually create module */
-int molink_module_management_test(void)
+/* create module */
+static int molink_module_management_create(void)
 {
     mo_object_t *test_module = OS_NULL;
     mo_object_t *temp_module = OS_NULL;
     mo_parser_config_t parser_config = {0};
-    int result;
 
     os_device_t *device = os_device_find(MODULE_AT_DEVICE_NAME);
     if (OS_NULL == device)
     {
-        LOG_E(MOLINK_LOG_TAG, "Can not find %s interface device!", MODULE_AT_DEVICE_NAME);
+        LOG_E(MOLINK_LOG_TAG, "Can not find %s device!", MODULE_AT_DEVICE_NAME);
         return OS_ERROR;
     }
 
@@ -139,8 +156,10 @@ int molink_module_management_test(void)
         return OS_ERROR;
     }
 
+#ifdef MOLINK_USING_MULTI_MODULES
     /* set default module instance */
     mo_set_default(test_module);
+#endif
 
     /* get default module instance */
     temp_module = mo_get_default();
@@ -159,29 +178,47 @@ int molink_module_management_test(void)
         mo_destroy(test_module, MODULE_TYPE_SIM7600CE);
         return OS_ERROR;
     }
+    
+    LOG_I(MOLINK_LOG_TAG, "Test of create module success");
 
-    /* destroy module */
-    result = mo_destroy(temp_module, MODULE_TYPE_SIM7600CE);
+    return OS_EOK;
+}
+
+/* destroy module */
+static int  molink_module_management_destroy(void)
+{
+    mo_object_t *test_module = OS_NULL;
+    int result;
+    
+    test_module = mo_get_default();
+    if (OS_NULL == test_module)
+    {
+        LOG_E(MOLINK_LOG_TAG, "Get default module failed!");
+        return OS_ERROR;
+    }
+    
+    result = mo_destroy(test_module, MODULE_TYPE_SIM7600CE);
     if (OS_ERROR == result)
     {
         LOG_E(MOLINK_LOG_TAG, "Destroy module %s failed!", MODULE_NAME);
         return OS_ERROR;
     }
-    
-    LOG_I(MOLINK_LOG_TAG, "Test of manually create module success");
 
+    LOG_I(MOLINK_LOG_TAG, "Test of destroy module success");
+    
     return OS_EOK;
 }
 
 #ifdef OS_USING_SHELL
 #include <shell.h>
-SH_CMD_EXPORT(molink_module_management_test, molink_module_management_test, "molink module management test");
+SH_CMD_EXPORT(molink_module_management_create, molink_module_management_create, "molink module management create");
+SH_CMD_EXPORT(molink_module_management_destroy, molink_module_management_destroy, "molink module management destroy");
 #endif
 ```
 
 #### 通用控制
 
-这里采用自动创建模组的方式（即开启`Object Auto Create`功能），设备在启动时完成模组的自动创建。
+运行`Demo`前完成模组实例的创建。
 
 `Demo`流程：`获取默认模组对象 → AT测试 → 获取IMEI → 获取IMSI → 获取ICCID → 获取CFUN`。
 
@@ -255,7 +292,7 @@ SH_CMD_EXPORT(molink_genereal_control_test, molink_genereal_control_test, "molin
 
 #### 网络服务
 
-这里采用自动创建模组的方式（即开启`Object Auto Create`功能），设备在启动时完成模组的自动创建。
+运行`Demo`前完成模组实例的创建。
 
 `Demo`流程：`获取默认模组对象 → AT测试 → 获取网络注册状态 → 获取网络激活状态 → 获取信号强度 → 网络异常处理（设置CFUN）`。
 
@@ -351,9 +388,9 @@ SH_CMD_EXPORT(molink_net_service_test, molink_net_service_test, "molink net serv
 
 #### 套接字
 
-这里采用自动创建模组的方式（即开启`Object Auto Create`功能），设备在启动时完成模组的自动创建。
+运行`Demo`前完成模组实例的创建。
 
-`Demo`流程：`获取默认模组对象 → 获取IP → 创建Socket → 连接TCP服务器 → 发送数据 → 接收数据 → 关闭Socket`。
+`Demo`流程：`获取默认模组对象 → 获取IP → 创建Socket → 连接TCP服务器 → 发送数据 → 接收数据 → 关闭Socket`。这里采用的是`mo_socket`接口，单模组情形也可以用`BSD Socket`接口。
 
 ```c
 #include "mo_socket.h"
@@ -537,9 +574,13 @@ SH_CMD_EXPORT(molink_mosocket_tcp_test, molink_mosocket_tcp_test, "molink socket
 
 **测试命令**
 
-`molink_module_management_test`
+`molink_module_management_create`
 
-该命令用于在设备端跑编程入门中的模组实例管理演示代码，执行流程：`手动创建模组 → 设置默认模组 → 获取默认模组对象/通过命名获取模组对象 → 销毁模组`。
+该命令用于在设备端跑编程入门中的模组实例管理演示代码，执行流程：`创建模组 → 获取默认模组对象 → 通过命名获取模组对象`。
+
+`molink_module_management_destroy`
+
+该命令用于在设备端跑编程入门中的模组实例管理演示代码，执行流程：`获取默认模组对象 → 销毁模组`。
 
 **效果展示**
 
@@ -588,8 +629,8 @@ SH_CMD_EXPORT(molink_mosocket_tcp_test, molink_mosocket_tcp_test, "molink socket
 ## 注意事项
 
 1. `Molink`提供的通用控制和网络服务相关接口需要模组支持，部分接口失败的原因是模组本身不支持该功能。
-2. 使用自动创建需关注模组在自动创建时是否正常工作，若模组未开机或工作状态不正常，不能使用自动创建功能。
-3. 支持`mo_socket`网络接口，也支持用`AT`的方式，如用`BSD Socket`，需要配置`Socket`套件。
+2. 如遇到模组实例创建失败，查看模组工作状态是否正常，串口设置是否正确。
+3. 支持`mo_socket`网络接口，也支持用`AT`的方式，如用`BSD Socket`，在多模组情形需要`Socket`套件。
 4.  对于`NB`类型模组，因网络因素受限，收发较大长度的数据常会有严重丢包重传等现象发生，造成发送/接收较返回超时或错误，不建议大量数据收发。
 5. 通信模组通过串口发送给系统的数据将会首先缓存在串口数据缓冲区中，因此，如果串口缓冲区大小设置过小则会导致`Molink `无法正确的接收通信模组发送的数据，造成`AT`指令执行超时或数据接收不全等问题。建议将串口缓冲区大小设置为略大于通信所需的数据的最大值。
 
