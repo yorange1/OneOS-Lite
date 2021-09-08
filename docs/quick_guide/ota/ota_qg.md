@@ -84,9 +84,9 @@
 
 2. ##### **模组选择与配置**
 
-   ![lite_wifi_option](images/lite_wifi_option.png)
+   ![lite_wifi_option](images/lite_wifi_option2.png)
 
-   `OTA`演示工程选择的是`ESP8266 WiFi`模组，勾选`Object Auto Create`，正确设置串口号和波特率，让模组在`OneOS`操作系统启动时自动完成初始化，使`Molink`组件与模组之间建连，当然用户也可以采用手动初始化方式，即在应用初始阶段调用模组的初始化接口。
+   `OTA`演示工程选择的是`ESP8266 WiFi`模组。
 
    `AP` 的`SSID`和`Password`根据实际的无线接入点设置。
 

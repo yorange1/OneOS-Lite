@@ -4,7 +4,7 @@
 
 ## 概述
 
-通常小型物联网设备会基于`MCU+模组`或`模组OpenCPU`的方案来设计，为了方便开发者移植用户程序，屏蔽网络硬件方案的差异，`OneOS`为开发者提供了`Socket`组件。`Socket`套件是在`Molink`组件之上的适配层，提供一套兼容`BSD`的标准接口，用来实现网络连接及数据传输。`Molink`组件支持搭载蜂窝模组、`wifi`模组等不同制式的通信模块。`Molink`组件与模组之间又是采用`AT`指令进行拨号连接和数据收发。
+通常小型物联网设备会基于`MCU+模组`或`模组OpenCPU`的方案来设计，为了方便开发者移植用户程序，屏蔽网络硬件方案的差异，`OneOS`为开发者提供了`Socket`组件。`Socket`套件是在`Molink`组件之上的适配层，给用户提供了一套兼容`BSD`的标准接口，用来实现网络连接及数据传输。`Molink`组件与模组之间又是采用`AT`指令进行拨号连接和数据收发。`Molink`组件支持搭载蜂窝模组、`wifi`模组、`4G`模组等不同制式的通信模块。在单模组情形下，`Molink`就可以兼容`BSD Socket`，不需要本节所介绍的`Socket`套件，在多模组情形下，例如`ESP8266` + ` SIM7600CE`的多模组连接下，需要`Socket`套件才能套兼容`BSD`的标准接口。
 
 ![lite_socket1](images/lite_socket1.png)
 
@@ -42,19 +42,25 @@
 
 2. **模组选择与配置**
 
-   ![wifi_option](images/wifi_option.png)
+   ![wifi_option](images/wifi_option1.png)
 
-   该演示工程选择的是应用广泛的`ESP8266 WiFi`模组，勾选`Object Auto Create`，正确设置串口号和波特率，让模组在`OneOS`操作系统启动时自动完成初始化，使`Molink`组件与模组之间建连，当然用户也可以采用手动初始化方式，即在应用初始阶段调用模组的初始化接口。
+   多模组情形，在`Molink`的`Single/Multi Module`配置项中选择`Multi`，然后在`WiFi`中选择`ESP8266`并进行配置。这里演示的是多模组情形，但是另一个模组仍然可以不进行配置，当然在实际应用中若是单模组情形，建议在`Molink`的`Single/Multi Module`配置项中选择`Single`，使用`Molink`提供的`BSD Socket`接口，这样资源更节约，效率也更高。
+
+   ![wifi_option](images/wifi_option2.png)
+
+   万耦开发板的`uart1`上自带一个`ESP8266 WiFi`模组，对`ESP8266`进行配置。
 
    `AP` 的`SSID`和`Password`根据实际的无线接入点设置。
 
-   勾选`BSD Socket`选项，用户采用`BSD`的标准接口进行网络的连接和数据收发。若不勾选则只能采用`Molink`提供的`mo_socket`网络接口，详见`components\molink\api\include\mo_socket.h`
+   `Netconn Option`提供网络通信功能，`TCP`、`UDP`、`Select`、`DNS`、`AddrInfo`功能用户可以按需配置。
+
+   勾选`BSD Socket`选项，`Molink`对上层提供`mo_socket`网络接口，`Socket`套件的`BSD`标准接口需要依赖该配置。
 
 3. **socket套件配置**
 
    ![bsd_option](images/bsd_option.png)
 
-   除在 `Molink→ molink → Module→ WiFi→ ESP8266 → Config`设置项中要勾选`BSD Socket`选项，在`Components→ Socket`下的`BSD Socket`选项也要勾选。
+   多模组情形使用`BSD`标准接口，除在 `Molink→ molink → Module→ WiFi→ ESP8266 → Config`设置项中要勾选`BSD Socket`选项，在`Components→ Socket`下的`BSD Socket`选项也要勾选。
 
 #### **工程配置过程**
 
@@ -63,6 +69,89 @@
 ## 编程入门
 
 这里提供了本次实验所用的`TCP/UDP`客户端代码和`TCP/UDP`服务端代码。如需对`Socket API`做详细了解，详见 [Socket API 手册](http://localhost:3000/#/components/socket/README) 。
+
+等等......，在进行`TCP`、`UDP`通信演示前不能忘了完成模组实例的创建，即完成`Molink`的初始化工作。
+
+#### 模组实例创建
+
+```c
+#include <stdlib.h>
+#include <string.h>
+#include <os_errno.h>
+#include <dlog.h>
+#include <serial.h>
+#include "mo_factory.h"
+#include "mo_common.h"
+
+#define MOLINK_LOG_TAG "molink"
+
+#define MODULE_NAME "esp8266"
+#define MODULE_AT_PARSER_RECV_BUF_LEN (1500)
+#define MODULE_AT_DEVICE_NAME "uart1"
+#define MODULE_AT_DEVICE_RATE (115200)
+
+
+static struct serial_configure uart_config = OS_SERIAL_CONFIG_DEFAULT;
+
+/* create module */
+static int molink_module_management_create(void)
+{
+    mo_object_t *test_module = OS_NULL;
+    mo_object_t *temp_module = OS_NULL;
+    mo_parser_config_t parser_config = {0};
+
+    os_device_t *device = os_device_find(MODULE_AT_DEVICE_NAME);
+    if (OS_NULL == device)
+    {
+        LOG_E(MOLINK_LOG_TAG, "Can not find %s device!", MODULE_AT_DEVICE_NAME);
+        return OS_ERROR;
+    }
+
+    uart_config.baud_rate = MODULE_AT_DEVICE_RATE;
+    os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
+
+    parser_config.parser_name = MODULE_NAME;
+    parser_config.parser_device = device;
+    parser_config.recv_buff_len = MODULE_AT_PARSER_RECV_BUF_LEN;
+
+    test_module = mo_create(MODULE_NAME, MODULE_TYPE_ESP8266, &parser_config);
+    if (OS_NULL == test_module)
+    {
+        LOG_E(MOLINK_LOG_TAG, "Can not find %s interface device!", MODULE_AT_DEVICE_NAME);
+        return OS_ERROR;
+    }
+
+    /* set default module instance */
+    mo_set_default(test_module);
+
+    /* get default module instance */
+    temp_module = mo_get_default();
+    if (OS_NULL == temp_module)
+    {
+        LOG_E(MOLINK_LOG_TAG, "Get default module failed!");
+        mo_destroy(test_module, MODULE_TYPE_ESP8266);
+        return OS_ERROR;
+    }
+
+    /* get module instance by name */
+    temp_module = mo_get_by_name(MODULE_NAME);
+    if (OS_NULL == temp_module)
+    {
+        LOG_E(MOLINK_LOG_TAG, "Get module by name: %s failed!", MODULE_NAME);
+        mo_destroy(test_module, MODULE_TYPE_ESP8266);
+        return OS_ERROR;
+    }
+    
+    LOG_I(MOLINK_LOG_TAG, "Test of create module success");
+
+    return OS_EOK;
+}
+
+#ifdef OS_USING_SHELL
+#include <shell.h>
+SH_CMD_EXPORT(molink_module_management_create, molink_module_management_create, "molink module management create");
+#endif
+```
 
 #### 客户端代码
 
@@ -567,4 +656,4 @@
 
 1. `Lite`版本的`OneOS`不支持`lwip`，因此`Socket`套件是通过`molink`实现数据收发，标准版本才提供`lwip`和`molink`的选择。
 2. 若不需要`BSD Socket`套件，可以采用`mo_socket`网络接口，也支持用`AT`的方式。
-
+3. 多模组情形`BSD Socket`数据收发采用的是默认模组，因此需要在创建完模组实例后设置一个默认模组用于`BSD Socket`通信。
