@@ -29,24 +29,24 @@
   - [原子操作](/kernel/doc/atomic.md)
   - [工作队列](/kernel/doc/workqueue.md)
 
-- **设备驱动**
+- **驱动**
 
 
 
-- **通用组件**
+- **组件**
   - [SHELL工具](/components/shell/README.md)
   - [Socket套件](/components/socket/README.md)
   - [ATest测试框架](/components/atest/README.md)
   - [DLOG 日志系统](/components/dlog/README.md)
   - [C++支持](/components/cplusplus/README.md)
-
-- **特色组件**
   - [Molink模组连接套件](/components/molink/README.md)
   - [远程升级套件](/components/ota/cmiot/README.md)
+
+
+
+
+- **生态**
   - [组件生态](/thirdparty/README.md)
-
-
-
 
 - **硬件支持**
 
