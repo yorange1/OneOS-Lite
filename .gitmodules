@@ -1,0 +1,3 @@
+[submodule "oneos-kernel"]
+	path = oneos-kernel
+	url = git@gitee.com:cmcc-oneos/oneos-kernel.git
