@@ -4,14 +4,14 @@
   - [OneOS-Lite概述](/README.md)
 
 - **内核**
-  - [内核基础](/kernel/README.md)
+  - [内核基础](/oneos-kernel/README.md)
   - 基础定义
-    - [基础数据类型](/kernel/doc/typedef.md)
-    - [通用宏定义](/kernel/doc/stddef.md)
-    - [链表](/kernel/doc/list.md)
-    - [断言](/kernel/doc/assert.md)
-    - [硬件操作抽象接口](/kernel/doc/hw.md)
-    - [标准输出](/kernel/doc/util.md)
+    - [基础数据类型](/oneos-kernel/doc/typedef.md)
+    - [通用宏定义](/oneos-kernel/doc/stddef.md)
+    - [链表](/oneos-kernel/doc/list.md)
+    - [断言](/oneos-kernel/doc/assert.md)
+    - [硬件操作抽象接口](/oneos-kernel/doc/hw.md)
+    - [标准输出](/oneos-kernel/doc/util.md)
   - [内核启动](/kernel/doc/startup.md)
   - [任务管理及调度](/kernel/doc/task.md)
   - 任务同步与通信
