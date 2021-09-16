@@ -6,5 +6,5 @@
 - <font color="#1661ab">专用于资源受限的MCU</font>
 
 [快速上手](/docs/quick_guide/README.md)
-[Lite版本](/README.md)
+[文档中心](/README.md)
 [开发工具](/docs/tools/README.md)
