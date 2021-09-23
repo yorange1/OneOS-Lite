@@ -125,7 +125,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>JL2CM3</Key>
-          <Name>-U69612308 -O78 -S2 -ZTIFSpeedSel5000 -A0 -C0 -JU1 -JI127.0.0.1 -JP0 -RST0 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO18 -TC10000000 -TP21 -TDS8001 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -TB1 -TFE0 -FO7 -FD20000000 -FC1000 -FN1 -FF0STM32L4xx_1024.FLM -FS08000000 -FL0100000 -FP0($$Device:STM32L475VGTx$CMSIS\Flash\STM32L4xx_1024.FLM)</Name>
+          <Name>-U69612305 -O78 -S2 -ZTIFSpeedSel5000 -A0 -C0 -JU1 -JI127.0.0.1 -JP0 -RST0 -TO18 -TC10000000 -TP21 -TDS8001 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -TB1 -TFE0 -FO7 -FD20000000 -FC1000 -FN1 -FF0STM32L4xx_1024.FLM -FS08000000 -FL0100000 -FP0($$Device:STM32L475VGTx$CMSIS\Flash\STM32L4xx_1024.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -1207,7 +1207,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_block.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_block.c</PathWithFileName>
       <FilenameWithoutPath>os_block.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1219,7 +1219,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_clock.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_clock.c</PathWithFileName>
       <FilenameWithoutPath>os_clock.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1231,7 +1231,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_event.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_event.c</PathWithFileName>
       <FilenameWithoutPath>os_event.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1243,7 +1243,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_idle.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_idle.c</PathWithFileName>
       <FilenameWithoutPath>os_idle.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1255,7 +1255,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_kernel_lock.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_kernel_lock.c</PathWithFileName>
       <FilenameWithoutPath>os_kernel_lock.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1267,7 +1267,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_kernel_log.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_kernel_log.c</PathWithFileName>
       <FilenameWithoutPath>os_kernel_log.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1279,7 +1279,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_mb.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_mb.c</PathWithFileName>
       <FilenameWithoutPath>os_mb.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1291,7 +1291,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_mem_firstfit.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_mem_firstfit.c</PathWithFileName>
       <FilenameWithoutPath>os_mem_firstfit.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1303,7 +1303,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_mem_pool.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_mem_pool.c</PathWithFileName>
       <FilenameWithoutPath>os_mem_pool.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1315,7 +1315,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_mem_small.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_mem_small.c</PathWithFileName>
       <FilenameWithoutPath>os_mem_small.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1327,7 +1327,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_memory.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_memory.c</PathWithFileName>
       <FilenameWithoutPath>os_memory.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1339,7 +1339,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_mq.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_mq.c</PathWithFileName>
       <FilenameWithoutPath>os_mq.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1351,7 +1351,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_mutex.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_mutex.c</PathWithFileName>
       <FilenameWithoutPath>os_mutex.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1363,7 +1363,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_sched.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_sched.c</PathWithFileName>
       <FilenameWithoutPath>os_sched.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1375,7 +1375,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_sem.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_sem.c</PathWithFileName>
       <FilenameWithoutPath>os_sem.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1387,7 +1387,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_spinlock.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_spinlock.c</PathWithFileName>
       <FilenameWithoutPath>os_spinlock.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1399,7 +1399,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_startup.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_startup.c</PathWithFileName>
       <FilenameWithoutPath>os_startup.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1411,7 +1411,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_task.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_task.c</PathWithFileName>
       <FilenameWithoutPath>os_task.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1423,7 +1423,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_timer.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_timer.c</PathWithFileName>
       <FilenameWithoutPath>os_timer.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1435,7 +1435,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_util.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_util.c</PathWithFileName>
       <FilenameWithoutPath>os_util.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1447,7 +1447,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\kernel\source\os_version.c</PathWithFileName>
+      <PathWithFileName>..\..\oneos-kernel\source\os_version.c</PathWithFileName>
       <FilenameWithoutPath>os_version.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
