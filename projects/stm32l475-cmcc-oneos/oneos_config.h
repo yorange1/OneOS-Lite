@@ -132,6 +132,10 @@
 /* Atest */
 
 /* end of Atest */
+
+/* Dlog */
+
+/* end of Dlog */
 #define OS_USING_NEWLIB_ADAPTER
 #define OS_USING_ARMCCLIB_ADAPTER
 #define OS_USING_LIBC_ADAPTER
@@ -162,7 +166,19 @@
 /* Socket */
 
 /* end of Socket */
+
+/* Cplusplus */
+
+/* end of Cplusplus */
 /* end of Components */
+
+/* Thirdparty */
+
+/* Submodule */
+
+#define OS_USING_SUBMODULE
+/* end of Submodule */
+/* end of Thirdparty */
 
 #endif /* __ONEOS_CONFIG_H__ */
 
