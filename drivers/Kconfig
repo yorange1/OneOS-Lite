@@ -22,4 +22,5 @@ endmenu
     source "$OS_ROOT/drivers/misc/Kconfig"
     source "$OS_ROOT/drivers/pin/Kconfig"
     source "$OS_ROOT/drivers/hal/Kconfig"
+    source "$OS_ROOT/drivers/rtc/Kconfig"
 endmenu
