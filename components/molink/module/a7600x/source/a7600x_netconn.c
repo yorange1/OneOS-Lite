@@ -563,7 +563,6 @@ os_err_t a7600x_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_a
 
     return OS_EOK;
 }
-#endif
 
 os_size_t a7600x_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
