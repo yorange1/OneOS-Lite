@@ -343,9 +343,9 @@ os_size_t sim7070x_netconn_send(mo_object_t *module, mo_netconn_t *netconn, cons
 
     strncpy(remote_ip, inet_ntoa(netconn->remote_ip), IPADDR_MAX_STR_LEN);
 
-    mo_sim7070x_t *sim7070x = os_container_of(module, mo_sim7070x_t, parent);
-    /* Protect the data sending process, prevent other threads to send AT commands */
+    //mo_sim7070x_t *sim7070x = os_container_of(module, mo_sim7070x_t, parent);
 
+    /* Protect the data sending process, prevent other threads to send AT commands */
     at_parser_exec_lock(parser);
     /* Send the AT+CASEND cmd then receive the '>' response on the first line */
     at_parser_set_end_mark(parser, ">", 1);
