@@ -3,4 +3,4 @@
 	url = https://gitee.com/cmcc-oneos/oneos-kernel.git
 [submodule "thirdparty/powermanager"]
 	path = thirdparty/powermanager
-	url = git@gitee.com:cmcc-oneos/power-manager.git
+	url = https://gitee.com/cmcc-oneos/power-manager.git
