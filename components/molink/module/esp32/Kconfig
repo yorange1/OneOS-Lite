@@ -16,7 +16,7 @@ menu "Config"
     config ESP32_USING_WIFI_OPS
         bool "WiFi"
         select MOLINK_USING_WIFI_OPS
-        default n
+        default y
 
     config ESP32_USING_PING_OPS
         bool #"Ping"

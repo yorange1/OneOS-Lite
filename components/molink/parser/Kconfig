@@ -11,7 +11,7 @@ config MOLINK_USING_PARSER
 if MOLINK_USING_PARSER
         config AT_PARSER_TASK_STACK_SIZE
             int "AT parser task stack size"
-            default 512
+            default 1024
 
         config AT_PARSER_PRINT_RAW
             bool "print AT data flow"
