@@ -133,12 +133,12 @@ static int molink_module_management_create(void)
 #endif
 
     result = mo_wifi_connect_ap(test_module, ESP8266_CONNECT_SSID, ESP8266_CONNECT_PASSWORD);
-		if (OS_EOK != result)
-		{
+    if (OS_EOK != result)
+    {
         LOG_E(MOLINK_LOG_TAG, "ESP8266 connect to ap failed!");
         mo_destroy(test_module, MODULE_TYPE_ESP8266);
         return OS_ERROR;
-		}
+    }
 
     /* get default module instance */
     temp_module = mo_get_default();
