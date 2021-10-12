@@ -35,7 +35,7 @@ static void user_task(void *parameter)
 
     for (i = 0; i < led_table_size; i++)
     {
-        os_kprintf("nihaonihao\r\n");
+        os_kprintf("Hello OneOS-Lite\r\n");
     }
 
 }
