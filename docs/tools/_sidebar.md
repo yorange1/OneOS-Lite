@@ -41,3 +41,7 @@
   - [Renode Host集成](/docs/tools/renode/5.renode-host.md)
   - [Renode简明教程](/docs/tools/renode/6.renode-tutorials.md)
   - [Renode高级用法](/docs/tools/renode/7.renode-advanced.md)
+
+- **GIT工具**
+  - [GIT多仓库管理](/docs/tools/git/gitlab-github-gitee.md)
+  - [GIT仓库&子目录迁移](/docs/tools/git/GIT-transfer.md)
