@@ -10,14 +10,13 @@
       <TargetName>oneos</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pArmCC>6140000::V6.14::ARMCLANG</pArmCC>
-      <pCCUsed>6140000::V6.14::ARMCLANG</pCCUsed>
-      <uAC6>1</uAC6>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
+      <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32L475VGTx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32L4xx_DFP.2.5.0</PackID>
+          <PackID>Keil.STM32L4xx_DFP.2.6.1</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x00018000) IRAM2(0x10000000,0x00008000) IROM(0x08000000,0x00100000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -314,7 +313,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>7</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -323,7 +322,7 @@
             <PlainCh>0</PlainCh>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
-            <wLevel>3</wLevel>
+            <wLevel>2</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
@@ -340,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>STM32L475xx, USE_HAL_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.;application;..\..\arch\arm\armv7m\include;board;board\CubeMX_Config\Inc;board\ports;board\packages;..\..\components\ringbuf\include;..\..\components\dlog\include;..\..\drivers;..\..\drivers\bus;..\..\drivers\console;..\..\drivers\misc;..\..\drivers\pin;..\..\drivers\serial;..\..\drivers\timer;..\..\drivers\hal\st\devices;..\..\drivers\hal\st\drivers;..\..\drivers\hal\st\drivers\config;..\..\drivers\hal\st\drivers\drv_flash;..\..\drivers\hal\st\STM32L4xx_HAL\STM32L4xx_HAL_Driver\Inc;..\..\drivers\hal\st\STM32L4xx_HAL\CMSIS\Device\ST\STM32L4xx\Include;..\..\drivers\hal\st\STM32L4xx_HAL\CMSIS\Include;..\..\kernel\include;..\..\components\libc\include;..\..\components\libc\include\extension;..\..\components\libc\include\armlibc;..\..\components\shell\include</IncludePath>
+              <IncludePath>.;application;..\..\arch\arm\armv7m\include;board;board\CubeMX_Config\Inc;board\ports;board\packages;..\..\components\ringbuf\include;..\..\components\dlog\include;..\..\drivers;..\..\drivers\bus;..\..\drivers\console;..\..\drivers\misc;..\..\drivers\pin;..\..\drivers\serial;..\..\drivers\timer;..\..\drivers\hal\st\devices;..\..\drivers\hal\st\drivers;..\..\drivers\hal\st\drivers\config;..\..\drivers\hal\st\drivers\drv_flash;..\..\drivers\hal\st\STM32L4xx_HAL\STM32L4xx_HAL_Driver\Inc;..\..\drivers\hal\st\STM32L4xx_HAL\CMSIS\Device\ST\STM32L4xx\Include;..\..\drivers\hal\st\STM32L4xx_HAL\CMSIS\Include;..\..\oneos-kernel\include;..\..\components\libc\include;..\..\components\libc\include\extension;..\..\components\libc\include\armlibc;..\..\components\shell\include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -807,107 +806,107 @@
             <File>
               <FileName>os_block.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_block.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_block.c</FilePath>
             </File>
             <File>
               <FileName>os_clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_clock.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_clock.c</FilePath>
             </File>
             <File>
               <FileName>os_event.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_event.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_event.c</FilePath>
             </File>
             <File>
               <FileName>os_idle.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_idle.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_idle.c</FilePath>
             </File>
             <File>
               <FileName>os_kernel_lock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_kernel_lock.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_kernel_lock.c</FilePath>
             </File>
             <File>
               <FileName>os_kernel_log.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_kernel_log.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_kernel_log.c</FilePath>
             </File>
             <File>
               <FileName>os_mb.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_mb.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_mb.c</FilePath>
             </File>
             <File>
               <FileName>os_mem_firstfit.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_mem_firstfit.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_mem_firstfit.c</FilePath>
             </File>
             <File>
               <FileName>os_mem_pool.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_mem_pool.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_mem_pool.c</FilePath>
             </File>
             <File>
               <FileName>os_mem_small.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_mem_small.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_mem_small.c</FilePath>
             </File>
             <File>
               <FileName>os_memory.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_memory.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_memory.c</FilePath>
             </File>
             <File>
               <FileName>os_mq.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_mq.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_mq.c</FilePath>
             </File>
             <File>
               <FileName>os_mutex.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_mutex.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_mutex.c</FilePath>
             </File>
             <File>
               <FileName>os_sched.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_sched.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_sched.c</FilePath>
             </File>
             <File>
               <FileName>os_sem.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_sem.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_sem.c</FilePath>
             </File>
             <File>
               <FileName>os_spinlock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_spinlock.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_spinlock.c</FilePath>
             </File>
             <File>
               <FileName>os_startup.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_startup.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_startup.c</FilePath>
             </File>
             <File>
               <FileName>os_task.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_task.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_task.c</FilePath>
             </File>
             <File>
               <FileName>os_timer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_timer.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_timer.c</FilePath>
             </File>
             <File>
               <FileName>os_util.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_util.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_util.c</FilePath>
             </File>
             <File>
               <FileName>os_version.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_version.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_version.c</FilePath>
             </File>
           </Files>
         </Group>

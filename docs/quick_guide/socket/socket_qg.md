@@ -82,11 +82,12 @@
 #include <serial.h>
 #include "mo_factory.h"
 #include "mo_common.h"
+#include "esp8266.h"
 
 #define MOLINK_LOG_TAG "molink"
 
 #define MODULE_NAME "esp8266"
-#define MODULE_AT_PARSER_RECV_BUF_LEN (1500)
+#define MODULE_AT_PARSER_RECV_BUF_LEN (512)
 #define MODULE_AT_DEVICE_NAME "uart1"
 #define MODULE_AT_DEVICE_RATE (115200)
 
@@ -96,33 +97,48 @@ static struct serial_configure uart_config = OS_SERIAL_CONFIG_DEFAULT;
 /* create module */
 static int molink_module_management_create(void)
 {
-    mo_object_t *test_module = OS_NULL;
     mo_object_t *temp_module = OS_NULL;
+    mo_object_t *test_module = OS_NULL;
     mo_parser_config_t parser_config = {0};
+    os_err_t result;
 
     os_device_t *device = os_device_find(MODULE_AT_DEVICE_NAME);
     if (OS_NULL == device)
     {
-        LOG_E(MOLINK_LOG_TAG, "Can not find %s device!", MODULE_AT_DEVICE_NAME);
+        LOG_E(MOLINK_LOG_TAG, "Auto create failed, Can not find ESP8266 interface device %s!", MODULE_AT_DEVICE_NAME);
         return OS_ERROR;
     }
 
     uart_config.baud_rate = MODULE_AT_DEVICE_RATE;
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    parser_config.parser_name = MODULE_NAME;
+#ifdef ESP8266_USING_HW_CONTROL
+    esp8266_hw_rst(ESP8266_RST_PIN_NUM);
+#endif
+
+    parser_config.parser_name   = MODULE_NAME;
     parser_config.parser_device = device;
     parser_config.recv_buff_len = MODULE_AT_PARSER_RECV_BUF_LEN;
 
-    test_module = mo_create(MODULE_NAME, MODULE_TYPE_ESP8266, &parser_config);
+    test_module = module_esp8266_create(MODULE_NAME, &parser_config);
     if (OS_NULL == test_module)
     {
-        LOG_E(MOLINK_LOG_TAG, "Can not find %s interface device!", MODULE_AT_DEVICE_NAME);
+        LOG_E(MOLINK_LOG_TAG, "Auto create failed, Can not create %s module object!", MODULE_NAME);
         return OS_ERROR;
     }
 
+#ifdef MOLINK_USING_MULTI_MODULES
     /* set default module instance */
     mo_set_default(test_module);
+#endif
+
+    result = mo_wifi_connect_ap(test_module, ESP8266_CONNECT_SSID, ESP8266_CONNECT_PASSWORD);
+    if (OS_EOK != result)
+    {
+        LOG_E(MOLINK_LOG_TAG, "ESP8266 connect to ap failed!");
+        mo_destroy(test_module, MODULE_TYPE_ESP8266);
+        return OS_ERROR;
+    }
 
     /* get default module instance */
     temp_module = mo_get_default();
@@ -165,7 +181,6 @@ SH_CMD_EXPORT(molink_module_management_create, molink_module_management_create, 
    #include <os_errno.h>
    #include <sys/errno.h>
    #include <sys/socket.h>
-   #include <sys/ioctl.h>
    #include <dlog.h>
    #include <oneos_config.h>
    
@@ -333,7 +348,6 @@ SH_CMD_EXPORT(molink_module_management_create, molink_module_management_create, 
    #include <os_errno.h>
    #include <sys/errno.h>
    #include <sys/socket.h>
-   #include <sys/ioctl.h>
    #include <dlog.h>
    #include <oneos_config.h>
    

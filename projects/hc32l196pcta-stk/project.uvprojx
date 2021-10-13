@@ -337,9 +337,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_HAL_DRIVER, HC32L19xPxxx</Define>
+              <Define>HC32L19xPxxx, USE_HAL_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.;application;..\..\arch\arm\armv6m\include;board;board\ports;..\..\drivers\hal\hdsc\HC32L19x_HAL\common;..\..\common\include;..\..\components\dlog\include;..\..\drivers;..\..\drivers\bus;..\..\drivers\console;..\..\drivers\dma;..\..\drivers\fal;..\..\drivers\mtd;..\..\drivers\pin;..\..\drivers\serial;..\..\drivers\hal\hdsc\HC32L19x_HAL\CMSIS\Core\Include;..\..\drivers\hal\hdsc\devices;..\..\drivers\hal\hdsc\drivers;..\..\drivers\hal\hdsc\HC32L19x_HAL\hal_drivers\inc;..\..\kernel\include;..\..\libc\include;..\..\libc\include\extension;..\..\libc\include\armlibc;..\..\components\diagnose\resource_moniter;..\..\components\shell\include;..\..\components\diagnose\stack_trace</IncludePath>
+              <IncludePath>.;application;..\..\arch\arm\armv6m\include;board;board\ports;..\..\drivers\hal\hdsc\HC32L19x_HAL\common;..\..\components\ringbuf\include;..\..\components\dlog\include;..\..\drivers;..\..\drivers\bus;..\..\drivers\console;..\..\drivers\fal;..\..\drivers\misc;..\..\drivers\pin;..\..\drivers\serial;..\..\drivers\hal\hdsc\HC32L19x_HAL\CMSIS\Core\Include;..\..\drivers\hal\hdsc\devices;..\..\drivers\hal\hdsc\drivers;..\..\drivers\hal\hdsc\HC32L19x_HAL\hal_drivers\inc;..\..\oneos-kernel\include;..\..\components\libc\include;..\..\components\libc\include\extension;..\..\components\libc\include\armlibc;..\..\components\shell\include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -461,32 +461,17 @@
             <File>
               <FileName>option_parse.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\common\source\option_parse.c</FilePath>
+              <FilePath>..\..\components\ringbuf\source\option_parse.c</FilePath>
             </File>
             <File>
               <FileName>ring_blk_buff.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\common\source\ring_blk_buff.c</FilePath>
+              <FilePath>..\..\components\ringbuf\source\ring_blk_buff.c</FilePath>
             </File>
             <File>
               <FileName>ring_buff.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\common\source\ring_buff.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>dlog</GroupName>
-          <Files>
-            <File>
-              <FileName>dlog.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\components\dlog\source\dlog.c</FilePath>
-            </File>
-            <File>
-              <FileName>console_backend.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\components\dlog\source\backend\console_backend.c</FilePath>
+              <FilePath>..\..\components\ringbuf\source\ring_buff.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -504,11 +489,6 @@
               <FilePath>..\..\drivers\device.c</FilePath>
             </File>
             <File>
-              <FileName>block_device.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\drivers\block\block_device.c</FilePath>
-            </File>
-            <File>
               <FileName>bus.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\drivers\bus\bus.c</FilePath>
@@ -517,11 +497,6 @@
               <FileName>console.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\drivers\console\console.c</FilePath>
-            </File>
-            <File>
-              <FileName>dma.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\drivers\dma\dma.c</FilePath>
             </File>
             <File>
               <FileName>fal.c</FileName>
@@ -534,24 +509,9 @@
               <FilePath>..\..\drivers\fal\fal_part.c</FilePath>
             </File>
             <File>
-              <FileName>fal_mtd.c</FileName>
+              <FileName>push_button.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\drivers\fal\fal_mtd.c</FilePath>
-            </File>
-            <File>
-              <FileName>fal_block.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\drivers\fal\fal_block.c</FilePath>
-            </File>
-            <File>
-              <FileName>mtd.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\drivers\mtd\mtd.c</FilePath>
-            </File>
-            <File>
-              <FileName>pin.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\drivers\pin\pin.c</FilePath>
+              <FilePath>..\..\drivers\misc\push_button.c</FilePath>
             </File>
             <File>
               <FileName>serial.c</FileName>
@@ -628,11 +588,6 @@
               <FileType>1</FileType>
               <FilePath>..\..\drivers\hal\hdsc\HC32L19x_HAL\hal_drivers\src\hc_flash.c</FilePath>
             </File>
-            <File>
-              <FileName>hc_dmac.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\drivers\hal\hdsc\HC32L19x_HAL\hal_drivers\src\hc_dmac.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -641,102 +596,87 @@
             <File>
               <FileName>os_block.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_block.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_block.c</FilePath>
             </File>
             <File>
               <FileName>os_clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_clock.c</FilePath>
-            </File>
-            <File>
-              <FileName>os_event.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_event.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_clock.c</FilePath>
             </File>
             <File>
               <FileName>os_idle.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_idle.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_idle.c</FilePath>
             </File>
             <File>
               <FileName>os_kernel_lock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_kernel_lock.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_kernel_lock.c</FilePath>
             </File>
             <File>
               <FileName>os_kernel_log.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_kernel_log.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_kernel_log.c</FilePath>
             </File>
             <File>
               <FileName>os_mb.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_mb.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_mb.c</FilePath>
             </File>
             <File>
-              <FileName>os_mem_firstfit.c</FileName>
+              <FileName>os_mem_small.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_mem_firstfit.c</FilePath>
-            </File>
-            <File>
-              <FileName>os_mem_pool.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_mem_pool.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_mem_small.c</FilePath>
             </File>
             <File>
               <FileName>os_memory.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_memory.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_memory.c</FilePath>
             </File>
             <File>
-              <FileName>os_mutex.c</FileName>
+              <FileName>os_mq.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_mutex.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_mq.c</FilePath>
             </File>
             <File>
               <FileName>os_sched.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_sched.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_sched.c</FilePath>
             </File>
             <File>
               <FileName>os_sem.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_sem.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_sem.c</FilePath>
             </File>
             <File>
               <FileName>os_spinlock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_spinlock.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_spinlock.c</FilePath>
             </File>
             <File>
               <FileName>os_startup.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_startup.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_startup.c</FilePath>
             </File>
             <File>
               <FileName>os_task.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_task.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_task.c</FilePath>
             </File>
             <File>
               <FileName>os_timer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_timer.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_timer.c</FilePath>
             </File>
             <File>
               <FileName>os_util.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_util.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_util.c</FilePath>
             </File>
             <File>
               <FileName>os_version.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_version.c</FilePath>
-            </File>
-            <File>
-              <FileName>os_workqueue.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\kernel\source\os_workqueue.c</FilePath>
+              <FilePath>..\..\oneos-kernel\source\os_version.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -746,162 +686,137 @@
             <File>
               <FileName>access.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\access.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\access.c</FilePath>
             </File>
             <File>
               <FileName>chdir.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\chdir.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\chdir.c</FilePath>
             </File>
             <File>
               <FileName>close.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\close.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\close.c</FilePath>
             </File>
             <File>
               <FileName>dirent.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\dirent.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\dirent.c</FilePath>
             </File>
             <File>
               <FileName>fcntl.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\fcntl.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\fcntl.c</FilePath>
             </File>
             <File>
               <FileName>fstat.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\fstat.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\fstat.c</FilePath>
             </File>
             <File>
               <FileName>fsync.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\fsync.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\fsync.c</FilePath>
             </File>
             <File>
               <FileName>getcwd.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\getcwd.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\getcwd.c</FilePath>
             </File>
             <File>
               <FileName>ioctl.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\ioctl.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\ioctl.c</FilePath>
             </File>
             <File>
               <FileName>libc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\libc.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\libc.c</FilePath>
             </File>
             <File>
               <FileName>lseek.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\lseek.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\lseek.c</FilePath>
             </File>
             <File>
               <FileName>mem_std.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\mem_std.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\mem_std.c</FilePath>
             </File>
             <File>
               <FileName>mkdir.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\mkdir.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\mkdir.c</FilePath>
             </File>
             <File>
               <FileName>open.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\open.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\open.c</FilePath>
             </File>
             <File>
               <FileName>read.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\read.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\read.c</FilePath>
             </File>
             <File>
               <FileName>rename.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\rename.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\rename.c</FilePath>
             </File>
             <File>
               <FileName>rmdir.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\rmdir.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\rmdir.c</FilePath>
             </File>
             <File>
               <FileName>stat.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\stat.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\stat.c</FilePath>
             </File>
             <File>
               <FileName>statfs.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\statfs.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\statfs.c</FilePath>
             </File>
             <File>
               <FileName>stdio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\stdio.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\stdio.c</FilePath>
             </File>
             <File>
               <FileName>strdup.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\strdup.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\strdup.c</FilePath>
             </File>
             <File>
               <FileName>strnlen.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\strnlen.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\strnlen.c</FilePath>
             </File>
             <File>
               <FileName>stubs.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\stubs.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\stubs.c</FilePath>
             </File>
             <File>
               <FileName>time.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\time.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\time.c</FilePath>
             </File>
             <File>
               <FileName>unlink.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\unlink.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\unlink.c</FilePath>
             </File>
             <File>
               <FileName>write.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\armlibc\write.c</FilePath>
+              <FilePath>..\..\components\libc\source\armlibc\write.c</FilePath>
             </File>
             <File>
               <FileName>gmtime_r.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\libc\source\common\gmtime_r.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>shell</GroupName>
-          <Files>
-            <File>
-              <FileName>shell_buildin_cmd.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\components\shell\source\shell_buildin_cmd.c</FilePath>
-            </File>
-            <File>
-              <FileName>shell_main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\components\shell\source\shell_main.c</FilePath>
-            </File>
-            <File>
-              <FileName>shell_process.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\components\shell\source\shell_process.c</FilePath>
-            </File>
-            <File>
-              <FileName>shell_symbol.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\components\shell\source\shell_symbol.c</FilePath>
+              <FilePath>..\..\components\libc\source\common\gmtime_r.c</FilePath>
             </File>
           </Files>
         </Group>

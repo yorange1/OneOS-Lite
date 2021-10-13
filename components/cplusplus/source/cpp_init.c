@@ -23,23 +23,6 @@
 
 #include "os_stddef.h"
 
-#if defined(__GNUC__)
-
-OS_WEAK int cpp_init(void)
-{
-    /*  initialize the C++ runtime.*/
-    typedef void(*pfunc)();
-    extern pfunc __ctors_start__[];
-    extern pfunc __ctors_end__[];
-    pfunc *p;
-
-    for (p = __ctors_start__; p < __ctors_end__; p++)
-        (*p)();
-
-    return 0;
-}
-#endif
-
 #if defined(__CC_ARM) || defined(__CLANG_ARM)
 extern void $Super$$__cpp_initialize__aeabi_(void);
 /* if we do not add cpp_initialize,it will init error */
@@ -63,6 +46,21 @@ OS_WEAK int cpp_init(void)
         FUNC *func = (FUNC *)((const char *)base + *base);
         (*func)();
     }
+    return 0;
+}
+#elif defined(__GNUC__)
+
+OS_WEAK int cpp_init(void)
+{
+    /*  initialize the C++ runtime.*/
+    typedef void(*pfunc)();
+    extern pfunc __ctors_start__[];
+    extern pfunc __ctors_end__[];
+    pfunc *p;
+
+    for (p = __ctors_start__; p < __ctors_end__; p++)
+        (*p)();
+
     return 0;
 }
 #endif

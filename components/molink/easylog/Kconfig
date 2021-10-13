@@ -1,0 +1,104 @@
+menu "Easylog"
+
+    config MOLINK_USING_EASYLOG
+        bool "Enable molink network log info features"
+        default n
+        select MOLINK_USING_GENERAL_OPS
+        select MOLINK_USING_NETSERV_OPS
+        select OS_USING_RTC
+
+    if MOLINK_USING_EASYLOG
+
+        config MOLINK_EASYLOG_USING_IMEI
+            bool "Enable easylog imei features"
+            depends on MOLINK_USING_GENERAL_OPS
+            default y
+
+        config MOLINK_EASYLOG_USING_IMSI
+            bool "Enable easylog imsi features"
+            depends on MOLINK_USING_GENERAL_OPS
+            default y
+
+        config MOLINK_EASYLOG_USING_ICCID
+            bool "Enable easylog iccid features"
+            depends on MOLINK_USING_GENERAL_OPS
+            default y
+
+        config MOLINK_EASYLOG_USING_CSQ
+            bool "Enable easylog csq features"
+            depends on MOLINK_USING_NETSERV_OPS
+            default y
+
+
+        config MOLINK_EASYLOG_USING_RADIOINFO
+            bool "Enable easylog radio info features"
+            depends on MOLINK_USING_NETSERV_OPS
+            default y
+
+        if MOLINK_EASYLOG_USING_RADIOINFO
+
+            config MOLINK_EASYLOG_USING_PCI
+                bool "Enable easylog pci info features"
+                depends on MOLINK_USING_NETSERV_OPS
+                default y
+
+            config MOLINK_EASYLOG_USING_EARFCN
+                bool "Enable easylog earfcn info features"
+                depends on MOLINK_USING_NETSERV_OPS
+                default y
+
+            config MOLINK_EASYLOG_USING_CELLID
+                bool "Enable easylog cell id info features"
+                depends on MOLINK_USING_NETSERV_OPS
+                default y
+
+            config MOLINK_EASYLOG_USING_RSRP
+                bool "Enable easylog rsrp info features"
+                depends on MOLINK_USING_NETSERV_OPS
+                default y
+
+            config MOLINK_EASYLOG_USING_RSRQ
+                bool "Enable easylog rsrq info features"
+                depends on MOLINK_USING_NETSERV_OPS
+                default y
+
+            config MOLINK_EASYLOG_USING_SNR
+                bool "Enable easylog snr info features"
+                depends on MOLINK_USING_NETSERV_OPS
+                default y
+
+            config MOLINK_EASYLOG_USING_TX_PWR
+                bool "Enable easylog tx power info features"
+                depends on MOLINK_USING_NETSERV_OPS
+                default y
+
+            config MOLINK_EASYLOG_USING_ECL
+                bool "Enable easylog ecl info features"
+                depends on MOLINK_USING_NETSERV_OPS
+                default y
+
+        endif
+
+        config MOLINK_EASYLOG_USING_USER_DATA
+            bool "Enable easylog user-defined data area"
+            default n
+
+        if MOLINK_EASYLOG_USING_USER_DATA
+
+            config MO_EASYLOG_USER_DATA_LEN
+                int "Define easylog user-defined data area len"
+                default 8
+
+        endif
+
+        config MOLINK_EASYLOG_USING_CHECKSUM
+            bool "Enable easylog info checksum features"
+            default n
+
+        config MOLINK_EASYLOG_INFO_PRINTF
+            bool "Enable easylog info printf features"
+            default n
+
+    endif
+
+endmenu
