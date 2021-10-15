@@ -8,7 +8,7 @@ machine LoadPlatformDescription @platforms/boards/stm32f4_discovery.repl
 
 cpu PerformanceInMips 125
 
-showAnalyzer sysbus.usart1
+showAnalyzer sysbus.uart1
 
 macro reset
 """

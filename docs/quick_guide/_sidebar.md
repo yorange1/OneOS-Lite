@@ -5,6 +5,9 @@
 
 - **没板子也能跑**
   - [Keil模拟STM32F103](/docs/quick_guide/simulator/keilsimulator.md)
+  - [基于Renode的Cortex-M单片机仿真](docs/quick_guide/simulator/renode/renode-mcu-sample/renode-mcu-sample.md)
+  - [使用renode仿真开发OneOS-Lite物联网操作系统](docs/quick_guide/simulator/renode/renode-lite-run/renode-lite-run.md)
+  - [基于Renode调试OneOS-Lite物联网操作系统](docs/quick_guide/simulator/renode/renode-lite-gdb/renode-lite-gdb.md)
 
 
 - **内核上上手**
