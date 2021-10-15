@@ -22,11 +22,11 @@ Renode 项目发布 Windows、 MacOS 和多个 Linux 发行版的安装程序。
 
 1.打开renode终端，并输入命令：`start @scripts/single-node/stm32f4_discovery.resc`
 
-![](C:\Users\luosy\Music\9.基于Renode的Cortex-M单片机仿真\1.png)
+![](.\1.png)
 
 2.这时，我们可以看到到一个新的终端弹出，里面显示的是串口的输出
 
-![](C:\Users\luosy\Music\9.基于Renode的Cortex-M单片机仿真\2.png)
+![](.\2.png)
 
 **由此可见，示例中的系统已经跑起来了，并且显示了串口输出！**
 

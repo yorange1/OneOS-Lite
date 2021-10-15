@@ -15,14 +15,14 @@
 ### 3.1 帮助help
 熟悉命令，最好的方式之一是巧用`help`命令。我们可以直接在终端中直接输入`help`来查看它所支持的命令有哪些，也可以使用`help xxx`的方式来查看绝体某个命令的详细使用方法。
 
-![help-renode](C:\Users\luosy\Music\10.使用renode仿真开发OneOS-Lite物联网操作系统\help-renode.gif)
+![help-renode](.\help-renode.gif)
 
 ### 3.2 创建Machine
 在`monitor`中执行`mach create`，将会创建一个新的`machine`，默认情况下，系统会自动分配`machine`的`index`，从0开始计数，分别命名为`machine-0`、`machine-1`等，并且会自动将`monitor`的上下文切换到新建的`machine`。
 
 如果需要指定`machine`的名字，可以执行命令`mach create ”xxx“`，如下图：
 
-![mach-create](C:\Users\luosy\Music\10.使用renode仿真开发OneOS-Lite物联网操作系统\mach-create.gif)
+![mach-create](.\mach-create.gif)
 
 
 
@@ -31,7 +31,7 @@
 
 我们可以通过 peripherals命令列出所有的外设，可以看到，此时只有sysbus：
 
-![sysbus](C:\Users\luosy\Music\10.使用renode仿真开发OneOS-Lite物联网操作系统\sysbus.gif)
+![sysbus](.\sysbus.gif)
 
 
 
@@ -39,7 +39,7 @@
 
 此时，再次查看外设。可以发现，包含串口uart等更多的外设信息。而我们虚拟的硬件平台也已经初步完成。
 
-![sysbus-more](C:\Users\luosy\Music\10.使用renode仿真开发OneOS-Lite物联网操作系统\sysbus-more.gif)
+![sysbus-more](.\sysbus-more.gif)
 
 
 
@@ -50,14 +50,14 @@
 
 这里我们使用的是`OneOS-Lite`下的`STM32F407VG-renode`项目，进入该项目中，编译生成elf文件。
 
-![platform](C:\Users\luosy\Music\10.使用renode仿真开发OneOS-Lite物联网操作系统\platform.gif)
+![platform](.\platform.gif)
 
 
 
 ### 3.5 运行程序
 程序加载好以后，可以使用命令`start`让程序运行起来，我们可以通过命令`showAnalyzer sysbus.uart1`打开串口，证明程序是跑起来了的！
 
-![uart1](C:\Users\luosy\Music\10.使用renode仿真开发OneOS-Lite物联网操作系统\uart1.gif)
+![uart1](.\uart1.gif)
 
 
 
