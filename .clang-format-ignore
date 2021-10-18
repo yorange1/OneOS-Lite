@@ -1,1 +1,4 @@
-sdk/library/CMSIS/*
+docs/*
+oneos-kernel/*
+projects/*
+scripts/*
