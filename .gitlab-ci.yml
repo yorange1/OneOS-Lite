@@ -11,11 +11,11 @@ check:format:
   tags:
     - win_check
   script:
-    - python ci/format_check/run-clang-format.py --clang-format-executable ci/format_check/clang-format.exe -r sdk/
+    - python .workflow/ci/format_check/run-clang-format.py --clang-format-executable .workflow/ci/format_check/clang-format.exe -r components/
 
 build:windows:keil:
   stage: build
   tags: 
     - win_keil
   script:
-    - ci/build/build_keil.bat
+    - .workflow/ci/build/build_keil.bat
