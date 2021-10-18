@@ -33,10 +33,15 @@
 - **GNU工具**
   - [gdb调试](/docs/tools/gnu/debug_with_gdb.md)
 
+- **Renode仿真(中文翻译)**
+  - [Renode介绍](/docs/tools/renode/1.renode-introduction.md)
+  - [renode基本用法](/docs/tools/renode/2.renode-usage.md)
+  - [Renode调试](/docs/tools/renode/3.renode-debug.md)
+  - [Renode网络](/docs/tools/renode/4.renode-network.md)
+  - [Renode Host集成](/docs/tools/renode/5.renode-host.md)
+  - [Renode简明教程](/docs/tools/renode/6.renode-tutorials.md)
+  - [Renode高级用法](/docs/tools/renode/7.renode-advanced.md)
 
-
-
-
-
-
-
+- **GIT工具**
+  - [GIT多仓库管理](/docs/tools/git/gitlab-github-gitee.md)
+  - [GIT仓库&子目录迁移](/docs/tools/git/GIT-transfer.md)
