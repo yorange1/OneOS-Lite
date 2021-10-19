@@ -1,0 +1,21 @@
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  GIT_STRATEGY: fetch
+
+stages:
+  - check
+  - build
+
+check:format:
+  stage: check
+  tags:
+    - win_check
+  script:
+    - python .workflow/ci/format_check/run-clang-format.py --clang-format-executable .workflow/ci/format_check/clang-format.exe -r components/
+
+build:windows:keil:
+  stage: build
+  tags: 
+    - win_keil
+  script:
+    - .workflow/ci/build/build_keil.bat
