@@ -41,7 +41,7 @@
 #endif
 
 #ifndef N58_NETCONN_MQ_MSG_MAX
-#define N58_NETCONN_MQ_MSG_MAX  (10)
+#define N58_NETCONN_MQ_MSG_MAX (10)
 #endif
 
 #define SET_EVENT(socket, event) (((socket + 1) << 16) | (event))
@@ -71,9 +71,12 @@ static os_bool_t n58_check_netconn_state(mo_object_t *module, os_int32_t connect
     at_parser_t *parser = &module->parser;
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
-    char netconn_stat[11]                 = {0};
+    char netconn_stat[11] = {0};
 
-    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 2 * OS_TICK_PER_SECOND, .line_num = 1};
+    at_resp_t resp = {.buff = resp_buff,
+                      .buff_size = sizeof(resp_buff),
+                      .timeout = 2 * OS_TICK_PER_SECOND,
+                      .line_num = 1};
 
     if (at_parser_exec_cmd(parser, &resp, "AT+IPSTATUS=%d", connect_id) != OS_EOK)
     {
@@ -138,7 +141,7 @@ os_err_t n58_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
     mo_n58_t *n58 = os_container_of(module, mo_n58_t, parent);
 
     info->netconn_array = n58->netconn;
-    info->netconn_nums  = sizeof(n58->netconn) / sizeof(n58->netconn[0]);
+    info->netconn_nums = sizeof(n58->netconn) / sizeof(n58->netconn[0]);
 
     return OS_EOK;
 }
@@ -216,7 +219,10 @@ static os_err_t n58_netconn_do_destroy(mo_object_t *module, mo_netconn_t *netcon
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 5 * OS_TICK_PER_SECOND, .line_num = 1};
+    at_resp_t resp = {.buff = resp_buff,
+                      .buff_size = sizeof(resp_buff),
+                      .timeout = 5 * OS_TICK_PER_SECOND,
+                      .line_num = 1};
 
     os_err_t result = OS_EOK;
 
@@ -231,18 +237,14 @@ static os_err_t n58_netconn_do_destroy(mo_object_t *module, mo_netconn_t *netcon
 
     if (result != OS_EOK)
     {
-        ERROR("Module %s destroy %s netconn failed",
-               module->name,
-               (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
+        ERROR("Module %s destroy %s netconn failed", module->name, (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
         return result;
     }
 
     const char *source_line = at_resp_get_line(&resp, 1);
     if (OS_NULL == source_line)
     {
-        ERROR("Module %s destroy %s netconn failed",
-               module->name,
-               (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
+        ERROR("Module %s destroy %s netconn failed", module->name, (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
         return OS_ERROR;
     }
 
@@ -261,7 +263,7 @@ os_err_t n58_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 
     DEBUG("Module %s in %d netconn status", module->name, netconn->stat);
 
-    mo_n58_t *n58  = os_container_of(module, mo_n58_t, parent);
+    mo_n58_t *n58 = os_container_of(module, mo_n58_t, parent);
     if (n58 == OS_NULL)
     {
         ERROR("Module %s destroy netconn failed, get netconn_lock failed", module->name);
@@ -296,9 +298,9 @@ os_err_t n58_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 
     INFO("Module %s netconn id %d destroyed", module->name, netconn->connect_id);
 
-    netconn->connect_id  = -1;
-    netconn->stat        = NETCONN_STAT_NULL;
-    netconn->type        = NETCONN_TYPE_NULL;
+    netconn->connect_id = -1;
+    netconn->stat = NETCONN_STAT_NULL;
+    netconn->type = NETCONN_TYPE_NULL;
     netconn->remote_port = 0;
     inet_aton("0.0.0.0", &netconn->remote_ip);
 
@@ -310,10 +312,10 @@ os_err_t n58_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 os_err_t n58_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port)
 {
     at_parser_t *parser = &module->parser;
-    mo_n58_t    *n58    = os_container_of(module, mo_n58_t, parent);
-    os_err_t     result = OS_EOK;
+    mo_n58_t *n58 = os_container_of(module, mo_n58_t, parent);
+    os_err_t result = OS_EOK;
 
-    char resp_buff[AT_RESP_BUFF_SIZE_DEF]  = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
     char remote_ip[IPADDR_MAX_STR_LEN + 1] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 60 * OS_TICK_PER_SECOND};
@@ -388,7 +390,7 @@ __exit:
     {
         ip_addr_copy(netconn->remote_ip, addr);
         netconn->remote_port = port;
-        netconn->stat        = NETCONN_STAT_CONNECT;
+        netconn->stat = NETCONN_STAT_CONNECT;
         DEBUG("Module %s connect to %s:%d successfully!", module->name, remote_ip, port);
     }
     else
@@ -401,17 +403,17 @@ __exit:
 
 os_size_t n58_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
-    at_parser_t *parser    = &module->parser;
-    os_err_t     result    = OS_EOK;
-    os_size_t    sent_size = 0;
-    os_size_t    curr_size = 0;
-    os_uint32_t  event     = 0;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    os_size_t sent_size = 0;
+    os_size_t curr_size = 0;
+    os_uint32_t event = 0;
 
-    char resp_buff [AT_RESP_BUFF_SIZE_128] = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_128] = {0};
     char cmd_format[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 12 * OS_TICK_PER_SECOND};
-    mo_n58_t *n58  = os_container_of(module, mo_n58_t, parent);
+    mo_n58_t *n58 = os_container_of(module, mo_n58_t, parent);
 
     /* Protect the data sending process, prevent other threads to send AT commands */
     at_parser_exec_lock(parser);
@@ -529,8 +531,8 @@ static void urc_close_func(struct at_parser *parser, const char *data, os_size_t
     OS_ASSERT(OS_NULL != parser);
     OS_ASSERT(OS_NULL != data);
 
-    mo_object_t *module    = os_container_of(parser, mo_object_t, parser);
-    os_int32_t  connect_id = 0;
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
+    os_int32_t connect_id = 0;
 
     sscanf(data, "+TCPCLOSE: %d,&*s", &connect_id);
 
@@ -552,9 +554,9 @@ static void urc_connect_func(struct at_parser *parser, const char *data, os_size
     OS_ASSERT(OS_NULL != parser);
     OS_ASSERT(OS_NULL != data);
 
-    mo_object_t *module    = os_container_of(parser, mo_object_t, parser);
-    mo_n58_t    *n58       = os_container_of(module, mo_n58_t, parent);
-    os_int32_t  connect_id = 0;
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
+    mo_n58_t *n58 = os_container_of(module, mo_n58_t, parent);
+    os_int32_t connect_id = 0;
 
     sscanf(data, "%*[^:]: %d,%*s", &connect_id);
 
@@ -582,9 +584,9 @@ static void urc_send_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != parser);
     OS_ASSERT(OS_NULL != data);
 
-    mo_object_t *module    = os_container_of(parser, mo_object_t, parser);
-    mo_n58_t    *n58       = os_container_of(module, mo_n58_t, parent);
-    os_int32_t  connect_id = 0;
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
+    mo_n58_t *n58 = os_container_of(module, mo_n58_t, parent);
+    os_int32_t connect_id = 0;
 
     sscanf(data, "%*[^:]: %d,%*s", &connect_id);
 
@@ -611,7 +613,7 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
 {
     mo_object_t *module = os_container_of(parser, mo_object_t, parser);
 
-    char tmp_ch;  /* Get connecnt id */
+    char tmp_ch; /* Get connecnt id */
 
     /* handle the blank space */
     at_parser_recv(parser, &tmp_ch, 1, 0);
@@ -644,12 +646,12 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
     }
 
     os_size_t data_size = atoi(tmp_str);
-    os_int32_t timeout  = data_size > 10 ? data_size : 10;
+    os_int32_t timeout = data_size > 10 ? data_size : 10;
 
     INFO("Moudle %s netconn %d receive %d bytes data", parser->name, netconn->connect_id, data_size);
 
-    char *recv_buff    = os_calloc(1, data_size);
-    char  temp_buff[8] = {0};
+    char *recv_buff = os_calloc(1, data_size);
+    char temp_buff[8] = {0};
     if (recv_buff == OS_NULL)
     {
         /* read and clean the coming data */
@@ -691,13 +693,13 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
 }
 
 static at_urc_t gs_urc_table[] = {
-    {.prefix = "+TCPSEND",   .suffix = "\r\n",       .func = urc_send_func},
-    {.prefix = "+UDPSEND",   .suffix = "\r\n",       .func = urc_send_func},
-    {.prefix = "+TCPSETUP:", .suffix = "\r\n",       .func = urc_connect_func},
-    {.prefix = "+UDPSETUP:", .suffix = "\r\n",       .func = urc_connect_func},
+    {.prefix = "+TCPSEND", .suffix = "\r\n", .func = urc_send_func},
+    {.prefix = "+UDPSEND", .suffix = "\r\n", .func = urc_send_func},
+    {.prefix = "+TCPSETUP:", .suffix = "\r\n", .func = urc_connect_func},
+    {.prefix = "+UDPSETUP:", .suffix = "\r\n", .func = urc_connect_func},
     {.prefix = "+TCPCLOSE:", .suffix = "Closed\r\n", .func = urc_close_func},
-    {.prefix = "",           .suffix = "+TCPRECV:",  .func = urc_recv_func},
-    {.prefix = "",           .suffix = "+UDPRECV:",  .func = urc_recv_func},
+    {.prefix = "", .suffix = "+TCPRECV:", .func = urc_recv_func},
+    {.prefix = "", .suffix = "+UDPRECV:", .func = urc_recv_func},
 };
 
 void n58_netconn_init(mo_n58_t *module)

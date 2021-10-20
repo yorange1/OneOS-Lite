@@ -20,9 +20,9 @@
  * 2020-06-16   OneOS Team      First Version
  ***********************************************************************************************************************
  */
- #ifndef __NETDB_H__
- #define __NETDB_H__
- 
+#ifndef __NETDB_H__
+#define __NETDB_H__
+
 #include <sys/socket.h>
 
 #endif

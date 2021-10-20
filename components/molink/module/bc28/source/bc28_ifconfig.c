@@ -31,7 +31,7 @@
 #ifdef BC28_USING_IFCONFIG_OPS
 
 #define MO_LOG_TAG "bc28.ifconfig"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #define BC28_IFCONFIG_INVALID_DEF (-1)
@@ -57,12 +57,12 @@ os_err_t bc28_ifconfig(mo_object_t *module)
     }
 
     os_uint8_t rssi = 0;
-    os_uint8_t ber  = 0;
+    os_uint8_t ber = 0;
 
     if (bc28_get_csq(module, &rssi, &ber) != OS_EOK)
     {
         rssi = 0;
-        ber  = 0;
+        ber = 0;
     }
 
     os_kprintf("\r\nLIST AT MODULE INFORMATION\r\n");
@@ -89,10 +89,10 @@ os_err_t bc28_ifconfig(mo_object_t *module)
 
 os_err_t bc28_set_dnsserver(mo_object_t *module, dns_server_t dns)
 {
-    /* BC28 must set usable dns server befor QDNS(gethostbyname), 
+    /* BC28 must set usable dns server befor QDNS(gethostbyname),
        otherwise both func will not be reachable before reboot! */
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_EOK;
+    os_err_t result = OS_EOK;
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
@@ -119,16 +119,16 @@ os_err_t bc28_set_dnsserver(mo_object_t *module, dns_server_t dns)
     {
         result = at_parser_exec_cmd(parser, &resp, "AT+QIDNSCFG=\"%s\",\"%s\"", dns.primary_dns, dns.secondary_dns);
     }
-    
+
     return result;
 }
 
 os_err_t bc28_get_dnsserver(mo_object_t *module, dns_server_t *dns)
 {
-    at_parser_t *parser         = &module->parser;
-    os_err_t     result         = OS_EOK;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
 
-    char primary_dns[IPADDR_MAX_STR_LEN + 1]   = {0};
+    char primary_dns[IPADDR_MAX_STR_LEN + 1] = {0};
     char secondary_dns[IPADDR_MAX_STR_LEN + 1] = {0};
 
     if (OS_NULL == parser)
@@ -145,9 +145,7 @@ os_err_t bc28_get_dnsserver(mo_object_t *module, dns_server_t *dns)
 
     char resp_buff[4 * AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t at_resp = {.buff      = resp_buff,
-                         .buff_size = sizeof(resp_buff),
-                         .timeout   = 16 * OS_TICK_PER_SECOND};
+    at_resp_t at_resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 16 * OS_TICK_PER_SECOND};
 
     result = at_parser_exec_cmd(parser, &at_resp, "AT+QIDNSCFG?");
 
@@ -178,10 +176,10 @@ __exit:
 os_err_t bc28_get_ipaddr(mo_object_t *module, char ip[])
 {
     at_parser_t *parser = &module->parser;
-    os_int8_t    ucid   = BC28_IFCONFIG_INVALID_DEF;
-    os_int8_t    len    = BC28_IFCONFIG_INVALID_DEF;
+    os_int8_t ucid = BC28_IFCONFIG_INVALID_DEF;
+    os_int8_t len = BC28_IFCONFIG_INVALID_DEF;
 
-    char ipaddr[IPADDR_MAX_STR_LEN + 1]       = {0};
+    char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
     char resp_buff[2 * AT_RESP_BUFF_SIZE_DEF] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 5 * OS_TICK_PER_SECOND};
@@ -215,7 +213,7 @@ os_err_t bc28_get_ipaddr(mo_object_t *module, char ip[])
     }
 
 __exit:
-    
+
     return result;
 }
 

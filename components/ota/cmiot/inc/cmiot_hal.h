@@ -43,12 +43,12 @@ typedef enum
 
 typedef struct
 {
-    cmiot_uint8  inited;
+    cmiot_uint8 inited;
     cmiot_uint16 update_result;
-    cmiot_char   mid[CMIOT_MID_MAXLEN + 1];
-    cmiot_char   code[32];
-    cmiot_char   device_id[CMIOT_DEVICEID_MAX_LEN + 1];
-    cmiot_char   device_secret[CMIOT_DEVICESECRET_MAX_LEN + 1];
+    cmiot_char mid[CMIOT_MID_MAXLEN + 1];
+    cmiot_char code[32];
+    cmiot_char device_id[CMIOT_DEVICEID_MAX_LEN + 1];
+    cmiot_char device_secret[CMIOT_DEVICESECRET_MAX_LEN + 1];
     cmiot_uint32 index;
     cmiot_uint32 index_max;
     cmiot_uint32 delta_id;
@@ -68,42 +68,42 @@ typedef enum
 
 typedef struct
 {
-    cmiot_uint8  result;
+    cmiot_uint8 result;
     cmiot_uint32 state;
 } CMIOT_ALIGN(1) cmiot_action_result_t;
 
-void            cmiot_hal_update_device(cmiot_char * mid,
-                                        cmiot_uint16 mid_len,
-                                        cmiot_char * device_id,
-                                        cmiot_uint16 device_id_len,
-                                        cmiot_char * device_secret,
-                                        cmiot_uint16 device_secret_len);
-cmiot_int32     cmiot_hal_flash_read(cmiot_uint8 type, cmiot_uint32 addr, cmiot_char *buf, cmiot_uint32 size);
-cmiot_int32     cmiot_hal_flash_write(cmiot_uint8 type, cmiot_uint32 addr, cmiot_char *buf, cmiot_uint32 size);
-cmiot_int32     cmiot_hal_flash_erase(cmiot_uint8 type, cmiot_uint32 addr, cmiot_uint32 size);
-cmiot_uint32    cmiot_hal_get_true_blocksize(cmiot_uint8 type);
-cmiot_uint32    cmiot_hal_get_true_pagesize(cmiot_uint8 type);
-cmiot_uint32    cmiot_hal_get_info_addr(void);
-cmiot_uint32    cmiot_hal_get_backup_addr(void);
-cmiot_uint32    cmiot_hal_get_app_addr(void);
-cmiot_uint32    cmiot_hal_get_delta_addr(void);
-cmiot_uint32    cmiot_hal_get_delta_size(void);
-cmiot_uint32    cmiot_hal_get_download_size(void);
-cmiot_bool      cmiot_hal_write_delta(cmiot_uint16 index, cmiot_char *data, cmiot_uint16 len);
-cmiot_bool      cmiot_hal_erase_sector(cmiot_uint8 type, cmiot_uint32 addr);
+void cmiot_hal_update_device(cmiot_char *mid,
+                             cmiot_uint16 mid_len,
+                             cmiot_char *device_id,
+                             cmiot_uint16 device_id_len,
+                             cmiot_char *device_secret,
+                             cmiot_uint16 device_secret_len);
+cmiot_int32 cmiot_hal_flash_read(cmiot_uint8 type, cmiot_uint32 addr, cmiot_char *buf, cmiot_uint32 size);
+cmiot_int32 cmiot_hal_flash_write(cmiot_uint8 type, cmiot_uint32 addr, cmiot_char *buf, cmiot_uint32 size);
+cmiot_int32 cmiot_hal_flash_erase(cmiot_uint8 type, cmiot_uint32 addr, cmiot_uint32 size);
+cmiot_uint32 cmiot_hal_get_true_blocksize(cmiot_uint8 type);
+cmiot_uint32 cmiot_hal_get_true_pagesize(cmiot_uint8 type);
+cmiot_uint32 cmiot_hal_get_info_addr(void);
+cmiot_uint32 cmiot_hal_get_backup_addr(void);
+cmiot_uint32 cmiot_hal_get_app_addr(void);
+cmiot_uint32 cmiot_hal_get_delta_addr(void);
+cmiot_uint32 cmiot_hal_get_delta_size(void);
+cmiot_uint32 cmiot_hal_get_download_size(void);
+cmiot_bool cmiot_hal_write_delta(cmiot_uint16 index, cmiot_char *data, cmiot_uint16 len);
+cmiot_bool cmiot_hal_erase_sector(cmiot_uint8 type, cmiot_uint32 addr);
 cmiot_update_t *cmiot_hal_init_update(void);
 cmiot_update_t *cmiot_hal_get_update(void);
-cmiot_bool      cmiot_hal_set_update(cmiot_update_t *cmiot_update);
-cmiot_uint32    cmiot_hal_get_delta_id(void);
-cmiot_char *    cmiot_hal_get_device_id(void);
-cmiot_char *    cmiot_hal_get_device_secret(void);
-cmiot_bool      cmiot_hal_set_download_index(cmiot_uint32 index);
-cmiot_uint32    cmiot_hal_get_download_index(void);
-void            cmiot_hal_reset_index_pos(void);
+cmiot_bool cmiot_hal_set_update(cmiot_update_t *cmiot_update);
+cmiot_uint32 cmiot_hal_get_delta_id(void);
+cmiot_char *cmiot_hal_get_device_id(void);
+cmiot_char *cmiot_hal_get_device_secret(void);
+cmiot_bool cmiot_hal_set_download_index(cmiot_uint32 index);
+cmiot_uint32 cmiot_hal_get_download_index(void);
+void cmiot_hal_reset_index_pos(void);
 
-cmiot_char * cmiot_hal_get_mid(void);
+cmiot_char *cmiot_hal_get_mid(void);
 cmiot_uint16 cmiot_hal_get_update_result(void);
-fal_part_t * cmiot_hal_get_device(cmiot_uint8 type);
+fal_part_t *cmiot_hal_get_device(cmiot_uint8 type);
 
 #ifdef __cplusplus
 }

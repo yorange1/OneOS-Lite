@@ -27,22 +27,23 @@
 #define MO_LOG_LVL MO_LOG_INFO
 #include <mo_log.h>
 
-#define EC200X_600S_MIN_PING_TIME   (1)
-#define EC200X_600S_MAX_PING_TIME   (255)
-#define EC200X_600S_PING_OK         (0)
-#define EC200X_600S_PING_TIMEOUT    (569)
+#define EC200X_600S_MIN_PING_TIME (1)
+#define EC200X_600S_MAX_PING_TIME (255)
+#define EC200X_600S_PING_OK       (0)
+#define EC200X_600S_PING_TIMEOUT  (569)
 
 #ifdef EC200X_600S_USING_PING_OPS
 
-os_err_t ec200x_600s_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp)
+os_err_t
+ec200x_600s_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp)
 {
-    at_parser_t *parser        = &self->parser;
-    os_err_t     result        = OS_EOK;
-    os_int32_t   response      = -1;
-    os_uint16_t  recv_data_len = 0;
-    os_uint32_t  ping_time     = 0;
-    os_int16_t   ttl           = -1;
-    os_uint32_t  timeout_s     = timeout / 1000; /* Milliseconds convert to seconds */
+    at_parser_t *parser = &self->parser;
+    os_err_t result = OS_EOK;
+    os_int32_t response = -1;
+    os_uint16_t recv_data_len = 0;
+    os_uint32_t ping_time = 0;
+    os_int16_t ttl = -1;
+    os_uint32_t timeout_s = timeout / 1000; /* Milliseconds convert to seconds */
 
     char ip_addr[IPADDR_MAX_STR_LEN + 1] = {0};
 
@@ -63,10 +64,10 @@ os_err_t ec200x_600s_ping(mo_object_t *self, const char *host, os_uint16_t len, 
     char resp_buff[AT_RESP_BUFF_SIZE_256] = {0};
 
     /* Need to wait for 3 lines response msg */
-    at_resp_t at_resp = {.buff      = resp_buff,
+    at_resp_t at_resp = {.buff = resp_buff,
                          .buff_size = sizeof(resp_buff),
-                         .line_num  = 3,
-                         .timeout   = (5 + timeout_s) * OS_TICK_PER_SECOND};
+                         .line_num = 3,
+                         .timeout = (5 + timeout_s) * OS_TICK_PER_SECOND};
 
     /* REF: EC200S_600S QPING */
     if (at_parser_exec_cmd(parser, &at_resp, "AT+QPING=1,%s,%u,1", host, timeout_s) < 0)
@@ -101,9 +102,9 @@ os_err_t ec200x_600s_ping(mo_object_t *self, const char *host, os_uint16_t len, 
         inet_aton(ip_addr, &(resp->ip_addr));
 
         resp->data_len = recv_data_len;
-        resp->time     = ping_time;
-        resp->ttl      = ttl;
-        result         = OS_EOK;
+        resp->time = ping_time;
+        resp->ttl = ttl;
+        result = OS_EOK;
         break;
 
     case EC200X_600S_PING_TIMEOUT:

@@ -74,22 +74,22 @@ typedef enum
 #define CMIOT_DEVICEID_MAX_LEN     31
 #define CMIOT_DEVICESECRET_MAX_LEN 63
 
-typedef char               cmiot_char;
-typedef unsigned char      cmiot_uint8;
-typedef signed char        cmiot_int8;
+typedef char cmiot_char;
+typedef unsigned char cmiot_uint8;
+typedef signed char cmiot_int8;
 typedef unsigned short int cmiot_uint16;
-typedef signed short int   cmiot_int16;
+typedef signed short int cmiot_int16;
 
 #ifdef CMIOT_8BIT
-typedef unsigned long      cmiot_uint32;
-typedef signed long        cmiot_int32;
+typedef unsigned long cmiot_uint32;
+typedef signed long cmiot_int32;
 typedef unsigned long long cmiot_uint64;
-typedef signed long long   cmiot_int64;
+typedef signed long long cmiot_int64;
 #else
-typedef unsigned int       cmiot_uint32;
-typedef signed int         cmiot_int32;
+typedef unsigned int cmiot_uint32;
+typedef signed int cmiot_int32;
 typedef unsigned long long cmiot_uint64;
-typedef signed long long   cmiot_int64;
+typedef signed long long cmiot_int64;
 #endif
 
 typedef enum

@@ -67,7 +67,7 @@ os_err_t esp32_get_firmware_version(mo_object_t *self, mo_firmware_version_t *ve
     for (int i = 1; i <= resp.line_counts - 2; i++)
     {
         const char *source_line = at_resp_get_line(&resp, i);
-        os_size_t   line_length = strlen(source_line);
+        os_size_t line_length = strlen(source_line);
 
         char **dest_line = &version->ver_info[version->line_counts];
 
@@ -79,7 +79,7 @@ os_err_t esp32_get_firmware_version(mo_object_t *self, mo_firmware_version_t *ve
         }
 
         strncpy(*dest_line, source_line, line_length);
-        version->line_counts ++;
+        version->line_counts++;
     }
 
     return OS_EOK;

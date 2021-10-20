@@ -73,12 +73,12 @@ typedef struct mo_mb26
     mo_object_t parent;
 #ifdef MB26_USING_NETCONN_OPS
     mo_netconn_t netconn[MB26_NETCONN_NUM];
-    os_mutex_t   netconn_lock;
+    os_mutex_t netconn_lock;
 #endif /* MB26_USING_NETCONN_OPS */
 } mo_mb26_t;
 
 mo_object_t *module_mb26_create(const char *name, void *parser_config);
-os_err_t     module_mb26_destroy(mo_object_t *self);
+os_err_t module_mb26_destroy(mo_object_t *self);
 
 #endif /* MOLINK_USING_MB26 */
 

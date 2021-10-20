@@ -73,14 +73,14 @@ typedef struct mo_l610
     mo_object_t parent;
 #ifdef L610_USING_NETCONN_OPS
     mo_netconn_t netconn[L610_NETCONN_NUM];
-	
+
     os_event_t netconn_evt;
     os_mutex_t netconn_lock;
 #endif /* L610_USING_NETCONN_OPS */
 } mo_l610_t;
 
 mo_object_t *module_l610_create(const char *name, void *parser_config);
-os_err_t     module_l610_destroy(mo_object_t *self);
+os_err_t module_l610_destroy(mo_object_t *self);
 
 #endif /* MOLINK_USING_L610 */
 
@@ -89,4 +89,3 @@ os_err_t     module_l610_destroy(mo_object_t *self);
 #endif /* __cplusplus */
 
 #endif /* __L610_H__ */
-

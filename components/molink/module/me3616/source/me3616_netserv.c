@@ -29,11 +29,10 @@
 #include <stdio.h>
 
 #define MO_LOG_TAG "me3616_netserv"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #define IP_SIZE 16
-
 
 #ifdef ME3616_USING_NETSERV_OPS
 
@@ -118,7 +117,7 @@ os_err_t me3616_get_cgact(mo_object_t *self, os_uint8_t *cid, os_uint8_t *act_st
     {
         return OS_ERROR;
     }
-    
+
     if (at_resp_get_data_by_line(&resp, *cid, "+CGACT: %d,%d", cid, act_stat) <= 0)
     {
         ERROR("Get %s module cgact state failed", self->name);
@@ -152,4 +151,3 @@ os_err_t me3616_get_csq(mo_object_t *self, os_uint8_t *rssi, os_uint8_t *ber)
 }
 
 #endif /* me3616_USING_NETSERV_OPS */
-

@@ -35,11 +35,11 @@ extern "C" {
 
 #ifdef MOLINK_USING_EASYLOG
 
-#define MO_EASYLOG_SYS_TIME_LEN      (23)
-#define MO_EASTLOG_CSQ_WARNING_LV    (10)           /* Alarm threshold for poor signal quality, define by user */
+#define MO_EASYLOG_SYS_TIME_LEN   (23)
+#define MO_EASTLOG_CSQ_WARNING_LV (10) /* Alarm threshold for poor signal quality, define by user */
 
 #ifndef MO_EASYLOG_USER_DATA_LEN
-#define MO_EASYLOG_USER_DATA_LEN     (8)            /* The size defined by user application, default value 8 */
+#define MO_EASYLOG_USER_DATA_LEN (8) /* The size defined by user application, default value 8 */
 #endif
 
 typedef enum mo_easylog_upload_flag
@@ -63,54 +63,54 @@ typedef enum mo_easylog_network_status
 
 typedef struct mo_easylog
 {
-    os_uint8_t  upload_flag;
+    os_uint8_t upload_flag;
     os_uint16_t len;
-    os_uint8_t  net_status;
+    os_uint8_t net_status;
 #ifdef OS_USING_RTC
-    char        sys_time[MO_EASYLOG_SYS_TIME_LEN + 1];  /* "Jan  1 01:07:59 2000"--2000年01月01日01时07分59秒 */
+    char sys_time[MO_EASYLOG_SYS_TIME_LEN + 1]; /* "Jan  1 01:07:59 2000"--2000年01月01日01时07分59秒 */
 #endif
 #ifdef MOLINK_EASYLOG_USING_IMEI
-    char        imei[MO_IMEI_LEN + 1];
+    char imei[MO_IMEI_LEN + 1];
 #endif
 #ifdef MOLINK_EASYLOG_USING_IMSI
-    char        imsi[MO_IMSI_LEN + 1];
+    char imsi[MO_IMSI_LEN + 1];
 #endif
 #ifdef MOLINK_EASYLOG_USING_ICCID
-    char        iccid[MO_ICCID_LEN + 1];
+    char iccid[MO_ICCID_LEN + 1];
 #endif
 #ifdef MOLINK_EASYLOG_USING_CSQ
-    os_uint8_t  csq_rssi;
-    os_uint8_t  csq_ber;
+    os_uint8_t csq_rssi;
+    os_uint8_t csq_ber;
 #endif
 #ifdef MOLINK_EASYLOG_USING_PCI
-    os_int32_t  pci;
+    os_int32_t pci;
 #endif
 #ifdef MOLINK_EASYLOG_USING_EARFCN
-    os_int32_t  earfcn;
+    os_int32_t earfcn;
 #endif
 #ifdef MOLINK_EASYLOG_USING_CELLID
-    char        cell_id[CELL_ID_MAX_LEN + 1];
+    char cell_id[CELL_ID_MAX_LEN + 1];
 #endif
 #ifdef MOLINK_EASYLOG_USING_RSRP
-    os_int32_t  rsrp;
+    os_int32_t rsrp;
 #endif
 #ifdef MOLINK_EASYLOG_USING_RSRQ
-    os_int32_t  rsrq;
+    os_int32_t rsrq;
 #endif
 #ifdef MOLINK_EASYLOG_USING_SNR
-    os_int32_t  snr;
+    os_int32_t snr;
 #endif
 #ifdef MOLINK_EASYLOG_USING_TX_PWR
-    os_int32_t  tx_power;
+    os_int32_t tx_power;
 #endif
 #ifdef MOLINK_EASYLOG_USING_ECL
-    os_int32_t  ecl;
+    os_int32_t ecl;
 #endif
 #ifdef MOLINK_EASYLOG_USING_USER_DATA
-    os_uint8_t  user_data[MO_EASYLOG_USER_DATA_LEN];
+    os_uint8_t user_data[MO_EASYLOG_USER_DATA_LEN];
 #endif
 #ifdef MOLINK_EASYLOG_USING_CHECKSUM
-    os_uint8_t  checksum;
+    os_uint8_t checksum;
 #endif
 } mo_easylog_t;
 
@@ -119,8 +119,8 @@ os_uint8_t mo_easylog_calculate_rx_checksum(os_uint8_t *data, os_uint32_t len);
 #endif
 
 mo_easylog_t *mo_easylog_create(const os_uint8_t *user_data, os_size_t data_len);
-os_err_t      mo_easylog_destory(mo_easylog_t *easylog);
-os_err_t      mo_easylog_info_printf(mo_easylog_t *easylog_obj);
+os_err_t mo_easylog_destory(mo_easylog_t *easylog);
+os_err_t mo_easylog_info_printf(mo_easylog_t *easylog_obj);
 #endif /* MOLINK_USING_EASYLOG */
 
 #endif /* NET_USING_MOLINK */

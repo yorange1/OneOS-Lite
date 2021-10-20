@@ -32,37 +32,37 @@
 #ifdef BC95_USING_NETCONN_OPS
 
 #define MO_LOG_TAG "bc95.netconn"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
-#define BC95_EVENT_DOMAIN_OK     (1L << 0)
-#define BC95_EVENT_DOMAIN_FAIL   (1L << 1)
-#ifdef  BC95_USING_PING_OPS
-#define BC95_EVENT_PING_OK       (1L << 2)
-#define BC95_EVENT_PING_FAIL     (1L << 3)
+#define BC95_EVENT_DOMAIN_OK   (1L << 0)
+#define BC95_EVENT_DOMAIN_FAIL (1L << 1)
+#ifdef BC95_USING_PING_OPS
+#define BC95_EVENT_PING_OK   (1L << 2)
+#define BC95_EVENT_PING_FAIL (1L << 3)
 #endif /* BC95_USING_PING_OPS */
 
-#define PROTOCOL_TYPE_TCP        (6)
-#define PROTOCOL_TYPE_UDP        (17)
-#define SEND_DATA_MAX_SIZE       (1358)
-#define BC95_CONN_ID_NULL        (-1)
-#define BC95_SEND_BLOCK_SIZE     (128)
+#define PROTOCOL_TYPE_TCP    (6)
+#define PROTOCOL_TYPE_UDP    (17)
+#define SEND_DATA_MAX_SIZE   (1358)
+#define BC95_CONN_ID_NULL    (-1)
+#define BC95_SEND_BLOCK_SIZE (128)
 
-#ifdef  BC95_USING_PING_OPS
-#define BC95_MIN_PING_PKG_LEN    (12)
-#define BC95_MAX_PING_PKG_LEN    (1500)
-#define BC95_MIN_PING_TIMEOUT    (10)
-#define BC95_MAX_PING_TIMEOUT    (600000)
-#define BC95_PING_INVALID_DEF    (-1)
-#define BC95_PING_BUFFER_SIZE    (128)
+#ifdef BC95_USING_PING_OPS
+#define BC95_MIN_PING_PKG_LEN (12)
+#define BC95_MAX_PING_PKG_LEN (1500)
+#define BC95_MIN_PING_TIMEOUT (10)
+#define BC95_MAX_PING_TIMEOUT (600000)
+#define BC95_PING_INVALID_DEF (-1)
+#define BC95_PING_BUFFER_SIZE (128)
 #endif /* BC95_USING_PING_OPS */
 
-#define BC95_NETCONN_MQ_NAME     "bc95_nc_mq"
+#define BC95_NETCONN_MQ_NAME "bc95_nc_mq"
 #ifndef BC95_NETCONN_MQ_MSG_SIZE
 #define BC95_NETCONN_MQ_MSG_SIZE (sizeof(mo_notconn_msg_t))
 #endif /* BC95_NETCONN_MQ_MSG_SIZE */
 #ifndef BC95_NETCONN_MQ_MSG_MAX
-#define BC95_NETCONN_MQ_MSG_MAX  (5)
+#define BC95_NETCONN_MQ_MSG_MAX (5)
 #endif /* BC95_NETCONN_MQ_MSG_MAX */
 
 static os_err_t bc95_lock(os_mutex_t *mutex)
@@ -124,16 +124,16 @@ os_err_t bc95_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
     mo_bc95_t *bc95 = os_container_of(module, mo_bc95_t, parent);
 
     info->netconn_array = bc95->netconn;
-    info->netconn_nums  = sizeof(bc95->netconn) / sizeof(bc95->netconn[0]);
+    info->netconn_nums = sizeof(bc95->netconn) / sizeof(bc95->netconn[0]);
 
     return OS_EOK;
 }
 
 mo_netconn_t *bc95_netconn_create(mo_object_t *module, mo_netconn_type_t type)
 {
-    mo_bc95_t   *bc95   = os_container_of(module, mo_bc95_t, parent);
+    mo_bc95_t *bc95 = os_container_of(module, mo_bc95_t, parent);
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_EOK;
+    os_err_t result = OS_EOK;
 
     bc95_lock(&bc95->netconn_lock);
 
@@ -191,9 +191,7 @@ mo_netconn_t *bc95_netconn_create(mo_object_t *module, mo_netconn_type_t type)
         return OS_NULL;
     }
 
-    netconn->mq = os_mq_create(BC95_NETCONN_MQ_NAME,
-                               BC95_NETCONN_MQ_MSG_SIZE,
-                               BC95_NETCONN_MQ_MSG_MAX);
+    netconn->mq = os_mq_create(BC95_NETCONN_MQ_NAME, BC95_NETCONN_MQ_MSG_SIZE, BC95_NETCONN_MQ_MSG_MAX);
     if (OS_NULL == netconn->mq)
     {
         ERROR("%s message queue create failed, no enough memory.", module->name);
@@ -210,9 +208,9 @@ mo_netconn_t *bc95_netconn_create(mo_object_t *module, mo_netconn_type_t type)
 
 os_err_t bc95_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 {
-    at_parser_t *parser  = &module->parser;
-    os_err_t     result  = OS_ERROR;
-    os_int32_t   conn_id = BC95_CONN_ID_NULL;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_ERROR;
+    os_int32_t conn_id = BC95_CONN_ID_NULL;
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
@@ -228,8 +226,8 @@ os_err_t bc95_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
         if (result != OS_EOK)
         {
             ERROR("Module %s destroy %s netconn failed",
-                      module->name,
-                      (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
+                  module->name,
+                  (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
             return result;
         }
         break;
@@ -244,12 +242,12 @@ os_err_t bc95_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
         netconn->mq = OS_NULL;
     }
 
-    conn_id              = netconn->connect_id;
-    netconn->connect_id  = BC95_CONN_ID_NULL;
-    netconn->stat        = NETCONN_STAT_NULL;
-    netconn->type        = NETCONN_TYPE_NULL;
+    conn_id = netconn->connect_id;
+    netconn->connect_id = BC95_CONN_ID_NULL;
+    netconn->stat = NETCONN_STAT_NULL;
+    netconn->type = NETCONN_TYPE_NULL;
     netconn->remote_port = 0;
-    netconn->local_port  = 0;
+    netconn->local_port = 0;
     inet_aton("0.0.0.0", &netconn->remote_ip);
 
     INFO("Module %s netconn_id: %d destroyed", module->name, conn_id);
@@ -260,17 +258,15 @@ os_err_t bc95_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 #ifdef BC95_USING_DNS
 os_err_t bc95_netconn_gethostbyname(mo_object_t *module, const char *domain_name, ip_addr_t *addr)
 {
-    os_err_t     result = OS_EOK;
-    os_uint32_t  event  = 0;
+    os_err_t result = OS_EOK;
+    os_uint32_t event = 0;
     at_parser_t *parser = &module->parser;
-    mo_bc95_t   *bc95   = os_container_of(module, mo_bc95_t, parent);
+    mo_bc95_t *bc95 = os_container_of(module, mo_bc95_t, parent);
 
     char resp_buff[4 * AT_RESP_BUFF_SIZE_DEF] = {0};
-    char addr_str[IPADDR_MAX_STR_LEN + 1]     = {0};
+    char addr_str[IPADDR_MAX_STR_LEN + 1] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 20 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 20 * OS_TICK_PER_SECOND};
 
     bc95_lock(&bc95->netconn_lock);
 
@@ -350,7 +346,7 @@ static os_err_t bc95_tcp_connect(at_parser_t *parser, os_int32_t connect_id, cha
 os_err_t bc95_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port)
 {
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_EOK;
+    os_err_t result = OS_EOK;
 
     char remote_ip[IPADDR_MAX_STR_LEN + 1] = {0};
 
@@ -366,7 +362,7 @@ os_err_t bc95_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_add
 
 #ifdef BC95_USING_UDP
     case NETCONN_TYPE_UDP:
-        result = OS_EOK;    /* UDP does not need to connect */
+        result = OS_EOK; /* UDP does not need to connect */
         break;
 #endif
 
@@ -383,7 +379,7 @@ os_err_t bc95_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_add
 
     ip_addr_copy(netconn->remote_ip, addr);
     netconn->remote_port = port;
-    netconn->stat        = NETCONN_STAT_CONNECT;
+    netconn->stat = NETCONN_STAT_CONNECT;
 
     DEBUG("Module %s connect to %s:%u successfully!", module->name, remote_ip, port);
 
@@ -392,8 +388,8 @@ os_err_t bc95_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_add
 
 static os_size_t bc95_single_packet_send(at_parser_t *parser, const char *data, os_size_t size)
 {
-    os_size_t  sent_size     = 0; /* raw data sent size */
-    os_size_t  curr_pkt_size = 0; /* raw data current packet size */
+    os_size_t sent_size = 0;     /* raw data sent size */
+    os_size_t curr_pkt_size = 0; /* raw data current packet size */
 
     char hex_str_buff[BC95_SEND_BLOCK_SIZE] = {0};
 
@@ -418,17 +414,17 @@ __exit:
 
 static os_size_t bc95_hexdata_send(at_parser_t *parser, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
-    os_err_t   result            = OS_EOK;
-    os_int32_t connect_id        = BC95_CONN_ID_NULL;
-    os_size_t  sent_size         = 0;
-    os_size_t  cur_pkt_size      = 0;
-    os_size_t  cnt               = 0;
+    os_err_t result = OS_EOK;
+    os_int32_t connect_id = BC95_CONN_ID_NULL;
+    os_size_t sent_size = 0;
+    os_size_t cur_pkt_size = 0;
+    os_size_t cnt = 0;
 
-    char send_cmd[AT_RESP_BUFF_SIZE_DEF]   = {0};
+    char send_cmd[AT_RESP_BUFF_SIZE_DEF] = {0};
     char remote_ip[IPADDR_MAX_STR_LEN + 1] = {0};
-    char resp_buff[AT_RESP_BUFF_SIZE_DEF]  = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff = resp_buff, .buff_size = AT_RESP_BUFF_SIZE_DEF, .timeout =  10 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = AT_RESP_BUFF_SIZE_DEF, .timeout = 10 * OS_TICK_PER_SECOND};
 
     strncpy(remote_ip, inet_ntoa(netconn->remote_ip), IPADDR_MAX_STR_LEN);
 
@@ -454,19 +450,17 @@ static os_size_t bc95_hexdata_send(at_parser_t *parser, mo_netconn_t *netconn, c
 
         if (NETCONN_TYPE_TCP == netconn->type)
         {
-            snprintf(send_cmd, sizeof(send_cmd),
-                    "AT+NSOSD=%d,%d,",
-                     netconn->connect_id,
-                    (int)cur_pkt_size);
+            snprintf(send_cmd, sizeof(send_cmd), "AT+NSOSD=%d,%d,", netconn->connect_id, (int)cur_pkt_size);
         }
         else /* other cases judged by upper function */
         {
-            snprintf(send_cmd, sizeof(send_cmd),
-                    "AT+NSOST=%d,%s,%d,%hu,",
+            snprintf(send_cmd,
+                     sizeof(send_cmd),
+                     "AT+NSOST=%d,%s,%d,%hu,",
                      netconn->connect_id,
                      remote_ip,
                      netconn->remote_port,
-                    (int)cur_pkt_size);
+                     (int)cur_pkt_size);
         }
 
         /* send cmd prefix */
@@ -505,22 +499,18 @@ __exit:
 
     if (result != OS_EOK)
     {
-        ERROR("Module %s netconn %d send %d bytes data failed!",
-               parser->name,
-               netconn->connect_id,
-               cur_pkt_size);
+        ERROR("Module %s netconn %d send %d bytes data failed!", parser->name, netconn->connect_id, cur_pkt_size);
         return 0;
     }
 
     return sent_size;
 }
 
-
 os_size_t bc95_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
-    at_parser_t *parser    = &module->parser;
-    os_size_t    sent_size = 0;
-    mo_bc95_t   *bc95      = os_container_of(module, mo_bc95_t, parent);
+    at_parser_t *parser = &module->parser;
+    os_size_t sent_size = 0;
+    mo_bc95_t *bc95 = os_container_of(module, mo_bc95_t, parent);
 
     if (OS_EOK != bc95_lock(&bc95->netconn_lock))
     {
@@ -547,19 +537,20 @@ os_size_t bc95_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const ch
 }
 
 #ifdef BC95_USING_PING_OPS
-os_err_t bc95_ping_handler(mo_object_t *module, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp)
+os_err_t
+bc95_ping_handler(mo_object_t *module, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp)
 {
-    at_parser_t *parser   = &module->parser;
-    os_err_t     result   = OS_EOK;
-    os_int16_t   ttl      = BC95_PING_INVALID_DEF;
-    ip_addr_t    addr     = {0};
-    os_uint32_t  req_time = 0;
-    os_uint32_t  event    = 0;
-    mo_bc95_t   *bc95     = os_container_of(module, mo_bc95_t, parent);
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    os_int16_t ttl = BC95_PING_INVALID_DEF;
+    ip_addr_t addr = {0};
+    os_uint32_t req_time = 0;
+    os_uint32_t event = 0;
+    mo_bc95_t *bc95 = os_container_of(module, mo_bc95_t, parent);
 
-    char ip_send[IPADDR_MAX_STR_LEN + 1]  = {0};
-    char ip_recv[IPADDR_MAX_STR_LEN + 1]  = {0};
-    char ret_buff[BC95_PING_BUFFER_SIZE]  = {0};
+    char ip_send[IPADDR_MAX_STR_LEN + 1] = {0};
+    char ip_recv[IPADDR_MAX_STR_LEN + 1] = {0};
+    char ret_buff[BC95_PING_BUFFER_SIZE] = {0};
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     bc95_lock(&bc95->netconn_lock);
@@ -573,14 +564,18 @@ os_err_t bc95_ping_handler(mo_object_t *module, const char *host, os_uint16_t le
     if ((len < BC95_MIN_PING_PKG_LEN) || (len > BC95_MAX_PING_PKG_LEN))
     {
         ERROR("BC95 ping: ping package len[%d] is out of range[%d, %d].",
-                  len, BC95_MIN_PING_PKG_LEN, BC95_MAX_PING_PKG_LEN);
+              len,
+              BC95_MIN_PING_PKG_LEN,
+              BC95_MAX_PING_PKG_LEN);
         return OS_ERROR;
     }
 
     if ((timeout < BC95_MIN_PING_TIMEOUT) || (timeout > BC95_MAX_PING_TIMEOUT))
     {
         ERROR("BC95 ping: user set ping timeout value %ums is out of range[%dms, %dms].",
-                  timeout, BC95_MIN_PING_TIMEOUT, BC95_MAX_PING_TIMEOUT);
+              timeout,
+              BC95_MIN_PING_TIMEOUT,
+              BC95_MAX_PING_TIMEOUT);
         return OS_ERROR;
     }
 
@@ -604,9 +599,9 @@ os_err_t bc95_ping_handler(mo_object_t *module, const char *host, os_uint16_t le
      * Module only support IPV4, BC95 only support Dotted Dec/Hex/Oct Notation
      * Because unable to synchronize time between board & module, 5 seconds reserved
      *  **/
-    at_resp_t at_resp = {.buff      = resp_buff,
+    at_resp_t at_resp = {.buff = resp_buff,
                          .buff_size = sizeof(resp_buff),
-                         .timeout   = (5 + timeout / 1000) * OS_TICK_PER_SECOND};
+                         .timeout = (5 + timeout / 1000) * OS_TICK_PER_SECOND};
 
     os_event_clear(&bc95->netconn_evt, BC95_EVENT_PING_OK | BC95_EVENT_PING_FAIL);
 
@@ -657,9 +652,9 @@ os_err_t bc95_ping_handler(mo_object_t *module, const char *host, os_uint16_t le
         {
             inet_aton(ip_recv, &(resp->ip_addr));
             resp->data_len = len;
-            resp->ttl      = ttl;
-            resp->time     = req_time;
-            result         = OS_EOK;
+            resp->ttl = ttl;
+            resp->time = req_time;
+            result = OS_EOK;
         }
     }
 
@@ -677,9 +672,9 @@ static void urc_ping_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != parser);
     OS_ASSERT(OS_NULL != data);
 
-    os_err_t     result = OS_EOK;
+    os_err_t result = OS_EOK;
     mo_object_t *module = os_container_of(parser, mo_object_t, parser);
-    mo_bc95_t   *bc95   = os_container_of(module, mo_bc95_t, parent);
+    mo_bc95_t *bc95 = os_container_of(module, mo_bc95_t, parent);
 
     if (OS_NULL == bc95->netconn_data)
     {
@@ -717,7 +712,7 @@ static void urc_ping_err_func(struct at_parser *parser, const char *data, os_siz
     OS_ASSERT(OS_NULL != data);
 
     mo_object_t *module = os_container_of(parser, mo_object_t, parser);
-    mo_bc95_t   *bc95   = os_container_of(module, mo_bc95_t, parent);
+    mo_bc95_t *bc95 = os_container_of(module, mo_bc95_t, parent);
 
     ERROR("%s-%d: ping error[%s]", __func__, __LINE__, data);
 
@@ -759,7 +754,7 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != data);
 
     os_int32_t connect_id = 0;
-    os_int32_t data_size  = 0;
+    os_int32_t data_size = 0;
 
     sscanf(data, "+NSONMI:%d,%*[^,],%*d,%d,", &connect_id, &data_size);
 
@@ -811,9 +806,9 @@ static void urc_dns_func(struct at_parser *parser, const char *data, os_size_t s
     OS_ASSERT(OS_NULL != parser);
     OS_ASSERT(OS_NULL != data);
 
-    os_err_t     result = OS_EOK;
+    os_err_t result = OS_EOK;
     mo_object_t *module = os_container_of(parser, mo_object_t, parser);
-    mo_bc95_t   *bc95   = os_container_of(module, mo_bc95_t, parent);
+    mo_bc95_t *bc95 = os_container_of(module, mo_bc95_t, parent);
     char ret_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     if (OS_NULL == bc95->netconn_data)
@@ -855,13 +850,13 @@ __exit:
 
 static at_urc_t netconn_urc_table[] = {
     {.prefix = "+NSOCLI:", .suffix = "\r\n", .func = urc_close_func},
-    {.prefix = "+NSONMI:", .suffix = "\r\n", .func = urc_recv_func },
-    {.prefix = "+QDNS:",   .suffix = "\r\n", .func = urc_dns_func  },
+    {.prefix = "+NSONMI:", .suffix = "\r\n", .func = urc_recv_func},
+    {.prefix = "+QDNS:", .suffix = "\r\n", .func = urc_dns_func},
 };
 
 #ifdef BC95_USING_PING_OPS
 static at_urc_t ping_urc_table[] = {
-    {.prefix = "+NPING:",    .suffix = "\r\n", .func = urc_ping_func    },
+    {.prefix = "+NPING:", .suffix = "\r\n", .func = urc_ping_func},
     {.prefix = "+NPINGERR:", .suffix = "\r\n", .func = urc_ping_err_func},
 };
 #endif /* BC95_USING_PING_OPS */

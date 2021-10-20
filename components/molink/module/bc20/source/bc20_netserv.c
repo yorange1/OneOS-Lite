@@ -29,13 +29,13 @@
 #include <string.h>
 
 #define MO_LOG_TAG "bc20.netserv"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef BC20_USING_NETSERV_OPS
 
-#define BC20_EARFCN_MAX        (65535)
-#define BC20_PCI_MAX           (0x1F7)
+#define BC20_EARFCN_MAX (65535)
+#define BC20_PCI_MAX    (0x1F7)
 
 os_err_t bc20_set_attach(mo_object_t *module, os_uint8_t attach_stat)
 {
@@ -62,7 +62,7 @@ os_err_t bc20_get_attach(mo_object_t *module, os_uint8_t *attach_stat)
         return OS_ERROR;
     }
 
-    if(at_resp_get_data_by_kw(&resp, "+CGATT:", "+CGATT:%hhu", attach_stat) <= 0)
+    if (at_resp_get_data_by_kw(&resp, "+CGATT:", "+CGATT:%hhu", attach_stat) <= 0)
     {
         ERROR("Get %s module attach state failed", module->name);
         return OS_ERROR;
@@ -178,7 +178,7 @@ os_err_t bc20_get_radio(mo_object_t *module, radio_info_t *radio_info)
 
     memset(radio_info, 0, sizeof(radio_info_t));
 
-    int  at_ret         =  0;
+    int at_ret = 0;
     char resp_buff[4 * AT_RESP_BUFF_SIZE_DEF] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 3 * OS_TICK_PER_SECOND};
@@ -192,18 +192,20 @@ os_err_t bc20_get_radio(mo_object_t *module, radio_info_t *radio_info)
     /**
      *  <mode>=0:
      *  +QENG: 0,<sc_EARFCN>,<sc_EARFCN_offset>,<sc_pci>,<sc_cellID>,[<sc_RSRP>],[<sc_RSRQ>],[<sc_RSSI>],[<sc_SINR>],
-     *           <sc_band>,<sc_TAC>,[<sc_ECL>],[<sc_Tx_pwr>],<operation_mode> 
+     *           <sc_band>,<sc_TAC>,[<sc_ECL>],[<sc_Tx_pwr>],<operation_mode>
      * [+QENG: 1,<nc_EARFCN>,<nc_EARFCN_offset>,<nc_pci>,<nc_RSRP>,[…]]
      *   SINR: Signal to Interference plus Noise Ratio
      *   SNR : Signal Noise Ratio
      * */
-    at_ret = at_resp_get_data_by_kw(&resp, "+QENG: 0", "+QENG: 0,%d,%*d,%*d,\"%[^\"]\",%*d,%d,%*d,%d,%*d,%*[^,],%d,%d,",
-                                                        &radio_info->earfcn, 
-                                                         radio_info->cell_id, 
-                                                        &radio_info->rsrq, 
-                                                        &radio_info->snr,
-                                                        &radio_info->ecl, 
-                                                        &radio_info->signal_power);
+    at_ret = at_resp_get_data_by_kw(&resp,
+                                    "+QENG: 0",
+                                    "+QENG: 0,%d,%*d,%*d,\"%[^\"]\",%*d,%d,%*d,%d,%*d,%*[^,],%d,%d,",
+                                    &radio_info->earfcn,
+                                    radio_info->cell_id,
+                                    &radio_info->rsrq,
+                                    &radio_info->snr,
+                                    &radio_info->ecl,
+                                    &radio_info->signal_power);
     if (0 >= at_ret)
     {
         ERROR("Get %s module signal power failed", module->name);

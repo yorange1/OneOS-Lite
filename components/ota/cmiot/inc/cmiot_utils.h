@@ -31,11 +31,11 @@ extern "C" {
 #endif
 
 cmiot_char *cmiot_get_32bit_dec_tmp(cmiot_int32 number, cmiot_bool unsignedint);
-void        cmiot_byte2hexstr(const cmiot_uint8 *source, cmiot_char *dest, cmiot_uint32 source_len);
-void        cmiot_hexstr2byte(cmiot_char *dest, const cmiot_uint8 *source, cmiot_uint32 source_len);
+void cmiot_byte2hexstr(const cmiot_uint8 *source, cmiot_char *dest, cmiot_uint32 source_len);
+void cmiot_hexstr2byte(cmiot_char *dest, const cmiot_uint8 *source, cmiot_uint32 source_len);
 cmiot_int32 cmiot_hex2dec(cmiot_char *hex);
 cmiot_int32 cmiot_c2i(cmiot_char ch);
-cmiot_bool  cmiot_str_is_same_char(cmiot_char *str, cmiot_uint32 len, cmiot_char ch);
+cmiot_bool cmiot_str_is_same_char(cmiot_char *str, cmiot_uint32 len, cmiot_char ch);
 
 #ifdef __cplusplus
 }

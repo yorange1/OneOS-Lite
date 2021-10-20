@@ -41,5 +41,3 @@ os_err_t me3630_w_get_ipaddr(mo_object_t *self, char ip[]);
 #endif /* __cplusplus */
 
 #endif /* __ME3630_W_IFCONFIG_H__ */
-
-

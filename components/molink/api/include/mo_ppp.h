@@ -44,7 +44,7 @@ typedef struct mo_ppp_ops
     os_err_t (*ppp_init)(mo_object_t *module);
     os_err_t (*ppp_dial)(mo_object_t *module);
     os_err_t (*ppp_exit)(mo_object_t *module);
-   
+
 } mo_ppp_ops_t;
 
 os_err_t mo_ppp_init(mo_object_t *module);

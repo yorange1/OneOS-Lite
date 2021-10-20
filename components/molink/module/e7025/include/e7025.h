@@ -77,12 +77,12 @@ typedef struct mo_e7025
     mo_object_t parent;
 #ifdef E7025_USING_NETCONN_OPS
     mo_netconn_t netconn[E7025_NETCONN_NUM];
-    os_mutex_t   netconn_lock;
+    os_mutex_t netconn_lock;
 #endif /* E7025_USING_NETCONN_OPS */
 } mo_e7025_t;
 
 mo_object_t *module_e7025_create(const char *name, void *parser_config);
-os_err_t     module_e7025_destroy(mo_object_t *self);
+os_err_t module_e7025_destroy(mo_object_t *self);
 
 #endif /* MOLINK_USING_E7025 */
 

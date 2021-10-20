@@ -29,9 +29,8 @@
 #include <string.h>
 
 #define MO_LOG_TAG "n21_ifconfig"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
-
 
 #ifdef N21_USING_IFCONFIG_OPS
 
@@ -56,12 +55,12 @@ os_err_t n21_ifconfig(mo_object_t *self)
     }
 
     os_uint8_t rssi = 0;
-    os_uint8_t ber  = 0;
+    os_uint8_t ber = 0;
 
     if (n21_get_csq(self, &rssi, &ber) != OS_EOK)
     {
         rssi = 0;
-        ber  = 0;
+        ber = 0;
     }
 
     os_kprintf("\r\nLIST AT MODULE INFORMATION\r\n");
@@ -94,9 +93,7 @@ os_err_t n21_get_ipaddr(mo_object_t *self, char ip[])
 
     char resp_buff[256] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff, 
-                      .buff_size = sizeof(resp_buff), 
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+XIIC?");
     if (result != OS_EOK)

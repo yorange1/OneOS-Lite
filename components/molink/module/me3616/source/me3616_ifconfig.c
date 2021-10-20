@@ -30,7 +30,7 @@
 #include <string.h>
 
 #define MO_LOG_TAG "me3616_ifconfig"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef ME3616_USING_IFCONFIG_OPS
@@ -56,12 +56,12 @@ os_err_t me3616_ifconfig(mo_object_t *self)
     }
 
     os_uint8_t rssi = 0;
-    os_uint8_t ber  = 0;
+    os_uint8_t ber = 0;
 
     if (me3616_get_csq(self, &rssi, &ber) != OS_EOK)
     {
         rssi = 0;
-        ber  = 0;
+        ber = 0;
     }
 
     os_kprintf("\r\nLIST AT MODULE INFORMATIONS\r\n");
@@ -88,15 +88,15 @@ os_err_t me3616_ifconfig(mo_object_t *self)
 
 os_err_t me3616_get_ipaddr(mo_object_t *self, char ip[])
 {
-    at_parser_t *parser                         = &self->parser;
-    os_int8_t    len                            = -1;
-    os_int8_t    len_start                      = 0;
-    os_int8_t    len_end                        = 0;
-    char         cgcontrdp[128]                 = {0};
-    char         resp_buff[256]                 = {0};
-    char         ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
-    int          j                              = 0;
-    int          k                              = 0;
+    at_parser_t *parser = &self->parser;
+    os_int8_t len = -1;
+    os_int8_t len_start = 0;
+    os_int8_t len_end = 0;
+    char cgcontrdp[128] = {0};
+    char resp_buff[256] = {0};
+    char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
+    int j = 0;
+    int k = 0;
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 10 * OS_TICK_PER_SECOND};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+CGCONTRDP");
@@ -105,28 +105,28 @@ os_err_t me3616_get_ipaddr(mo_object_t *self, char ip[])
         ERROR("Get ip address fail: AT+CGPADDR cmd exec fail.");
         goto __exit;
     }
-     
-    if (at_resp_get_data_by_kw(&resp,"+CGCONTRDP: ","+CGCONTRDP: %s", cgcontrdp) <= 0)
+
+    if (at_resp_get_data_by_kw(&resp, "+CGCONTRDP: ", "+CGCONTRDP: %s", cgcontrdp) <= 0)
     {
         result = OS_ERROR;
         goto __exit;
     }
 
-    for (int i = 0; ; i++)
+    for (int i = 0;; i++)
     {
-        if(cgcontrdp[i] == '\"')
+        if (cgcontrdp[i] == '\"')
         {
             j++;
-            if(j ==3)
+            if (j == 3)
             {
                 len_start = i + 1;
             }
         }
-        
-        if(cgcontrdp[i] == '.')
+
+        if (cgcontrdp[i] == '.')
         {
             k++;
-            if(k ==4)
+            if (k == 4)
             {
                 len_end = i;
                 break;
@@ -134,9 +134,9 @@ os_err_t me3616_get_ipaddr(mo_object_t *self, char ip[])
         }
     }
     len = len_end - len_start;
-    
-    strncpy(ipaddr,&cgcontrdp[len_start],len);
-   	
+
+    strncpy(ipaddr, &cgcontrdp[len_start], len);
+
     if ((len < IPADDR_MIN_STR_LEN) || (len > IPADDR_MAX_STR_LEN))
     {
         ERROR("IP address size [%d] error.", len);
@@ -155,4 +155,3 @@ __exit:
 }
 
 #endif /* ME3616_USING_IFCONFIG_OPS */
-

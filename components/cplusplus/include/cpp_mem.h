@@ -11,14 +11,14 @@
 void *operator new(size_t size);
 void *operator new[](size_t size);
 
-void operator delete(void * ptr);
+void operator delete(void *ptr);
 void operator delete[](void *ptr);
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-int  cpp_init(void);
+int cpp_init(void);
 
 #ifdef __cplusplus
 }

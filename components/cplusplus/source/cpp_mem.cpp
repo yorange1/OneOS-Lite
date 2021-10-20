@@ -24,4 +24,3 @@ void operator delete(void *ptr)
 {
     os_free(ptr);
 }
-

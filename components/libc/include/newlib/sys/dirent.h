@@ -30,50 +30,49 @@ extern "C" {
 #endif
 
 /* Ref: http://www.opengroup.org/onlinepubs/009695399/basedefs/dirent.h.html */
-#define DT_UNKNOWN  0
-#define DT_FIFO     1
-#define DT_CHR      2
-#define DT_DIR      4
-#define DT_BLK      6
-#define DT_REG      8
-#define DT_LNK      10
-#define DT_SOCK     12
-#define DT_WHT      14
+#define DT_UNKNOWN 0
+#define DT_FIFO    1
+#define DT_CHR     2
+#define DT_DIR     4
+#define DT_BLK     6
+#define DT_REG     8
+#define DT_LNK     10
+#define DT_SOCK    12
+#define DT_WHT     14
 
 struct dirent
 {
-    ino_t          d_ino;          /* file number    */
-    unsigned char  d_type;         /* The type of the file. */
-    char           d_name[256];    /* The null-terminated file name. */
+    ino_t d_ino;          /* file number    */
+    unsigned char d_type; /* The type of the file. */
+    char d_name[256];     /* The null-terminated file name. */
 };
 
 struct __dirstream
 {
-    int     fd;                     /* File descriptor.  */
-    size_t  allocation;             /* Space allocated for the block.  */
-    size_t  size;                   /* Total valid data in the block.  */
-    size_t  offset;                 /* Current offset into the block.  */
-    off_t   filepos;                /* Position of next entry to read.  */
-    int     errcode;                /* Delayed error code.  */
-    void   *priv;
+    int fd;            /* File descriptor.  */
+    size_t allocation; /* Space allocated for the block.  */
+    size_t size;       /* Total valid data in the block.  */
+    size_t offset;     /* Current offset into the block.  */
+    off_t filepos;     /* Position of next entry to read.  */
+    int errcode;       /* Delayed error code.  */
+    void *priv;
 };
 
-/* 
+/*
  * This is the data type of directory stream objects.
  * The actual structure is opaque to users.
  */
 typedef struct __dirstream DIR;
 
-extern int            closedir(DIR *pdir);
-extern DIR           *opendir(const char *path);
+extern int closedir(DIR *pdir);
+extern DIR *opendir(const char *path);
 extern struct dirent *readdir(DIR *pdir);
-extern void           rewinddir(DIR *pdir);
-extern void           seekdir(DIR *pdir, long ofst);
-extern long           telldir(DIR *pdir);
+extern void rewinddir(DIR *pdir);
+extern void seekdir(DIR *pdir, long ofst);
+extern long telldir(DIR *pdir);
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* __SYS_DIRENT_H__ */
-

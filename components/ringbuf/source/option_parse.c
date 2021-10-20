@@ -2,20 +2,20 @@
  ***********************************************************************************************************************
  * Copyright (c) 2020, China Mobile Communications Group Co.,Ltd.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on 
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
  * @file        option_parse.c
  *
  * @brief       This file implements command option parser.
  *
- * @details     This command option parser doesn't support "--" option.            
+ * @details     This command option parser doesn't support "--" option.
  *
  * @revision
  * Date         Author          Notes
@@ -32,7 +32,7 @@
 
 /**
  ***********************************************************************************************************************
- * @brief           Initialize command option parser.      
+ * @brief           Initialize command option parser.
  *
  * @attention       .
  *
@@ -47,8 +47,8 @@ void opt_init(opt_state_t *state, os_int32_t begin_index)
     OS_ASSERT(state);
 
     state->opt_index = begin_index;
-    state->opt_char  = 0;
-    state->opt_arg   = OS_NULL;
+    state->opt_char = 0;
+    state->opt_arg = OS_NULL;
     state->opt_place = OS_NULL;
 
     return;
@@ -58,9 +58,9 @@ void opt_init(opt_state_t *state, os_int32_t begin_index)
  ***********************************************************************************************************************
  * @brief           This function implements command option parser.
  *
- * @details         The function shall return the next option character (if one is found) from argv that matches a 
+ * @details         The function shall return the next option character (if one is found) from argv that matches a
  *                  character in optstring. If the option takes an argument, opt_get() shall set the variable
- *                  state->opt_arg to point to the option-argument. 
+ *                  state->opt_arg to point to the option-argument.
  *
  * @attention       opt_init() must be called before using this function.
  *
@@ -69,16 +69,16 @@ void opt_init(opt_state_t *state, os_int32_t begin_index)
  * @param[in]       optstring       Is a string of recognized option characters.
  * @param[in]       state           Option parser state.
  *
- * @return          Next option character (if one is found) from argv that matches a character in optstring. 
+ * @return          Next option character (if one is found) from argv that matches a character in optstring.
  * @retval          OPT_EOF         End options parsing.
  * @retval          OPT_BADOPT      Bad option.
  * @retval          OPT_BADARG      Bad argument.
  * @retval          else            The next option character.
  ***********************************************************************************************************************
  */
-os_int32_t opt_get(os_int32_t argc, char * const *argv, const char *optstring, opt_state_t *state)
+os_int32_t opt_get(os_int32_t argc, char *const *argv, const char *optstring, opt_state_t *state)
 {
-    char *oli;      /* Option letter list index */
+    char *oli; /* Option letter list index */
 
     if (state->opt_index >= argc)
     {
@@ -93,7 +93,7 @@ os_int32_t opt_get(os_int32_t argc, char * const *argv, const char *optstring, o
     }
 
     if (state->opt_place[1])
-    { 
+    {
         if (state->opt_place[1] == '-')
         {
             /* Found "--" */
@@ -123,15 +123,15 @@ os_int32_t opt_get(os_int32_t argc, char * const *argv, const char *optstring, o
     if (*state->opt_place)
     {
         os_kprintf("Illegal option: %s\r\n", argv[state->opt_index]);
-        return OPT_BADOPT;   
+        return OPT_BADOPT;
     }
-    
+
     oli++;
 
     /* Don't need argument */
     if (*oli != ':')
     {
-        state->opt_arg = OS_NULL;   
+        state->opt_arg = OS_NULL;
     }
     /* Need an argument */
     else
@@ -144,11 +144,10 @@ os_int32_t opt_get(os_int32_t argc, char * const *argv, const char *optstring, o
         }
 
         state->opt_index++;
-        state->opt_arg = argv[state->opt_index];    
+        state->opt_arg = argv[state->opt_index];
     }
 
     state->opt_index++;
 
     return state->opt_char;
 }
-

@@ -27,7 +27,7 @@
 #include <string.h>
 
 #define MO_LOG_TAG "bc26.general"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef BC26_USING_GENERAL_OPS
@@ -172,7 +172,7 @@ static void bc26_ip_indicator_urc(struct at_parser *parser, const char *data, os
     char ip_indicator_buf[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     sscanf(data, "+IP: %63s", ip_indicator_buf);
-    
+
     INFO("%s IP indocator:[%s]", __func__, ip_indicator_buf);
     return;
 }
@@ -185,13 +185,13 @@ static void bc26_cpin_indicator_urc(struct at_parser *parser, const char *data, 
     char cpin_indicator_buf[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     sscanf(data, "+CPIN: %63s", cpin_indicator_buf);
-    
+
     INFO("%s CPIN indocator:[%s]", __func__, cpin_indicator_buf);
     return;
 }
 
 static at_urc_t bc26_general_urc_table[] = {
-    {.prefix = "+IP:",   .suffix = "\r\n", .func = bc26_ip_indicator_urc  },
+    {.prefix = "+IP:", .suffix = "\r\n", .func = bc26_ip_indicator_urc},
     {.prefix = "+CPIN:", .suffix = "\r\n", .func = bc26_cpin_indicator_urc},
 };
 
@@ -199,7 +199,8 @@ void bc26_general_init(mo_bc26_t *module)
 {
     /* Set general urc table */
     at_parser_t *parser = &(module->parent.parser);
-    at_parser_set_urc_table(parser, bc26_general_urc_table, 
+    at_parser_set_urc_table(parser,
+                            bc26_general_urc_table,
                             sizeof(bc26_general_urc_table) / sizeof(bc26_general_urc_table[0]));
 }
 

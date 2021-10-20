@@ -27,7 +27,8 @@
 
 #ifdef BC95_USING_PING_OPS
 
-extern os_err_t bc95_ping_handler(mo_object_t *module, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp);
+extern os_err_t
+bc95_ping_handler(mo_object_t *module, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp);
 
 os_err_t bc95_ping(mo_object_t *module, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp)
 {

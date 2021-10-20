@@ -36,9 +36,9 @@ extern "C" {
 
 typedef struct
 {
-    cmiot_char   download_host[CMIOT_DOWNLOAD_HOST_MAX_LEN + 1];
-    cmiot_char   download_url[CMIOT_DOWNLOAD_URI_MAX_LEN + 1];
-    cmiot_char   download_md5[CMIOT_DOWNLOAD_MD5_LEN + 1];
+    cmiot_char download_host[CMIOT_DOWNLOAD_HOST_MAX_LEN + 1];
+    cmiot_char download_url[CMIOT_DOWNLOAD_URI_MAX_LEN + 1];
+    cmiot_char download_md5[CMIOT_DOWNLOAD_MD5_LEN + 1];
     cmiot_uint32 download_delta_id;
     cmiot_uint32 download_delta_size;
     cmiot_uint32 download_port;
@@ -46,16 +46,16 @@ typedef struct
 
 #define DECLARE_VOID_FUNC(PREFIX, SUFFIX) cmiot_int8 PREFIX##_##SUFFIX(void);
 
-cmiot_uint8                cmiot_get_current_state(void);
-cmiot_uint8                cmiot_get_conn_try_count(void);
-cmiot_char *               cmiot_get_send_buf(void);
-cmiot_uint16               cmiot_get_send_buf_len(void);
-void                       cmiot_reset_send_buf(void);
-cmiot_uint16               cmiot_get_recieve_buf_len(void);
+cmiot_uint8 cmiot_get_current_state(void);
+cmiot_uint8 cmiot_get_conn_try_count(void);
+cmiot_char *cmiot_get_send_buf(void);
+cmiot_uint16 cmiot_get_send_buf_len(void);
+void cmiot_reset_send_buf(void);
+cmiot_uint16 cmiot_get_recieve_buf_len(void);
 cmiot_download_uri_info_t *cmiot_get_download_uri_info(void);
-cmiot_uint32               cmiot_get_download_index(void);
-cmiot_uint32               cmiot_get_download_index_max(void);
-cmiot_bool                 cmiot_get_domain(cmiot_char *server, cmiot_char *domain, cmiot_uint32 *port);
+cmiot_uint32 cmiot_get_download_index(void);
+cmiot_uint32 cmiot_get_download_index_max(void);
+cmiot_bool cmiot_get_domain(cmiot_char *server, cmiot_char *domain, cmiot_uint32 *port);
 
 DECLARE_VOID_FUNC(cmiot_upgrade, coap)
 DECLARE_VOID_FUNC(cmiot_upgrade, http)

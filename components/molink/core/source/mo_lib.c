@@ -31,12 +31,12 @@ void bytes_to_hexstr(const char *source, char *dest, os_size_t source_size)
     OS_ASSERT(OS_NULL != dest);
 
     os_uint8_t high_byte = 0;
-    os_uint8_t low_byte  = 0;
+    os_uint8_t low_byte = 0;
 
     for (int i = 0; i < source_size; i++)
     {
         high_byte = source[i] >> 4;
-        low_byte  = source[i] & 0x0f;
+        low_byte = source[i] & 0x0f;
 
         high_byte += 0x30;
 
@@ -68,12 +68,12 @@ void hexstr_to_bytes(const char *source, char *dest, os_size_t source_size)
     OS_ASSERT(OS_NULL != dest);
 
     os_uint8_t high_byte = 0;
-    os_uint8_t low_byte  = 0;
+    os_uint8_t low_byte = 0;
 
     for (int i = 0; i < source_size; i += 2)
     {
         high_byte = toupper(source[i]);
-        low_byte  = toupper(source[i + 1]);
+        low_byte = toupper(source[i + 1]);
 
         if (high_byte > 0x39)
         {

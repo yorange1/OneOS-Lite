@@ -25,7 +25,7 @@
 #include <stdlib.h>
 
 #define MO_LOG_TAG "gm190.h"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 #ifdef MOLINK_USING_GM190
 
@@ -33,49 +33,45 @@
 
 #ifdef GM190_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test   = gm190_at_test,
-    .get_imei  = gm190_get_imei,
-    .get_imsi  = gm190_get_imsi,
+    .at_test = gm190_at_test,
+    .get_imei = gm190_get_imei,
+    .get_imsi = gm190_get_imsi,
     .get_iccid = gm190_get_iccid,
-    .get_cfun  = gm190_get_cfun,
-    .set_cfun  = gm190_set_cfun,
+    .get_cfun = gm190_get_cfun,
+    .set_cfun = gm190_set_cfun,
     .get_firmware_version = gm190_get_firmware_version,
 };
 #endif /* GM190_USING_GENERAL_OPS */
 
 #ifdef GM190_USING_NETSERV_OPS
 static const struct mo_netserv_ops gs_netserv_ops = {
-    .set_attach    = gm190_set_attach,
-    .get_attach    = gm190_get_attach,
-    .set_reg       = gm190_set_reg,
-    .get_reg       = gm190_get_reg,
-    .set_cgact     = gm190_set_cgact,
-    .get_cgact     = gm190_get_cgact,
-    .get_csq       = gm190_get_csq,
+    .set_attach = gm190_set_attach,
+    .get_attach = gm190_get_attach,
+    .set_reg = gm190_set_reg,
+    .get_reg = gm190_get_reg,
+    .set_cgact = gm190_set_cgact,
+    .get_cgact = gm190_get_cgact,
+    .get_csq = gm190_get_csq,
     .get_cell_info = gm190_get_cell_info,
 };
 #endif /* GM190_USING_NETSERV_OPS */
 
 #ifdef GM190_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig             = gm190_ifconfig,
-    .get_ipaddr           = gm190_get_ipaddr,
+    .ifconfig = gm190_ifconfig,
+    .get_ipaddr = gm190_get_ipaddr,
 };
 #endif /* GM190_USING_IFCONFIG_OPS */
 
 #ifdef GM190_USING_NETCONN_OPS
 extern void gm190_netconn_init(mo_gm190_t *module);
 
-static const struct mo_netconn_ops gs_netconn_ops = {
-    .create        = gm190_netconn_create,
-    .destroy       = gm190_netconn_destroy,
-    .connect       = gm190_netconn_connect,
-    .send          = gm190_netconn_send,
-    .get_info      = gm190_netconn_get_info
-};
+static const struct mo_netconn_ops gs_netconn_ops = {.create = gm190_netconn_create,
+                                                     .destroy = gm190_netconn_destroy,
+                                                     .connect = gm190_netconn_connect,
+                                                     .send = gm190_netconn_send,
+                                                     .get_info = gm190_netconn_get_info};
 #endif /* GM190_USING_NETCONN_OPS */
-
-
 
 static os_err_t gm190_at_init(mo_object_t *self)
 {
@@ -90,9 +86,7 @@ static os_err_t gm190_at_init(mo_object_t *self)
 
     char resp_buff[32] = {0};
 
-    at_resp_t resp = {.buff = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     return at_parser_exec_cmd(parser, &resp, "ATE0");
 }
@@ -105,7 +99,7 @@ mo_object_t *module_gm190_create(const char *name, void *parser_config)
         ERROR("Create %s module instance failed, no enough memory.", name);
         return OS_NULL;
     }
-    
+
     os_task_msleep(20);
     /* make sure gm190 power on and be ready */
     os_err_t result = mo_object_init(&(module->parent), name, parser_config);
@@ -128,11 +122,11 @@ mo_object_t *module_gm190_create(const char *name, void *parser_config)
 #ifdef GM190_USING_NETSERV_OPS
     module->parent.ops_table[MODULE_OPS_NETSERV] = &gs_netserv_ops;
 #endif /* GM190_USING_NETSERV_OPS */
-		
+
 #ifdef GM190_USING_IFCONFIG_OPS
     module->parent.ops_table[MODULE_OPS_IFCONFIG] = &gs_ifconfig_ops;
 #endif /* GM190_USING_IFCONFIG_OPS */
-		
+
 #ifdef GM190_USING_NETCONN_OPS
     module->parent.ops_table[MODULE_OPS_NETCONN] = &gs_netconn_ops;
 
@@ -168,13 +162,13 @@ os_err_t module_gm190_destroy(mo_object_t *self)
     mo_gm190_t *module = os_container_of(self, mo_gm190_t, parent);
 
     mo_object_deinit(self);
-	
+
 #ifdef GM190_USING_NETCONN_OPS
 
     os_event_deinit(&module->netconn_evt);
 
     os_mutex_deinit(&module->netconn_lock);
-	
+
 #endif /* GM190_USING_NETCONN_OPS */
 
     os_free(module);
@@ -200,7 +194,7 @@ int gm190_auto_create(void)
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = GM190_NAME,
+    mo_parser_config_t parser_config = {.parser_name = GM190_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = GM190_RECV_BUFF_LEN};
 
@@ -218,4 +212,3 @@ OS_CMPOENT_INIT(gm190_auto_create, OS_INIT_SUBLEVEL_MIDDLE);
 
 #endif /* GM190_AUTO_CREATE */
 #endif /* MOLINK_USING_GM190 */
-

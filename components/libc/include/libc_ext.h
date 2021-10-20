@@ -35,4 +35,3 @@
 #define EXPORT_SYMBOL(symbol)
 
 #endif /* __OS_LIBC_H__ */
-

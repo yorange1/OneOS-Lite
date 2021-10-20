@@ -3,13 +3,13 @@
  * Copyright (c) 2020, China Mobile Communications Group Co.,Ltd.
  * Copyright (c) 2006-2018, RT-Thread Development Team.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on 
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
  * @file        ring_blk_buff.c
@@ -38,8 +38,8 @@
 
 static rbb_blk_t *rbb_find_empty_blk_in_set(rbb_ctrl_info_t *rbb)
 {
-    rbb_blk_t  *unused_block;
-    os_size_t   index;
+    rbb_blk_t *unused_block;
+    os_size_t index;
 
     unused_block = OS_NULL;
     for (index = 0; index < rbb->blk_max_num; index++)
@@ -54,17 +54,14 @@ static rbb_blk_t *rbb_find_empty_blk_in_set(rbb_ctrl_info_t *rbb)
     return unused_block;
 }
 
-static void rbb_do_init(rbb_ctrl_info_t   *rbb,
-                        os_uint8_t        *buf,
-                        os_size_t          buf_size,
-                        rbb_blk_t         *block_set,
-                        os_size_t          blk_max_num)
+static void
+rbb_do_init(rbb_ctrl_info_t *rbb, os_uint8_t *buf, os_size_t buf_size, rbb_blk_t *block_set, os_size_t blk_max_num)
 {
     os_size_t index;
 
-    rbb->buf         = buf;
-    rbb->buf_size    = buf_size;
-    rbb->blk_set     = block_set;
+    rbb->buf = buf;
+    rbb->buf_size = buf_size;
+    rbb->blk_set = block_set;
     rbb->blk_max_num = blk_max_num;
 
     os_list_init(&rbb->blk_list_head);
@@ -79,11 +76,7 @@ static void rbb_do_init(rbb_ctrl_info_t   *rbb,
     return;
 }
 
-void rbb_init(rbb_ctrl_info_t   *rbb,
-              os_uint8_t        *buf,
-              os_size_t          buf_size,
-              rbb_blk_t         *block_set,
-              os_size_t          blk_max_num)
+void rbb_init(rbb_ctrl_info_t *rbb, os_uint8_t *buf, os_size_t buf_size, rbb_blk_t *block_set, os_size_t blk_max_num)
 {
     OS_ASSERT(OS_NULL != rbb);
     OS_ASSERT(OS_NULL != buf);
@@ -100,11 +93,11 @@ void rbb_init(rbb_ctrl_info_t   *rbb,
 rbb_ctrl_info_t *rbb_create(os_size_t buf_size, os_size_t blk_max_num)
 {
     rbb_ctrl_info_t *rbb;
-    os_uint8_t      *buf;
-    rbb_blk_t       *blk_set;
+    os_uint8_t *buf;
+    rbb_blk_t *blk_set;
 
-    rbb     = (rbb_ctrl_info_t *)os_malloc(sizeof(rbb_ctrl_info_t));
-    buf     = (os_uint8_t *)os_malloc(buf_size);
+    rbb = (rbb_ctrl_info_t *)os_malloc(sizeof(rbb_ctrl_info_t));
+    buf = (os_uint8_t *)os_malloc(buf_size);
     blk_set = (rbb_blk_t *)os_malloc(sizeof(rbb_blk_t) * blk_max_num);
 
     if ((OS_NULL == rbb) || (OS_NULL == buf) || (OS_NULL == blk_set))
@@ -157,8 +150,8 @@ os_size_t rbb_get_buf_size(rbb_ctrl_info_t *rbb)
 rbb_blk_t *rbb_blk_alloc(rbb_ctrl_info_t *rbb, os_size_t alloc_size)
 {
     os_ubase_t irq_save;
-    os_size_t  empty1;
-    os_size_t  empty2;
+    os_size_t empty1;
+    os_size_t empty2;
     rbb_blk_t *head;
     rbb_blk_t *tail;
     rbb_blk_t *new_blk;
@@ -169,7 +162,7 @@ rbb_blk_t *rbb_blk_alloc(rbb_ctrl_info_t *rbb, os_size_t alloc_size)
     os_spin_lock_irqsave(&rbb->rbb_locker, &irq_save);
 
     new_blk = rbb_find_empty_blk_in_set(rbb);
-    
+
     if (OS_NULL != new_blk)
     {
         if (!os_list_empty(&rbb->blk_list_head))
@@ -191,8 +184,8 @@ rbb_blk_t *rbb_blk_alloc(rbb_ctrl_info_t *rbb, os_size_t alloc_size)
 
                 if (empty1 >= alloc_size)
                 {
-                    new_blk->status   = RBB_BLK_STATUS_INITED;
-                    new_blk->buf      = tail->buf + tail->buf_size;
+                    new_blk->status = RBB_BLK_STATUS_INITED;
+                    new_blk->buf = tail->buf + tail->buf_size;
                     new_blk->buf_size = alloc_size;
 
                     os_list_add_tail(&rbb->blk_list_head, &new_blk->list_node);
@@ -201,8 +194,8 @@ rbb_blk_t *rbb_blk_alloc(rbb_ctrl_info_t *rbb, os_size_t alloc_size)
                 {
                     if (empty2 >= alloc_size)
                     {
-                        new_blk->status   = RBB_BLK_STATUS_INITED;
-                        new_blk->buf      = rbb->buf;
+                        new_blk->status = RBB_BLK_STATUS_INITED;
+                        new_blk->buf = rbb->buf;
                         new_blk->buf_size = alloc_size;
 
                         os_list_add_tail(&rbb->blk_list_head, &new_blk->list_node);
@@ -224,11 +217,11 @@ rbb_blk_t *rbb_blk_alloc(rbb_ctrl_info_t *rbb, os_size_t alloc_size)
                  *                            rbb->buf
                  */
                 empty1 = head->buf - (tail->buf + tail->buf_size);
-                
+
                 if (empty1 >= alloc_size)
                 {
-                    new_blk->status   = RBB_BLK_STATUS_INITED;
-                    new_blk->buf      = tail->buf + tail->buf_size;
+                    new_blk->status = RBB_BLK_STATUS_INITED;
+                    new_blk->buf = tail->buf + tail->buf_size;
                     new_blk->buf_size = alloc_size;
 
                     os_list_add_tail(&rbb->blk_list_head, &new_blk->list_node);
@@ -244,8 +237,8 @@ rbb_blk_t *rbb_blk_alloc(rbb_ctrl_info_t *rbb, os_size_t alloc_size)
         {
             /* The list is empty */
             os_list_add_tail(&rbb->blk_list_head, &new_blk->list_node);
-            new_blk->status   = RBB_BLK_STATUS_INITED;
-            new_blk->buf      = rbb->buf;
+            new_blk->status = RBB_BLK_STATUS_INITED;
+            new_blk->buf = rbb->buf;
             new_blk->buf_size = alloc_size;
         }
     }
@@ -266,8 +259,8 @@ void rbb_blk_put(rbb_blk_t *block)
 
 rbb_blk_t *rbb_blk_get(rbb_ctrl_info_t *rbb)
 {
-    os_ubase_t  irq_save;
-    rbb_blk_t  *block;
+    os_ubase_t irq_save;
+    rbb_blk_t *block;
 
     OS_ASSERT(OS_NULL != rbb);
 
@@ -313,4 +306,3 @@ void rbb_blk_free(rbb_ctrl_info_t *rbb, rbb_blk_t *block)
 
     return;
 }
-

@@ -63,9 +63,9 @@ typedef enum mo_platform
 #ifdef MOLINK_PLATFORM_MCU
 typedef struct mo_parser_config
 {
-    const char  *parser_name;
+    const char *parser_name;
     os_device_t *parser_device;
-    os_size_t    recv_buff_len;
+    os_size_t recv_buff_len;
 } mo_parser_config_t;
 #endif /* MOLINK_PLATFORM_MCU */
 
@@ -78,16 +78,16 @@ typedef struct mo_parser_config
  */
 typedef struct mo_object
 {
-#ifdef MOLINK_USING_MULTI_MODULES 
-    os_slist_node_t list;                      /* module object manage list  */
+#ifdef MOLINK_USING_MULTI_MODULES
+    os_slist_node_t list; /* module object manage list  */
 #endif
-    char            name[OS_NAME_MAX + 1];     /* module object name */
-    mo_type_t       type;                      /* module object type */
-    mo_platform_t   platform;                  /* module object platform */
+    char name[OS_NAME_MAX + 1]; /* module object name */
+    mo_type_t type;             /* module object type */
+    mo_platform_t platform;     /* module object platform */
 #ifdef MOLINK_PLATFORM_MCU
-    at_parser_t     parser;                    /* module object at parser */
-#endif /* MOLINK_PLATFORM_MCU */
-    const void     *ops_table[MODULE_OPS_MAX]; /* module object operates table */
+    at_parser_t parser;                    /* module object at parser */
+#endif                                     /* MOLINK_PLATFORM_MCU */
+    const void *ops_table[MODULE_OPS_MAX]; /* module object operates table */
 } mo_object_t;
 
 os_err_t mo_object_init(mo_object_t *self, const char *name, void *parser_config);
@@ -99,7 +99,7 @@ mo_object_t *mo_object_get(void);
 #elif defined(MOLINK_USING_MULTI_MODULES)
 mo_object_t *mo_object_get_by_name(const char *name);
 mo_object_t *mo_object_get_default(void);
-void         mo_object_set_default(mo_object_t *self);
+void mo_object_set_default(mo_object_t *self);
 #endif
 
 #ifdef __cplusplus
@@ -109,4 +109,3 @@ void         mo_object_set_default(mo_object_t *self);
 #endif /* NET_USING_MOLINK */
 
 #endif /* __MO_OBJECT_H__ */
-

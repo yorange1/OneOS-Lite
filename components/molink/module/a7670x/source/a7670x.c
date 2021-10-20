@@ -37,24 +37,24 @@
 
 #ifdef A7670X_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test   = a7670x_at_test,
-    .get_imei  = a7670x_get_imei,
-    .get_imsi  = a7670x_get_imsi,
+    .at_test = a7670x_at_test,
+    .get_imei = a7670x_get_imei,
+    .get_imsi = a7670x_get_imsi,
     .get_iccid = a7670x_get_iccid,
-    .get_cfun  = a7670x_get_cfun,
-    .set_cfun  = a7670x_set_cfun,
+    .get_cfun = a7670x_get_cfun,
+    .set_cfun = a7670x_set_cfun,
 };
 #endif /* A7670X_USING_GENERAL_OPS */
 
 #ifdef A7670X_USING_NETSERV_OPS
 static const struct mo_netserv_ops gs_netserv_ops = {
-    .set_attach    = a7670x_set_attach,
-    .get_attach    = a7670x_get_attach,
-    .set_reg       = a7670x_set_reg,
-    .get_reg       = a7670x_get_reg,
-    .set_cgact     = a7670x_set_cgact,
-    .get_cgact     = a7670x_get_cgact,
-    .get_csq       = a7670x_get_csq,
+    .set_attach = a7670x_set_attach,
+    .get_attach = a7670x_get_attach,
+    .set_reg = a7670x_set_reg,
+    .get_reg = a7670x_get_reg,
+    .set_cgact = a7670x_set_cgact,
+    .get_cgact = a7670x_get_cgact,
+    .get_csq = a7670x_get_csq,
     .get_cell_info = a7670x_get_cell_info,
 };
 #endif /* A7670X_USING_NETSERV_OPS */
@@ -67,7 +67,7 @@ static const struct mo_ping_ops gs_ping_ops = {
 
 #ifdef A7670X_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig   = a7670x_ifconfig,
+    .ifconfig = a7670x_ifconfig,
     .get_ipaddr = a7670x_get_ipaddr,
 };
 #endif /* A7670X_USING_IFCONFIG_OPS */
@@ -76,14 +76,14 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern void a7670x_netconn_init(mo_a7670x_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create        = a7670x_netconn_create,
-    .destroy       = a7670x_netconn_destroy,
+    .create = a7670x_netconn_create,
+    .destroy = a7670x_netconn_destroy,
 #ifdef A7670X_USING_DNS
     .gethostbyname = a7670x_netconn_gethostbyname,
 #endif
-    .connect       = a7670x_netconn_connect,
-    .send          = a7670x_netconn_send,
-    .get_info      = a7670x_netconn_get_info,
+    .connect = a7670x_netconn_connect,
+    .send = a7670x_netconn_send,
+    .get_info = a7670x_netconn_get_info,
 };
 #endif /* A7670X_USING_NETCONN_OPS */
 
@@ -92,17 +92,22 @@ static void urc_cereg_info_func(struct at_parser *parser, const char *data, os_s
     OS_ASSERT(OS_NULL != parser);
     OS_ASSERT(OS_NULL != data);
 
-    int stat   = 0;
+    int stat = 0;
     int access = 0;
 
     char area_code[AT_RESP_BUFF_SIZE_DEF] = {0};
-    char cell_id  [AT_RESP_BUFF_SIZE_DEF] = {0};
+    char cell_id[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     /* For ex: +CEREG: 1,"8109","0ee5e687",7\r\n, +CEREG: <stat>[,<tac>,<ci>[,<AcT>]] */
     sscanf(data, "+CEREG: %d,\"%[^\"]\",\"%[^\"]\",%d", &stat, area_code, cell_id, &access);
 
-    WARN("The module %s access network base station has been switched. network status[%d], tac[%s], cell_id[%s], AcT[%d]",
-         parser->name, stat, area_code, cell_id, access);
+    WARN("The module %s access network base station has been switched. network status[%d], tac[%s], cell_id[%s], "
+         "AcT[%d]",
+         parser->name,
+         stat,
+         area_code,
+         cell_id,
+         access);
 
     return;
 }
@@ -126,9 +131,7 @@ static os_err_t a7670x_at_init(mo_object_t *self)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 2 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 2 * OS_TICK_PER_SECOND};
 
     return at_parser_exec_cmd(parser, &resp, "ATE0");
 }
@@ -229,7 +232,7 @@ int a7670x_auto_create(void)
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = A7670X_NAME,
+    mo_parser_config_t parser_config = {.parser_name = A7670X_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = A7670X_RECV_BUFF_LEN};
 

@@ -59,7 +59,7 @@ os_err_t mb26_get_attach(mo_object_t *self, os_uint8_t *attach_stat)
         return OS_ERROR;
     }
 
-    if(at_resp_get_data_by_kw(&resp, "+CGATT:", "+CGATT: %hhu", attach_stat) <= 0)
+    if (at_resp_get_data_by_kw(&resp, "+CGATT:", "+CGATT: %hhu", attach_stat) <= 0)
     {
         LOG_EXT_E("Get %s module attach state failed", self->name);
         return OS_ERROR;
@@ -161,10 +161,10 @@ os_err_t mb26_get_csq(mo_object_t *self, os_uint8_t *rssi, os_uint8_t *ber)
 
 os_err_t mb26_get_radio(mo_object_t *self, radio_info_t *radio_info)
 {
-    at_parser_t *parser       = &self->parser;
-    os_uint32_t  buff_len     = 1024;
-    const char  *tmp_src_resp = OS_NULL;
-    char        *dest_ptr     = OS_NULL;
+    at_parser_t *parser = &self->parser;
+    os_uint32_t buff_len = 1024;
+    const char *tmp_src_resp = OS_NULL;
+    char *dest_ptr = OS_NULL;
 
     memset(radio_info, 0, sizeof(radio_info_t));
 
@@ -213,7 +213,7 @@ os_err_t mb26_get_radio(mo_object_t *self, radio_info_t *radio_info)
         result = OS_ERROR;
         goto __exit;
     }
-    sscanf(dest_ptr, "RSRP:%d,",&radio_info->rsrp);
+    sscanf(dest_ptr, "RSRP:%d,", &radio_info->rsrp);
 
     /* Get RSRQ info form tmp_src_resp buff */
     dest_ptr = strstr(tmp_src_resp, "RSRQ:");
@@ -223,7 +223,7 @@ os_err_t mb26_get_radio(mo_object_t *self, radio_info_t *radio_info)
         result = OS_ERROR;
         goto __exit;
     }
-    sscanf(dest_ptr, "RSRQ:%d,",&radio_info->rsrq);
+    sscanf(dest_ptr, "RSRQ:%d,", &radio_info->rsrq);
 
     /* Get SNR info form tmp_src_resp buff */
     dest_ptr = strstr(tmp_src_resp, "SNR:");
@@ -233,7 +233,7 @@ os_err_t mb26_get_radio(mo_object_t *self, radio_info_t *radio_info)
         result = OS_ERROR;
         goto __exit;
     }
-    sscanf(dest_ptr, "SNR:%d,",&radio_info->snr);
+    sscanf(dest_ptr, "SNR:%d,", &radio_info->snr);
 
     /* Get ECL info form tmp_src_resp buff */
     dest_ptr = strstr(tmp_src_resp, "CeLevel:");
@@ -243,7 +243,7 @@ os_err_t mb26_get_radio(mo_object_t *self, radio_info_t *radio_info)
         result = OS_ERROR;
         goto __exit;
     }
-    sscanf(dest_ptr, "CeLevel:%d,",&radio_info->ecl);
+    sscanf(dest_ptr, "CeLevel:%d,", &radio_info->ecl);
 
     tmp_src_resp = at_resp_get_line_by_kw(&resp, "+ECSTATUS: RRC");
     /* Get CellId info form tmp_src_resp buff */
@@ -254,11 +254,11 @@ os_err_t mb26_get_radio(mo_object_t *self, radio_info_t *radio_info)
         result = OS_ERROR;
         goto __exit;
     }
-    sscanf(dest_ptr, "CellId:%s",radio_info->cell_id);
+    sscanf(dest_ptr, "CellId:%s", radio_info->cell_id);
 
 __exit:
 
-    if(resp_buff != OS_NULL)
+    if (resp_buff != OS_NULL)
     {
         free(resp_buff);
     }

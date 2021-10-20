@@ -32,21 +32,26 @@ extern "C" {
 
 #ifdef ESP8266_USING_NETCONN_OPS
 
-os_err_t      esp8266_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info);
+os_err_t esp8266_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info);
 mo_netconn_t *esp8266_netconn_create(mo_object_t *module, mo_netconn_type_t type);
-os_err_t      esp8266_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn);
+os_err_t esp8266_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn);
 #ifdef ESP8266_USING_SERVER_MODE
-os_err_t      esp8266_netconn_bind(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port);
+os_err_t esp8266_netconn_bind(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port);
 #endif
-os_err_t      esp8266_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port);
+os_err_t esp8266_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port);
 #ifdef ESP8266_USING_UDP
-os_size_t     esp8266_netconn_sendto(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port, const char *data, os_size_t size);
+os_size_t esp8266_netconn_sendto(mo_object_t *module,
+                                 mo_netconn_t *netconn,
+                                 ip_addr_t addr,
+                                 os_uint16_t port,
+                                 const char *data,
+                                 os_size_t size);
 #endif
 #ifdef ESP8266_USING_TCP
-os_size_t     esp8266_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size);
+os_size_t esp8266_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size);
 #endif
 #ifdef ESP8266_USING_DNS
-os_err_t      esp8266_netconn_gethostbyname(mo_object_t *self, const char *domain_name, ip_addr_t *addr);
+os_err_t esp8266_netconn_gethostbyname(mo_object_t *self, const char *domain_name, ip_addr_t *addr);
 #endif
 
 #endif /* ESP8266_USING_NETCONN_OPS */

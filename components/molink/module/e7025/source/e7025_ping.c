@@ -36,9 +36,9 @@
 
 os_err_t e7025_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp)
 {
-    at_parser_t *parser   = &self->parser;
-    os_err_t     result   = OS_EOK;
-    os_int16_t   req_time = -1;
+    at_parser_t *parser = &self->parser;
+    os_err_t result = OS_EOK;
+    os_int16_t req_time = -1;
 
     char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
 
@@ -72,10 +72,10 @@ os_err_t e7025_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uin
 
     char resp_buff[256] = {0};
     /* At least, need to wait for 4 lines response msg */
-    at_resp_t at_resp = {.buff      = resp_buff,
+    at_resp_t at_resp = {.buff = resp_buff,
                          .buff_size = sizeof(resp_buff),
-                         .line_num  = 4,
-                         .timeout   = (5 + timeout / 1000) * OS_TICK_PER_SECOND};
+                         .line_num = 4,
+                         .timeout = (5 + timeout / 1000) * OS_TICK_PER_SECOND};
 
     /* Exec AT+ECPING="180.101.147.115",1,64,10000; */
     /* Def ping timeout: +ECPING: FAIL, dest: 180.101.147.115, time out: 10000 ms*/
@@ -87,16 +87,23 @@ os_err_t e7025_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uin
         goto __exit;
     }
 
-    if (at_resp_get_data_by_kw(&at_resp, "+ECPING: SUCC", "+ECPING: SUCC, dest: %[^,], RTT: %u ms", ipaddr, &req_time) <= 0)
+    if (at_resp_get_data_by_kw(&at_resp,
+                               "+ECPING: SUCC",
+                               "+ECPING: SUCC, dest: %[^,], RTT: %u ms",
+                               ipaddr,
+                               &req_time) <= 0)
     {
-        if(at_resp_get_data_by_kw(&at_resp, "+ECPING: FAIL", "+ECPING: FAIL, dest: %[^,], time out: %u ms", ipaddr, &req_time) <= 0)
+        if (at_resp_get_data_by_kw(&at_resp,
+                                   "+ECPING: FAIL",
+                                   "+ECPING: FAIL, dest: %[^,], time out: %u ms",
+                                   ipaddr,
+                                   &req_time) <= 0)
         {
             LOG_EXT_E("Module %s ping %s fail: check network status or try to set a longer timeout.", self->name, host);
             result = OS_ERROR;
             goto __exit;
         }
     }
-
 
     LOG_EXT_D("Module %s ping: resp parse ip[%s], req_time[%d]", self->name, ipaddr, req_time);
     if (req_time == timeout)
@@ -110,7 +117,7 @@ os_err_t e7025_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uin
 
     inet_aton(ipaddr, &(resp->ip_addr));
     resp->data_len = len;
-    resp->time     = req_time;
+    resp->time = req_time;
 
 __exit:
 

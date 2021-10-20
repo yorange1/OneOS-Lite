@@ -80,16 +80,16 @@ typedef struct mo_esp8266
 
 #ifdef ESP8266_USING_NETCONN_OPS
     mo_netconn_t netconn[ESP8266_NETCONN_NUM];
-    os_int32_t   curr_connect;
-    os_size_t    curr_sent_size;
-    os_event_t   netconn_evt;
-    os_mutex_t   netconn_lock;
-    void        *netconn_data;
+    os_int32_t curr_connect;
+    os_size_t curr_sent_size;
+    os_event_t netconn_evt;
+    os_mutex_t netconn_lock;
+    void *netconn_data;
 #endif /* ESP8266_USING_NETCONN_OPS */
 } mo_esp8266_t;
 
 mo_object_t *module_esp8266_create(const char *name, void *parser_config);
-os_err_t     module_esp8266_destroy(mo_object_t *self);
+os_err_t module_esp8266_destroy(mo_object_t *self);
 
 #ifdef ESP8266_USING_HW_CONTROL
 void esp8266_hw_rst(os_base_t rst_pin);

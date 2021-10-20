@@ -70,8 +70,8 @@ typedef enum mo_wifi_stat
     MO_WIFI_STAT_INIT,
     MO_WIFI_STAT_CONNECTED,
     MO_WIFI_STAT_DISCONNECTED,
-    MO_WIFI_STAT_GOT_IP     = 0x8,
-    MO_WIFI_STAT_GOT_IPV6   = 0x10,
+    MO_WIFI_STAT_GOT_IP = 0x8,
+    MO_WIFI_STAT_GOT_IPV6 = 0x10,
     MO_WIFI_STAT_MAX
 } mo_wifi_stat_t;
 
@@ -98,8 +98,8 @@ typedef enum mo_cipdinfo_mode
  */
 typedef enum mo_wifi_cipv6
 {
-    MO_WIFI_CIPV6_DISABLE   = 0,
-    MO_WIFI_CIPV6_ENABLE    = 1,
+    MO_WIFI_CIPV6_DISABLE = 0,
+    MO_WIFI_CIPV6_ENABLE = 1,
 } mo_wifi_cipv6_t;
 
 /**
@@ -142,7 +142,7 @@ typedef struct mo_wifi_ssid
  */
 typedef struct mo_wifi_bssid
 {
-    char       bssid_str[MO_WIFI_BSSID_MAX_LENGTH + 1]; /* hwaddr */
+    char bssid_str[MO_WIFI_BSSID_MAX_LENGTH + 1]; /* hwaddr */
     os_uint8_t bssid_array[MO_WIFI_BSSID_ARRAY_LENGTH];
 } mo_wifi_bssid_t;
 
@@ -155,11 +155,11 @@ typedef struct mo_wifi_bssid
  */
 typedef struct mo_wifi_info
 {
-    mo_wifi_ecn_t   ecn_mode; /* encryption mode */
-    os_int32_t      channel;  /* radio channel */
-    os_int32_t      rssi;     /* signal strength */
-    mo_wifi_ssid_t  ssid;     /* ssid */
-    mo_wifi_bssid_t bssid;    /* hwaddr */
+    mo_wifi_ecn_t ecn_mode; /* encryption mode */
+    os_int32_t channel;     /* radio channel */
+    os_int32_t rssi;        /* signal strength */
+    mo_wifi_ssid_t ssid;    /* ssid */
+    mo_wifi_bssid_t bssid;  /* hwaddr */
 } mo_wifi_info_t;
 
 /**
@@ -172,7 +172,7 @@ typedef struct mo_wifi_info
 typedef struct mo_wifi_scan_result
 {
     mo_wifi_info_t *info_array;
-    os_size_t       info_num;
+    os_size_t info_num;
 } mo_wifi_scan_result_t;
 
 /**
@@ -184,36 +184,48 @@ typedef struct mo_wifi_scan_result
  */
 typedef struct mo_wifi_ops
 {
-    os_err_t       (*set_mode)(mo_object_t *module, mo_wifi_mode_t mode);
+    os_err_t (*set_mode)(mo_object_t *module, mo_wifi_mode_t mode);
     mo_wifi_mode_t (*get_mode)(mo_object_t *module);
     mo_wifi_stat_t (*get_stat)(mo_object_t *module);
-    os_err_t       (*get_sta_cip)(mo_object_t *module, ip_addr_t *ip, ip_addr_t *gw, ip_addr_t *mask, ip_addr_t *ip6_ll, ip_addr_t *ip6_gl);
-    os_err_t       (*set_ap_cip)(mo_object_t *module, char *ip, char *gw, char *mask);
-    os_err_t       (*get_ap_cip)(mo_object_t *module, ip_addr_t *ip, ip_addr_t *gw, ip_addr_t *mask);
-    os_err_t       (*get_sta_mac)(mo_object_t *module, char mac[]);
-    os_err_t       (*get_ap_mac)(mo_object_t *module, char mac[]);
-    os_err_t       (*scan_info)(mo_object_t *module, char *ssid, mo_wifi_scan_result_t *scan_result);
-    os_err_t       (*connect_ap)(mo_object_t *module, const char *ssid, const char *password);
-    os_err_t       (*disconnect_ap)(mo_object_t *module);
+    os_err_t (*get_sta_cip)(mo_object_t *module,
+                            ip_addr_t *ip,
+                            ip_addr_t *gw,
+                            ip_addr_t *mask,
+                            ip_addr_t *ip6_ll,
+                            ip_addr_t *ip6_gl);
+    os_err_t (*set_ap_cip)(mo_object_t *module, char *ip, char *gw, char *mask);
+    os_err_t (*get_ap_cip)(mo_object_t *module, ip_addr_t *ip, ip_addr_t *gw, ip_addr_t *mask);
+    os_err_t (*get_sta_mac)(mo_object_t *module, char mac[]);
+    os_err_t (*get_ap_mac)(mo_object_t *module, char mac[]);
+    os_err_t (*scan_info)(mo_object_t *module, char *ssid, mo_wifi_scan_result_t *scan_result);
+    os_err_t (*connect_ap)(mo_object_t *module, const char *ssid, const char *password);
+    os_err_t (*disconnect_ap)(mo_object_t *module);
     // ecn, encryption method
-    os_err_t       (*start_ap)(mo_object_t *module, const char *ssid, const char *password, os_uint8_t channel, os_uint8_t ecn);
-    os_err_t       (*stop_ap)(mo_object_t *module);
+    os_err_t (
+        *start_ap)(mo_object_t *module, const char *ssid, const char *password, os_uint8_t channel, os_uint8_t ecn);
+    os_err_t (*stop_ap)(mo_object_t *module);
 } mo_wifi_ops_t;
 
-os_err_t       mo_wifi_set_mode(mo_object_t *module, mo_wifi_mode_t mode);
+os_err_t mo_wifi_set_mode(mo_object_t *module, mo_wifi_mode_t mode);
 mo_wifi_mode_t mo_wifi_get_mode(mo_object_t *module);
 mo_wifi_stat_t mo_wifi_get_stat(mo_object_t *module);
-os_err_t       mo_wifi_get_sta_cip(mo_object_t *module, ip_addr_t *ip, ip_addr_t *gw, ip_addr_t *mask, ip_addr_t *ip6_ll, ip_addr_t *ip6_gl);
-os_err_t       mo_wifi_set_ap_cip(mo_object_t *module, char *ip, char *gw, char *mask);
-os_err_t       mo_wifi_get_ap_cip(mo_object_t *module, ip_addr_t *ip, ip_addr_t *gw, ip_addr_t *mask);
-os_err_t       mo_wifi_get_sta_mac(mo_object_t *module, char mac[]);
-os_err_t       mo_wifi_get_ap_mac(mo_object_t *module, char mac[]);
-os_err_t       mo_wifi_scan_info(mo_object_t *module, char *ssid, mo_wifi_scan_result_t *scan_result);
-void           mo_wifi_scan_info_free(mo_wifi_scan_result_t *scan_result);
-os_err_t       mo_wifi_connect_ap(mo_object_t *module, const char *ssid, const char *password);
-os_err_t       mo_wifi_disconnect_ap(mo_object_t *module);
-os_err_t       mo_wifi_start_ap(mo_object_t *module, const char *ssid, const char *password, os_uint8_t channel, os_uint8_t ecn);
-os_err_t       mo_wifi_stop_ap(mo_object_t *module);
+os_err_t mo_wifi_get_sta_cip(mo_object_t *module,
+                             ip_addr_t *ip,
+                             ip_addr_t *gw,
+                             ip_addr_t *mask,
+                             ip_addr_t *ip6_ll,
+                             ip_addr_t *ip6_gl);
+os_err_t mo_wifi_set_ap_cip(mo_object_t *module, char *ip, char *gw, char *mask);
+os_err_t mo_wifi_get_ap_cip(mo_object_t *module, ip_addr_t *ip, ip_addr_t *gw, ip_addr_t *mask);
+os_err_t mo_wifi_get_sta_mac(mo_object_t *module, char mac[]);
+os_err_t mo_wifi_get_ap_mac(mo_object_t *module, char mac[]);
+os_err_t mo_wifi_scan_info(mo_object_t *module, char *ssid, mo_wifi_scan_result_t *scan_result);
+void mo_wifi_scan_info_free(mo_wifi_scan_result_t *scan_result);
+os_err_t mo_wifi_connect_ap(mo_object_t *module, const char *ssid, const char *password);
+os_err_t mo_wifi_disconnect_ap(mo_object_t *module);
+os_err_t
+mo_wifi_start_ap(mo_object_t *module, const char *ssid, const char *password, os_uint8_t channel, os_uint8_t ecn);
+os_err_t mo_wifi_stop_ap(mo_object_t *module);
 
 #ifdef __cplusplus
 }

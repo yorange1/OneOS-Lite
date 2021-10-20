@@ -26,4 +26,3 @@
 #include "../../extension/errno_ext.h"
 
 #endif /* __SYS_ERRNO_H__ */
-

@@ -31,10 +31,10 @@ extern "C" {
 #endif /* __cplusplus */
 
 typedef mo_object_t *(*mo_create_fn)(const char *name, void *parser_config);
-typedef os_err_t     (*mo_destory_fn)(mo_object_t *self);
+typedef os_err_t (*mo_destory_fn)(mo_object_t *self);
 
 mo_object_t *mo_create(const char *name, mo_type_t type, void *parser_config);
-os_err_t     mo_destroy(mo_object_t *self, mo_type_t type);
+os_err_t mo_destroy(mo_object_t *self, mo_type_t type);
 
 #ifdef __cplusplus
 }

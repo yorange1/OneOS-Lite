@@ -166,13 +166,11 @@ os_err_t mb26_set_cfun(mo_object_t *self, os_uint8_t fun_lvl)
 
 os_err_t mb26_get_firmware_version(mo_object_t *self, mo_firmware_version_t *version)
 {
-   at_parser_t *parser = &self->parser;
+    at_parser_t *parser = &self->parser;
 
     char resp_buff[256] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 5 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 5 * OS_TICK_PER_SECOND};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+CGMR");
     if (result != OS_EOK)
@@ -193,7 +191,7 @@ os_err_t mb26_get_firmware_version(mo_object_t *self, mo_firmware_version_t *ver
     for (int i = 3; i <= resp.line_counts - 2; i++)
     {
         const char *source_line = at_resp_get_line(&resp, i);
-        os_size_t   line_length = strlen(source_line);
+        os_size_t line_length = strlen(source_line);
 
         char **dest_line = &version->ver_info[version->line_counts];
 
@@ -205,7 +203,7 @@ os_err_t mb26_get_firmware_version(mo_object_t *self, mo_firmware_version_t *ver
         }
 
         strncpy(*dest_line, source_line, line_length);
-        version->line_counts ++;
+        version->line_counts++;
     }
 
     return OS_EOK;

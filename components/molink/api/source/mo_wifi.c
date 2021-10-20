@@ -27,7 +27,7 @@
 #include <stdlib.h>
 
 #define MO_LOG_TAG "molink.wifi"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef MOLINK_USING_WIFI_OPS
@@ -50,8 +50,8 @@ static mo_wifi_ops_t *get_wifi_ops(mo_object_t *self)
  *
  * @param[in]       module          The descriptor of molink module instance
  * @param[in]       mode            The wifi mode @see mo_wifi_mode_t
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Set module functionality level successfully
  * @retval          OS_ERROR        Set module functionality level error
  * @retval          OS_ETIMEOUT     Set module functionality level timeout
@@ -83,7 +83,7 @@ os_err_t mo_wifi_set_mode(mo_object_t *module, mo_wifi_mode_t mode)
  * @brief           Execute AT command to get module wifi mode
  *
  * @param[in]       module          The descriptor of molink module instance
- * 
+ *
  * @return          On success, return wifi mode; on error, return MO_WIFI_MODE_NULL. @see mo_wifi_mode_t
  ***********************************************************************************************************************
  */
@@ -112,7 +112,7 @@ mo_wifi_mode_t mo_wifi_get_mode(mo_object_t *module)
  * @brief           Execute AT command to get module wifi state
  *
  * @param[in]       module          The descriptor of molink module instance
- * 
+ *
  * @return          On success, return wifi state; on error, return MO_WIFI_STAT_NULL. @see mo_wifi_stat_t
  ***********************************************************************************************************************
  */
@@ -144,13 +144,18 @@ mo_wifi_stat_t mo_wifi_get_stat(mo_object_t *module)
  * @param[out]      ip                The ip to store
  * @param[out]      gw                The gw to store
  * @param[out]      mask              The mask to store
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK             get sta cip infomation successfully
  * @retval          OS_ERROR           get sta cip infomation error
  ***********************************************************************************************************************
  */
-os_err_t mo_wifi_get_sta_cip(mo_object_t *module, ip_addr_t *ip, ip_addr_t *gw, ip_addr_t *mask, ip_addr_t *ip6_ll, ip_addr_t *ip6_gl)
+os_err_t mo_wifi_get_sta_cip(mo_object_t *module,
+                             ip_addr_t *ip,
+                             ip_addr_t *gw,
+                             ip_addr_t *mask,
+                             ip_addr_t *ip6_ll,
+                             ip_addr_t *ip6_gl)
 {
     OS_ASSERT(OS_NULL != module);
 
@@ -178,8 +183,8 @@ os_err_t mo_wifi_get_sta_cip(mo_object_t *module, ip_addr_t *ip, ip_addr_t *gw, 
  * @param[in]       ip                The ip to set
  * @param[in]       gw                The gw to set
  * @param[in]       mask              The mask to set
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK             get ap cip infomation successfully
  * @retval          OS_ERROR           get ap cip infomation error
  ***********************************************************************************************************************
@@ -213,8 +218,8 @@ os_err_t mo_wifi_set_ap_cip(mo_object_t *module, char *ip, char *gw, char *mask)
  * @param[out]      ip                The ip to store
  * @param[out]      gw                The gw to store
  * @param[out]      mask              The mask to store
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK             get ap cip infomation successfully
  * @retval          OS_ERROR           get ap cip infomation error
  ***********************************************************************************************************************
@@ -248,8 +253,8 @@ os_err_t mo_wifi_get_ap_cip(mo_object_t *module, ip_addr_t *ip, ip_addr_t *gw, i
  *
  * @param[in]       module            The descriptor of molink module instance
  * @param[out]      mac               The mac to store
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK             get sta mac infomation successfully
  * @retval          OS_ERROR           get sta mac infomation error
  ***********************************************************************************************************************
@@ -281,8 +286,8 @@ os_err_t mo_wifi_get_sta_mac(mo_object_t *module, char mac[])
  *
  * @param[in]       module            The descriptor of molink module instance
  * @param[out]      mac               The mac to store
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK             get ap mac infomation successfully
  * @retval          OS_ERROR           get ap mac infomation error
  ***********************************************************************************************************************
@@ -315,8 +320,8 @@ os_err_t mo_wifi_get_ap_mac(mo_object_t *module, char mac[])
  * @param[in]       module            The descriptor of molink module instance
  * @param[in]       ssid              The ssid of ap to scan, if ssid is NULL, scan all available ap
  * @param[out]      scan_result       The buffer to store scan ap infomation
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK             Scan infomation successfully
  * @retval          OS_ETIMEOUT        Scan infomation timeout
  * @retval          OS_ERROR           Scan infomation error
@@ -359,12 +364,12 @@ void mo_wifi_scan_info_free(mo_wifi_scan_result_t *scan_result)
 
 /**
  ***********************************************************************************************************************
- * @brief           Execute AT command to connect to ap 
+ * @brief           Execute AT command to connect to ap
  *
  * @param[in]       module            The descriptor of molink module instance
  * @param[in]       ssid              The ssid of ap to connect
  * @param[in]       password          The password of ap to connect
- * 
+ *
  * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK             Connect successfully
  * @retval          OS_ETIMEOUT        Connect timeout
@@ -375,7 +380,7 @@ os_err_t mo_wifi_connect_ap(mo_object_t *module, const char *ssid, const char *p
 {
     OS_ASSERT(OS_NULL != module);
     OS_ASSERT(OS_NULL != ssid);
-    //OS_ASSERT(OS_NULL != password);
+    // OS_ASSERT(OS_NULL != password);
 
     mo_wifi_ops_t *ops = get_wifi_ops(module);
 
@@ -395,10 +400,10 @@ os_err_t mo_wifi_connect_ap(mo_object_t *module, const char *ssid, const char *p
 
 /**
  ***********************************************************************************************************************
- * @brief           Execute AT command to disconnect to ap 
+ * @brief           Execute AT command to disconnect to ap
  *
  * @param[in]       module            The descriptor of molink module instance
- * 
+ *
  * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK             Disconnect successfully
  * @retval          OS_ETIMEOUT        Disconnect timeout
@@ -427,21 +432,22 @@ os_err_t mo_wifi_disconnect_ap(mo_object_t *module)
 
 /**
  ***********************************************************************************************************************
- * @brief           Execute AT command to start ap 
+ * @brief           Execute AT command to start ap
  *
  * @param[in]       module            The descriptor of molink module instance
  * @param[in]       ssid              The ssid of ap to start
  * @param[in]       password          The password of ap to start
  * @param[in]       channel           The channel of ap to start
  * @param[in]       ecn               The encryption method of ap to start
- * 
+ *
  * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK             start successfully
  * @retval          OS_ETIMEOUT        start timeout
  * @retval          OS_ERROR           start error
  ***********************************************************************************************************************
  */
-os_err_t mo_wifi_start_ap(mo_object_t *module, const char *ssid, const char *password, os_uint8_t channel, os_uint8_t ecn)
+os_err_t
+mo_wifi_start_ap(mo_object_t *module, const char *ssid, const char *password, os_uint8_t channel, os_uint8_t ecn)
 {
     OS_ASSERT(OS_NULL != module);
     OS_ASSERT(OS_NULL != ssid);
@@ -465,10 +471,10 @@ os_err_t mo_wifi_start_ap(mo_object_t *module, const char *ssid, const char *pas
 
 /**
  ***********************************************************************************************************************
- * @brief           Execute AT command to stop ap 
+ * @brief           Execute AT command to stop ap
  *
  * @param[in]       module            The descriptor of molink module instance
- * 
+ *
  * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK             stop successfully
  * @retval          OS_ETIMEOUT        stop timeout

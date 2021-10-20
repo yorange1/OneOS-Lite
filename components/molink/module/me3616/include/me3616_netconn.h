@@ -32,13 +32,13 @@ extern "C" {
 
 #ifdef ME3616_USING_NETCONN_OPS
 
-os_err_t      me3616_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info);
+os_err_t me3616_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info);
 mo_netconn_t *me3616_netconn_create(mo_object_t *module, mo_netconn_type_t type);
-os_err_t      me3616_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn);
-os_err_t      me3616_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port);
-os_size_t     me3616_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size);
+os_err_t me3616_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn);
+os_err_t me3616_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port);
+os_size_t me3616_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size);
 #ifdef ME3616_USING_DNS
-os_err_t      me3616_netconn_gethostbyname(mo_object_t *self, const char *domain_name, ip_addr_t *addr);
+os_err_t me3616_netconn_gethostbyname(mo_object_t *self, const char *domain_name, ip_addr_t *addr);
 #endif
 
 #endif /* ME3616_USING_NETCONN_OPS */
@@ -48,4 +48,3 @@ os_err_t      me3616_netconn_gethostbyname(mo_object_t *self, const char *domain
 #endif /* __cplusplus */
 
 #endif /* __M5310A_NETCONN_H__ */
-

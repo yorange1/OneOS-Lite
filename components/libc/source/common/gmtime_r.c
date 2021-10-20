@@ -2,13 +2,13 @@
  ***********************************************************************************************************************
  * Copyright (c) 2020, China Mobile Communications Group Co.,Ltd.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on 
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
  * @file        gmtime_r.c
@@ -21,15 +21,14 @@
  ***********************************************************************************************************************
  */
 #include <os_stddef.h>
-#if defined(__CC_ARM) || defined(__CLANG_ARM) || defined (__IAR_SYSTEMS_ICC__)  
+#if defined(__CC_ARM) || defined(__CLANG_ARM) || defined(__IAR_SYSTEMS_ICC__)
 #include <sys/time.h>
 
 /* Seconds per day. */
 #define SPD (24 * 60 * 60)
 
 /* Days per month -- nonleap! */
-const short __spm[13] =
-{
+const short __spm[13] = {
     0,
     (31),
     (31 + 28),
@@ -67,15 +66,15 @@ struct tm *gmtime_r(const time_t *timep, struct tm *r)
 {
     time_t i;
     register time_t work = *timep % (SPD);
-    
-    r->tm_sec  = work % 60;
-    work      /= 60;
-    r->tm_min  = work % 60;
+
+    r->tm_sec = work % 60;
+    work /= 60;
+    r->tm_min = work % 60;
     r->tm_hour = work / 60;
-    work       = *timep / (SPD);
+    work = *timep / (SPD);
     r->tm_wday = (4 + work) % 7;
 
-    for (i = 1970; ; ++i)
+    for (i = 1970;; ++i)
     {
         register time_t k = __isleap(i) ? 366 : 365;
         if (work >= k)
@@ -97,16 +96,16 @@ struct tm *gmtime_r(const time_t *timep, struct tm *r)
         {
             r->tm_mday = 2; /* 29.2. */
         }
-        
+
         work -= 1;
     }
 
-    for (i = 11; i && (__spm[i] > work); --i);
-    
+    for (i = 11; i && (__spm[i] > work); --i)
+        ;
+
     r->tm_mon = i;
     r->tm_mday += work - __spm[i];
-    
+
     return r;
 }
 #endif /* end of __CC_ARM or __CLANG_ARM or __IAR_SYSTEMS_ICC__ */
-

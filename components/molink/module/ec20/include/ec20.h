@@ -76,7 +76,7 @@ typedef struct mo_ec20
 {
     mo_object_t parent;
 #ifdef EC20_USING_NETCONN_OPS
-    os_bool_t   pdp_act;
+    os_bool_t pdp_act;
 #endif /* EC20_USING_NETCONN_OPS */
 
 #ifdef EC20_USING_NETCONN_OPS
@@ -85,12 +85,12 @@ typedef struct mo_ec20
     os_int32_t curr_connect;
     os_event_t netconn_evt;
     os_mutex_t netconn_lock;
-    void      *netconn_data;
+    void *netconn_data;
 #endif /* EC20_USING_NETCONN_OPS */
 } mo_ec20_t;
 
 mo_object_t *module_ec20_create(const char *name, void *parser_config);
-os_err_t     module_ec20_destroy(mo_object_t *self);
+os_err_t module_ec20_destroy(mo_object_t *self);
 
 #endif /* MOLINK_USING_EC20 */
 

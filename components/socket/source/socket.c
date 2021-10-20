@@ -81,7 +81,7 @@ static const struct dev_file_ops gs_sockfs_fops = {
         return OS_ERROR;                                                                                               \
     }                                                                                                                  \
     struct socket_private *sock_private = FILE->private;                                                               \
-    SOCKET                              = sock_private->socket_id;
+    SOCKET = sock_private->socket_id;
 
 #define GET_SOCKETID_SHUTDOWN_FROM_FILE(SOCKET, SHUTDOWN, FILE)                                                        \
     if (FILE->private == NULL)                                                                                         \
@@ -89,8 +89,8 @@ static const struct dev_file_ops gs_sockfs_fops = {
         return OS_ERROR;                                                                                               \
     }                                                                                                                  \
     struct socket_private *sock_private = FILE->private;                                                               \
-    SOCKET                              = sock_private->socket_id;                                                     \
-    SHUTDOWN                            = sock_private->shutdown_how;
+    SOCKET = sock_private->socket_id;                                                                                  \
+    SHUTDOWN = sock_private->shutdown_how;
 
 #define SET_SOCKETID_TO_FILE(SOCKET, FILE)                                                                             \
     if (FILE->private == NULL)                                                                                         \
@@ -98,7 +98,7 @@ static const struct dev_file_ops gs_sockfs_fops = {
         return OS_ERROR;                                                                                               \
     }                                                                                                                  \
     struct socket_private *sock_private = FILE->private;                                                               \
-    sock_private->socket_id             = SOCKET;
+    sock_private->socket_id = SOCKET;
 
 #define SET_SHUTDOWN_TO_FILE(SHUTDOWN, FILE)                                                                           \
     if (FILE->private == NULL)                                                                                         \
@@ -106,7 +106,7 @@ static const struct dev_file_ops gs_sockfs_fops = {
         return OS_ERROR;                                                                                               \
     }                                                                                                                  \
     struct socket_private *sock_private = FILE->private;                                                               \
-    sock_private->shutdown_how          = SHUTDOWN;
+    sock_private->shutdown_how = SHUTDOWN;
 
 #define GET_SOCKETID_FROM_FD(SOCKET, FD)                                                                               \
     struct vfs_file *file = fd_to_fp(FD);                                                                              \
@@ -274,7 +274,7 @@ int select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset, st
     {
         memcpy(&exceptset_bak, exceptset, sizeof(fd_set));
     }
-    int fd     = 0;
+    int fd = 0;
     int socket = 0;
     // tansfor to socket id
     for (fd = 0; fd < maxfdp1; fd++)
@@ -624,8 +624,8 @@ static int sockfs_adapter_close(struct vfs_file *file)
     OS_ASSERT(file != OS_NULL);
     OS_ASSERT(file->type == FT_DEVICE);
 
-    int ret          = OS_ERROR;
-    int socket       = -1;
+    int ret = OS_ERROR;
+    int socket = -1;
     int shutdown_how = 0;
     GET_SOCKETID_SHUTDOWN_FROM_FILE(socket, shutdown_how, file)
     if (shutdown_how)
@@ -739,7 +739,7 @@ int select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset, st
     {
         memcpy(&exceptset_bak, exceptset, sizeof(fd_set));
     }
-    int fd     = 0;
+    int fd = 0;
     int socket = 0;
     // tansfor to socket id
     for (fd = 0; fd < maxfdp1; fd++)

@@ -36,39 +36,39 @@
 
 #ifdef MB26_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test              = mb26_at_test,
-    .get_imei             = mb26_get_imei,
-    .get_imsi             = mb26_get_imsi,
-    .get_iccid            = mb26_get_iccid,
-    .get_cfun             = mb26_get_cfun,
-    .set_cfun             = mb26_set_cfun,
+    .at_test = mb26_at_test,
+    .get_imei = mb26_get_imei,
+    .get_imsi = mb26_get_imsi,
+    .get_iccid = mb26_get_iccid,
+    .get_cfun = mb26_get_cfun,
+    .set_cfun = mb26_set_cfun,
     .get_firmware_version = mb26_get_firmware_version,
 };
 #endif /* MB26_USING_GENERAL_OPS */
 
 #ifdef MB26_USING_NETSERV_OPS
 static const struct mo_netserv_ops gs_netserv_ops = {
-    .set_attach           = mb26_set_attach,
-    .get_attach           = mb26_get_attach,
-    .set_reg              = mb26_set_reg,
-    .get_reg              = mb26_get_reg,
-    .set_cgact            = mb26_set_cgact,
-    .get_cgact            = mb26_get_cgact,
-    .get_csq              = mb26_get_csq,
-    .get_radio            = mb26_get_radio,
+    .set_attach = mb26_set_attach,
+    .get_attach = mb26_get_attach,
+    .set_reg = mb26_set_reg,
+    .get_reg = mb26_get_reg,
+    .set_cgact = mb26_set_cgact,
+    .get_cgact = mb26_get_cgact,
+    .get_csq = mb26_get_csq,
+    .get_radio = mb26_get_radio,
 };
 #endif /* MB26_USING_NETSERV_OPS */
 
 #ifdef MB26_USING_PING_OPS
 static const struct mo_ping_ops gs_ping_ops = {
-    .ping                 = mb26_ping,
+    .ping = mb26_ping,
 };
 #endif /* MB26_USING_PING_OPS */
 
 #ifdef MB26_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig             = mb26_ifconfig,
-    .get_ipaddr           = mb26_get_ipaddr,
+    .ifconfig = mb26_ifconfig,
+    .get_ipaddr = mb26_get_ipaddr,
 };
 #endif /* MB26_USING_IFCONFIG_OPS */
 
@@ -76,14 +76,14 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern void mb26_netconn_init(mo_mb26_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create               = mb26_netconn_create,
-    .destroy              = mb26_netconn_destroy,
+    .create = mb26_netconn_create,
+    .destroy = mb26_netconn_destroy,
 #ifdef MB26_USING_DNSs
-    .gethostbyname        = mb26_netconn_gethostbyname,
+    .gethostbyname = mb26_netconn_gethostbyname,
 #endif
-    .connect              = mb26_netconn_connect,
-    .send                 = mb26_netconn_send,
-    .get_info             = mb26_netconn_get_info,
+    .connect = mb26_netconn_connect,
+    .send = mb26_netconn_send,
+    .get_info = mb26_netconn_get_info,
 };
 #endif /* MB26_USING_NETCONN_OPS */
 
@@ -100,9 +100,7 @@ static os_err_t mb26_at_init(mo_object_t *self)
 
     char resp_buff[32] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 3 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 3 * OS_TICK_PER_SECOND};
 
     result = at_parser_exec_cmd(parser, &resp, "ATE0");
     if (result != OS_EOK)
@@ -209,7 +207,7 @@ int mb26_auto_create(void)
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = MB26_NAME,
+    mo_parser_config_t parser_config = {.parser_name = MB26_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = MB26_RECV_BUFF_LEN};
 

@@ -31,19 +31,19 @@
 #ifdef CLM920RV3_USING_NETCONN_OPS
 
 #define MO_LOG_TAG "clm920rv3.netconn"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #define CLM920RV3_SEND_MAX_SIZE (1460)
 #define CLM920RV3_RESP_DEF_SIZE (256)
 #define CLM920RV3_CONN_ID_NULL  (-1)
 
-#define CLM920RV3_NETCONN_MQ_NAME     "clm920rv3_nc_mq"
+#define CLM920RV3_NETCONN_MQ_NAME "clm920rv3_nc_mq"
 #ifndef CLM920RV3_NETCONN_MQ_MSG_SIZE
 #define CLM920RV3_NETCONN_MQ_MSG_SIZE (sizeof(mo_notconn_msg_t))
 #endif /* CLM920RV3_NETCONN_MQ_MSG_SIZE */
 #ifndef CLM920RV3_NETCONN_MQ_MSG_MAX
-#define CLM920RV3_NETCONN_MQ_MSG_MAX  (5)
+#define CLM920RV3_NETCONN_MQ_MSG_MAX (5)
 #endif /* CLM920RV3_NETCONN_MQ_MSG_MAX */
 
 #define SET_EVENT(socket, event) (((socket + 1) << 16) | (event))
@@ -107,7 +107,7 @@ os_err_t clm920rv3_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info
     mo_clm920rv3_t *clm920rv3 = os_container_of(module, mo_clm920rv3_t, parent);
 
     info->netconn_array = clm920rv3->netconn;
-    info->netconn_nums  = sizeof(clm920rv3->netconn) / sizeof(clm920rv3->netconn[0]);
+    info->netconn_nums = sizeof(clm920rv3->netconn) / sizeof(clm920rv3->netconn[0]);
 
     return OS_EOK;
 }
@@ -115,7 +115,7 @@ os_err_t clm920rv3_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info
 os_err_t clm920rv3_pdp_act(mo_clm920rv3_t *clm920rv3)
 {
     char tmp_data[20] = {0};
-    char APN[10]      = {0};
+    char APN[10] = {0};
 
     at_parser_t *parser = &clm920rv3->parent.parser;
 
@@ -140,16 +140,16 @@ os_err_t clm920rv3_pdp_act(mo_clm920rv3_t *clm920rv3)
 
     switch (atoi(tmp_data + 3))
     {
-    case 0:  /* 46000 */
-    case 2:  /* 46002 */
-    case 4:  /* 46004 */
-    case 7:  /* 46007 */
+    case 0: /* 46000 */
+    case 2: /* 46002 */
+    case 4: /* 46004 */
+    case 7: /* 46007 */
         strncpy(APN, "cmnet", strlen("cmnet"));
         break;
 
-    case 1:  /* 46001 */
-    case 6:  /* 46006 */
-    case 9:  /* 46009 */
+    case 1: /* 46001 */
+    case 6: /* 46006 */
+    case 9: /* 46009 */
         strncpy(APN, "3gnet", strlen("3gnet"));
         break;
 
@@ -181,12 +181,12 @@ os_err_t clm920rv3_pdp_act(mo_clm920rv3_t *clm920rv3)
 
     /* PDP context active process, recommend timeout:12s */
     os_event_recv(&clm920rv3->netconn_evt,
-                   CLM920RV3_EVENT_PDP_ACT,
-                   OS_EVENT_OPTION_OR | OS_EVENT_OPTION_CLEAR,
-                   OS_NO_WAIT,
-                   OS_NULL);
+                  CLM920RV3_EVENT_PDP_ACT,
+                  OS_EVENT_OPTION_OR | OS_EVENT_OPTION_CLEAR,
+                  OS_NO_WAIT,
+                  OS_NULL);
 
-    resp.timeout  = 10 * OS_TICK_PER_SECOND;
+    resp.timeout = 10 * OS_TICK_PER_SECOND;
 
     result = at_parser_exec_cmd(parser, &resp, "AT+QIPACT=1");
     if (result != OS_EOK)
@@ -229,9 +229,7 @@ mo_netconn_t *clm920rv3_netconn_create(mo_object_t *module, mo_netconn_type_t ty
         return OS_NULL;
     }
 
-    netconn->mq = os_mq_create(CLM920RV3_NETCONN_MQ_NAME,
-                               CLM920RV3_NETCONN_MQ_MSG_SIZE,
-                               CLM920RV3_NETCONN_MQ_MSG_MAX);
+    netconn->mq = os_mq_create(CLM920RV3_NETCONN_MQ_NAME, CLM920RV3_NETCONN_MQ_MSG_SIZE, CLM920RV3_NETCONN_MQ_MSG_MAX);
     if (OS_NULL == netconn->mq)
     {
         ERROR("%s message queue create failed, no enough memory.", module->name);
@@ -250,7 +248,7 @@ mo_netconn_t *clm920rv3_netconn_create(mo_object_t *module, mo_netconn_type_t ty
 os_err_t clm920rv3_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 {
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_ERROR;
+    os_err_t result = OS_ERROR;
 
     DEBUG("Module %s in %d netconn status", module->name, netconn->stat);
 
@@ -267,8 +265,8 @@ os_err_t clm920rv3_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
         if (result != OS_EOK)
         {
             ERROR("Module %s destroy %s netconn failed",
-                      module->name,
-                      (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
+                  module->name,
+                  (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
             return result;
         }
         break;
@@ -285,8 +283,8 @@ os_err_t clm920rv3_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 
     INFO("Module %s netconn id %d destroyed", module->name, netconn->connect_id);
 
-    netconn->stat        = NETCONN_STAT_NULL;
-    netconn->type        = NETCONN_TYPE_NULL;
+    netconn->stat = NETCONN_STAT_NULL;
+    netconn->type = NETCONN_TYPE_NULL;
     netconn->remote_port = 0;
     inet_aton("0.0.0.0", &netconn->remote_ip);
 
@@ -385,7 +383,7 @@ __exit:
     {
         ip_addr_copy(netconn->remote_ip, addr);
         netconn->remote_port = port;
-        netconn->stat        = NETCONN_STAT_CONNECT;
+        netconn->stat = NETCONN_STAT_CONNECT;
 
         DEBUG("Module %s connect to %s:%d successfully!", module->name, remote_ip, port);
     }
@@ -399,20 +397,18 @@ __exit:
 
 os_size_t clm920rv3_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
-    at_parser_t *parser     = &module->parser;
-    os_err_t     result     = OS_EOK;
-    os_size_t    sent_size  = 0;
-    os_size_t    curr_size  = 0;
-    os_int32_t   connect_id = CLM920RV3_CONN_ID_NULL;
-    os_size_t    cnt        = 0;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    os_size_t sent_size = 0;
+    os_size_t curr_size = 0;
+    os_int32_t connect_id = CLM920RV3_CONN_ID_NULL;
+    os_size_t cnt = 0;
 
     at_parser_exec_lock(parser);
 
     char resp_buff[CLM920RV3_RESP_DEF_SIZE] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 10 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 10 * OS_TICK_PER_SECOND};
 
     while (sent_size < size)
     {
@@ -487,9 +483,9 @@ static void urc_connect_func(struct at_parser *parser, const char *data, os_size
     mo_clm920rv3_t *clm920rv3 = os_container_of(module, mo_clm920rv3_t, parent);
 
     os_int32_t connect_id = 0;
-    os_int32_t result     = 0;
+    os_int32_t result = 0;
 
-    sscanf(data, "+QIPOPEN: %d,%d", &connect_id , &result);
+    sscanf(data, "+QIPOPEN: %d,%d", &connect_id, &result);
 
     if (0 == result)
     {
@@ -509,7 +505,7 @@ os_err_t clm920rv3_netconn_gethostbyname(mo_object_t *module, const char *domain
     OS_ASSERT(OS_NULL != addr);
 
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_EOK;
+    os_err_t result = OS_EOK;
     char resp_buff[CLM920RV3_RESP_DEF_SIZE] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = OS_TICK_PER_SECOND};
@@ -577,7 +573,7 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != data);
 
     os_int32_t connect_id = 0;
-    os_int32_t data_size  = 0;
+    os_int32_t data_size = 0;
 
     sscanf(data, "RECV FROM: %d,%*[^,],%*d,%d", &connect_id, &data_size);
 
@@ -592,13 +588,13 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
         return;
     }
 
-    char *recv_buff    = os_calloc(1, data_size);
-    char  temp_buff[8] = {0};
+    char *recv_buff = os_calloc(1, data_size);
+    char temp_buff[8] = {0};
     if (recv_buff == OS_NULL)
     {
         /* read and clean the coming data */
         ERROR("alloc recv buff %d bytes fail, no enough memory", data_size);
-        os_size_t temp_size    = 0;
+        os_size_t temp_size = 0;
         while (temp_size < data_size)
         {
             if (data_size - temp_size > sizeof(temp_buff))
@@ -637,11 +633,11 @@ static void urc_pdpact_func(struct at_parser *parser, const char *data, os_size_
     OS_ASSERT(OS_NULL != parser);
     OS_ASSERT(OS_NULL != data);
 
-    mo_object_t    *module    = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
     mo_clm920rv3_t *clm920rv3 = os_container_of(module, mo_clm920rv3_t, parent);
 
-    char ip[IPADDR_MAX_STR_LEN +1] = {0};
-    os_int32_t context_id   = 0;
+    char ip[IPADDR_MAX_STR_LEN + 1] = {0};
+    os_int32_t context_id = 0;
     os_int32_t context_type = 0;
 
     if (0 >= sscanf(data, "+QIPACTURC: %d,%d,\"%[^\"]", &context_id, &context_type, ip))
@@ -695,11 +691,11 @@ static void urc_cdns_func(struct at_parser *parser, const char *data, os_size_t 
 }
 
 static at_urc_t gs_urc_table[] = {
-    {.prefix = "+QIPOPEN:",     .suffix = "\r\n", .func = urc_connect_func},
-    {.prefix = "+QIPCLOSEURC:", .suffix = "\r\n", .func = urc_close_func  },
-    {.prefix = "+QIPACTURC:",   .suffix = "\r\n", .func = urc_pdpact_func },
-    {.prefix = "RECV FROM:",    .suffix = "\r\n", .func = urc_recv_func   },
-    {.prefix = "+CDNS:",        .suffix = "\r\n", .func = urc_cdns_func   },
+    {.prefix = "+QIPOPEN:", .suffix = "\r\n", .func = urc_connect_func},
+    {.prefix = "+QIPCLOSEURC:", .suffix = "\r\n", .func = urc_close_func},
+    {.prefix = "+QIPACTURC:", .suffix = "\r\n", .func = urc_pdpact_func},
+    {.prefix = "RECV FROM:", .suffix = "\r\n", .func = urc_recv_func},
+    {.prefix = "+CDNS:", .suffix = "\r\n", .func = urc_cdns_func},
 };
 
 os_err_t clm920rv3_netconn_init(mo_clm920rv3_t *module)

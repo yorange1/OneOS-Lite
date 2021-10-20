@@ -39,8 +39,7 @@ os_err_t ml302_get_reg(mo_object_t *self, eps_reg_info_t *info);
 os_err_t ml302_set_cgact(mo_object_t *self, os_uint8_t cid, os_uint8_t act_n);
 os_err_t ml302_get_cgact(mo_object_t *self, os_uint8_t *cid, os_uint8_t *act_stat);
 os_err_t ml302_get_csq(mo_object_t *self, os_uint8_t *rssi, os_uint8_t *ber);
-os_err_t ml302_get_cell_info(mo_object_t *self, onepos_cell_info_t* onepos_cell_info);
-
+os_err_t ml302_get_cell_info(mo_object_t *self, onepos_cell_info_t *onepos_cell_info);
 
 #endif /* ML302_USING_NETSERV_OPS */
 
@@ -49,4 +48,3 @@ os_err_t ml302_get_cell_info(mo_object_t *self, onepos_cell_info_t* onepos_cell_
 #endif /* __cplusplus */
 
 #endif /* __ML302_NETSERV_H__ */
-

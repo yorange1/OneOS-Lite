@@ -65,30 +65,30 @@ extern "C" {
 #endif
 
 #ifndef BC95_RECV_BUFF_LEN
-#define BC95_RECV_BUFF_LEN  (1500)
+#define BC95_RECV_BUFF_LEN (1500)
 #endif
 
 #ifndef BC95_NETCONN_NUM
-#define BC95_NETCONN_NUM    (5)                 /* module service occupied 2 socket */
+#define BC95_NETCONN_NUM (5) /* module service occupied 2 socket */
 #endif
 
 typedef struct mo_bc95
 {
-    mo_object_t     parent;
+    mo_object_t parent;
 #ifdef BC95_USING_NETCONN_OPS
-    mo_netconn_t    netconn[BC95_NETCONN_NUM];
-    os_mutex_t      netconn_lock;
-    char           *netconn_data;
-    os_event_t      netconn_evt;
+    mo_netconn_t netconn[BC95_NETCONN_NUM];
+    os_mutex_t netconn_lock;
+    char *netconn_data;
+    os_event_t netconn_evt;
 #endif /* BC95_USING_NETCONN_OPS */
 #ifdef BC95_USING_ONENET_NB_OPS
-    mo_onenet_cb_t *regist_cb;                  /* module onenet register callback */
-#endif /* BC95_USING_ONENET_NB_OPS */
+    mo_onenet_cb_t *regist_cb; /* module onenet register callback */
+#endif                         /* BC95_USING_ONENET_NB_OPS */
 
 } mo_bc95_t;
 
 mo_object_t *module_bc95_create(const char *name, void *parser_config);
-os_err_t     module_bc95_destroy(mo_object_t *self);
+os_err_t module_bc95_destroy(mo_object_t *self);
 
 #endif /* MOLINK_USING_BC95 */
 

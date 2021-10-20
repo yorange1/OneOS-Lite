@@ -3,13 +3,13 @@
  * Copyright (c) 2020, China Mobile Communications Group Co.,Ltd.
  * Copyright (c) 2006-2018, RT-Thread Development Team.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on 
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
  * @file        ring_buff.c
@@ -37,8 +37,8 @@ typedef enum
 {
     RB_RING_BUFF_EMPTY,
     RB_RING_BUFF_FULL,
-    RB_RING_BUFF_HALF_FULL,     /* Half full is neither full nor empty */
-}rb_ring_buff_state_t;
+    RB_RING_BUFF_HALF_FULL, /* Half full is neither full nor empty */
+} rb_ring_buff_state_t;
 
 static rb_ring_buff_state_t rb_ring_buff_state(rb_ring_buff_t *rb)
 {
@@ -53,7 +53,7 @@ static rb_ring_buff_state_t rb_ring_buff_state(rb_ring_buff_t *rb)
             return RB_RING_BUFF_FULL;
         }
     }
-    
+
     return RB_RING_BUFF_HALF_FULL;
 }
 
@@ -72,14 +72,14 @@ void rb_ring_buff_init(rb_ring_buff_t *rb, os_uint8_t *pool, os_uint32_t pool_si
 {
     OS_ASSERT(rb && pool && pool_size);
 
-    rb->read_index   = 0;
-    rb->write_index  = 0;
-    
-    rb->read_mirror  = OS_FALSE;
+    rb->read_index = 0;
+    rb->write_index = 0;
+
+    rb->read_mirror = OS_FALSE;
     rb->write_mirror = OS_FALSE;
-    
-    rb->buff         = pool;
-    rb->buff_size    = pool_size;
+
+    rb->buff = pool;
+    rb->buff_size = pool_size;
 
     return;
 }
@@ -97,13 +97,13 @@ void rb_ring_buff_reset(rb_ring_buff_t *rb)
 {
     OS_ASSERT(rb != OS_NULL);
 
-    rb->read_index   = 0;
-    rb->write_index  = 0;
-    
-    rb->read_mirror  = OS_FALSE;
+    rb->read_index = 0;
+    rb->write_index = 0;
+
+    rb->read_mirror = OS_FALSE;
     rb->write_mirror = OS_FALSE;
 
-    return;    
+    return;
 }
 
 #ifdef OS_USING_SYS_HEAP
@@ -121,13 +121,13 @@ void rb_ring_buff_reset(rb_ring_buff_t *rb)
 rb_ring_buff_t *rb_ring_buff_create(os_uint32_t size)
 {
     rb_ring_buff_t *rb;
-    os_uint8_t     *pool;
+    os_uint8_t *pool;
 
-	OS_ASSERT(size > 0);
+    OS_ASSERT(size > 0);
 
-    rb   = OS_NULL;
+    rb = OS_NULL;
     pool = OS_NULL;
-    
+
     do
     {
         size = OS_ALIGN_DOWN(size, OS_ALIGN_SIZE);
@@ -143,14 +143,14 @@ rb_ring_buff_t *rb_ring_buff_create(os_uint32_t size)
         {
             os_free(rb);
             rb = OS_NULL;
-            
+
             break;
         }
-        
+
         rb_ring_buff_init(rb, pool, size);
-        
+
     } while (0);
-    
+
     return rb;
 }
 
@@ -186,12 +186,12 @@ void rb_ring_buff_destroy(rb_ring_buff_t *rb)
 os_uint32_t rb_ring_buff_data_len(rb_ring_buff_t *rb)
 {
     rb_ring_buff_state_t state;
-    os_uint32_t          data_len;
-    
+    os_uint32_t data_len;
+
     OS_ASSERT(rb != OS_NULL);
 
     data_len = 0;
-    
+
     state = rb_ring_buff_state(rb);
     switch (state)
     {
@@ -263,14 +263,14 @@ os_uint32_t rb_ring_buff_put(rb_ring_buff_t *rb, const os_uint8_t *buff, os_uint
     {
         return 0;
     }
-    
+
     /* Drop some data */
     if (size < buff_len)
     {
         buff_len = size;
     }
-    
-    if (rb->buff_size - rb->write_index  > buff_len )
+
+    if (rb->buff_size - rb->write_index > buff_len)
     {
         memcpy(rb->buff + rb->write_index, buff, buff_len);
         rb->write_index += buff_len;
@@ -278,9 +278,7 @@ os_uint32_t rb_ring_buff_put(rb_ring_buff_t *rb, const os_uint8_t *buff, os_uint
     }
 
     memcpy(rb->buff + rb->write_index, buff, rb->buff_size - rb->write_index);
-    memcpy(rb->buff,
-           buff + (rb->buff_size - rb->write_index),
-           buff_len - (rb->buff_size - rb->write_index));
+    memcpy(rb->buff, buff + (rb->buff_size - rb->write_index), buff_len - (rb->buff_size - rb->write_index));
 
     /* We are going into the other side of the mirror */
     rb->write_mirror = !rb->write_mirror;
@@ -320,7 +318,7 @@ os_uint32_t rb_ring_buff_put_force(rb_ring_buff_t *rb, const os_uint8_t *buff, o
 
     if (rb->buff_size - rb->write_index > buff_len)
     {
-        /* 
+        /*
          * This should not cause overflow because there is enough space for
          * length of data in current mirror
          */
@@ -332,7 +330,7 @@ os_uint32_t rb_ring_buff_put_force(rb_ring_buff_t *rb, const os_uint8_t *buff, o
         {
             rb->read_index = rb->write_index;
         }
-        
+
         return buff_len;
     }
 
@@ -342,12 +340,12 @@ os_uint32_t rb_ring_buff_put_force(rb_ring_buff_t *rb, const os_uint8_t *buff, o
 
     /* We are going into the other side of the mirror */
     rb->write_mirror = !rb->write_mirror;
-    rb->write_index  = buff_len - (rb->buff_size - rb->write_index);
+    rb->write_index = buff_len - (rb->buff_size - rb->write_index);
 
     if (buff_len > space_len)
     {
         rb->read_mirror = !rb->read_mirror;
-        rb->read_index  = rb->write_index;
+        rb->read_index = rb->write_index;
     }
 
     return buff_len;
@@ -382,23 +380,21 @@ os_uint32_t rb_ring_buff_get(rb_ring_buff_t *rb, os_uint8_t *buff, os_uint32_t b
         /* Less data */
         buff_len = size;
     }
-    
+
     if (rb->buff_size - rb->read_index > buff_len)
     {
-        /* 
+        /*
          * This should not cause overflow because there is enough space for
          * length of data in current mirror
          */
         memcpy(buff, rb->buff + rb->read_index, buff_len);
         rb->read_index += buff_len;
-        
+
         return buff_len;
     }
 
     memcpy(buff, rb->buff + rb->read_index, rb->buff_size - rb->read_index);
-    memcpy(buff + (rb->buff_size - rb->read_index),
-           rb->buff,
-           buff_len - (rb->buff_size - rb->read_index));
+    memcpy(buff + (rb->buff_size - rb->read_index), rb->buff, buff_len - (rb->buff_size - rb->read_index));
 
     /* We are going into the other side of the mirror */
     rb->read_mirror = !rb->read_mirror;
@@ -422,7 +418,7 @@ os_uint32_t rb_ring_buff_get(rb_ring_buff_t *rb, os_uint8_t *buff, os_uint32_t b
 os_uint32_t rb_ring_buff_put_char(rb_ring_buff_t *rb, const os_uint8_t ch)
 {
     os_uint32_t space_len;
-    
+
     OS_ASSERT(rb != OS_NULL);
 
     /* Whether has enough space */
@@ -431,11 +427,11 @@ os_uint32_t rb_ring_buff_put_char(rb_ring_buff_t *rb, const os_uint8_t ch)
     {
         return 0;
     }
-    
+
     rb->buff[rb->write_index] = ch;
 
     /* Flip mirror */
-    if (rb->write_index == rb->buff_size-1)
+    if (rb->write_index == rb->buff_size - 1)
     {
         rb->write_mirror = !rb->write_mirror;
         rb->write_index = 0;
@@ -471,11 +467,11 @@ os_uint32_t rb_ring_buff_put_char_force(rb_ring_buff_t *rb, const os_uint8_t ch)
     rb->buff[rb->write_index] = ch;
 
     /* Flip mirror */
-    if (rb->write_index == rb->buff_size-1)
+    if (rb->write_index == rb->buff_size - 1)
     {
         rb->write_mirror = !rb->write_mirror;
         rb->write_index = 0;
-        
+
         if (old_state == RB_RING_BUFF_FULL)
         {
             rb->read_mirror = !rb->read_mirror;
@@ -485,7 +481,7 @@ os_uint32_t rb_ring_buff_put_char_force(rb_ring_buff_t *rb, const os_uint8_t ch)
     else
     {
         rb->write_index++;
-        
+
         if (old_state == RB_RING_BUFF_FULL)
         {
             rb->read_index = rb->write_index;
@@ -510,7 +506,7 @@ os_uint32_t rb_ring_buff_put_char_force(rb_ring_buff_t *rb, const os_uint8_t ch)
 os_uint32_t rb_ring_buff_get_char(rb_ring_buff_t *rb, os_uint8_t *ch)
 {
     os_uint32_t size;
-    
+
     OS_ASSERT(rb && ch);
 
     /* Ring buffer is empty */
@@ -519,11 +515,11 @@ os_uint32_t rb_ring_buff_get_char(rb_ring_buff_t *rb, os_uint8_t *ch)
     {
         return 0;
     }
-    
+
     /* Get character */
     *ch = rb->buff[rb->read_index];
 
-    if (rb->read_index == rb->buff_size-1)
+    if (rb->read_index == rb->buff_size - 1)
     {
         rb->read_mirror = !rb->read_mirror;
         rb->read_index = 0;
@@ -535,4 +531,3 @@ os_uint32_t rb_ring_buff_get_char(rb_ring_buff_t *rb, os_uint8_t *ch)
 
     return 1;
 }
-

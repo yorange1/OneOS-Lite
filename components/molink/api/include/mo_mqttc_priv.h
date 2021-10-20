@@ -33,8 +33,8 @@ extern "C" {
 #endif /* __cplusplus */
 
 os_err_t mo_mqttc_data_queue_push_notice(mo_mqttc_t *client, mqttc_msg_data_t *msg);
-void     mo_mqttc_data_queue_disconnect_notice(mo_mqttc_t *client);
-void     mo_mqttc_data_queue_destroy(mo_mqttc_t *client);
+void mo_mqttc_data_queue_disconnect_notice(mo_mqttc_t *client);
+void mo_mqttc_data_queue_destroy(mo_mqttc_t *client);
 
 #ifdef __cplusplus
 }

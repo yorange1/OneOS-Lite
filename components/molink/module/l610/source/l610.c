@@ -36,39 +36,39 @@
 
 #ifdef L610_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test              = l610_at_test,
-    .get_imei             = l610_get_imei,
-    .get_imsi             = l610_get_imsi,
-    .get_iccid            = l610_get_iccid,
-    .get_cfun             = l610_get_cfun,
-    .set_cfun             = l610_set_cfun,
+    .at_test = l610_at_test,
+    .get_imei = l610_get_imei,
+    .get_imsi = l610_get_imsi,
+    .get_iccid = l610_get_iccid,
+    .get_cfun = l610_get_cfun,
+    .set_cfun = l610_set_cfun,
     .get_firmware_version = l610_get_firmware_version,
 };
 #endif /* L610_USING_GENERAL_OPS */
 
 #ifdef L610_USING_NETSERV_OPS
 static const struct mo_netserv_ops gs_netserv_ops = {
-    .set_attach           = l610_set_attach,
-    .get_attach           = l610_get_attach,
-    .set_reg              = l610_set_reg,
-    .get_reg              = l610_get_reg,
-    .set_cgact            = l610_set_cgact,
-    .get_cgact            = l610_get_cgact,
-    .get_csq              = l610_get_csq,
-    .get_cell_info        = l610_get_cell_info,
+    .set_attach = l610_set_attach,
+    .get_attach = l610_get_attach,
+    .set_reg = l610_set_reg,
+    .get_reg = l610_get_reg,
+    .set_cgact = l610_set_cgact,
+    .get_cgact = l610_get_cgact,
+    .get_csq = l610_get_csq,
+    .get_cell_info = l610_get_cell_info,
 };
 #endif /* L610_USING_NETSERV_OPS */
- 
+
 #ifdef L610_USING_PING_OPS
 static const struct mo_ping_ops gs_ping_ops = {
-    .ping                 = l610_ping,
+    .ping = l610_ping,
 };
 #endif /* L610_USING_PING_OPS */
 
 #ifdef L610_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig             = l610_ifconfig,
-    .get_ipaddr           = l610_get_ipaddr,
+    .ifconfig = l610_ifconfig,
+    .get_ipaddr = l610_get_ipaddr,
 };
 #endif /* L610_USING_IFCONFIG_OPS */
 
@@ -76,14 +76,14 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern void l610_netconn_init(mo_l610_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create               = l610_netconn_create,
-    .destroy              = l610_netconn_destroy,
+    .create = l610_netconn_create,
+    .destroy = l610_netconn_destroy,
 #ifdef L610_USING_DNS
-    .gethostbyname        = l610_netconn_gethostbyname,
+    .gethostbyname = l610_netconn_gethostbyname,
 #endif
-    .connect              = l610_netconn_connect,
-    .send                 = l610_netconn_send,
-    .get_info             = l610_netconn_get_info,
+    .connect = l610_netconn_connect,
+    .send = l610_netconn_send,
+    .get_info = l610_netconn_get_info,
 };
 #endif /* L610_USING_NETCONN_OPS */
 
@@ -101,7 +101,7 @@ static void urc_sim_func(struct at_parser *parser, const char *data, os_size_t s
 
 static at_urc_t gs_urc_table[] = {
     {.prefix = "AT command", .suffix = "ready\r\n", .func = urc_ready_func},
-    {.prefix = "+SIM",       .suffix = "READY\r\n", .func = urc_sim_func},
+    {.prefix = "+SIM", .suffix = "READY\r\n", .func = urc_sim_func},
 };
 
 #ifdef L610_USING_GENERAL_OPS
@@ -332,7 +332,7 @@ int l610_auto_create(void)
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = L610_NAME,
+    mo_parser_config_t parser_config = {.parser_name = L610_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = L610_RECV_BUFF_LEN};
 

@@ -24,7 +24,6 @@
 #ifndef __ESP32_WIFI_H__
 #define __ESP32_WIFI_H__
 
-
 #include "mo_wifi.h"
 #ifdef __cplusplus
 extern "C" {
@@ -32,12 +31,12 @@ extern "C" {
 
 #ifdef ESP32_USING_WIFI_OPS
 
-os_err_t       esp32_wifi_set_mode(mo_object_t *module, mo_wifi_mode_t mode);
+os_err_t esp32_wifi_set_mode(mo_object_t *module, mo_wifi_mode_t mode);
 mo_wifi_mode_t esp32_wifi_get_mode(mo_object_t *module);
 mo_wifi_stat_t esp32_wifi_get_stat(mo_object_t *module);
-os_err_t       esp32_wifi_scan_info(mo_object_t *module, char *ssid, mo_wifi_scan_result_t *scan_result);
-os_err_t       esp32_wifi_connect_ap(mo_object_t *module, const char *ssid, const char *password);
-os_err_t       esp32_wifi_disconnect_ap(mo_object_t *module);
+os_err_t esp32_wifi_scan_info(mo_object_t *module, char *ssid, mo_wifi_scan_result_t *scan_result);
+os_err_t esp32_wifi_connect_ap(mo_object_t *module, const char *ssid, const char *password);
+os_err_t esp32_wifi_disconnect_ap(mo_object_t *module);
 
 #endif /* ESP32_USING_WIFI_OPS */
 

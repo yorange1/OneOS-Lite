@@ -27,15 +27,14 @@
 #include "mo_time.h"
 
 #define MO_LOG_TAG "m5311.general"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef M5311_USING_GENERAL_OPS
 
-#define M5311_GENERAL_TIMEOUT_DFT   (2 * OS_TICK_PER_SECOND)
-#define M5311_PSM_QUOTES_LEN        (2)
-#define M5311_TIMEZONE_STR_LEN_DEF  (8)
-
+#define M5311_GENERAL_TIMEOUT_DFT  (2 * OS_TICK_PER_SECOND)
+#define M5311_PSM_QUOTES_LEN       (2)
+#define M5311_TIMEZONE_STR_LEN_DEF (8)
 
 os_err_t m5311_at_test(mo_object_t *self)
 {
@@ -53,13 +52,13 @@ os_err_t m5311_get_imei(mo_object_t *self, char *value, os_size_t len)
     OS_ASSERT(len > MO_IMEI_LEN);
 
     at_parser_t *parser = &self->parser;
-    
+
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout =  M5311_GENERAL_TIMEOUT_DFT};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = M5311_GENERAL_TIMEOUT_DFT};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+GSN");
-    if(result != OS_EOK)
+    if (result != OS_EOK)
     {
         return OS_ERROR;
     }
@@ -171,12 +170,12 @@ os_err_t m5311_set_cfun(mo_object_t *self, os_uint8_t fun_lvl)
 
 os_err_t m5311_gm_time(mo_object_t *self, struct tm *l_tm)
 {
-    at_parser_t *parser   = &self->parser;
-    os_err_t     result   = OS_EOK;
-    _mo_tm_t     mo_tm    = {0};
+    at_parser_t *parser = &self->parser;
+    os_err_t result = OS_EOK;
+    _mo_tm_t mo_tm = {0};
 
     char timezone_str[M5311_TIMEZONE_STR_LEN_DEF] = {0};
-    char resp_buff[AT_RESP_BUFF_SIZE_DEF]         = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 90 * OS_TICK_PER_SECOND};
 
@@ -188,14 +187,16 @@ os_err_t m5311_gm_time(mo_object_t *self, struct tm *l_tm)
     }
 
     /* at least 6 parm required: yy/MM/dd,hh:mm:ss */
-    if (6 >= at_resp_get_data_by_kw(&resp, "+CCLK:", "+CCLK: %d/%d/%d,%d:%d:%d%s", 
-                                    &mo_tm.tm_year, 
+    if (6 >= at_resp_get_data_by_kw(&resp,
+                                    "+CCLK:",
+                                    "+CCLK: %d/%d/%d,%d:%d:%d%s",
+                                    &mo_tm.tm_year,
                                     &mo_tm.tm_mon,
                                     &mo_tm.tm_mday,
                                     &mo_tm.tm_hour,
                                     &mo_tm.tm_min,
                                     &mo_tm.tm_sec,
-                                     timezone_str))
+                                    timezone_str))
     {
         ERROR("%s-%d:get local time failed", __func__, __LINE__);
         result = OS_ERROR;
@@ -210,7 +211,7 @@ os_err_t m5311_gm_time(mo_object_t *self, struct tm *l_tm)
     {
         DEBUG("%s-%d:no timezone info passed by module.", __func__, __LINE__);
     }
-    else if (0 >= sscanf(timezone_str, "%d", &mo_tm.tm_q_off)) 
+    else if (0 >= sscanf(timezone_str, "%d", &mo_tm.tm_q_off))
     {
         WARN("%s-%d:parse timezone info failed.", __func__, __LINE__);
     }
@@ -219,7 +220,8 @@ os_err_t m5311_gm_time(mo_object_t *self, struct tm *l_tm)
 
 __exit:
 
-    if (OS_EOK != result) memset(l_tm, 0, sizeof(struct tm));
+    if (OS_EOK != result)
+        memset(l_tm, 0, sizeof(struct tm));
 
     return result;
 }

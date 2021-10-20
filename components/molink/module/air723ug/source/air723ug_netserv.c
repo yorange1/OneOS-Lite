@@ -32,7 +32,7 @@
 #endif /* MOLINK_USING_IP */
 
 #define MO_LOG_TAG "air723ug_netserv"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef AIR723UG_USING_NETSERV_OPS
@@ -170,151 +170,154 @@ os_err_t air723ug_get_csq(mo_object_t *self, os_uint8_t *rssi, os_uint8_t *ber)
     return OS_EOK;
 }
 
-#define GET_AIR723UG_RSSI(rxlev)   (0 - (63 - rxlev + 48))
-#define AIR723UG_MODULE_NET_TYPE   5
+#define GET_AIR723UG_RSSI(rxlev) (0 - (63 - rxlev + 48))
+#define AIR723UG_MODULE_NET_TYPE 5
 
-os_err_t air723ug_get_cell_info(mo_object_t *self, onepos_cell_info_t* onepos_cell_info)  
-{  
-    os_err_t     ret       = OS_EOK;  
-    os_size_t    i         = 0;  
-    cell_info_t *cell_info = OS_NULL;  
-    char        *temp_buff = OS_NULL;  
-    os_uint32_t  cell_num  = 0;  
-    os_uint32_t  frequency = 0;  
-    os_uint32_t  rsrp      = 0;  
-    os_uint32_t  rsrq      = 0;  
-    os_uint32_t  rxlev     = 0;  
-    os_uint32_t  pcid      = 0;  
-    char         imsi[20];  
-    char         earfcn[10];  
-    os_uint32_t  roming_flag;  
-    os_uint32_t  bandinfo; 
-    char         bandwidth[20];    
-    at_parser_t *parser = &self->parser;  
-  
-    if (parser == OS_NULL)  
-    {  
-        ERROR("AIR723UG ping: at parser is NULL.");  
-        return OS_ERROR;  
-    }  
-    if(!onepos_cell_info)  
-    {  
-        ERROR("input param is error!");  
-        return OS_ERROR;  
-    }  
-  
-    at_resp_t resp = {.buff      = os_calloc(1, 1024),  
-                      .buff_size = 1024,  
-                      .timeout   = 50 * OS_TICK_PER_SECOND  
-                     };  
-  
-    if (OS_NULL == resp.buff)  
-    {  
-        ERROR("Calloc air723ug cell info response memory failed!");  
-        ret = OS_ENOMEM;  
-        goto __exit;  
-    }  
-  
-    /* neighbor cell */  
-    if (at_parser_exec_cmd(parser, &resp, "AT+CCED=0,2") < 0)  
-    {  
-        ret = OS_ERROR;  
-        ERROR("AT cmd exec fail: AT+CCED=0,2\n");  
-        goto __exit;  
-    }  
-    DEBUG("resp->line_counts : %d\r\n", resp.line_counts);  
-  
-    cell_info = os_calloc((resp.line_counts), sizeof(cell_info_t)); 
-    ERROR("resp.line_counts =%d",resp.line_counts);    
-    if(NULL == cell_info)  
-    {  
-        ERROR("malloc cell_info is null");  
-        ret = OS_ENOMEM;  
-        return ret;  
-    }  
-  
-    INFO("                MCC         MNC          CID         LAC       RSSI\n");  
-    INFO("           ------------ ------------ ------------ ------------ ----\n");  
-  
-    for (i = 1; i < resp.line_counts; i++)  
-    {  
-        temp_buff = (char*)at_resp_get_line(&resp, i);  
-        if(strlen(temp_buff) > 25) {  
-            sscanf(temp_buff,  
-                   " +CCED:LTE neighbor cell:%u,%u,%u,%u,%u,%u,%u,%u,%u",  
-                   &cell_info[cell_num].mcc,  
-                   &cell_info[cell_num].mnc,  
-                   &frequency,  
-                   &cell_info[cell_num].cid,  
-                   &rsrp,  
-                   &rsrq,  
-                   &cell_info[cell_num].lac,  
-                   &rxlev,  
-                   &pcid);  
-  
-            cell_info[cell_num].ss = GET_AIR723UG_RSSI(rxlev);  
-            if(cell_info[cell_num].mcc)  
-            {  
-                INFO("cell_info: %-12u %-12u %-12u %-12u %-4d\n",  
-                          cell_info[cell_num].mcc, cell_info[cell_num].mnc, cell_info[cell_num].cid,  
-                          cell_info[cell_num].lac, cell_info[cell_num].ss);  
-                cell_num ++;  
-            }  
-        }  
-    }  
-    /* main cell */  
-    if (at_parser_exec_cmd(parser, &resp, "AT+CCED=0,1") < 0)  
-    {  
-        ret = OS_ERROR;  
-        os_free(cell_info);  
-        ERROR("AT cmd exec fail: AT+CCED=0,1\n");  
-        goto __exit;  
-    }  
-    DEBUG("resp->line_counts : %d\r\n", &resp.line_counts);  
-  
-    temp_buff = (char*)at_resp_get_line(&resp, 1);  
-    if(strlen(temp_buff) > 25)  
-    {  
-        sscanf(temp_buff,  
-        "+CCED:LTE current cell:%u,%u,%[^,],%u,%u,%[^,],%*[^,],%[^,],%u,%u,%u,%u,%u,%u",  
-               &cell_info[cell_num].mcc,  
-               &cell_info[cell_num].mnc,  
-               imsi,  
-               &roming_flag,  
+os_err_t air723ug_get_cell_info(mo_object_t *self, onepos_cell_info_t *onepos_cell_info)
+{
+    os_err_t ret = OS_EOK;
+    os_size_t i = 0;
+    cell_info_t *cell_info = OS_NULL;
+    char *temp_buff = OS_NULL;
+    os_uint32_t cell_num = 0;
+    os_uint32_t frequency = 0;
+    os_uint32_t rsrp = 0;
+    os_uint32_t rsrq = 0;
+    os_uint32_t rxlev = 0;
+    os_uint32_t pcid = 0;
+    char imsi[20];
+    char earfcn[10];
+    os_uint32_t roming_flag;
+    os_uint32_t bandinfo;
+    char bandwidth[20];
+    at_parser_t *parser = &self->parser;
+
+    if (parser == OS_NULL)
+    {
+        ERROR("AIR723UG ping: at parser is NULL.");
+        return OS_ERROR;
+    }
+    if (!onepos_cell_info)
+    {
+        ERROR("input param is error!");
+        return OS_ERROR;
+    }
+
+    at_resp_t resp = {.buff = os_calloc(1, 1024), .buff_size = 1024, .timeout = 50 * OS_TICK_PER_SECOND};
+
+    if (OS_NULL == resp.buff)
+    {
+        ERROR("Calloc air723ug cell info response memory failed!");
+        ret = OS_ENOMEM;
+        goto __exit;
+    }
+
+    /* neighbor cell */
+    if (at_parser_exec_cmd(parser, &resp, "AT+CCED=0,2") < 0)
+    {
+        ret = OS_ERROR;
+        ERROR("AT cmd exec fail: AT+CCED=0,2\n");
+        goto __exit;
+    }
+    DEBUG("resp->line_counts : %d\r\n", resp.line_counts);
+
+    cell_info = os_calloc((resp.line_counts), sizeof(cell_info_t));
+    ERROR("resp.line_counts =%d", resp.line_counts);
+    if (NULL == cell_info)
+    {
+        ERROR("malloc cell_info is null");
+        ret = OS_ENOMEM;
+        return ret;
+    }
+
+    INFO("                MCC         MNC          CID         LAC       RSSI\n");
+    INFO("           ------------ ------------ ------------ ------------ ----\n");
+
+    for (i = 1; i < resp.line_counts; i++)
+    {
+        temp_buff = (char *)at_resp_get_line(&resp, i);
+        if (strlen(temp_buff) > 25)
+        {
+            sscanf(temp_buff,
+                   " +CCED:LTE neighbor cell:%u,%u,%u,%u,%u,%u,%u,%u,%u",
+                   &cell_info[cell_num].mcc,
+                   &cell_info[cell_num].mnc,
+                   &frequency,
+                   &cell_info[cell_num].cid,
+                   &rsrp,
+                   &rsrq,
+                   &cell_info[cell_num].lac,
+                   &rxlev,
+                   &pcid);
+
+            cell_info[cell_num].ss = GET_AIR723UG_RSSI(rxlev);
+            if (cell_info[cell_num].mcc)
+            {
+                INFO("cell_info: %-12u %-12u %-12u %-12u %-4d\n",
+                     cell_info[cell_num].mcc,
+                     cell_info[cell_num].mnc,
+                     cell_info[cell_num].cid,
+                     cell_info[cell_num].lac,
+                     cell_info[cell_num].ss);
+                cell_num++;
+            }
+        }
+    }
+    /* main cell */
+    if (at_parser_exec_cmd(parser, &resp, "AT+CCED=0,1") < 0)
+    {
+        ret = OS_ERROR;
+        os_free(cell_info);
+        ERROR("AT cmd exec fail: AT+CCED=0,1\n");
+        goto __exit;
+    }
+    DEBUG("resp->line_counts : %d\r\n", &resp.line_counts);
+
+    temp_buff = (char *)at_resp_get_line(&resp, 1);
+    if (strlen(temp_buff) > 25)
+    {
+        sscanf(temp_buff,
+               "+CCED:LTE current cell:%u,%u,%[^,],%u,%u,%[^,],%*[^,],%[^,],%u,%u,%u,%u,%u,%u",
+               &cell_info[cell_num].mcc,
+               &cell_info[cell_num].mnc,
+               imsi,
+               &roming_flag,
                &bandinfo,
-               bandwidth,        
-               earfcn,  
-               &cell_info[cell_num].cid,  
-               &rsrp,  
-               &rsrq,  
-               &cell_info[cell_num].lac,  
-               &rxlev,  
-               &pcid);  
-  
-        cell_info[cell_num].ss = GET_AIR723UG_RSSI(rxlev);  
-        INFO("cell_info: %-12u %-12u %-12u %-12u %-4d\n",  
-                  cell_info[cell_num].mcc, cell_info[cell_num].mnc, cell_info[cell_num].cid,  
-                  cell_info[cell_num].lac, cell_info[cell_num].ss);  
-  
-    }  
-    else  
-    {  
-        cell_num --;  
-    }  
-    INFO("           ------------ ------------ ------------ ------------ ----\n");  
-  
-    onepos_cell_info->cell_num = ++cell_num;  
-    onepos_cell_info->cell_info = cell_info;  
-    onepos_cell_info->net_type = AIR723UG_MODULE_NET_TYPE;  
-  
-__exit:  
-  
-    if (resp.buff != OS_NULL)  
-    {  
-        os_free(resp.buff);  
-    }  
-  
-    return ret;  
-}  
+               bandwidth,
+               earfcn,
+               &cell_info[cell_num].cid,
+               &rsrp,
+               &rsrq,
+               &cell_info[cell_num].lac,
+               &rxlev,
+               &pcid);
+
+        cell_info[cell_num].ss = GET_AIR723UG_RSSI(rxlev);
+        INFO("cell_info: %-12u %-12u %-12u %-12u %-4d\n",
+             cell_info[cell_num].mcc,
+             cell_info[cell_num].mnc,
+             cell_info[cell_num].cid,
+             cell_info[cell_num].lac,
+             cell_info[cell_num].ss);
+    }
+    else
+    {
+        cell_num--;
+    }
+    INFO("           ------------ ------------ ------------ ------------ ----\n");
+
+    onepos_cell_info->cell_num = ++cell_num;
+    onepos_cell_info->cell_info = cell_info;
+    onepos_cell_info->net_type = AIR723UG_MODULE_NET_TYPE;
+
+__exit:
+
+    if (resp.buff != OS_NULL)
+    {
+        os_free(resp.buff);
+    }
+
+    return ret;
+}
 
 #endif /* AIR723UG_USING_NETSERV_OPS */

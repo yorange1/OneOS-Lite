@@ -29,7 +29,7 @@
 #ifdef CLM920RV3_USING_IFCONFIG_OPS
 
 #define MO_LOG_TAG "clm920rv3.ifconfig"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 extern os_err_t clm920rv3_pdp_act(mo_object_t *module);
@@ -55,12 +55,12 @@ os_err_t clm920rv3_ifconfig(mo_object_t *module)
     }
 
     os_uint8_t rssi = 0;
-    os_uint8_t ber  = 0;
+    os_uint8_t ber = 0;
 
     if (clm920rv3_get_csq(module, &rssi, &ber) != OS_EOK)
     {
         rssi = 0;
-        ber  = 0;
+        ber = 0;
     }
 
     os_kprintf("\r\nLIST AT MODULE INFORMATIONS\r\n");
@@ -88,7 +88,7 @@ os_err_t clm920rv3_ifconfig(mo_object_t *module)
 os_err_t clm920rv3_get_ipaddr(mo_object_t *module, char ip[])
 {
     at_parser_t *parser = &module->parser;
-    os_int8_t    len    = -1;
+    os_int8_t len = -1;
 
     char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
 
@@ -125,7 +125,7 @@ os_err_t clm920rv3_get_ipaddr(mo_object_t *module, char ip[])
     }
 
 __exit:
-    
+
     return result;
 }
 
@@ -133,12 +133,12 @@ os_err_t clm920rv3_set_dnsserver(mo_object_t *module, dns_server_t dns)
 {
     /* CLM920RV3 set dnsserver function just for test use, not officially support for now. */
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_EOK;
+    os_err_t result = OS_EOK;
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
-    char ip[IPADDR_MAX_STR_LEN + 1]       = {0};
-    
+    char ip[IPADDR_MAX_STR_LEN + 1] = {0};
+
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = OS_TICK_PER_SECOND};
-    
+
     if (OS_NULL == parser)
     {
         ERROR("CLM920RV3 %s: at parser is NULL.", __func__);
@@ -152,28 +152,28 @@ os_err_t clm920rv3_set_dnsserver(mo_object_t *module, dns_server_t dns)
     }
 
     /**
-     * CLM920RV3 set dns server function just for test use, not officially support for now. 
+     * CLM920RV3 set dns server function just for test use, not officially support for now.
      * and it appears that CLM920RV3 not support "0" to reset the DNS server address.
      **/
-    if (!strlen(dns.primary_dns)        || !strlen(dns.secondary_dns) || 
-        !strcmp(dns.secondary_dns, "0") || !strcmp(dns.secondary_dns, "0"))
+    if (!strlen(dns.primary_dns) || !strlen(dns.secondary_dns) || !strcmp(dns.secondary_dns, "0") ||
+        !strcmp(dns.secondary_dns, "0"))
     {
         ERROR("CLM920RV3 %s: with invalid param.", __func__);
         return OS_ERROR;
     }
 
     result = at_parser_exec_cmd(parser, &resp, "AT*NETDNS=1,\"%s\",\"%s\"", dns.primary_dns, dns.secondary_dns);
-    
+
     return result;
 }
 
 os_err_t clm920rv3_get_dnsserver(mo_object_t *module, dns_server_t *dns)
 {
     /* CLM920RV3 get dnsserver function just for test use, not officially support for now. */
-    at_parser_t *parser         = &module->parser;
-    os_err_t     result         = OS_EOK;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
 
-    char primary_dns[IPADDR_MAX_STR_LEN + 1]   = {0};
+    char primary_dns[IPADDR_MAX_STR_LEN + 1] = {0};
     char secondary_dns[IPADDR_MAX_STR_LEN + 1] = {0};
 
     if (OS_NULL == parser)

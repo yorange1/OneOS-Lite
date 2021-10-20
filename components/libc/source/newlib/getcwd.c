@@ -7,7 +7,7 @@
 #include "vfs_posix.h"
 #endif
 
-char* getcwd(char *buf, size_t size)
+char *getcwd(char *buf, size_t size)
 {
 #ifdef OS_USING_VFS
     return vfs_getcwd(buf, size);

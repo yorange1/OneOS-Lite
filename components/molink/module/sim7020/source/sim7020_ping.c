@@ -36,11 +36,11 @@
 
 os_err_t sim7020_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp)
 {
-    at_parser_t *parser   = &self->parser;
-    os_err_t     result   = OS_EOK;
-    os_int16_t   req_time = -1;
-    os_int16_t   replyid  = -1;
-    os_int16_t   ttl      = -1;
+    at_parser_t *parser = &self->parser;
+    os_err_t result = OS_EOK;
+    os_int16_t req_time = -1;
+    os_int16_t replyid = -1;
+    os_int16_t ttl = -1;
 
     char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
 
@@ -53,9 +53,9 @@ os_err_t sim7020_ping(mo_object_t *self, const char *host, os_uint16_t len, os_u
     if (len > SIM7020_MAX_PING_PKG_LEN)
     {
         ERROR("SIM7020 ping: ping package len[%d] is out of range[%d, %d].",
-                  len,
-                  SIM7020_MIN_PING_PKG_LEN,
-                  SIM7020_MAX_PING_PKG_LEN);
+              len,
+              SIM7020_MIN_PING_PKG_LEN,
+              SIM7020_MAX_PING_PKG_LEN);
         return OS_ERROR;
     }
 
@@ -64,9 +64,9 @@ os_err_t sim7020_ping(mo_object_t *self, const char *host, os_uint16_t len, os_u
     if ((timeout < SIM7020_MIN_PING_TIMEOUT) || (timeout > SIM7020_MAX_PING_TIMEOUT))
     {
         ERROR("SIM7020 ping: user set ping timeout value %ums is out of range[%dms, %dms].",
-                  timeout * 100,
-                  SIM7020_MIN_PING_TIMEOUT * 100,
-                  SIM7020_MAX_PING_TIMEOUT * 100);
+              timeout * 100,
+              SIM7020_MIN_PING_TIMEOUT * 100,
+              SIM7020_MAX_PING_TIMEOUT * 100);
         return OS_ERROR;
     }
 
@@ -74,10 +74,10 @@ os_err_t sim7020_ping(mo_object_t *self, const char *host, os_uint16_t len, os_u
 
     char resp_buff[256] = {0};
     /* Need to wait for 2 lines response msg */
-    at_resp_t at_resp = {.buff      = resp_buff,
+    at_resp_t at_resp = {.buff = resp_buff,
                          .buff_size = sizeof(resp_buff),
-                         .line_num  = 2,
-                         .timeout   = (5 + timeout / 10) * OS_TICK_PER_SECOND};
+                         .line_num = 2,
+                         .timeout = (5 + timeout / 10) * OS_TICK_PER_SECOND};
 
     /* Exec AT+CIPPING="www.baidu.com",4,64,50; def ping timeout: +CIPPING: 1,39.156.66.14,50,0 */
     /* Success: +CIPPING: 1,39.156.66.14,84,52 */
@@ -88,7 +88,8 @@ os_err_t sim7020_ping(mo_object_t *self, const char *host, os_uint16_t len, os_u
         goto __exit;
     }
 
-    if (at_resp_get_data_by_kw(&at_resp, "+CIPPING", "+CIPPING: %d,%[^,],%d,%d", &replyid, ipaddr, &req_time, &ttl) <= 0)
+    if (at_resp_get_data_by_kw(&at_resp, "+CIPPING", "+CIPPING: %d,%[^,],%d,%d", &replyid, ipaddr, &req_time, &ttl) <=
+        0)
     {
         ERROR("%s ping %s fail: check network status and try to set a longer timeout.", self->name, host);
         result = OS_ERROR;
@@ -111,8 +112,8 @@ os_err_t sim7020_ping(mo_object_t *self, const char *host, os_uint16_t len, os_u
     {
         inet_aton(ipaddr, &(resp->ip_addr));
         resp->data_len = len;
-        resp->ttl      = ttl;
-        resp->time     = (req_time * 100);
+        resp->ttl = ttl;
+        resp->time = (req_time * 100);
     }
 
 __exit:

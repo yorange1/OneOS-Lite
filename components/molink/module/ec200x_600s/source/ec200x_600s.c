@@ -36,39 +36,39 @@
 
 #ifdef EC200X_600S_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test              = ec200x_600s_at_test,
-    .get_imei             = ec200x_600s_get_imei,
-    .get_imsi             = ec200x_600s_get_imsi,
-    .get_iccid            = ec200x_600s_get_iccid,
-    .get_cfun             = ec200x_600s_get_cfun,
-    .set_cfun             = ec200x_600s_set_cfun,
+    .at_test = ec200x_600s_at_test,
+    .get_imei = ec200x_600s_get_imei,
+    .get_imsi = ec200x_600s_get_imsi,
+    .get_iccid = ec200x_600s_get_iccid,
+    .get_cfun = ec200x_600s_get_cfun,
+    .set_cfun = ec200x_600s_set_cfun,
     .get_firmware_version = ec200x_600s_get_firmware_version,
-    .sleep_mode_set       = ec200x_600s_sleep_mode_set,
+    .sleep_mode_set = ec200x_600s_sleep_mode_set,
 };
 #endif /* EC200X_600S_USING_GENERAL_OPS */
 
 #ifdef EC200X_600S_USING_NETSERV_OPS
 static const struct mo_netserv_ops gs_netserv_ops = {
-    .set_attach           = ec200x_600s_set_attach,
-    .get_attach           = ec200x_600s_get_attach,
-    .set_reg              = ec200x_600s_set_reg,
-    .get_reg              = ec200x_600s_get_reg,
-    .set_cgact            = ec200x_600s_set_cgact,
-    .get_cgact            = ec200x_600s_get_cgact,
-    .get_csq              = ec200x_600s_get_csq,
+    .set_attach = ec200x_600s_set_attach,
+    .get_attach = ec200x_600s_get_attach,
+    .set_reg = ec200x_600s_set_reg,
+    .get_reg = ec200x_600s_get_reg,
+    .set_cgact = ec200x_600s_set_cgact,
+    .get_cgact = ec200x_600s_get_cgact,
+    .get_csq = ec200x_600s_get_csq,
 };
 #endif /* EC200X_600S_USING_NETSERV_OPS */
 
 #ifdef EC200X_600S_USING_PING_OPS
 static const struct mo_ping_ops gs_ping_ops = {
-    .ping                 = ec200x_600s_ping,
+    .ping = ec200x_600s_ping,
 };
 #endif /* EC200X_600S_USING_PING_OPS */
 
 #ifdef EC200X_600S_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig            = ec200x_600s_ifconfig,
-    .get_ipaddr          = ec200x_600s_get_ipaddr,
+    .ifconfig = ec200x_600s_ifconfig,
+    .get_ipaddr = ec200x_600s_get_ipaddr,
 };
 #endif /* EC200X_600S_USING_IFCONFIG_OPS */
 
@@ -76,14 +76,14 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern void ec200x_600s_netconn_init(mo_ec200x_600s_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create              = ec200x_600s_netconn_create,
-    .destroy             = ec200x_600s_netconn_destroy,
+    .create = ec200x_600s_netconn_create,
+    .destroy = ec200x_600s_netconn_destroy,
 #ifdef EC200X_600S_USING_DNS
-    .gethostbyname       = ec200x_600s_netconn_gethostbyname,
+    .gethostbyname = ec200x_600s_netconn_gethostbyname,
 #endif
-    .connect             = ec200x_600s_netconn_connect,
-    .send                = ec200x_600s_netconn_send,
-    .get_info            = ec200x_600s_netconn_get_info,
+    .connect = ec200x_600s_netconn_connect,
+    .send = ec200x_600s_netconn_send,
+    .get_info = ec200x_600s_netconn_get_info,
 };
 #endif /* EC200X_600S_USING_NETCONN_OPS */
 
@@ -218,7 +218,7 @@ int ec200x_600s_auto_create(void)
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = EC200X_600S_NAME,
+    mo_parser_config_t parser_config = {.parser_name = EC200X_600S_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = EC200X_600S_RECV_BUFF_LEN};
 

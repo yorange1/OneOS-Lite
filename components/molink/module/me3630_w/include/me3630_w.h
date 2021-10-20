@@ -69,16 +69,16 @@ typedef struct mo_me3630_w
     mo_object_t parent;
 #ifdef ME3630_W_USING_NETCONN_OPS
     mo_netconn_t netconn[ME3630_W_NETCONN_NUM];
-	
-	os_int32_t curr_connect;
+
+    os_int32_t curr_connect;
     os_event_t netconn_evt;
     os_mutex_t netconn_lock;
-    void      *netconn_data;
+    void *netconn_data;
 #endif /* ME3630_W_USING_NETCONN_OPS */
 } mo_me3630_w_t;
 
 mo_object_t *module_me3630_w_create(const char *name, void *parser_config);
-os_err_t     module_me3630_w_destroy(mo_object_t *self);
+os_err_t module_me3630_w_destroy(mo_object_t *self);
 
 #endif /* MOLINK_USING_ME3630_W */
 
@@ -87,4 +87,3 @@ os_err_t     module_me3630_w_destroy(mo_object_t *self);
 #endif /* __cplusplus */
 
 #endif /* __ME3630_W_H__ */
-

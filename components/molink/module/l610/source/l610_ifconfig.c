@@ -37,13 +37,13 @@
 os_err_t l610_ifconfig(mo_object_t *self)
 {
     char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
-    char imei[MO_IMEI_LEN + 1]          = {0};
-    char iccid[MO_ICCID_LEN + 1]        = {0};
-    char imsi[MO_IMSI_LEN + 1]          = {0};
+    char imei[MO_IMEI_LEN + 1] = {0};
+    char iccid[MO_ICCID_LEN + 1] = {0};
+    char imsi[MO_IMSI_LEN + 1] = {0};
 
-    os_err_t   ret  = OS_EOK;
+    os_err_t ret = OS_EOK;
     os_uint8_t rssi = 0;
-    os_uint8_t ber  = 0;
+    os_uint8_t ber = 0;
 
     if (l610_get_ipaddr(self, ipaddr) != OS_EOK)
     {
@@ -72,7 +72,7 @@ os_err_t l610_ifconfig(mo_object_t *self)
     if (l610_get_csq(self, &rssi, &ber) != OS_EOK)
     {
         rssi = 0;
-        ber  = 0;
+        ber = 0;
         ret = OS_ERROR;
     }
 
@@ -103,10 +103,10 @@ os_err_t l610_get_ipaddr(mo_object_t *self, char ip[])
 {
     at_parser_t *parser = &self->parser;
 
-    char ipaddr[IPADDR_MAX_STR_LEN + 1]   = {0};
+    char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
     char resp_buff[AT_RESP_BUFF_SIZE_256] = {0};
 
-    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout =  2 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 2 * OS_TICK_PER_SECOND};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+CGPADDR");
     if (result != OS_EOK)

@@ -26,4 +26,3 @@
 #include <sys/fcntl.h>
 
 #endif /* __FCNTL_H__ */
-

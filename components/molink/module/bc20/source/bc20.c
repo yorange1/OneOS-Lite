@@ -27,7 +27,7 @@
 #include <string.h>
 
 #define MO_LOG_TAG "bc20"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef MOLINK_USING_BC20
@@ -38,12 +38,12 @@
 extern void bc20_general_init(mo_bc20_t *module);
 
 static const struct mo_general_ops gs_general_ops = {
-    .at_test               = bc20_at_test,
-    .get_imei              = bc20_get_imei,
-    .get_imsi              = bc20_get_imsi,
-    .get_iccid             = bc20_get_iccid,
-    .get_cfun              = bc20_get_cfun,
-    .set_cfun              = bc20_set_cfun,
+    .at_test = bc20_at_test,
+    .get_imei = bc20_get_imei,
+    .get_imsi = bc20_get_imsi,
+    .get_iccid = bc20_get_iccid,
+    .get_cfun = bc20_get_cfun,
+    .set_cfun = bc20_set_cfun,
 };
 #endif /* BC20_USING_GENERAL_OPS */
 
@@ -51,30 +51,30 @@ static const struct mo_general_ops gs_general_ops = {
 extern void bc20_netserv_init(mo_bc20_t *module);
 
 static const struct mo_netserv_ops gs_netserv_ops = {
-    .set_attach            = bc20_set_attach,
-    .get_attach            = bc20_get_attach,
-    .set_reg               = bc20_set_reg,
-    .get_reg               = bc20_get_reg,
-    .set_cgact             = bc20_set_cgact,
-    .get_cgact             = bc20_get_cgact,
-    .get_csq               = bc20_get_csq,
-    .get_radio             = bc20_get_radio,
+    .set_attach = bc20_set_attach,
+    .get_attach = bc20_get_attach,
+    .set_reg = bc20_set_reg,
+    .get_reg = bc20_get_reg,
+    .set_cgact = bc20_set_cgact,
+    .get_cgact = bc20_get_cgact,
+    .get_csq = bc20_get_csq,
+    .get_radio = bc20_get_radio,
 };
 #endif /* BC20_USING_NETSERV_OPS */
 
 #ifdef BC20_USING_PING_OPS
 extern void bc20_ping_init(mo_bc20_t *module);
 static const struct mo_ping_ops gs_ping_ops = {
-    .ping                  = bc20_ping,
+    .ping = bc20_ping,
 };
 #endif /* BC20_USING_PING_OPS */
 
 #ifdef BC20_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig              = bc20_ifconfig,
-    .get_ipaddr            = bc20_get_ipaddr,
-    .set_dnsserver         = bc20_set_dnsserver,
-    .get_dnsserver         = bc20_get_dnsserver,
+    .ifconfig = bc20_ifconfig,
+    .get_ipaddr = bc20_get_ipaddr,
+    .set_dnsserver = bc20_set_dnsserver,
+    .get_dnsserver = bc20_get_dnsserver,
 };
 #endif /* BC20_USING_IFCONFIG_OPS */
 
@@ -82,27 +82,25 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern void bc20_netconn_init(mo_bc20_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create                = bc20_netconn_create,
-    .destroy               = bc20_netconn_destroy,
+    .create = bc20_netconn_create,
+    .destroy = bc20_netconn_destroy,
 #ifdef BC20_USING_DNS
-    .gethostbyname         = bc20_netconn_gethostbyname,
+    .gethostbyname = bc20_netconn_gethostbyname,
 #endif
-    .connect               = bc20_netconn_connect,
-    .send                  = bc20_netconn_send,
-    .get_info              = bc20_netconn_get_info,
+    .connect = bc20_netconn_connect,
+    .send = bc20_netconn_send,
+    .get_info = bc20_netconn_get_info,
 };
 #endif /* BC20_USING_NETCONN_OPS */
 
 static os_err_t bc20_at_init(mo_object_t *self)
 {
     at_parser_t *parser = &self->parser;
-    os_err_t     result = OS_EOK;
+    os_err_t result = OS_EOK;
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = OS_TICK_PER_SECOND};
 
     result = at_parser_connect(parser, BC20_RETRY_TIMES);
     if (result != OS_EOK)
@@ -133,7 +131,7 @@ __exit:
 mo_object_t *module_bc20_create(const char *name, void *parser_config)
 {
     os_err_t result = OS_ERROR;
-    
+
     mo_bc20_t *module = (mo_bc20_t *)os_calloc(1, sizeof(mo_bc20_t));
     if (OS_NULL == module)
     {
@@ -179,7 +177,7 @@ mo_object_t *module_bc20_create(const char *name, void *parser_config)
     os_event_init(&module->netconn_evt, "bc20_nc");
     os_mutex_init(&module->netconn_lock, "bc20_nc", OS_TRUE);
 #endif /* BC20_USING_NETCONN_OPS */
-	
+
 __exit:
     if (OS_EOK != result)
     {
@@ -190,7 +188,7 @@ __exit:
             os_mutex_deinit(&module->netconn_lock);
         }
 #endif /* BC20_USING_NETCONN_OPS */
-        
+
 #ifdef BC20_USING_PING_OPS
         if (OS_NULL != module->parent.ops_table[MODULE_OPS_PING])
         {
@@ -245,12 +243,12 @@ int bc20_auto_create(void)
         ERROR("Auto create failed, Can not find BC20 interface device %s!", BC20_DEVICE_NAME);
         return OS_ERROR;
     }
-	
-	uart_config.baud_rate = BC20_DEVICE_RATE;
+
+    uart_config.baud_rate = BC20_DEVICE_RATE;
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = BC20_NAME,
+    mo_parser_config_t parser_config = {.parser_name = BC20_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = BC20_RECV_BUFF_LEN};
 

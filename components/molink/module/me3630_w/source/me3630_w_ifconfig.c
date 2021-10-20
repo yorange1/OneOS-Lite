@@ -30,7 +30,7 @@
 #include <string.h>
 
 #define MO_LOG_TAG "me3630_w.ifconfig"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef ME3630_W_USING_IFCONFIG_OPS
@@ -56,12 +56,12 @@ os_err_t me3630_w_ifconfig(mo_object_t *self)
     }
 
     os_uint8_t rssi = 0;
-    os_uint8_t ber  = 0;
+    os_uint8_t ber = 0;
 
     if (me3630_w_get_csq(self, &rssi, &ber) != OS_EOK)
     {
         rssi = 0;
-        ber  = 0;
+        ber = 0;
     }
 
     os_kprintf("\r\nLIST AT MODULE INFORMATIONS\r\n");
@@ -90,9 +90,9 @@ os_err_t me3630_w_get_ipaddr(mo_object_t *self, char ip[])
 {
 #define IPADDR_MAX_STR_LEN_ME3630 64
     at_parser_t *parser = &self->parser;
-    os_int8_t    ucid   = -1;
-    os_int8_t    len    = -1;
-    int          i      = 1;
+    os_int8_t ucid = -1;
+    os_int8_t len = -1;
+    int i = 1;
     char ipaddr[IPADDR_MAX_STR_LEN_ME3630] = {0};
 
     char resp_buff[512] = {0};
@@ -110,7 +110,7 @@ os_err_t me3630_w_get_ipaddr(mo_object_t *self, char ip[])
     do
     {
         memset(ipaddr, 0, sizeof(ipaddr));
-        if (at_resp_get_data_by_line(&resp, i , "+CGPADDR: %d,%s", &ucid, ipaddr) <= 0)
+        if (at_resp_get_data_by_line(&resp, i, "+CGPADDR: %d,%s", &ucid, ipaddr) <= 0)
         {
             ERROR("Get ip address: parse resp fail.");
             result = OS_ERROR;
@@ -118,12 +118,11 @@ os_err_t me3630_w_get_ipaddr(mo_object_t *self, char ip[])
         }
         i = i + 1;
         len = strlen(ipaddr);
-        if(i > 6)
+        if (i > 6)
         {
             break;
         }
-    }
-    while(len == 0 || ipaddr[0] == '0' );
+    } while (len == 0 || ipaddr[0] == '0');
 
     if ((len < IPADDR_MIN_STR_LEN) || (len > IPADDR_MAX_STR_LEN))
     {
@@ -133,7 +132,7 @@ os_err_t me3630_w_get_ipaddr(mo_object_t *self, char ip[])
     }
     else
     {
-        strncpy(ip, ipaddr,len);
+        strncpy(ip, ipaddr, len);
         DEBUG("IP address: %s", ip);
     }
 
@@ -143,4 +142,3 @@ __exit:
 }
 
 #endif /* ME3630_W_USING_IFCONFIG_OPS */
-

@@ -3,13 +3,13 @@
  * Copyright (c) 2020, China Mobile Communications Group Co.,Ltd.
  * COPYRIGHT (C) 2006 - 2018,RT - Thread Development Team
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on 
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
  * @file        syslog.c
@@ -43,9 +43,9 @@
 
 #ifdef DLOG_USING_SYSLOG
 
-#define DLOG_SYSLOG_IDENT_MAX_LEN       15
+#define DLOG_SYSLOG_IDENT_MAX_LEN 15
 
-static char      gs_local_ident[DLOG_SYSLOG_IDENT_MAX_LEN + 1] = {0};
+static char gs_local_ident[DLOG_SYSLOG_IDENT_MAX_LEN + 1] = {0};
 static os_bool_t gs_is_open = OS_FALSE;
 
 /**
@@ -73,7 +73,7 @@ void openlog(const char *ident, int option, int facility)
         if (OS_EOK == ret)
         {
             memset(gs_local_ident, 0, sizeof(gs_local_ident));
-        
+
             if (OS_NULL != ident)
             {
                 strncpy(gs_local_ident, ident, DLOG_SYSLOG_IDENT_MAX_LEN);
@@ -92,7 +92,7 @@ void openlog(const char *ident, int option, int facility)
     }
 
     return;
-}  
+}
 
 /**
  ***********************************************************************************************************************
@@ -113,7 +113,7 @@ void syslog(int priority, const char *format, ...)
     {
         openlog(OS_NULL, 0, 0);
     }
-    
+
     /* Args point to the first variable parameter */
     va_start(args, format);
     dlog_voutput((os_uint16_t)priority, gs_local_ident, OS_TRUE, format, args);
@@ -137,8 +137,7 @@ void closelog(void)
     {
         gs_is_open = OS_FALSE;
     }
-    
+
     return;
 }
 #endif /* DLOG_USING_SYSLOG */
-

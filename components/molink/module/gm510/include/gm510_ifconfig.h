@@ -41,5 +41,3 @@ os_err_t gm510_get_ipaddr(mo_object_t *self, char ip[]);
 #endif /* __cplusplus */
 
 #endif /* __GM510_IFCONFIG_H__ */
-
-

@@ -29,7 +29,7 @@
 #include <string.h>
 
 #define MO_LOG_TAG "m5311.netserv"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef M5311_USING_NETSERV_OPS
@@ -65,7 +65,7 @@ os_err_t m5311_get_attach(mo_object_t *self, os_uint8_t *attach_stat)
         return OS_ERROR;
     }
 
-    if(0 >= at_resp_get_data_by_kw(&resp, "+CGATT:", "+CGATT: %hhu", attach_stat))
+    if (0 >= at_resp_get_data_by_kw(&resp, "+CGATT:", "+CGATT: %hhu", attach_stat))
     {
         ERROR("Get %s module attach state failed", self->name);
         return OS_ERROR;
@@ -172,7 +172,7 @@ os_err_t m5311_get_radio(mo_object_t *self, radio_info_t *radio_info)
     at_parser_t *parser = &self->parser;
 
     memset(radio_info, 0, sizeof(radio_info_t));
-    
+
     char resp_buff[4 * AT_RESP_BUFF_SIZE_DEF] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = M5311_NETSERV_TIMEOUT_DFT};
@@ -182,16 +182,18 @@ os_err_t m5311_get_radio(mo_object_t *self, radio_info_t *radio_info)
     {
         goto __exit;
     }
-    
+
     /* return eg: *ENGINFOSC: 3684,2,131,"85B0F15"\n,-107,-13,-93,-3,8,"5A21",0, */
     /* <sc_earfcn>,<sc_earfcn_offset>,<sc_pci>,<sc_cellid>,
     [<sc_rsrp>],[<sc_rsrq>],[<sc_rssi>],[<sc_snr>],<sc_band>,<sc_tac>,[<sc_ecl>],[<sc_tx_pwr>] */
-    if (0 >= at_resp_get_data_by_kw(&resp, "*ENGINFOSC:", M5311_NETSTAT_REGEX, 
-                                                        &radio_info->earfcn,
-                                                        &radio_info->cell_id, 
-                                                        &radio_info->rsrq, 
-                                                        &radio_info->snr,
-                                                        &radio_info->ecl))
+    if (0 >= at_resp_get_data_by_kw(&resp,
+                                    "*ENGINFOSC:",
+                                    M5311_NETSTAT_REGEX,
+                                    &radio_info->earfcn,
+                                    &radio_info->cell_id,
+                                    &radio_info->rsrq,
+                                    &radio_info->snr,
+                                    &radio_info->ecl))
     {
         ERROR("Get %s module radio_info failed", self->name);
         result = OS_ERROR;
@@ -206,12 +208,12 @@ __exit:
 os_err_t m5311_set_psm(mo_object_t *self, mo_psm_info_t info)
 {
     at_parser_t *parser = &self->parser;
-    
+
     /* M5311 needs double quotes */
-    os_int8_t periodic_rau[PSM_TIMER_MAX_STR_LEN + M5311_PSM_QUOTES_LEN]     = {0};
+    os_int8_t periodic_rau[PSM_TIMER_MAX_STR_LEN + M5311_PSM_QUOTES_LEN] = {0};
     os_int8_t gprs_ready_timer[PSM_TIMER_MAX_STR_LEN + M5311_PSM_QUOTES_LEN] = {0};
-    os_int8_t periodic_tau[PSM_TIMER_MAX_STR_LEN + M5311_PSM_QUOTES_LEN]     = {0};
-    os_int8_t active_time[PSM_TIMER_MAX_STR_LEN + M5311_PSM_QUOTES_LEN]      = {0};
+    os_int8_t periodic_tau[PSM_TIMER_MAX_STR_LEN + M5311_PSM_QUOTES_LEN] = {0};
+    os_int8_t active_time[PSM_TIMER_MAX_STR_LEN + M5311_PSM_QUOTES_LEN] = {0};
 
     /* only insert double quotes when the value is valid */
     if (0 != strlen(info.periodic_rau))
@@ -227,12 +229,14 @@ os_err_t m5311_set_psm(mo_object_t *self, mo_psm_info_t info)
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = M5311_NETSERV_TIMEOUT_DFT};
 
-    return at_parser_exec_cmd(parser, &resp, "AT+CPSMS=%d,%s,%s,%s,%s", 
-                                              info.psm_mode, 
-                                              periodic_rau,
-                                              gprs_ready_timer,
-                                              periodic_tau,
-                                              active_time);
+    return at_parser_exec_cmd(parser,
+                              &resp,
+                              "AT+CPSMS=%d,%s,%s,%s,%s",
+                              info.psm_mode,
+                              periodic_rau,
+                              gprs_ready_timer,
+                              periodic_tau,
+                              active_time);
 }
 
 os_err_t m5311_get_psm(mo_object_t *self, mo_psm_info_t *info)
@@ -251,7 +255,12 @@ os_err_t m5311_get_psm(mo_object_t *self, mo_psm_info_t *info)
 
     memset(info, 0, sizeof(mo_psm_info_t));
 
-    if (0 >= at_resp_get_data_by_kw(&resp, "+CPSMS", "+CPSMS: %d,,,\"%[^\"]\",\"%[^\"]", &info->psm_mode, info->periodic_tau, info->active_time))
+    if (0 >= at_resp_get_data_by_kw(&resp,
+                                    "+CPSMS",
+                                    "+CPSMS: %d,,,\"%[^\"]\",\"%[^\"]",
+                                    &info->psm_mode,
+                                    info->periodic_tau,
+                                    info->active_time))
     {
         ERROR("Get %s module psm info failed", self->name);
         return OS_ERROR;
@@ -263,14 +272,12 @@ os_err_t m5311_get_psm(mo_object_t *self, mo_psm_info_t *info)
 os_err_t m5311_set_edrx_cfg(mo_object_t *self, mo_edrx_cfg_t cfg)
 {
     at_parser_t *parser = &self->parser;
-    
+
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = M5311_NETSERV_TIMEOUT_DFT};
 
-    return at_parser_exec_cmd(parser, &resp, "AT+CEDRXS=%d,5,%s", 
-                                              cfg.mode, 
-                                              cfg.edrx.req_edrx_value);
+    return at_parser_exec_cmd(parser, &resp, "AT+CEDRXS=%d,5,%s", cfg.mode, cfg.edrx.req_edrx_value);
 }
 
 os_err_t m5311_get_edrx_cfg(mo_object_t *self, mo_edrx_t *edrx_local)
@@ -289,9 +296,11 @@ os_err_t m5311_get_edrx_cfg(mo_object_t *self, mo_edrx_t *edrx_local)
 
     memset(edrx_local, 0, sizeof(mo_edrx_t));
 
-    if (0 >= at_resp_get_data_by_kw(&resp, "+CEDRXS", "+CEDRXS: %d,\"%[^\"]", 
-                                                       &edrx_local->act_type, 
-                                                        edrx_local->req_edrx_value))
+    if (0 >= at_resp_get_data_by_kw(&resp,
+                                    "+CEDRXS",
+                                    "+CEDRXS: %d,\"%[^\"]",
+                                    &edrx_local->act_type,
+                                    edrx_local->req_edrx_value))
     {
         ERROR("Get %s module edrx local config failed", self->name);
         return OS_ERROR;
@@ -316,11 +325,13 @@ os_err_t m5311_get_edrx_dynamic(mo_object_t *self, mo_edrx_t *edrx_dynamic)
 
     memset(edrx_dynamic, 0, sizeof(mo_edrx_t));
 
-    if (0 >= at_resp_get_data_by_kw(&resp, "+CEDRXRDP", "+CEDRXRDP: %d,\"%[^\"]\",\"%[^\"]\",\"%[^\"]\"", 
-                                                        &edrx_dynamic->act_type, 
-                                                         edrx_dynamic->req_edrx_value,
-                                                         edrx_dynamic->nw_edrx_value,
-                                                         edrx_dynamic->paging_time_window))
+    if (0 >= at_resp_get_data_by_kw(&resp,
+                                    "+CEDRXRDP",
+                                    "+CEDRXRDP: %d,\"%[^\"]\",\"%[^\"]\",\"%[^\"]\"",
+                                    &edrx_dynamic->act_type,
+                                    edrx_dynamic->req_edrx_value,
+                                    edrx_dynamic->nw_edrx_value,
+                                    edrx_dynamic->paging_time_window))
     {
         ERROR("Get %s module edrx dynamic config failed", self->name);
         return OS_ERROR;
@@ -475,11 +486,12 @@ void m5311_edrx_urc_handler(struct at_parser *parser, const char *data, os_size_
 
     mo_edrx_t edrx_urc;
     memset(&edrx_urc, 0, sizeof(mo_edrx_t));
-    sscanf(data, "+CEDRXP: %d,\"%[^\"]\",\"%[^\"]\",\"%[^\"]\"", 
-                  (int *)&edrx_urc.act_type,
-                   edrx_urc.req_edrx_value,
-                   edrx_urc.nw_edrx_value,
-                   edrx_urc.paging_time_window);
+    sscanf(data,
+           "+CEDRXP: %d,\"%[^\"]\",\"%[^\"]\",\"%[^\"]\"",
+           (int *)&edrx_urc.act_type,
+           edrx_urc.req_edrx_value,
+           edrx_urc.nw_edrx_value,
+           edrx_urc.paging_time_window);
     INFO("Get %s module edrx urc act_type[%d]", parser->name, edrx_urc.act_type);
     INFO("Get %s module edrx urc req_edrx_value[%s]", parser->name, edrx_urc.req_edrx_value);
     INFO("Get %s module edrx urc nw_edrx_value[%s]", parser->name, edrx_urc.nw_edrx_value);
@@ -490,7 +502,7 @@ void m5311_edrx_urc_handler(struct at_parser *parser, const char *data, os_size_
 
 static at_urc_t m5311_netserv_urc_table[] = {
     {.prefix = "NO CARRIER", .suffix = "\r\n", .func = m5311_pdp_urc_handler},
-    {.prefix = "+CEDRXP:",   .suffix = "\r\n", .func = m5311_edrx_urc_handler},
+    {.prefix = "+CEDRXP:", .suffix = "\r\n", .func = m5311_edrx_urc_handler},
 };
 
 void m5311_netserv_init(mo_m5311_t *module)

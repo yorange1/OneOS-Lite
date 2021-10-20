@@ -65,28 +65,28 @@ extern "C" {
 #endif
 
 #ifndef BC26_NETCONN_NUM
-#define BC26_NETCONN_NUM   (5)
+#define BC26_NETCONN_NUM (5)
 #endif
 
 typedef struct mo_bc26
 {
-    mo_object_t  parent;
+    mo_object_t parent;
 #ifdef BC26_USING_NETCONN_OPS
     mo_netconn_t netconn[BC26_NETCONN_NUM];
-    os_int32_t   curr_connect;
-    os_event_t   netconn_evt;
-    os_mutex_t   netconn_lock;
-    void        *netconn_data;
+    os_int32_t curr_connect;
+    os_event_t netconn_evt;
+    os_mutex_t netconn_lock;
+    void *netconn_data;
 #endif /* BC26_USING_NETCONN_OPS */
 
 #ifdef BC26_USING_PING_OPS
-    char        *ping_data;
-    os_event_t   ping_evt;
+    char *ping_data;
+    os_event_t ping_evt;
 #endif /* BC26_USING_PING_OPS */
 } mo_bc26_t;
 
 mo_object_t *module_bc26_create(const char *name, void *parser_config);
-os_err_t     module_bc26_destroy(mo_object_t *self);
+os_err_t module_bc26_destroy(mo_object_t *self);
 
 #endif /* MOLINK_USING_BC26 */
 

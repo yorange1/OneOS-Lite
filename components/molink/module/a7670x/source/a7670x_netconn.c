@@ -32,7 +32,7 @@
 #define MO_LOG_LVL MO_LOG_INFO
 #include <mo_log.h>
 
-#define SEND_DATA_MAX_SIZE        (1360)
+#define SEND_DATA_MAX_SIZE (1360)
 
 #define A7670X_NETCONN_MQ_NAME "a7670x_nc_mq"
 
@@ -41,11 +41,10 @@
 #endif
 
 #ifndef A7670X_NETCONN_MQ_MSG_MAX
-#define A7670X_NETCONN_MQ_MSG_MAX  (16)
+#define A7670X_NETCONN_MQ_MSG_MAX (16)
 #endif
 
-
-#define SET_EVENT(socket, event)  (((socket + 1) << 16) | (event))
+#define SET_EVENT(socket, event) (((socket + 1) << 16) | (event))
 
 #define A7670X_EVENT_NETCONN_OK   (1L << 0)
 #define A7670X_EVENT_NETCONN_FAIL (1L << 1)
@@ -57,25 +56,25 @@
 enum net_transfer_mode
 {
     NON_TRANSPARENT_MODE = 0,
-    TRANSPARENT_MODE     = 1,
+    TRANSPARENT_MODE = 1,
 };
 
 enum net_server_status
 {
     NET_SERVER_DISABLE = 0,
-    NET_SERVER_ENABLE  = 1,
+    NET_SERVER_ENABLE = 1,
 };
 
 enum netconn_send_status
 {
-    CONN_DISCONNECTED   = -1,
+    CONN_DISCONNECTED = -1,
     CONN_SEND_BUFF_FULL = 0,
 };
 
 enum link_close_reason
 {
-    LINK_CLOSED_BY_LOCAL    = 0,
-    LINK_CLOSED_BY_REMOTE   = 1,
+    LINK_CLOSED_BY_LOCAL = 0,
+    LINK_CLOSED_BY_REMOTE = 1,
     SEND_TIMEOUT_OR_DTR_OFF = 2,
     LINK_CLOSED_UNKNOWN,
 };
@@ -139,7 +138,7 @@ os_err_t a7670x_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
     mo_a7670x_t *a7670x = os_container_of(module, mo_a7670x_t, parent);
 
     info->netconn_array = a7670x->netconn;
-    info->netconn_nums  = sizeof(a7670x->netconn) / sizeof(a7670x->netconn[0]);
+    info->netconn_nums = sizeof(a7670x->netconn) / sizeof(a7670x->netconn[0]);
 
     return OS_EOK;
 }
@@ -147,8 +146,8 @@ os_err_t a7670x_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
 static os_err_t a7670x_netconn_set_transfer_mode(mo_object_t *module)
 {
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_EOK;
-    os_int32_t   mode   = -1;
+    os_err_t result = OS_EOK;
+    os_int32_t mode = -1;
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
@@ -189,8 +188,8 @@ static os_err_t a7670x_netconn_set_transfer_mode(mo_object_t *module)
 static os_err_t a7670x_netconn_server_open(mo_object_t *module)
 {
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_EOK;
-    os_int32_t   stat   = -1;
+    os_err_t result = OS_EOK;
+    os_int32_t stat = -1;
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
@@ -231,7 +230,7 @@ static os_err_t a7670x_netconn_server_open(mo_object_t *module)
 static os_err_t a7670x_net_server_config(mo_object_t *module)
 {
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_EOK;
+    os_err_t result = OS_EOK;
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
@@ -283,7 +282,7 @@ static os_err_t a7670x_net_server_config(mo_object_t *module)
 mo_netconn_t *a7670x_netconn_create(mo_object_t *module, mo_netconn_type_t type)
 {
     mo_a7670x_t *a7670x = os_container_of(module, mo_a7670x_t, parent);
-    os_err_t     result = OS_EOK;
+    os_err_t result = OS_EOK;
 
     a7670x_lock(&a7670x->netconn_lock);
 
@@ -323,7 +322,7 @@ mo_netconn_t *a7670x_netconn_create(mo_object_t *module, mo_netconn_type_t type)
 os_err_t a7670x_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 {
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_ERROR;
+    os_err_t result = OS_ERROR;
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
@@ -370,11 +369,11 @@ os_err_t a7670x_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 
     INFO("Module %s netconn_id: %d destroyed", module->name, netconn->connect_id);
 
-    netconn->connect_id  = -1;
-    netconn->stat        = NETCONN_STAT_NULL;
-    netconn->type        = NETCONN_TYPE_NULL;
+    netconn->connect_id = -1;
+    netconn->stat = NETCONN_STAT_NULL;
+    netconn->type = NETCONN_TYPE_NULL;
     netconn->remote_port = 0;
-    netconn->local_port  = 0;
+    netconn->local_port = 0;
     inet_aton("0.0.0.0", &netconn->remote_ip);
 
     a7670x_unlock(&a7670x->netconn_lock);
@@ -387,12 +386,10 @@ os_err_t a7670x_netconn_gethostbyname(mo_object_t *self, const char *domain_name
 {
     at_parser_t *parser = &self->parser;
 
-    char recvip[IPADDR_MAX_STR_LEN + 1]   = {0};
+    char recvip[IPADDR_MAX_STR_LEN + 1] = {0};
     char resp_buff[AT_RESP_BUFF_SIZE_256] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 20 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 20 * OS_TICK_PER_SECOND};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+CDNSGIP=\"%s\"", domain_name);
     if (result < 0)
@@ -440,19 +437,17 @@ __exit:
 #ifdef A7670X_USING_TCP
 static os_err_t a7670x_tcp_connect(mo_object_t *module, mo_netconn_t *netconn, char *ip_addr, os_uint16_t port)
 {
-    mo_a7670x_t *a7670x    = os_container_of(module, mo_a7670x_t, parent);
-    at_parser_t *parser    = &module->parser;
-    os_int32_t  connect_id = netconn->connect_id;
-    os_err_t    result     = OS_ERROR;
-    os_uint32_t  event     = SET_EVENT(netconn->connect_id, A7670X_EVENT_NETCONN_OK | A7670X_EVENT_NETCONN_FAIL);
+    mo_a7670x_t *a7670x = os_container_of(module, mo_a7670x_t, parent);
+    at_parser_t *parser = &module->parser;
+    os_int32_t connect_id = netconn->connect_id;
+    os_err_t result = OS_ERROR;
+    os_uint32_t event = SET_EVENT(netconn->connect_id, A7670X_EVENT_NETCONN_OK | A7670X_EVENT_NETCONN_FAIL);
 
-    char resp_buff[AT_RESP_BUFF_SIZE_DEF]     = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     os_event_recv(&a7670x->netconn_evt, event, OS_EVENT_OPTION_OR | OS_EVENT_OPTION_CLEAR, OS_NO_WAIT, OS_NULL);
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 30 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 30 * OS_TICK_PER_SECOND};
 
     a7670x_lock(&a7670x->netconn_lock);
 
@@ -505,15 +500,10 @@ static os_err_t a7670x_udp_connect(mo_object_t *module, mo_netconn_t *netconn)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 30 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 30 * OS_TICK_PER_SECOND};
 
-    os_err_t result = at_parser_exec_cmd(parser,
-                                         &resp,
-                                         "AT+CIPOPEN=%d,\"UDP\",,,%u",
-                                         netconn->connect_id,
-                                         netconn->local_port);
+    os_err_t result =
+        at_parser_exec_cmd(parser, &resp, "AT+CIPOPEN=%d,\"UDP\",,,%u", netconn->connect_id, netconn->local_port);
     if (result != OS_EOK)
     {
         ERROR("AT cmd exec failed: AT+CIPOPEN=%d,\"UDP\",,,%u", netconn->connect_id, netconn->local_port);
@@ -560,7 +550,7 @@ os_err_t a7670x_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_a
 
     ip_addr_copy(netconn->remote_ip, addr);
     netconn->remote_port = port;
-    netconn->stat        = NETCONN_STAT_CONNECT;
+    netconn->stat = NETCONN_STAT_CONNECT;
 
     DEBUG("Module %s connect to %s:%u successfully!", module->name, remote_ip, port);
 
@@ -569,16 +559,16 @@ os_err_t a7670x_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_a
 
 os_size_t a7670x_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
-    at_parser_t *parser      = &module->parser;
-    os_err_t    result       = OS_EOK;
-    os_size_t   sent_size    = 0;
-    os_size_t   cur_pkt_size = 0;
-    os_uint32_t event        = 0;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    os_size_t sent_size = 0;
+    os_size_t cur_pkt_size = 0;
+    os_uint32_t event = 0;
 
     mo_a7670x_t *a7670x = os_container_of(module, mo_a7670x_t, parent);
     a7670x_lock(&a7670x->netconn_lock);
 
-    char resp_buff[AT_RESP_BUFF_SIZE_DEF]  = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
     char remote_ip[IPADDR_MAX_STR_LEN + 1] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 60 * OS_TICK_PER_SECOND};
@@ -718,9 +708,9 @@ static void urc_tcp_connect_func(struct at_parser *parser, const char *data, os_
     mo_a7670x_t *a7670x = os_container_of(module, mo_a7670x_t, parent);
 
     os_int32_t connect_id = -1;
-    os_int32_t result     = -1;
+    os_int32_t result = -1;
 
-    sscanf(data, "+CIPOPEN: %d,%d", &connect_id , &result);
+    sscanf(data, "+CIPOPEN: %d,%d", &connect_id, &result);
 
     if (0 == result)
     {
@@ -740,11 +730,11 @@ static void urc_close_func(struct at_parser *parser, const char *data, os_size_t
     OS_ASSERT(OS_NULL != data);
 
     os_int32_t connect_id = -1;
-    os_int32_t closed_by  = -1;
+    os_int32_t closed_by = -1;
 
     sscanf(data, "+IPCLOSE: %d,%d", &connect_id, &closed_by);
 
-    mo_object_t  *module  = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
     mo_netconn_t *netconn = a7670x_get_netconn_by_id(module, connect_id);
 
     if (OS_NULL == netconn)
@@ -753,7 +743,7 @@ static void urc_close_func(struct at_parser *parser, const char *data, os_size_t
         return;
     }
 
-    switch(closed_by)
+    switch (closed_by)
     {
     case LINK_CLOSED_BY_LOCAL:
         DEBUG("Module %s connect %d, closed by local, active", module->name, connect_id);
@@ -784,8 +774,8 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != data);
 
     os_int32_t connect_id = 0;
-    os_int32_t data_size  = 0;
-    os_int32_t timeout    = 0;
+    os_int32_t data_size = 0;
+    os_int32_t timeout = 0;
 
     /* For ex: +RECEIVE,0,10\r\n 0123456789 */
     sscanf(data, "+RECEIVE,%d,%d,", &connect_id, &data_size);
@@ -793,7 +783,7 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
 
     timeout = data_size > 10 ? data_size : 10;
 
-    mo_object_t  *module  = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
     mo_netconn_t *netconn = a7670x_get_netconn_by_id(module, connect_id);
     if (OS_NULL == netconn)
     {
@@ -803,8 +793,8 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
 
     if (netconn->stat == NETCONN_STAT_CONNECT)
     {
-        char *recv_buff    = os_calloc(1, data_size + 1);
-        char  temp_buff[8] = {0};
+        char *recv_buff = os_calloc(1, data_size + 1);
+        char temp_buff[8] = {0};
 
         if (recv_buff == OS_NULL)
         {
@@ -853,15 +843,15 @@ static void urc_send_msg_func(struct at_parser *parser, const char *data, os_siz
     OS_ASSERT(OS_NULL != parser);
     OS_ASSERT(OS_NULL != data);
 
-    os_int32_t connect_id   = -1;
-    os_int32_t reqsend_len  = -1;
-    os_int32_t cnfsend_len  = -2;
-    os_err_t   result       = OS_EOK;
+    os_int32_t connect_id = -1;
+    os_int32_t reqsend_len = -1;
+    os_int32_t cnfsend_len = -2;
+    os_err_t result = OS_EOK;
 
     /* +CIPSEND: 0,1500,1500\r\n */
     sscanf(data, "+CIPSEND: %d,%d,%d", &connect_id, &reqsend_len, &cnfsend_len);
 
-    mo_object_t  *module  = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
     mo_a7670x_t *a7670x = os_container_of(module, mo_a7670x_t, parent);
     mo_netconn_t *netconn = a7670x_get_netconn_by_id(module, connect_id);
 
@@ -905,10 +895,10 @@ static void urc_send_msg_func(struct at_parser *parser, const char *data, os_siz
 }
 
 static at_urc_t gs_urc_table[] = {
-    {.prefix = "+CIPOPEN:",  .suffix = "\r\n", .func = urc_tcp_connect_func},
-    {.prefix = "+IPCLOSE:",  .suffix = "\r\n", .func = urc_close_func},
-    {.prefix = "+CIPSEND:",  .suffix = "\r\n", .func = urc_send_msg_func},
-    {.prefix = "+RECEIVE,",  .suffix = "\r\n", .func = urc_recv_func},
+    {.prefix = "+CIPOPEN:", .suffix = "\r\n", .func = urc_tcp_connect_func},
+    {.prefix = "+IPCLOSE:", .suffix = "\r\n", .func = urc_close_func},
+    {.prefix = "+CIPSEND:", .suffix = "\r\n", .func = urc_send_msg_func},
+    {.prefix = "+RECEIVE,", .suffix = "\r\n", .func = urc_recv_func},
 };
 
 void a7670x_netconn_init(mo_a7670x_t *module)

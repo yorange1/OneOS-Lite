@@ -29,7 +29,7 @@
 #include <stdlib.h>
 
 #define MO_LOG_TAG "me3630_w.netconn"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #define SEND_DATA_MAX_SIZE (1024)
@@ -41,28 +41,26 @@
 #endif
 
 #ifndef ME3630_W_NETCONN_MQ_MSG_MAX
-#define ME3630_W_NETCONN_MQ_MSG_MAX  (5)
+#define ME3630_W_NETCONN_MQ_MSG_MAX (5)
 #endif
 
 #define SET_EVENT(socket, event) (((socket + 1) << 16) | (event))
 
-#define ME3630_W_EVENT_CONN_OK    (1L << 0)
-#define ME3630_W_EVENT_SEND_OK    (1L << 1)
-#define ME3630_W_EVENT_RECV_OK    (1L << 2)
-#define ME3630_W_EVENT_CLOSE_OK   (1L << 3)
-#define ME3630_W_EVENT_CONN_FAIL  (1L << 4)
-#define ME3630_W_EVENT_SEND_FAIL  (1L << 5)
-#define ME3630_W_EVENT_DOMAIN_OK  (1L << 6)
-#define ME3630_W_EVENT_STAT_OK    (1L << 7)
-#define ME3630_W_EVENT_STAT_FAIL  (1L << 8)
-
-
+#define ME3630_W_EVENT_CONN_OK   (1L << 0)
+#define ME3630_W_EVENT_SEND_OK   (1L << 1)
+#define ME3630_W_EVENT_RECV_OK   (1L << 2)
+#define ME3630_W_EVENT_CLOSE_OK  (1L << 3)
+#define ME3630_W_EVENT_CONN_FAIL (1L << 4)
+#define ME3630_W_EVENT_SEND_FAIL (1L << 5)
+#define ME3630_W_EVENT_DOMAIN_OK (1L << 6)
+#define ME3630_W_EVENT_STAT_OK   (1L << 7)
+#define ME3630_W_EVENT_STAT_FAIL (1L << 8)
 
 #ifdef ME3630_W_USING_NETCONN_OPS
 
-static os_bool_t  me3630_w_pdp_set(mo_object_t *module)
+static os_bool_t me3630_w_pdp_set(mo_object_t *module)
 {
-    at_parser_t *parser       = &module->parser;
+    at_parser_t *parser = &module->parser;
     char resp_buff[256] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 20 * AT_RESP_TIMEOUT_DEF};
@@ -87,10 +85,10 @@ static os_bool_t  me3630_w_pdp_set(mo_object_t *module)
 
 static os_bool_t me3630_w_check_zipcall(mo_object_t *module)
 {
-    at_parser_t *parser           = &module->parser;
-    char         zipcall[30]      = {0};
-    char         resp_buff[256]   = {0};
-    char         zpas[30]         = {0};
+    at_parser_t *parser = &module->parser;
+    char zipcall[30] = {0};
+    char resp_buff[256] = {0};
+    char zpas[30] = {0};
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 20 * AT_RESP_TIMEOUT_DEF};
 
     if (at_parser_exec_cmd(parser, &resp, "AT+ZPAS?") != OS_EOK)
@@ -109,7 +107,6 @@ static os_bool_t me3630_w_check_zipcall(mo_object_t *module)
         return OS_FALSE;
     }
 
-
     if (at_parser_exec_cmd(parser, &resp, "AT+ZIPCALL?") != OS_EOK)
     {
         ERROR("Get ip call failed");
@@ -122,7 +119,7 @@ static os_bool_t me3630_w_check_zipcall(mo_object_t *module)
         return OS_FALSE;
     }
 
-    if ('1' != zipcall[0] )
+    if ('1' != zipcall[0])
     {
         if (at_parser_exec_cmd(parser, &resp, "AT+ZIPCALL=1") != OS_EOK)
         {
@@ -146,17 +143,17 @@ static os_err_t me3630_w_unlock(os_mutex_t *mutex)
     return os_mutex_recursive_unlock(mutex);
 }
 
-static os_err_t me3630_w_check_state(mo_object_t *module,os_int32_t connect_id)
+static os_err_t me3630_w_check_state(mo_object_t *module, os_int32_t connect_id)
 {
-    at_parser_t *parser         = &module->parser;
-    char         resp_buff[256] = {0};
-    char         zipstat[30]    = {0};
+    at_parser_t *parser = &module->parser;
+    char resp_buff[256] = {0};
+    char zipstat[30] = {0};
 
-    os_err_t     result         = OS_ERROR;
+    os_err_t result = OS_ERROR;
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 6 * OS_TICK_PER_SECOND};
 
-    result = at_parser_exec_cmd(parser, &resp, "AT+ZIPSTAT=%d",connect_id);
+    result = at_parser_exec_cmd(parser, &resp, "AT+ZIPSTAT=%d", connect_id);
 
     if (result != OS_EOK)
     {
@@ -231,7 +228,6 @@ static mo_netconn_t *me3630_w_get_netconn_by_id(mo_object_t *module, os_int32_t 
     }
 
     return OS_NULL;
-
 }
 
 os_err_t me3630_w_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
@@ -239,7 +235,7 @@ os_err_t me3630_w_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
     mo_me3630_w_t *me3630_w = os_container_of(module, mo_me3630_w_t, parent);
 
     info->netconn_array = me3630_w->netconn;
-    info->netconn_nums  = sizeof(me3630_w->netconn) / sizeof(me3630_w->netconn[0]);
+    info->netconn_nums = sizeof(me3630_w->netconn) / sizeof(me3630_w->netconn[0]);
 
     return OS_EOK;
 }
@@ -256,9 +252,7 @@ mo_netconn_t *me3630_w_netconn_create(mo_object_t *module, mo_netconn_type_t typ
         return OS_NULL;
     }
 
-    netconn->mq = os_mq_create(ME3630_W_NETCONN_MQ_NAME,
-                               ME3630_W_NETCONN_MQ_MSG_SIZE,
-                               ME3630_W_NETCONN_MQ_MSG_MAX);
+    netconn->mq = os_mq_create(ME3630_W_NETCONN_MQ_NAME, ME3630_W_NETCONN_MQ_MSG_SIZE, ME3630_W_NETCONN_MQ_MSG_MAX);
     if (OS_NULL == netconn->mq)
     {
         ERROR("%s data queue create failed, no enough memory.", module->name);
@@ -274,20 +268,17 @@ mo_netconn_t *me3630_w_netconn_create(mo_object_t *module, mo_netconn_type_t typ
 
 os_err_t me3630_w_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 {
-    at_parser_t *parser      = &module->parser;
-    os_err_t     result      = OS_ERROR;
-    char         zipstat[10] = {0};
-    int          i           = 0;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_ERROR;
+    char zipstat[10] = {0};
+    int i = 0;
 
-    mo_me3630_w_t * me3630_w = os_container_of(module, mo_me3630_w_t, parent);
+    mo_me3630_w_t *me3630_w = os_container_of(module, mo_me3630_w_t, parent);
     me3630_w_lock(&me3630_w->netconn_lock);
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 10 * OS_TICK_PER_SECOND
-                     };
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 10 * OS_TICK_PER_SECOND};
 
     switch (netconn->stat)
     {
@@ -298,16 +289,16 @@ os_err_t me3630_w_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
         if (result != OS_EOK)
         {
             ERROR("Module %s destroy %s netconn failed",
-                      module->name,
-                      (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
-             me3630_w_unlock(&me3630_w->netconn_lock);
+                  module->name,
+                  (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
+            me3630_w_unlock(&me3630_w->netconn_lock);
             return result;
         }
 
         do
         {
             os_task_msleep(1000);
-            result = at_parser_exec_cmd(parser, &resp, "AT+ZIPSTAT=%d",netconn->connect_id);
+            result = at_parser_exec_cmd(parser, &resp, "AT+ZIPSTAT=%d", netconn->connect_id);
 
             if (result != OS_EOK)
             {
@@ -323,8 +314,7 @@ os_err_t me3630_w_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
                 return result;
             }
             i++;
-        }
-        while('4' == zipstat[2]);
+        } while ('4' == zipstat[2]);
 
         if ('0' != zipstat[2])
         {
@@ -347,9 +337,9 @@ os_err_t me3630_w_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 
     INFO("Module %s netconn id %d destroyed", module->name, netconn->connect_id);
 
-    netconn->connect_id  = -1;
-    netconn->stat        = NETCONN_STAT_NULL;
-    netconn->type        = NETCONN_TYPE_NULL;
+    netconn->connect_id = -1;
+    netconn->stat = NETCONN_STAT_NULL;
+    netconn->type = NETCONN_TYPE_NULL;
     netconn->remote_port = 0;
     inet_aton("0.0.0.0", &netconn->remote_ip);
 
@@ -358,15 +348,13 @@ os_err_t me3630_w_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
     return OS_EOK;
 }
 
-
-
 os_err_t me3630_w_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port)
 {
 #define ZIP_CALL_TIMES (6)
-    at_parser_t *parser     = &module->parser;
-    os_err_t    result      = OS_EOK;
-    char        zipstat[10] = {0};
-    mo_me3630_w_t * me3630_w      = os_container_of(module, mo_me3630_w_t, parent);
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    char zipstat[10] = {0};
+    mo_me3630_w_t *me3630_w = os_container_of(module, mo_me3630_w_t, parent);
     me3630_w_lock(&me3630_w->netconn_lock);
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
@@ -392,13 +380,13 @@ os_err_t me3630_w_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip
             ERROR("Wait module %s call ip !", module->name);
 
             i++;
-            if(i > ZIP_CALL_TIMES)
+            if (i > ZIP_CALL_TIMES)
             {
                 ERROR("Wait module %s call ip failed !", module->name);
                 break;
             }
 
-        os_task_msleep(5000);
+            os_task_msleep(5000);
         }
     }
 
@@ -406,23 +394,13 @@ os_err_t me3630_w_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip
     {
 #ifdef ME3630_W_USING_TCP
     case NETCONN_TYPE_TCP:
-        result = at_parser_exec_cmd(parser,
-                                    &resp,
-                                    "AT+ZIPOPEN=%d,0,%s,%d",
-                                    netconn->connect_id,
-                                    remote_ip,
-                                    port);
+        result = at_parser_exec_cmd(parser, &resp, "AT+ZIPOPEN=%d,0,%s,%d", netconn->connect_id, remote_ip, port);
         break;
 #endif
 
 #ifdef ME3630_W_USING_UDP
     case NETCONN_TYPE_UDP:
-        result = at_parser_exec_cmd(parser,
-                                    &resp,
-                                    "AT+ZIPOPEN=%d,1,%s,%d",
-                                    netconn->connect_id,
-                                    remote_ip,
-                                    port);
+        result = at_parser_exec_cmd(parser, &resp, "AT+ZIPOPEN=%d,1,%s,%d", netconn->connect_id, remote_ip, port);
         break;
 #endif
 
@@ -439,7 +417,7 @@ os_err_t me3630_w_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip
     do
     {
         os_task_msleep(1000);
-        result = at_parser_exec_cmd(parser, &resp, "AT+ZIPSTAT=%d",netconn->connect_id);
+        result = at_parser_exec_cmd(parser, &resp, "AT+ZIPSTAT=%d", netconn->connect_id);
 
         if (result != OS_EOK)
         {
@@ -452,8 +430,7 @@ os_err_t me3630_w_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip
             result = OS_ERROR;
             goto __exit;
         }
-    }
-    while('3' == zipstat[2]);
+    } while ('3' == zipstat[2]);
 
     if ('1' != zipstat[2])
     {
@@ -466,7 +443,7 @@ __exit:
     {
         ip_addr_copy(netconn->remote_ip, addr);
         netconn->remote_port = port;
-        netconn->stat        = NETCONN_STAT_CONNECT;
+        netconn->stat = NETCONN_STAT_CONNECT;
 
         DEBUG("Module %s connect to %s:%d successfully!", module->name, remote_ip, port);
     }
@@ -481,11 +458,11 @@ __exit:
 
 os_size_t me3630_w_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
-    at_parser_t *parser    = &module->parser;
-    os_err_t     result    = OS_EOK;
-    os_size_t    sent_size = 0;
-    os_size_t    curr_size = 0;
-    os_uint32_t  event     = 0;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    os_size_t sent_size = 0;
+    os_size_t curr_size = 0;
+    os_uint32_t event = 0;
     mo_me3630_w_t *me3630_w = os_container_of(module, mo_me3630_w_t, parent);
 
     at_parser_exec_lock(parser);
@@ -494,10 +471,7 @@ os_size_t me3630_w_netconn_send(mo_object_t *module, mo_netconn_t *netconn, cons
 
     char resp_buff[128] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 5 * OS_TICK_PER_SECOND
-                     };
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 5 * OS_TICK_PER_SECOND};
 
     at_parser_set_end_mark(parser, ">", 1);
 
@@ -586,10 +560,10 @@ os_err_t me3630_w_netconn_gethostbyname(mo_object_t *self, const char *domain_na
     OS_ASSERT(OS_NULL != domain_name);
     OS_ASSERT(OS_NULL != addr);
 
-    at_parser_t *parser                 = &self->parser;
-    os_err_t     result                 = OS_EOK;
+    at_parser_t *parser = &self->parser;
+    os_err_t result = OS_EOK;
     char recvip[IPADDR_MAX_STR_LEN + 1] = {0};
-    char resp_buff[128]                 = {0};
+    char resp_buff[128] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 6 * OS_TICK_PER_SECOND};
 
@@ -597,7 +571,7 @@ os_err_t me3630_w_netconn_gethostbyname(mo_object_t *self, const char *domain_na
 
     me3630_w->netconn_data = addr;
 
-    if(OS_FALSE == me3630_w_check_zipcall(self))
+    if (OS_FALSE == me3630_w_check_zipcall(self))
     {
         result = OS_ERROR;
         goto __exit;
@@ -634,9 +608,9 @@ static void urc_send_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != data);
 
     os_int32_t connect_id = 0;
-    os_int32_t data_size  = 0;
-    mo_object_t *module   = os_container_of(parser, mo_object_t, parser);
-    mo_me3630_w_t *me3630_w     = os_container_of(module, mo_me3630_w_t, parent);
+    os_int32_t data_size = 0;
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
+    mo_me3630_w_t *me3630_w = os_container_of(module, mo_me3630_w_t, parent);
 
     sscanf(data, "+ZIPSENDRAW: %d,%d", &connect_id, &data_size);
 
@@ -652,16 +626,15 @@ static void urc_send_func(struct at_parser *parser, const char *data, os_size_t 
     }
 }
 
-
 static void urc_recv_data_func(struct at_parser *parser, mo_netconn_t *netconn, os_size_t data_size)
 {
-    mo_object_t *module  = os_container_of(parser, mo_object_t, parser);
-    os_int32_t   timeout = data_size > 10 ? data_size : 10;
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
+    os_int32_t timeout = data_size > 10 ? data_size : 10;
 
     INFO("Moudle %s netconn %d receive %d bytes data", parser->name, netconn->connect_id, data_size);
 
-    char *recv_buff    = os_calloc(1, data_size + 1);
-    char  temp_buff[8] = {0};
+    char *recv_buff = os_calloc(1, data_size + 1);
+    char temp_buff[8] = {0};
     if (recv_buff == OS_NULL)
     {
         /* read and clean the coming data */
@@ -711,7 +684,7 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
 
     os_int32_t connect_id = atoi(&tmp_ch);
 
-    mo_object_t  *module  = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
 
     mo_netconn_t *netconn = me3630_w_get_netconn_by_id(module, connect_id);
     if (OS_NULL == netconn)
@@ -749,16 +722,16 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
     return;
 }
 static at_urc_t gs_urc_table[] = {
-    {.prefix = "+ZIPSENDRAW:", .suffix = "\r\n",           .func = urc_send_func},
-    {.prefix = "",             .suffix = "+ZIPRECV:",      .func = urc_recv_func},
+    {.prefix = "+ZIPSENDRAW:", .suffix = "\r\n", .func = urc_send_func},
+    {.prefix = "", .suffix = "+ZIPRECV:", .func = urc_recv_func},
 };
 
 static void me3630_w_network_init(mo_object_t *module)
 {
-    at_parser_t *parser        = &module->parser;
-    os_int32_t   enable_num    = 0;
-    os_int32_t   reg_state     = 0;
-    os_err_t     result        = OS_ERROR;
+    at_parser_t *parser = &module->parser;
+    os_int32_t enable_num = 0;
+    os_int32_t reg_state = 0;
+    os_err_t result = OS_ERROR;
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
@@ -768,7 +741,7 @@ static void me3630_w_network_init(mo_object_t *module)
     {
         goto __exit;
     }
-    if (at_resp_get_data_by_kw(&resp, "+CREG:", "+CREG: %d,%d", &enable_num , &reg_state) < 0)
+    if (at_resp_get_data_by_kw(&resp, "+CREG:", "+CREG: %d,%d", &enable_num, &reg_state) < 0)
     {
         result = OS_ERROR;
         goto __exit;
@@ -785,14 +758,12 @@ static void me3630_w_network_init(mo_object_t *module)
     {
         result = OS_ERROR;
         goto __exit;
-
     }
 
     if (at_parser_exec_cmd(parser, &resp, "AT+CFUN=0") != OS_EOK)
     {
         result = OS_ERROR;
         goto __exit;
-
     }
 
     if (at_parser_exec_cmd(parser, &resp, "AT+CFUN=1") != OS_EOK)
@@ -806,7 +777,7 @@ static void me3630_w_network_init(mo_object_t *module)
     {
         goto __exit;
     }
-    if (at_resp_get_data_by_kw(&resp, "+CREG:", "+CREG: %d,%d", &enable_num , &reg_state) < 0)
+    if (at_resp_get_data_by_kw(&resp, "+CREG:", "+CREG: %d,%d", &enable_num, &reg_state) < 0)
     {
         goto __exit;
     }
@@ -821,9 +792,8 @@ static void me3630_w_network_init(mo_object_t *module)
         goto __exit;
     }
 
-
 __exit:
-    if(result != OS_EOK)
+    if (result != OS_EOK)
     {
         WARN("ME3630_W network init failed");
     }
@@ -850,4 +820,3 @@ void me3630_w_netconn_init(mo_me3630_w_t *module)
 }
 
 #endif /* ME3630_W_USING_NETCONN_OPS */
-

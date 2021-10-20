@@ -37,23 +37,23 @@
 
 #ifdef ESP32_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test              = esp32_at_test,
+    .at_test = esp32_at_test,
     .get_firmware_version = esp32_get_firmware_version,
 };
 #endif /* ESP32_USING_GENERAL_OPS */
 
 #ifdef ESP32_USING_PING_OPS
 static const struct mo_ping_ops gs_ping_ops = {
-    .ping                 = esp32_ping,
+    .ping = esp32_ping,
 };
 #endif /* ESP32_USING_PING_OPS */
 
 #ifdef ESP32_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig             = esp32_ifconfig,
-    .get_ipaddr           = esp32_get_ipaddr,
-    .set_dnsserver        = esp32_set_dnsserver,
-    .get_dnsserver        = esp32_get_dnsserver,
+    .ifconfig = esp32_ifconfig,
+    .get_ipaddr = esp32_get_ipaddr,
+    .set_dnsserver = esp32_set_dnsserver,
+    .get_dnsserver = esp32_get_dnsserver,
 };
 #endif /* ESP32_USING_IFCONFIG_OPS */
 
@@ -61,14 +61,14 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern os_err_t esp32_netconn_init(mo_esp32_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create               = esp32_netconn_create,
-    .destroy              = esp32_netconn_destroy,
+    .create = esp32_netconn_create,
+    .destroy = esp32_netconn_destroy,
 #ifdef ESP32_USING_DNS
-    .gethostbyname        = esp32_netconn_gethostbyname,
+    .gethostbyname = esp32_netconn_gethostbyname,
 #endif
-    .connect              = esp32_netconn_connect,
-    .send                 = esp32_netconn_send,
-    .get_info             = esp32_netconn_get_info,
+    .connect = esp32_netconn_connect,
+    .send = esp32_netconn_send,
+    .get_info = esp32_netconn_get_info,
 };
 #endif /* ESP32_USING_NETCONN_OPS */
 
@@ -76,12 +76,12 @@ static const struct mo_netconn_ops gs_netconn_ops = {
 extern os_err_t esp32_wifi_init(mo_object_t *module);
 
 static const struct mo_wifi_ops gs_wifi_ops = {
-    .set_mode             = esp32_wifi_set_mode,
-    .get_mode             = esp32_wifi_get_mode,
-    .get_stat             = esp32_wifi_get_stat,
-    .connect_ap           = esp32_wifi_connect_ap,
-    .scan_info            = esp32_wifi_scan_info,
-    .disconnect_ap        = esp32_wifi_disconnect_ap,
+    .set_mode = esp32_wifi_set_mode,
+    .get_mode = esp32_wifi_get_mode,
+    .get_stat = esp32_wifi_get_stat,
+    .connect_ap = esp32_wifi_connect_ap,
+    .scan_info = esp32_wifi_scan_info,
+    .disconnect_ap = esp32_wifi_disconnect_ap,
 };
 #endif /* ESP32_USING_WIFI_OPS */
 
@@ -101,7 +101,7 @@ static void urc_busy_s_func(struct at_parser *parser, const char *data, os_size_
 }
 
 static at_urc_t gs_urc_table[] = {
-    {.prefix = "ready",  .suffix = "\r\n", .func = urc_ready_func},
+    {.prefix = "ready", .suffix = "\r\n", .func = urc_ready_func},
     {.prefix = "busy p", .suffix = "\r\n", .func = urc_busy_p_func},
     {.prefix = "busy s", .suffix = "\r\n", .func = urc_busy_s_func},
 };
@@ -248,7 +248,7 @@ int esp32_auto_create(void)
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = ESP32_NAME,
+    mo_parser_config_t parser_config = {.parser_name = ESP32_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = ESP32_RECV_BUFF_LEN};
 

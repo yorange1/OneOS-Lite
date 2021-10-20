@@ -39,7 +39,7 @@ os_err_t air723ug_get_reg(mo_object_t *self, eps_reg_info_t *info);
 os_err_t air723ug_set_cgact(mo_object_t *self, os_uint8_t cid, os_uint8_t act_stat);
 os_err_t air723ug_get_cgact(mo_object_t *self, os_uint8_t *cid, os_uint8_t *act_stat);
 os_err_t air723ug_get_csq(mo_object_t *self, os_uint8_t *rssi, os_uint8_t *ber);
-os_err_t air723ug_get_cell_info(mo_object_t *self, onepos_cell_info_t* onepos_cell_info);
+os_err_t air723ug_get_cell_info(mo_object_t *self, onepos_cell_info_t *onepos_cell_info);
 
 #endif /* AIR723UG_USING_NETSERV_OPS */
 

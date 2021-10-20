@@ -65,30 +65,30 @@ extern "C" {
 #endif
 
 #ifndef BC28_RECV_BUFF_LEN
-#define BC28_RECV_BUFF_LEN  (1500)
+#define BC28_RECV_BUFF_LEN (1500)
 #endif
 
 #ifndef BC28_NETCONN_NUM
-#define BC28_NETCONN_NUM    (5)                 /* module service occupied 2 socket */
+#define BC28_NETCONN_NUM (5) /* module service occupied 2 socket */
 #endif
 
 typedef struct mo_bc28
 {
-    mo_object_t     parent;
+    mo_object_t parent;
 #ifdef BC28_USING_NETCONN_OPS
-    mo_netconn_t    netconn[BC28_NETCONN_NUM];
-    os_mutex_t      netconn_lock;
-    char           *netconn_data;
-    os_event_t      netconn_evt;
+    mo_netconn_t netconn[BC28_NETCONN_NUM];
+    os_mutex_t netconn_lock;
+    char *netconn_data;
+    os_event_t netconn_evt;
 #endif /* BC28_USING_NETCONN_OPS */
 #ifdef BC28_USING_ONENET_NB_OPS
-    mo_onenet_cb_t *regist_cb;                  /* module onenet register callback */
-#endif /* BC28_USING_ONENET_NB_OPS */
+    mo_onenet_cb_t *regist_cb; /* module onenet register callback */
+#endif                         /* BC28_USING_ONENET_NB_OPS */
 
 } mo_bc28_t;
 
 mo_object_t *module_bc28_create(const char *name, void *parser_config);
-os_err_t     module_bc28_destroy(mo_object_t *self);
+os_err_t module_bc28_destroy(mo_object_t *self);
 
 #endif /* MOLINK_USING_BC28 */
 

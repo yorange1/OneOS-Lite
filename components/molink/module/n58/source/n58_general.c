@@ -54,7 +54,7 @@ os_err_t n58_get_imei(mo_object_t *self, char *value, os_size_t len)
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 2 * OS_TICK_PER_SECOND};
 
-    if(OS_EOK != at_parser_exec_cmd(parser, &resp, "AT+CGSN"))
+    if (OS_EOK != at_parser_exec_cmd(parser, &resp, "AT+CGSN"))
     {
         return OS_ERROR;
     }
@@ -218,4 +218,3 @@ os_err_t n58_get_firmware_version(mo_object_t *self, mo_firmware_version_t *vers
 }
 
 #endif /* N58_USING_GENERAL_OPS */
-

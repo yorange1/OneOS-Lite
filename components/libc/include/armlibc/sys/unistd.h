@@ -25,16 +25,15 @@
 
 #include <sys/types.h>
 
-extern int   chdir(const char *path);
+extern int chdir(const char *path);
 extern char *getcwd(char *buf, size_t size);
-extern int   read(int fd, void *buf, size_t nbyte);
-extern int   close(int fildes);
-extern int   write(int fd, const void *buf, size_t nbyte);
-extern int   unlink(const char *path);
+extern int read(int fd, void *buf, size_t nbyte);
+extern int close(int fildes);
+extern int write(int fd, const void *buf, size_t nbyte);
+extern int unlink(const char *path);
 extern off_t lseek(int fildes, off_t offset, int whence);
-extern int   fsync(int fd);
-extern int   access(const char *pathname, int mode);
-extern int   rmdir(const char *pathname);
+extern int fsync(int fd);
+extern int access(const char *pathname, int mode);
+extern int rmdir(const char *pathname);
 
 #endif /* __SYS_UNISTD_H__ */
-

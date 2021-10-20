@@ -28,7 +28,7 @@
 #include <string.h>
 
 #define MO_LOG_TAG "air720uh"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef MOLINK_USING_AIR720UH
@@ -37,38 +37,38 @@
 
 #ifdef AIR720UH_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test              = air720uh_at_test,
-    .get_imei             = air720uh_get_imei,
-    .get_imsi             = air720uh_get_imsi,
-    .get_iccid            = air720uh_get_iccid,
-    .get_cfun             = air720uh_get_cfun,
-    .set_cfun             = air720uh_set_cfun,
+    .at_test = air720uh_at_test,
+    .get_imei = air720uh_get_imei,
+    .get_imsi = air720uh_get_imsi,
+    .get_iccid = air720uh_get_iccid,
+    .get_cfun = air720uh_get_cfun,
+    .set_cfun = air720uh_set_cfun,
     .get_firmware_version = air720uh_get_firmware_version,
 };
 #endif /* AIR720UH_USING_GENERAL_OPS */
 
 #ifdef AIR720UH_USING_NETSERV_OPS
 static const struct mo_netserv_ops gs_netserv_ops = {
-    .set_attach           = air720uh_set_attach,
-    .get_attach           = air720uh_get_attach,
-    .set_reg              = air720uh_set_reg,
-    .get_reg              = air720uh_get_reg,
-    .set_cgact            = air720uh_set_cgact,
-    .get_cgact            = air720uh_get_cgact,
-    .get_csq              = air720uh_get_csq,
+    .set_attach = air720uh_set_attach,
+    .get_attach = air720uh_get_attach,
+    .set_reg = air720uh_set_reg,
+    .get_reg = air720uh_get_reg,
+    .set_cgact = air720uh_set_cgact,
+    .get_cgact = air720uh_get_cgact,
+    .get_csq = air720uh_get_csq,
 };
 #endif /* AIR720UH_USING_NETSERV_OPS */
 
 #ifdef AIR720UH_USING_PING_OPS
 static const struct mo_ping_ops gs_ping_ops = {
-    .ping                 = air720uh_ping,
+    .ping = air720uh_ping,
 };
 #endif /* AIR720UH_USING_PING_OPS */
 
 #ifdef AIR720UH_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig            = air720uh_ifconfig,
-    .get_ipaddr          = air720uh_get_ipaddr,
+    .ifconfig = air720uh_ifconfig,
+    .get_ipaddr = air720uh_get_ipaddr,
 };
 #endif /* AIR720UH_USING_IFCONFIG_OPS */
 
@@ -76,14 +76,14 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern void air720uh_netconn_init(mo_air720uh_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create              = air720uh_netconn_create,
-    .destroy             = air720uh_netconn_destroy,
+    .create = air720uh_netconn_create,
+    .destroy = air720uh_netconn_destroy,
 #ifdef AIR720UH_USING_DNS
-    .gethostbyname       = air720uh_netconn_gethostbyname,
+    .gethostbyname = air720uh_netconn_gethostbyname,
 #endif
-    .connect             = air720uh_netconn_connect,
-    .send                = air720uh_netconn_send,
-    .get_info            = air720uh_netconn_get_info,
+    .connect = air720uh_netconn_connect,
+    .send = air720uh_netconn_send,
+    .get_info = air720uh_netconn_get_info,
 };
 #endif /* AIR720UH_USING_NETCONN_OPS */
 
@@ -93,7 +93,7 @@ void air720uh_poweron_sequence(void)
     os_pin_mode(GET_PIN(A, 4), PIN_MODE_OUTPUT);
     os_pin_write(GET_PIN(A, 4), PIN_HIGH);
     os_pin_write(GET_PIN(A, 3), PIN_HIGH);
-    os_task_msleep( 500 );
+    os_task_msleep(500);
     os_pin_write(GET_PIN(A, 3), PIN_LOW);
 
     INFO("%s Executed power on process.", __func__);
@@ -123,9 +123,7 @@ static os_err_t air720uh_at_init(mo_object_t *self)
 
     char resp_buff[32] = {0};
 
-    at_resp_t resp = {.buff = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
     return at_parser_exec_cmd(parser, &resp, "ATE0");
 }
 
@@ -227,14 +225,14 @@ int air720uh_auto_create(void)
         return OS_ERROR;
     }
 
-	uart_config.baud_rate = AIR720UH_DEVICE_RATE;
+    uart_config.baud_rate = AIR720UH_DEVICE_RATE;
 
     // air720uh_poweron_sequence();
     INFO("Auto create %s module object with [%s]:[%d]bps", AIR720UH_NAME, AIR720UH_DEVICE_NAME, AIR720UH_DEVICE_RATE);
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = AIR720UH_NAME,
+    mo_parser_config_t parser_config = {.parser_name = AIR720UH_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = AIR720UH_RECV_BUFF_LEN};
 
@@ -246,7 +244,10 @@ int air720uh_auto_create(void)
         return OS_ERROR;
     }
 
-    INFO("Auto create %s module object success [%s]:[%d]bps!", AIR720UH_NAME, AIR720UH_DEVICE_NAME, AIR720UH_DEVICE_RATE);
+    INFO("Auto create %s module object success [%s]:[%d]bps!",
+         AIR720UH_NAME,
+         AIR720UH_DEVICE_NAME,
+         AIR720UH_DEVICE_RATE);
     return OS_EOK;
 }
 OS_CMPOENT_INIT(air720uh_auto_create, OS_INIT_SUBLEVEL_MIDDLE);

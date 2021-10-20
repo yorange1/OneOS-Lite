@@ -28,7 +28,7 @@
 #include <string.h>
 
 #define MO_LOG_TAG "air723ug"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef MOLINK_USING_AIR723UG
@@ -37,39 +37,39 @@
 
 #ifdef AIR723UG_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test              = air723ug_at_test,
-    .get_imei             = air723ug_get_imei,
-    .get_imsi             = air723ug_get_imsi,
-    .get_iccid            = air723ug_get_iccid,
-    .get_cfun             = air723ug_get_cfun,
-    .set_cfun             = air723ug_set_cfun,
+    .at_test = air723ug_at_test,
+    .get_imei = air723ug_get_imei,
+    .get_imsi = air723ug_get_imsi,
+    .get_iccid = air723ug_get_iccid,
+    .get_cfun = air723ug_get_cfun,
+    .set_cfun = air723ug_set_cfun,
     .get_firmware_version = air723ug_get_firmware_version,
 };
 #endif /* AIR723UG_USING_GENERAL_OPS */
 
 #ifdef AIR723UG_USING_NETSERV_OPS
 static const struct mo_netserv_ops gs_netserv_ops = {
-    .set_attach           = air723ug_set_attach,
-    .get_attach           = air723ug_get_attach,
-    .set_reg              = air723ug_set_reg,
-    .get_reg              = air723ug_get_reg,
-    .set_cgact            = air723ug_set_cgact,
-    .get_cgact            = air723ug_get_cgact,
-    .get_csq              = air723ug_get_csq,
-    .get_cell_info        = air723ug_get_cell_info,
+    .set_attach = air723ug_set_attach,
+    .get_attach = air723ug_get_attach,
+    .set_reg = air723ug_set_reg,
+    .get_reg = air723ug_get_reg,
+    .set_cgact = air723ug_set_cgact,
+    .get_cgact = air723ug_get_cgact,
+    .get_csq = air723ug_get_csq,
+    .get_cell_info = air723ug_get_cell_info,
 };
 #endif /* AIR723UG_USING_NETSERV_OPS */
 
 #ifdef AIR723UG_USING_PING_OPS
 static const struct mo_ping_ops gs_ping_ops = {
-    .ping                 = air723ug_ping,
+    .ping = air723ug_ping,
 };
 #endif /* AIR723UG_USING_PING_OPS */
 
 #ifdef AIR723UG_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig            = air723ug_ifconfig,
-    .get_ipaddr          = air723ug_get_ipaddr,
+    .ifconfig = air723ug_ifconfig,
+    .get_ipaddr = air723ug_get_ipaddr,
 };
 #endif /* AIR723UG_USING_IFCONFIG_OPS */
 
@@ -77,14 +77,14 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern void air723ug_netconn_init(mo_air723ug_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create              = air723ug_netconn_create,
-    .destroy             = air723ug_netconn_destroy,
+    .create = air723ug_netconn_create,
+    .destroy = air723ug_netconn_destroy,
 #ifdef AIR723UG_USING_DNS
-    .gethostbyname       = air723ug_netconn_gethostbyname,
+    .gethostbyname = air723ug_netconn_gethostbyname,
 #endif
-    .connect             = air723ug_netconn_connect,
-    .send                = air723ug_netconn_send,
-    .get_info            = air723ug_netconn_get_info,
+    .connect = air723ug_netconn_connect,
+    .send = air723ug_netconn_send,
+    .get_info = air723ug_netconn_get_info,
 };
 #endif /* AIR723UG_USING_NETCONN_OPS */
 
@@ -94,7 +94,7 @@ void air723ug_poweron_sequence(void)
     os_pin_mode(GET_PIN(A, 4), PIN_MODE_OUTPUT);
     os_pin_write(GET_PIN(A, 4), PIN_HIGH);
     os_pin_write(GET_PIN(A, 3), PIN_HIGH);
-    os_task_msleep( 500 );
+    os_task_msleep(500);
     os_pin_write(GET_PIN(A, 3), PIN_LOW);
 
     INFO("%s Executed power on process.", __func__);
@@ -124,9 +124,7 @@ static os_err_t air723ug_at_init(mo_object_t *self)
 
     char resp_buff[32] = {0};
 
-    at_resp_t resp = {.buff = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
     return at_parser_exec_cmd(parser, &resp, "ATE0");
 }
 
@@ -228,14 +226,14 @@ int air723ug_auto_create(void)
         return OS_ERROR;
     }
 
-	uart_config.baud_rate = AIR723UG_DEVICE_RATE;
+    uart_config.baud_rate = AIR723UG_DEVICE_RATE;
 
     // air723ug_poweron_sequence();
     INFO("Auto create %s module object with [%s]:[%d]bps", AIR723UG_NAME, AIR723UG_DEVICE_NAME, AIR723UG_DEVICE_RATE);
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = AIR723UG_NAME,
+    mo_parser_config_t parser_config = {.parser_name = AIR723UG_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = AIR723UG_RECV_BUFF_LEN};
 
@@ -247,7 +245,10 @@ int air723ug_auto_create(void)
         return OS_ERROR;
     }
 
-    INFO("Auto create %s module object success [%s]:[%d]bps!", AIR723UG_NAME, AIR723UG_DEVICE_NAME, AIR723UG_DEVICE_RATE);
+    INFO("Auto create %s module object success [%s]:[%d]bps!",
+         AIR723UG_NAME,
+         AIR723UG_DEVICE_NAME,
+         AIR723UG_DEVICE_RATE);
     return OS_EOK;
 }
 OS_CMPOENT_INIT(air723ug_auto_create, OS_INIT_SUBLEVEL_MIDDLE);
