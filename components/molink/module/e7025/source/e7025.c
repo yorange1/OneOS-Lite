@@ -36,12 +36,12 @@
 
 #ifdef E7025_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test   = e7025_at_test,
-    .get_imei  = e7025_get_imei,
-    .get_imsi  = e7025_get_imsi,
+    .at_test = e7025_at_test,
+    .get_imei = e7025_get_imei,
+    .get_imsi = e7025_get_imsi,
     .get_iccid = e7025_get_iccid,
-    .get_cfun  = e7025_get_cfun,
-    .set_cfun  = e7025_set_cfun,
+    .get_cfun = e7025_get_cfun,
+    .set_cfun = e7025_set_cfun,
 };
 #endif /* E7025_USING_GENERAL_OPS */
 
@@ -49,11 +49,11 @@ static const struct mo_general_ops gs_general_ops = {
 static const struct mo_netserv_ops gs_netserv_ops = {
     .set_attach = e7025_set_attach,
     .get_attach = e7025_get_attach,
-    .set_reg    = e7025_set_reg,
-    .get_reg    = e7025_get_reg,
-    .set_cgact  = e7025_set_cgact,
-    .get_cgact  = e7025_get_cgact,
-    .get_csq    = e7025_get_csq,
+    .set_reg = e7025_set_reg,
+    .get_reg = e7025_get_reg,
+    .set_cgact = e7025_set_cgact,
+    .get_cgact = e7025_get_cgact,
+    .get_csq = e7025_get_csq,
 };
 #endif /* E7025_USING_NETSERV_OPS */
 
@@ -65,7 +65,7 @@ static const struct mo_ping_ops gs_ping_ops = {
 
 #ifdef E7025_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig   = e7025_ifconfig,
+    .ifconfig = e7025_ifconfig,
     .get_ipaddr = e7025_get_ipaddr,
 };
 #endif /* E7025_USING_IFCONFIG_OPS */
@@ -74,14 +74,13 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern void e7025_netconn_init(mo_e7025_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create        = e7025_netconn_create,
-    .destroy       = e7025_netconn_destroy,
+    .create = e7025_netconn_create,
+    .destroy = e7025_netconn_destroy,
 #ifdef E7025_USING_DNS
     .gethostbyname = e7025_netconn_gethostbyname,
-endif
-    .connect       = e7025_netconn_connect,
-    .send          = e7025_netconn_send,
-    .get_info      = e7025_netconn_get_info,
+    endif.connect = e7025_netconn_connect,
+    .send = e7025_netconn_send,
+    .get_info = e7025_netconn_get_info,
 };
 #endif /* E7025_USING_NETCONN_OPS */
 
@@ -98,9 +97,7 @@ static os_err_t e7025_at_init(mo_object_t *self)
 
     char resp_buff[32] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     return at_parser_exec_cmd(parser, &resp, "ATE0");
 }
@@ -200,7 +197,7 @@ int e7025_auto_create(void)
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = E7025_NAME,
+    mo_parser_config_t parser_config = {.parser_name = E7025_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = E7025_RECV_BUFF_LEN};
 

@@ -14,19 +14,19 @@ int closedir(DIR *pdir)
 {
     int res = -1;
 
-    if (!pdir) 
+    if (!pdir)
     {
         errno = EBADF;
         LOG_E(DIRENT_TAG, "Invalid directory stream descriptor\r\n");
-    } 
+    }
     else
     {
-    #ifdef OS_USING_VFS
+#ifdef OS_USING_VFS
         res = vfs_closedir(pdir->priv);
-    #if defined (OS_USING_SYS_HEAP)
+#if defined(OS_USING_SYS_HEAP)
         os_free(pdir);
-    #endif
-    #endif
+#endif
+#endif
     }
 
     return res;
@@ -34,25 +34,25 @@ int closedir(DIR *pdir)
 
 DIR *opendir(const char *path)
 {
-    DIR *pdir  = OS_NULL;
+    DIR *pdir = OS_NULL;
 
 #ifdef OS_USING_VFS
     void *priv = OS_NULL;
 
-    if (OS_NULL == path) 
+    if (OS_NULL == path)
     {
         errno = ENOENT;
         LOG_E(DIRENT_TAG, "Path is null\r\n");
-    } 
-    else 
+    }
+    else
     {
         if (OS_NULL != (priv = vfs_opendir(path)))
         {
-        #if defined (OS_USING_SYS_HEAP)
-            pdir = (DIR*)os_malloc(sizeof(DIR));
-        #else
+#if defined(OS_USING_SYS_HEAP)
+            pdir = (DIR *)os_malloc(sizeof(DIR));
+#else
             pdir = OS_NULL;
-        #endif
+#endif
             if (OS_NULL != pdir)
             {
                 pdir->priv = priv;
@@ -68,16 +68,16 @@ struct dirent *readdir(DIR *pdir)
 {
     struct dirent *pdirent = OS_NULL;
 
-    if (!pdir) 
+    if (!pdir)
     {
         errno = EBADF;
         LOG_E(DIRENT_TAG, "Invalid directory stream descriptor\r\n");
     }
-    else 
+    else
     {
-    #ifdef OS_USING_VFS
+#ifdef OS_USING_VFS
         pdirent = vfs_readdir(pdir->priv);
-    #endif
+#endif
     }
 
     return pdirent;
@@ -85,31 +85,31 @@ struct dirent *readdir(DIR *pdir)
 
 void rewinddir(DIR *pdir)
 {
-    if (!pdir) 
+    if (!pdir)
     {
         errno = EBADF;
         LOG_E(DIRENT_TAG, "Invalid directory stream descriptor\r\n");
-    } 
-    else 
+    }
+    else
     {
-    #ifdef OS_USING_VFS
+#ifdef OS_USING_VFS
         vfs_rewinddir(pdir->priv);
-    #endif
+#endif
     }
 }
 
 void seekdir(DIR *pdir, long ofst)
 {
-    if (!pdir) 
+    if (!pdir)
     {
         errno = EBADF;
         LOG_E(DIRENT_TAG, "Invalid directory stream descriptor\r\n");
-    } 
-    else 
+    }
+    else
     {
-    #ifdef OS_USING_VFS
+#ifdef OS_USING_VFS
         vfs_seekdir(pdir->priv, ofst);
-    #endif
+#endif
     }
 }
 
@@ -117,18 +117,17 @@ long telldir(DIR *pdir)
 {
     long res = 0;
 
-    if (!pdir) 
+    if (!pdir)
     {
         errno = EBADF;
         LOG_E(DIRENT_TAG, "Invalid directory stream descriptor\r\n");
     }
-    else 
+    else
     {
-    #ifdef OS_USING_VFS
+#ifdef OS_USING_VFS
         res = vfs_telldir(pdir->priv);
-    #endif
+#endif
     }
 
     return res;
 }
-

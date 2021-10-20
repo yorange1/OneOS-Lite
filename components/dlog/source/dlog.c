@@ -29,14 +29,14 @@
 #include <sys/time.h>
 #endif
 
-#define DLOG_FILTER_KW_MAX_LEN          15
-#define DLOG_FILTER_TAG_MAX_LEN         15
+#define DLOG_FILTER_KW_MAX_LEN  15
+#define DLOG_FILTER_TAG_MAX_LEN 15
 
-#define DLOG_NEWLINE_SIGN               "\r\n"
-#define DLOG_FRAME_MAGIC                0x10
+#define DLOG_NEWLINE_SIGN "\r\n"
+#define DLOG_FRAME_MAGIC  0x10
 
 #ifdef DLOG_USING_ASYNC_OUTPUT
-#define DLOG_ASYNC_OUTPUT_STORE_LINES   (DLOG_ASYNC_OUTPUT_BUF_SIZE * 3 / 2 / OS_LOG_BUFF_SIZE)
+#define DLOG_ASYNC_OUTPUT_STORE_LINES (DLOG_ASYNC_OUTPUT_BUF_SIZE * 3 / 2 / OS_LOG_BUFF_SIZE)
 
 #if (DLOG_ASYNC_OUTPUT_TASK_PRIORITY > OS_TASK_PRIORITY_MAX - 1)
 #error "Dlog async task priority is greater than or equal to OS_TASK_PRIORITY_MAX"
@@ -49,105 +49,92 @@
  * CSI(Control Sequence Introducer/Initiator) sign.
  * More information on https://en.wikipedia.org/wiki/ANSI_escape_code
  */
-#define CSI_START                       "\033["
-#define CSI_END                         "\033[0m"
+#define CSI_START "\033["
+#define CSI_END   "\033[0m"
 
 /* Output log front color */
-#define F_BLACK                         "30m"
-#define F_RED                           "31m"
-#define F_GREEN                         "32m"
-#define F_YELLOW                        "33m"
-#define F_BLUE                          "34m"
-#define F_MAGENTA                       "35m"
-#define F_CYAN                          "36m"
-#define F_WHITE                         "37m"
+#define F_BLACK   "30m"
+#define F_RED     "31m"
+#define F_GREEN   "32m"
+#define F_YELLOW  "33m"
+#define F_BLUE    "34m"
+#define F_MAGENTA "35m"
+#define F_CYAN    "36m"
+#define F_WHITE   "37m"
 
-#define DLOG_COLOR_DEBUG                (OS_NULL)
-#define DLOG_COLOR_INFO                 (F_GREEN)
-#define DLOG_COLOR_WARN                 (F_YELLOW)
-#define DLOG_COLOR_ERROR                (F_RED)
+#define DLOG_COLOR_DEBUG (OS_NULL)
+#define DLOG_COLOR_INFO  (F_GREEN)
+#define DLOG_COLOR_WARN  (F_YELLOW)
+#define DLOG_COLOR_ERROR (F_RED)
 #endif /* DLOG_USING_COLOR */
 
 struct dlog_ctrl_info
 {
-    os_bool_t           init_ok;
-    os_mutex_t          log_locker;
+    os_bool_t init_ok;
+    os_mutex_t log_locker;
 
     /* Global level */
-    os_uint16_t         global_level;
-    
+    os_uint16_t global_level;
+
     /* All backends */
-    os_list_node_t      backend_list_head;
-    
+    os_list_node_t backend_list_head;
+
     /* The task log's line buffer */
-    char                log_buf_task[OS_LOG_BUFF_SIZE];
+    char log_buf_task[OS_LOG_BUFF_SIZE];
 
 #ifdef DLOG_USING_ISR_LOG
-    os_ubase_t          irq_save;
-    os_spinlock_t       isr_spinlock;
-    char                log_buf_isr[OS_LOG_BUFF_SIZE];
+    os_ubase_t irq_save;
+    os_spinlock_t isr_spinlock;
+    char log_buf_isr[OS_LOG_BUFF_SIZE];
 #endif
 
 #ifdef DLOG_USING_ASYNC_OUTPUT
-    rbb_ctrl_info_t    *async_rbb;
-    os_task_t          *async_task;       
-    os_sem_t            async_notice_sem;
+    rbb_ctrl_info_t *async_rbb;
+    os_task_t *async_task;
+    os_sem_t async_notice_sem;
 #endif
 
 #ifdef DLOG_USING_FILTER
 
     /* All tag's level filter */
-    os_list_node_t  tag_lvl_list_head;
+    os_list_node_t tag_lvl_list_head;
 
-    /* Global filter tag and keyword */    
-    char            tag[DLOG_FILTER_TAG_MAX_LEN + 1];
-    char            keyword[DLOG_FILTER_KW_MAX_LEN + 1];
+    /* Global filter tag and keyword */
+    char tag[DLOG_FILTER_TAG_MAX_LEN + 1];
+    char keyword[DLOG_FILTER_KW_MAX_LEN + 1];
 #endif
 };
 
 /* Tag's level filter */
 struct dlog_tag_lvl_filter
 {
-    os_list_node_t  list_node;
-    char            tag[DLOG_FILTER_TAG_MAX_LEN + 1];
-    os_uint16_t     level;
+    os_list_node_t list_node;
+    char tag[DLOG_FILTER_TAG_MAX_LEN + 1];
+    os_uint16_t level;
 };
 typedef struct dlog_tag_lvl_filter dlog_tag_lvl_filter_t;
 
 struct dlog_frame
 {
-    os_uint8_t      magic;      /* Magic word is 0x10 ('lo') */
-    os_uint8_t      is_raw;
-    os_uint16_t     level;
-    os_uint32_t     log_len;
-    char           *log;
+    os_uint8_t magic; /* Magic word is 0x10 ('lo') */
+    os_uint8_t is_raw;
+    os_uint16_t level;
+    os_uint32_t log_len;
+    char *log;
 };
 typedef struct dlog_frame dlog_frame_t;
 
-
-
-static const char *gs_level_output_info[] =
-{
-    "EM/",
-    "A/",
-    "C/",
-    "E/",
-    "W/",
-    "N/",
-    "I/",
-    "D/"
-};
+static const char *gs_level_output_info[] = {"EM/", "A/", "C/", "E/", "W/", "N/", "I/", "D/"};
 
 #ifdef DLOG_USING_COLOR
 /* Color output info */
-static const char *gs_color_output_info[] =
-{
-    F_MAGENTA,              /* Compatible for LOG_EMERG */
-    F_MAGENTA,              /* Compatible for LOG_ALERT */
-    F_RED,                  /* Compatible for LOG_CRIT */
+static const char *gs_color_output_info[] = {
+    F_MAGENTA, /* Compatible for LOG_EMERG */
+    F_MAGENTA, /* Compatible for LOG_ALERT */
+    F_RED,     /* Compatible for LOG_CRIT */
     DLOG_COLOR_ERROR,
     DLOG_COLOR_WARN,
-    F_GREEN,                /* Compatible for LOG_NOTICE */
+    F_GREEN, /* Compatible for LOG_NOTICE */
     DLOG_COLOR_INFO,
     DLOG_COLOR_DEBUG,
 };
@@ -176,7 +163,7 @@ static os_size_t dlog_strcpy(os_size_t cur_len, char *dst, const char *src)
             break;
         }
     }
-    
+
     return src - src_old;
 }
 
@@ -185,29 +172,29 @@ OS_UNUSED static os_size_t dlog_ultoa(char *str, unsigned long value)
     os_size_t i;
     os_size_t j;
     os_size_t len;
-    char      swap;
+    char swap;
 
-    i   = 0;
-    j   = 0;
+    i = 0;
+    j = 0;
     len = 0;
-    
+
     do
     {
         str[len] = value % 10 + '0';
-        value    = value / 10;
+        value = value / 10;
         len++;
     } while (value);
-    
+
     str[len] = '\0';
 
     /* Reverse string */
     for (i = 0, j = len - 1; i < j; ++i, --j)
     {
-        swap   = str[i];
+        swap = str[i];
         str[i] = str[j];
         str[j] = swap;
     }
-    
+
     return len;
 }
 
@@ -216,9 +203,9 @@ static void dlog_lock(void)
     os_bool_t irq_active;
     os_bool_t irq_disabled;
     os_bool_t sched_locked;
-    os_err_t  ret;
+    os_err_t ret;
 
-    irq_active   = os_is_irq_active();
+    irq_active = os_is_irq_active();
     irq_disabled = os_is_irq_disabled();
     sched_locked = os_is_schedule_locked();
 
@@ -227,7 +214,7 @@ static void dlog_lock(void)
 #ifdef DLOG_USING_ISR_LOG
         /* Interrupt context, interrupt disabled, or schedule locked */
         os_spin_lock_irqsave(&gs_dlog_ctrl_info.isr_spinlock, &gs_dlog_ctrl_info.irq_save);
-#endif        
+#endif
     }
     else
     {
@@ -246,9 +233,9 @@ static void dlog_unlock(void)
     os_bool_t irq_active;
     os_bool_t irq_disabled;
     os_bool_t sched_locked;
-    os_err_t  ret;
+    os_err_t ret;
 
-    irq_active   = os_is_irq_active();
+    irq_active = os_is_irq_active();
     irq_disabled = os_is_irq_disabled();
     sched_locked = os_is_schedule_locked();
 
@@ -273,10 +260,11 @@ static void dlog_unlock(void)
 
 static char *dlog_get_log_buf(void)
 {
-    os_bool_t  irq_active;
-    char      *log_buff;;
+    os_bool_t irq_active;
+    char *log_buff;
+    ;
 
-    log_buff   = OS_NULL;
+    log_buff = OS_NULL;
     irq_active = os_is_irq_active();
 
     /* Is in task context */
@@ -300,10 +288,10 @@ static char *dlog_get_log_buf(void)
 #ifdef DLOG_USING_FILTER
 OS_UNUSED static os_err_t dlog_tag_lvl_filter_set(const char *tag, os_uint16_t level)
 {
-    os_list_node_t        *node;
+    os_list_node_t *node;
     dlog_tag_lvl_filter_t *tag_lvl;
-    os_int32_t             ret;
-    os_bool_t              found;
+    os_int32_t ret;
+    os_bool_t found;
 
     OS_ASSERT(OS_NULL != tag);
     OS_ASSERT(level <= DLOG_DEBUG);
@@ -316,21 +304,21 @@ OS_UNUSED static os_err_t dlog_tag_lvl_filter_set(const char *tag, os_uint16_t l
     dlog_lock();
 
     found = OS_FALSE;
-    os_list_for_each(node, &gs_dlog_ctrl_info.tag_lvl_list_head) 
+    os_list_for_each(node, &gs_dlog_ctrl_info.tag_lvl_list_head)
     {
         tag_lvl = os_list_entry(node, dlog_tag_lvl_filter_t, list_node);
         if (!strncmp(tag_lvl->tag, tag, DLOG_FILTER_TAG_MAX_LEN))
         {
-            found          = OS_TRUE;
+            found = OS_TRUE;
             tag_lvl->level = level;
-            
+
             break;
         }
     }
-    
+
     dlog_unlock();
-    
-    ret  = OS_EOK;
+
+    ret = OS_EOK;
     if (!found)
     {
         /* New a tag's level filter */
@@ -351,40 +339,40 @@ OS_UNUSED static os_err_t dlog_tag_lvl_filter_set(const char *tag, os_uint16_t l
             ret = OS_ENOMEM;
         }
     }
-    
+
     return ret;
 }
 
 OS_UNUSED static os_err_t dlog_tag_lvl_filter_get(const char *tag, os_uint16_t *level)
 {
-    os_list_node_t        *node;
+    os_list_node_t *node;
     dlog_tag_lvl_filter_t *tag_lvl;
-    os_bool_t              found;
-    os_err_t               ret;
+    os_bool_t found;
+    os_err_t ret;
 
     OS_ASSERT(OS_NULL != tag);
     OS_ASSERT(OS_NULL != level);
-    
+
     if (OS_TRUE != gs_dlog_ctrl_info.init_ok)
     {
         return OS_ERROR;
     }
-    
+
     dlog_lock();
 
     found = OS_FALSE;
-    os_list_for_each(node, &gs_dlog_ctrl_info.tag_lvl_list_head) 
+    os_list_for_each(node, &gs_dlog_ctrl_info.tag_lvl_list_head)
     {
         tag_lvl = os_list_entry(node, dlog_tag_lvl_filter_t, list_node);
         if (!strncmp(tag_lvl->tag, tag, DLOG_FILTER_TAG_MAX_LEN))
         {
-            found  = OS_TRUE;
+            found = OS_TRUE;
             *level = tag_lvl->level;
-            
+
             break;
         }
     }
-    
+
     dlog_unlock();
 
     if (found)
@@ -401,33 +389,33 @@ OS_UNUSED static os_err_t dlog_tag_lvl_filter_get(const char *tag, os_uint16_t *
 
 OS_UNUSED static os_err_t dlog_tag_lvl_filter_del(const char *tag)
 {
-    os_list_node_t        *node;
+    os_list_node_t *node;
     dlog_tag_lvl_filter_t *tag_lvl;
-    os_bool_t              found;
-    os_err_t               ret;
+    os_bool_t found;
+    os_err_t ret;
 
     OS_ASSERT(OS_NULL != tag);
-    
+
     if (OS_TRUE != gs_dlog_ctrl_info.init_ok)
     {
         return OS_ERROR;
     }
-    
+
     dlog_lock();
 
     found = OS_FALSE;
-    os_list_for_each(node, &gs_dlog_ctrl_info.tag_lvl_list_head) 
+    os_list_for_each(node, &gs_dlog_ctrl_info.tag_lvl_list_head)
     {
         tag_lvl = os_list_entry(node, dlog_tag_lvl_filter_t, list_node);
         if (!strncmp(tag_lvl->tag, tag, DLOG_FILTER_TAG_MAX_LEN))
         {
-            found  = OS_TRUE; 
+            found = OS_TRUE;
             os_list_del(&tag_lvl->list_node);
             os_free(tag_lvl);
             break;
         }
     }
-    
+
     dlog_unlock();
 
     if (found)
@@ -440,7 +428,6 @@ OS_UNUSED static os_err_t dlog_tag_lvl_filter_del(const char *tag)
     }
 
     return ret;
-
 }
 
 OS_UNUSED static void dlog_global_filter_tag_set(const char *tag)
@@ -449,7 +436,7 @@ OS_UNUSED static void dlog_global_filter_tag_set(const char *tag)
 
     memset(gs_dlog_ctrl_info.tag, 0, sizeof(gs_dlog_ctrl_info.tag));
     strncpy(gs_dlog_ctrl_info.tag, tag, DLOG_FILTER_TAG_MAX_LEN);
-    
+
     return;
 }
 
@@ -491,9 +478,9 @@ OS_UNUSED static void dlog_global_filter_kw_del(void)
 void dlog_global_lvl_set(os_uint16_t level)
 {
     OS_ASSERT(level <= DLOG_DEBUG);
-    
+
     gs_dlog_ctrl_info.global_level = level;
-    
+
     return;
 }
 
@@ -502,16 +489,12 @@ os_uint16_t dlog_global_lvl_get(void)
     return gs_dlog_ctrl_info.global_level;
 }
 
-static os_size_t dlog_formater(char        *log_buf,
-                               os_uint16_t  level,
-                               const char  *tag,
-                               os_bool_t    newline,
-                               const char  *format,
-                               va_list      args)
+static os_size_t
+dlog_formater(char *log_buf, os_uint16_t level, const char *tag, os_bool_t newline, const char *format, va_list args)
 {
     /* The caller has locker, so it can use static variable for reduce stack usage */
-    static os_size_t  s_log_len;
-    static os_size_t  s_newline_len;
+    static os_size_t s_log_len;
+    static os_size_t s_newline_len;
     static os_int32_t s_fmt_result;
 
     s_log_len = 0;
@@ -524,7 +507,7 @@ static os_size_t dlog_formater(char        *log_buf,
     {
         s_newline_len = 0;
     }
-    
+
 #ifdef DLOG_USING_COLOR
     /* Add CSI start sign and color info */
     if (OS_NULL != gs_color_output_info[level])
@@ -538,13 +521,13 @@ static os_size_t dlog_formater(char        *log_buf,
     /* Add time info */
     {
 #ifdef DLOG_TIME_USING_TIMESTAMP
-        static time_t     s_now;
+        static time_t s_now;
         static struct tm *s_tm;
-        static struct tm  s_tm_tmp;
+        static struct tm s_tm_tmp;
 
         s_now = time(OS_NULL);
-        s_tm  = gmtime_r(&s_now, &s_tm_tmp);
-        
+        s_tm = gmtime_r(&s_now, &s_tm_tmp);
+
         snprintf(log_buf + s_log_len,
                  OS_LOG_BUFF_SIZE - s_log_len,
                  "%02d-%02d %02d:%02d:%02d",
@@ -558,7 +541,7 @@ static os_size_t dlog_formater(char        *log_buf,
 
         log_buf[s_log_len] = '[';
         tick_len = dlog_ultoa(log_buf + s_log_len + 1, os_tick_get());
-        log_buf[s_log_len + 1 + tick_len]     = ']';
+        log_buf[s_log_len + 1 + tick_len] = ']';
         log_buf[s_log_len + 1 + tick_len + 1] = '\0';
 #endif /* DLOG_TIME_USING_TIMESTAMP */
 
@@ -632,23 +615,20 @@ static os_size_t dlog_formater(char        *log_buf,
 
     log_buf[s_log_len] = '\0';
     s_log_len++;
-    
+
     return s_log_len;
 }
 
-static void dlog_output_to_all_backend(os_uint16_t  level,
-                                       os_bool_t    is_raw,
-                                       char        *log,
-                                       os_size_t    log_len)
+static void dlog_output_to_all_backend(os_uint16_t level, os_bool_t is_raw, char *log, os_size_t log_len)
 {
-    os_list_node_t  *node;
-    dlog_backend_t  *backend;
-    os_bool_t        irq_active;
+    os_list_node_t *node;
+    dlog_backend_t *backend;
+    os_bool_t irq_active;
 
     irq_active = os_is_irq_active();
- 
+
     /* Output for all backends */
-    os_list_for_each(node, &gs_dlog_ctrl_info.backend_list_head)  
+    os_list_for_each(node, &gs_dlog_ctrl_info.backend_list_head)
     {
         backend = os_list_entry(node, dlog_backend_t, list_node);
 
@@ -675,8 +655,8 @@ static void dlog_output_to_all_backend(os_uint16_t  level,
             os_size_t output_size;
 
             color_info_len = strlen(gs_color_output_info[level]);
-            output_size    = log_len;
-            
+            output_size = log_len;
+
             if (color_info_len)
             {
                 os_size_t color_hdr_len;
@@ -687,7 +667,7 @@ static void dlog_output_to_all_backend(os_uint16_t  level,
                 /* "1" is '\0' */
                 output_size -= (color_hdr_len + strlen(CSI_END));
             }
-            
+
             backend->output(backend, log, output_size);
         }
 #endif /* DLOG_USING_COLOR */
@@ -699,28 +679,28 @@ static void dlog_output_to_all_backend(os_uint16_t  level,
 static void dlog_do_output(os_uint16_t level, const char *tag, os_bool_t is_raw, char *log_buf, os_size_t log_len)
 {
 #ifdef DLOG_USING_ASYNC_OUTPUT
-    rbb_blk_t    *log_blk;
+    rbb_blk_t *log_blk;
     dlog_frame_t *log_frame;
-    os_err_t      ret;
+    os_err_t ret;
 
     /* allocate log frame */
     log_blk = rbb_blk_alloc(gs_dlog_ctrl_info.async_rbb, OS_ALIGN_UP(sizeof(dlog_frame_t) + log_len, OS_ALIGN_SIZE));
     if (log_blk)
     {
         /* Package the log frame */
-        log_frame          = (dlog_frame_t *)log_blk->buf;
-        log_frame->magic   = DLOG_FRAME_MAGIC;
-        log_frame->is_raw  = is_raw;
-        log_frame->level   = level;
+        log_frame = (dlog_frame_t *)log_blk->buf;
+        log_frame->magic = DLOG_FRAME_MAGIC;
+        log_frame->is_raw = is_raw;
+        log_frame->level = level;
         log_frame->log_len = log_len;
-        log_frame->log     = (char *)log_blk->buf + sizeof(dlog_frame_t);
+        log_frame->log = (char *)log_blk->buf + sizeof(dlog_frame_t);
 
         /* Copy log data */
         memcpy(log_blk->buf + sizeof(dlog_frame_t), log_buf, log_len);
-        
+
         /* Put the block */
         rbb_blk_put(log_blk);
-        
+
         /* Send a notice */
         ret = os_sem_post(&gs_dlog_ctrl_info.async_notice_sem);
         if (OS_EOK != ret)
@@ -731,7 +711,7 @@ static void dlog_do_output(os_uint16_t level, const char *tag, os_bool_t is_raw,
     else
     {
         static os_bool_t already_output = OS_FALSE;
-        
+
         if (already_output == OS_FALSE)
         {
             os_kprintf("Warning: There is no enough buffer for saving async log, "
@@ -744,7 +724,7 @@ static void dlog_do_output(os_uint16_t level, const char *tag, os_bool_t is_raw,
 
     /* Output to all backends */
     dlog_output_to_all_backend(level, is_raw, log_buf, log_len);
-        
+
 #endif /* DLOG_USING_ASYNC_OUTPUT */
 
     return;
@@ -752,14 +732,14 @@ static void dlog_do_output(os_uint16_t level, const char *tag, os_bool_t is_raw,
 
 void dlog_voutput(os_uint16_t level, const char *tag, os_bool_t newline, const char *format, va_list args)
 {
-    char        *log_buf;
-    os_size_t    log_len;
-    os_uint16_t  tag_level;
-    os_uint16_t  global_level;
+    char *log_buf;
+    os_size_t log_len;
+    os_uint16_t tag_level;
+    os_uint16_t global_level;
 #ifdef DLOG_USING_FILTER
-    os_err_t     ret;
-#endif    
-	
+    os_err_t ret;
+#endif
+
     OS_ASSERT(level <= DLOG_DEBUG);
     OS_ASSERT(OS_NULL != tag);
     OS_ASSERT(OS_NULL != format);
@@ -772,7 +752,7 @@ void dlog_voutput(os_uint16_t level, const char *tag, os_bool_t newline, const c
         }
 
         tag_level = OS_UINT16_MAX;
-        
+
 #ifdef DLOG_USING_FILTER
         ret = dlog_tag_lvl_filter_get(tag, &tag_level);
         if (ret != OS_EOK)
@@ -831,14 +811,13 @@ void dlog_voutput(os_uint16_t level, const char *tag, os_bool_t newline, const c
 
         /* Do log output */
         dlog_do_output(level, tag, OS_FALSE, log_buf, log_len);
-        
+
         dlog_unlock();
 
     } while (0);
-    
+
     return;
 }
-
 
 void dlog_output(os_uint16_t level, const char *tag, os_bool_t newline, const char *format, ...)
 {
@@ -853,9 +832,9 @@ void dlog_output(os_uint16_t level, const char *tag, os_bool_t newline, const ch
 
 void dlog_raw(const char *format, ...)
 {
-    os_size_t   log_len;
-    char       *log_buf;
-    va_list     args;
+    os_size_t log_len;
+    char *log_buf;
+    va_list args;
 
     if (OS_TRUE == gs_dlog_ctrl_info.init_ok)
     {
@@ -866,7 +845,7 @@ void dlog_raw(const char *format, ...)
 
             va_start(args, format);
 #ifdef DLOG_OUTPUT_FLOAT
-            /* 
+            /*
              * When log size is larger than buffer size, this function will truncature
              * and fill '\0' at the buffer tail. The return len is log size without '\0'
              */
@@ -891,29 +870,27 @@ void dlog_raw(const char *format, ...)
         }
     }
 
-    return;    
+    return;
 }
 
-
-
 static void dlog_do_hexdump(const char *tag,
-                            os_size_t   width,
+                            os_size_t width,
                             os_uint8_t *data_buf,
-                            os_size_t   data_buf_size,
-                            char       *log_buf,
-                            os_size_t   log_buf_size)
+                            os_size_t data_buf_size,
+                            char *log_buf,
+                            os_size_t log_buf_size)
 {
-#define __is_print(ch)       ((unsigned int)((ch) - ' ') < 127U - ' ')
-    
-    os_size_t  i;
-    os_size_t  j;
-    os_size_t  log_len;
-    os_size_t  name_len;
-    char       dump_string[8];
+#define __is_print(ch) ((unsigned int)((ch) - ' ') < 127U - ' ')
+
+    os_size_t i;
+    os_size_t j;
+    os_size_t log_len;
+    os_size_t name_len;
+    char dump_string[8];
     os_int32_t fmt_result;
- 
+
     name_len = strlen(tag);
-    
+
     dlog_lock();
 
     log_len = 0;
@@ -931,8 +908,10 @@ static void dlog_do_hexdump(const char *tag,
             log_len = 6 + name_len + 2;
             memset(log_buf, ' ', log_len);
         }
-       
-        fmt_result = os_snprintf(log_buf + log_len, log_buf_size - log_len, "%04X-%04X: ",
+
+        fmt_result = os_snprintf(log_buf + log_len,
+                                 log_buf_size - log_len,
+                                 "%04X-%04X: ",
                                  (os_uint16_t)i,
                                  (os_uint16_t)(i + width));
 
@@ -945,7 +924,7 @@ static void dlog_do_hexdump(const char *tag,
         {
             log_len = log_buf_size;
         }
-       
+
         /* Dump hex */
         for (j = 0; j < width; j++)
         {
@@ -957,14 +936,14 @@ static void dlog_do_hexdump(const char *tag,
             {
                 strncpy(dump_string, "   ", sizeof(dump_string));
             }
-           
+
             log_len += dlog_strcpy(log_len, log_buf + log_len, dump_string);
             if ((j + 1) % 8 == 0)
             {
                 log_len += dlog_strcpy(log_len, log_buf + log_len, " ");
             }
         }
-       
+
         log_len += dlog_strcpy(log_len, log_buf + log_len, "  ");
 
         /* Dump char for hex */
@@ -972,26 +951,29 @@ static void dlog_do_hexdump(const char *tag,
         {
             if (i + j < data_buf_size)
             {
-                os_snprintf(dump_string, sizeof(dump_string), "%c", __is_print(data_buf[i + j]) ? data_buf[i + j] : '.');
+                os_snprintf(dump_string,
+                            sizeof(dump_string),
+                            "%c",
+                            __is_print(data_buf[i + j]) ? data_buf[i + j] : '.');
                 log_len += dlog_strcpy(log_len, log_buf + log_len, dump_string);
             }
         }
-       
+
         /* Overflow check and reserve some space for newline sign */
         if (log_len > log_buf_size - strlen(DLOG_NEWLINE_SIGN) - 1)
         {
             log_len = log_buf_size - strlen(DLOG_NEWLINE_SIGN) - 1;
         }
-       
+
         /* Package newline sign */
         log_len += dlog_strcpy(log_len, log_buf + log_len, DLOG_NEWLINE_SIGN);
         log_buf[log_len] = '\0';
         log_len++;
-       
+
         /* Do log output */
         dlog_do_output(DLOG_DEBUG, OS_NULL, OS_TRUE, log_buf, log_len);
     }
-       
+
     dlog_unlock();
 
     return;
@@ -1021,9 +1003,9 @@ void dlog_hexdump(const char *tag, os_size_t width, os_uint8_t *buf, os_size_t s
 #ifdef DLOG_USING_ASYNC_OUTPUT
 static void dlog_async_output_task_entry(void *arg)
 {
-    rbb_blk_t    *log_blk;
+    rbb_blk_t *log_blk;
     dlog_frame_t *log_frame;
-    os_err_t      ret;
+    os_err_t ret;
 
     while (1)
     {
@@ -1032,9 +1014,9 @@ static void dlog_async_output_task_entry(void *arg)
         {
             OS_ASSERT_EX(0, "Why sem wait failed?");
         }
-        
+
         while (1)
-        {   
+        {
             log_blk = rbb_blk_get(gs_dlog_ctrl_info.async_rbb);
             if (OS_NULL == log_blk)
             {
@@ -1047,7 +1029,7 @@ static void dlog_async_output_task_entry(void *arg)
                 /* Output to all backends */
                 dlog_output_to_all_backend(log_frame->level, log_frame->is_raw, log_frame->log, log_frame->log_len);
             }
-            
+
             rbb_blk_free(gs_dlog_ctrl_info.async_rbb, log_blk);
         }
     }
@@ -1055,7 +1037,7 @@ static void dlog_async_output_task_entry(void *arg)
 
 OS_UNUSED static void dlog_async_output(void)
 {
-    rbb_blk_t    *log_blk;
+    rbb_blk_t *log_blk;
     dlog_frame_t *log_frame;
 
     log_blk = rbb_blk_get(gs_dlog_ctrl_info.async_rbb);
@@ -1066,9 +1048,9 @@ OS_UNUSED static void dlog_async_output(void)
         {
             dlog_output_to_all_backend(log_frame->level, log_frame->is_raw, log_frame->log, log_frame->log_len);
         }
-        
+
         rbb_blk_free(gs_dlog_ctrl_info.async_rbb, log_blk);
-        
+
         log_blk = rbb_blk_get(gs_dlog_ctrl_info.async_rbb);
     }
 
@@ -1101,7 +1083,7 @@ void dlog_flush(void)
     }
 
     dlog_unlock();
-    
+
     return;
 }
 
@@ -1109,26 +1091,26 @@ os_err_t dlog_backend_register(dlog_backend_t *backend)
 {
     dlog_backend_t *backend_iter;
     os_list_node_t *node;
-    os_bool_t       found;
-    os_err_t        ret;
+    os_bool_t found;
+    os_err_t ret;
 
     OS_ASSERT(OS_NULL != backend);
     OS_ASSERT(OS_NULL != backend->output);
 
     found = OS_FALSE;
-    ret   = OS_EOK;
+    ret = OS_EOK;
 
     if (OS_TRUE == gs_dlog_ctrl_info.init_ok)
     {
         dlog_lock();
-        os_list_for_each(node, &gs_dlog_ctrl_info.backend_list_head) 
+        os_list_for_each(node, &gs_dlog_ctrl_info.backend_list_head)
         {
             backend_iter = os_list_entry(node, dlog_backend_t, list_node);
             if (backend == backend_iter)
             {
                 found = OS_TRUE;
                 break;
-            } 
+            }
         }
         dlog_unlock();
 
@@ -1148,7 +1130,7 @@ os_err_t dlog_backend_register(dlog_backend_t *backend)
     {
         ret = OS_EPERM;
     }
-    
+
     return ret;
 }
 
@@ -1156,27 +1138,27 @@ os_err_t dlog_backend_unregister(dlog_backend_t *backend)
 {
     dlog_backend_t *backend_iter;
     os_list_node_t *node;
-    os_bool_t       found;
-    os_err_t        ret;
+    os_bool_t found;
+    os_err_t ret;
 
     OS_ASSERT(OS_NULL != backend);
 
     found = OS_FALSE;
-    ret   = OS_EOK;
+    ret = OS_EOK;
 
     if (OS_TRUE == gs_dlog_ctrl_info.init_ok)
     {
         dlog_lock();
-        os_list_for_each(node, &gs_dlog_ctrl_info.backend_list_head) 
+        os_list_for_each(node, &gs_dlog_ctrl_info.backend_list_head)
         {
             backend_iter = os_list_entry(node, dlog_backend_t, list_node);
             if (backend == backend_iter)
             {
                 found = OS_TRUE;
                 os_list_del(&backend->list_node);
-                
+
                 break;
-            } 
+            }
         }
         dlog_unlock();
 
@@ -1208,7 +1190,7 @@ os_err_t dlog_init(void)
 
         ret = os_mutex_init(&gs_dlog_ctrl_info.log_locker, "dlog_locker", OS_FALSE);
         OS_ASSERT(OS_EOK == ret);
-        
+
         os_list_init(&gs_dlog_ctrl_info.backend_list_head);
 
 #ifdef DLOG_USING_FILTER
@@ -1219,17 +1201,18 @@ os_err_t dlog_init(void)
         os_spin_lock_init(&gs_dlog_ctrl_info.isr_spinlock);
 #endif
 
-#ifdef DLOG_USING_ASYNC_OUTPUT        
-        OS_ASSERT_EX(DLOG_ASYNC_OUTPUT_STORE_LINES >= 2, "Asynchronous output buffer(%u) is too small.",
+#ifdef DLOG_USING_ASYNC_OUTPUT
+        OS_ASSERT_EX(DLOG_ASYNC_OUTPUT_STORE_LINES >= 2,
+                     "Asynchronous output buffer(%u) is too small.",
                      DLOG_ASYNC_OUTPUT_BUF_SIZE);
 
         /* Async output ring block buffer */
-        gs_dlog_ctrl_info.async_rbb = rbb_create(OS_ALIGN_UP(DLOG_ASYNC_OUTPUT_BUF_SIZE, OS_ALIGN_SIZE),
-                                                 DLOG_ASYNC_OUTPUT_STORE_LINES);
+        gs_dlog_ctrl_info.async_rbb =
+            rbb_create(OS_ALIGN_UP(DLOG_ASYNC_OUTPUT_BUF_SIZE, OS_ALIGN_SIZE), DLOG_ASYNC_OUTPUT_STORE_LINES);
         if (OS_NULL == gs_dlog_ctrl_info.async_rbb)
         {
             os_kprintf("Dlog init failed! No memory for async rbb.\r\n");
-            
+
             (void)os_mutex_deinit(&gs_dlog_ctrl_info.log_locker);
             ret = OS_ENOMEM;
 
@@ -1247,17 +1230,17 @@ os_err_t dlog_init(void)
             os_kprintf("Dlog init failed! Create async output task failed.\r\n");
 
             rbb_destroy(gs_dlog_ctrl_info.async_rbb);
-            
+
             ret = os_mutex_deinit(&gs_dlog_ctrl_info.log_locker);
             OS_ASSERT(OS_EOK == ret);
-            
+
             ret = OS_ERROR;
             break;
         }
 
         ret = os_sem_init(&gs_dlog_ctrl_info.async_notice_sem, "dlog_sem", 0, OS_SEM_MAX_VALUE);
         OS_ASSERT(OS_EOK == ret);
-        
+
         ret = os_task_startup(gs_dlog_ctrl_info.async_task);
         OS_ASSERT(OS_EOK == ret);
 
@@ -1268,7 +1251,7 @@ os_err_t dlog_init(void)
 
         break;
     } while (0);
-    
+
     return ret;
 }
 OS_PREV_INIT(dlog_init, OS_INIT_SUBLEVEL_HIGH);
@@ -1278,48 +1261,38 @@ OS_PREV_INIT(dlog_init, OS_INIT_SUBLEVEL_HIGH);
 #include <stdlib.h>
 #include <option_parse.h>
 
-#define  SH_DLOG_LEVEL_INVALID      0xFFFFU
+#define SH_DLOG_LEVEL_INVALID 0xFFFFU
 
 struct dlog_cmd_ctrl_info
 {
-    os_int32_t              ctrl_info;
-    
+    os_int32_t ctrl_info;
+
 #ifdef DLOG_USING_FILTER
-    char                    tag_name[DLOG_FILTER_TAG_MAX_LEN + 1];
-    char                    keyword [DLOG_FILTER_KW_MAX_LEN + 1];
+    char tag_name[DLOG_FILTER_TAG_MAX_LEN + 1];
+    char keyword[DLOG_FILTER_KW_MAX_LEN + 1];
 #endif
-    
-    os_uint16_t             level;
+
+    os_uint16_t level;
 };
 typedef struct dlog_cmd_ctrl_info dlog_cmd_ctrl_info_t;
 
-static dlog_cmd_ctrl_info_t     gs_dlog_cmd_ctrl_info = {0};
+static dlog_cmd_ctrl_info_t gs_dlog_cmd_ctrl_info = {0};
 
-static char *gs_dlog_level_info[8] =
-{
-    "emerg",
-    "alert",
-    "crit",
-    "error",
-    "warning",
-    "notice",
-    "info",
-    "debug" 
-};
+static char *gs_dlog_level_info[8] = {"emerg", "alert", "crit", "error", "warning", "notice", "info", "debug"};
 
-#define COMMAND_SET_OPTION      1
-#define COMMAND_GET_OPTION      2
-#define COMMAND_DEL_OPTION      3
+#define COMMAND_SET_OPTION 1
+#define COMMAND_GET_OPTION 2
+#define COMMAND_DEL_OPTION 3
 
-static os_err_t sh_dlog_ctrl_info_get(os_int32_t argc, char * const *argv, dlog_cmd_ctrl_info_t *ctrl_info)
+static os_err_t sh_dlog_ctrl_info_get(os_int32_t argc, char *const *argv, dlog_cmd_ctrl_info_t *ctrl_info)
 {
     opt_state_t state;
-    os_int32_t  opt_ret;
-    os_int32_t  ret;
+    os_int32_t opt_ret;
+    os_int32_t ret;
 
-    memset(ctrl_info, 0 , sizeof(dlog_cmd_ctrl_info_t));
+    memset(ctrl_info, 0, sizeof(dlog_cmd_ctrl_info_t));
     ctrl_info->level = SH_DLOG_LEVEL_INVALID;
-    
+
     memset(&state, 0, sizeof(state));
     opt_init(&state, 1);
 
@@ -1337,7 +1310,7 @@ static os_err_t sh_dlog_ctrl_info_get(os_int32_t argc, char * const *argv, dlog_
             ret = OS_ERROR;
             break;
         }
-    
+
         switch (opt_ret)
         {
         case 's':
@@ -1347,15 +1320,15 @@ static os_err_t sh_dlog_ctrl_info_get(os_int32_t argc, char * const *argv, dlog_
         case 'g':
             ctrl_info->ctrl_info = COMMAND_GET_OPTION;
             break;
-            
+
         case 'd':
             ctrl_info->ctrl_info = COMMAND_DEL_OPTION;
             break;
-            
+
         case 'l':
             ctrl_info->level = (os_uint16_t)atoi(state.opt_arg);
             break;
-            
+
 #ifdef DLOG_USING_FILTER
         case 't':
             memset(ctrl_info->tag_name, 0, sizeof(ctrl_info->tag_name));
@@ -1366,7 +1339,7 @@ static os_err_t sh_dlog_ctrl_info_get(os_int32_t argc, char * const *argv, dlog_
             memset(ctrl_info->keyword, 0, sizeof(ctrl_info->keyword));
             strncpy(ctrl_info->keyword, state.opt_arg, DLOG_FILTER_KW_MAX_LEN);
             break;
-#endif            
+#endif
 
         default:
             os_kprintf("Invalid option: %c\r\n", (char)opt_ret);
@@ -1394,13 +1367,13 @@ static void sh_dlog_glvl_ctrl_help(void)
     os_kprintf("         -g     Get global level option.\r\n");
     os_kprintf("         -l     Specify a global level that want to be set.\r\n");
     os_kprintf("                level: 0-emerg, 1-alert, 2-crit, 3-error, 4-warning, 5-notice, 6-info, 7-debug\r\n");
-    
+
     return;
 }
 
 static os_err_t sh_dlog_glvl_ctrl(os_int32_t argc, char **argv)
 {
-    os_err_t    ret;
+    os_err_t ret;
     os_uint16_t level;
 
     ret = sh_dlog_ctrl_info_get(argc, argv, &gs_dlog_cmd_ctrl_info);
@@ -1409,8 +1382,8 @@ static os_err_t sh_dlog_glvl_ctrl(os_int32_t argc, char **argv)
         if (COMMAND_GET_OPTION == gs_dlog_cmd_ctrl_info.ctrl_info)
         {
             level = dlog_global_lvl_get();
-            
-            os_kprintf("Global level is: %s\r\n", gs_dlog_level_info[level]);        
+
+            os_kprintf("Global level is: %s\r\n", gs_dlog_level_info[level]);
         }
         else if (COMMAND_SET_OPTION == gs_dlog_cmd_ctrl_info.ctrl_info)
         {
@@ -1426,8 +1399,8 @@ static os_err_t sh_dlog_glvl_ctrl(os_int32_t argc, char **argv)
             }
             else
             {
-                 (void)dlog_global_lvl_set(gs_dlog_cmd_ctrl_info.level);
-                 os_kprintf("Set global level(%s) success!\r\n", gs_dlog_level_info[gs_dlog_cmd_ctrl_info.level]);
+                (void)dlog_global_lvl_set(gs_dlog_cmd_ctrl_info.level);
+                os_kprintf("Set global level(%s) success!\r\n", gs_dlog_level_info[gs_dlog_cmd_ctrl_info.level]);
             }
         }
         else
@@ -1446,11 +1419,9 @@ static os_err_t sh_dlog_glvl_ctrl(os_int32_t argc, char **argv)
         sh_dlog_glvl_ctrl_help();
     }
 
-    return ret; 
-
+    return ret;
 }
 SH_CMD_EXPORT(dlog_glvl_ctrl, sh_dlog_glvl_ctrl, "Dlog global level control");
-
 
 #ifdef DLOG_USING_FILTER
 static void sh_dlog_tlvl_ctrl_help(void)
@@ -1458,7 +1429,7 @@ static void sh_dlog_tlvl_ctrl_help(void)
     os_kprintf("Command format:\r\n");
     os_kprintf("dlog_tlvl_ctrl <-s | -g | -d> <-t tag name> [-l tag level]\r\n");
     os_kprintf("parameter Usage:\r\n");
-    
+
     os_kprintf("         -s     Set tag level option.\r\n");
     os_kprintf("         -g     Get tag level option.\r\n");
     os_kprintf("         -d     Delete tag level option.\r\n");
@@ -1472,7 +1443,7 @@ static void sh_dlog_tlvl_ctrl_help(void)
 static os_err_t sh_do_dlog_tlvl_ctrl(os_int32_t ctrl_info, char *tag_name, os_uint16_t set_level)
 {
     os_uint16_t get_level;
-    os_err_t    ret;
+    os_err_t ret;
 
     ret = OS_EOK;
 
@@ -1485,7 +1456,7 @@ static os_err_t sh_do_dlog_tlvl_ctrl(os_int32_t ctrl_info, char *tag_name, os_ui
         }
         else
         {
-            os_kprintf("The tag(%s) level is: %s.\r\n", tag_name, gs_dlog_level_info[get_level]);    
+            os_kprintf("The tag(%s) level is: %s.\r\n", tag_name, gs_dlog_level_info[get_level]);
         }
     }
     else if (COMMAND_SET_OPTION == gs_dlog_cmd_ctrl_info.ctrl_info)
@@ -1510,7 +1481,7 @@ static os_err_t sh_do_dlog_tlvl_ctrl(os_int32_t ctrl_info, char *tag_name, os_ui
             else
             {
                 os_kprintf("Set tag success, tag: %s, level: %s\r\n", tag_name, gs_dlog_level_info[set_level]);
-            } 
+            }
         }
     }
     else
@@ -1533,39 +1504,38 @@ static os_err_t sh_dlog_tlvl_ctrl(os_int32_t argc, char **argv)
 {
     os_bool_t cmd_option_valid;
     os_bool_t tag_name_valid;
-    os_err_t  ret;
+    os_err_t ret;
 
     cmd_option_valid = OS_TRUE;
-    tag_name_valid   = OS_TRUE;
+    tag_name_valid = OS_TRUE;
 
     ret = sh_dlog_ctrl_info_get(argc, argv, &gs_dlog_cmd_ctrl_info);
     if (OS_EOK == ret)
     {
-        if ((COMMAND_GET_OPTION != gs_dlog_cmd_ctrl_info.ctrl_info)
-            && (COMMAND_SET_OPTION != gs_dlog_cmd_ctrl_info.ctrl_info)
-            && (COMMAND_DEL_OPTION != gs_dlog_cmd_ctrl_info.ctrl_info))
+        if ((COMMAND_GET_OPTION != gs_dlog_cmd_ctrl_info.ctrl_info) &&
+            (COMMAND_SET_OPTION != gs_dlog_cmd_ctrl_info.ctrl_info) &&
+            (COMMAND_DEL_OPTION != gs_dlog_cmd_ctrl_info.ctrl_info))
         {
             os_kprintf("No command option, please input -s, -g or -d!\r\n");
-            cmd_option_valid = OS_FALSE;  
+            cmd_option_valid = OS_FALSE;
         }
 
         if (0U == strlen(gs_dlog_cmd_ctrl_info.tag_name))
         {
             os_kprintf("No tag name option!\r\n");
-            tag_name_valid = OS_FALSE;    
-        }  
+            tag_name_valid = OS_FALSE;
+        }
 
         if ((OS_TRUE == cmd_option_valid) && (OS_TRUE == tag_name_valid))
         {
             ret = sh_do_dlog_tlvl_ctrl(gs_dlog_cmd_ctrl_info.ctrl_info,
                                        gs_dlog_cmd_ctrl_info.tag_name,
-                                       gs_dlog_cmd_ctrl_info.level);   
+                                       gs_dlog_cmd_ctrl_info.level);
         }
         else
         {
             ret = OS_EINVAL;
         }
-
     }
     else
     {
@@ -1597,7 +1567,7 @@ static void sh_dlog_gtag_ctrl_help(void)
 static os_err_t sh_dlog_gtag_ctrl(os_int32_t argc, char **argv)
 {
     const char *tag;
-    os_err_t    ret;
+    os_err_t ret;
 
     ret = sh_dlog_ctrl_info_get(argc, argv, &gs_dlog_cmd_ctrl_info);
     if (OS_EOK == ret)
@@ -1631,7 +1601,7 @@ static os_err_t sh_dlog_gtag_ctrl(os_int32_t argc, char **argv)
         else if (COMMAND_DEL_OPTION == gs_dlog_cmd_ctrl_info.ctrl_info)
         {
             dlog_global_filter_tag_del();
-            os_kprintf("Del global filter tag success.\r\n");   
+            os_kprintf("Del global filter tag success.\r\n");
         }
         else
         {
@@ -1670,7 +1640,7 @@ static void sh_dlog_gkw_ctrl_help(void)
 static os_err_t sh_dlog_gkw_ctrl(os_int32_t argc, char **argv)
 {
     const char *keyword;
-    os_err_t    ret;
+    os_err_t ret;
 
     ret = sh_dlog_ctrl_info_get(argc, argv, &gs_dlog_cmd_ctrl_info);
     if (OS_EOK == ret)
@@ -1704,7 +1674,7 @@ static os_err_t sh_dlog_gkw_ctrl(os_int32_t argc, char **argv)
         else if (COMMAND_DEL_OPTION == gs_dlog_cmd_ctrl_info.ctrl_info)
         {
             dlog_global_filter_kw_del();
-            os_kprintf("Del global filter keyword success.\r\n");   
+            os_kprintf("Del global filter keyword success.\r\n");
         }
         else
         {
@@ -1739,4 +1709,3 @@ SH_CMD_EXPORT(dlog_flush, sh_dlog_flush, "Flush dlog cache");
 #endif /* OS_USING_SHELL */
 
 #endif /* OS_USING_DLOG */
-

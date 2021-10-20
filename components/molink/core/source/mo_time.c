@@ -31,15 +31,15 @@ static os_bool_t in_leap_year(os_int32_t year)
 
 static os_int32_t day_of_the_week(os_int32_t year, os_int32_t month, os_int32_t day)
 {
-    os_int32_t y,m;
+    os_int32_t y, m;
 
     /* Kim larsen calculation formula: w=(d+2m+3(m+1)/5+y+y/4-y/100+y/400+1)%7 */
-    if (1 == month || 2 == month) 
+    if (1 == month || 2 == month)
     {
         m = month + 12;
-        y = year  - 1;
+        y = year - 1;
     }
-    return (day+2*m+3*(m+1)/5+y+y/4-y/100+y/400+1)%7;
+    return (day + 2 * m + 3 * (m + 1) / 5 + y + y / 4 - y / 100 + y / 400 + 1) % 7;
 }
 
 /**
@@ -51,7 +51,7 @@ static os_int32_t day_of_the_week(os_int32_t year, os_int32_t month, os_int32_t 
  *
  * @param[in]       mo_tm           mo_tm_t that hold original time info
  * @param[in]       _tm             pointer to struct tm that user gives to
- * 
+ *
  * @return          void
  ***********************************************************************************************************************
  */
@@ -62,12 +62,12 @@ void time_struct_convert(_mo_tm_t *mo_tm, struct tm *_tm)
     /* UTC time without timezone cast, if in the leap year, set days_table */
     if (in_leap_year(mo_tm->tm_year))
     {
-        days_table[1] = 29;  // when leap year, feburary has 29 days
+        days_table[1] = 29;    // when leap year, feburary has 29 days
     }
 
     /* set month & years for struct tm: (Month.[0-11]. Year since 1900.) */
-    mo_tm->tm_mon   -= 1;    // struct's tm_mon  [0-11]
-    mo_tm->tm_year  -= 1900; // struct's tm_year since 1900
+    mo_tm->tm_mon -= 1;        // struct's tm_mon  [0-11]
+    mo_tm->tm_year -= 1900;    // struct's tm_year since 1900
 
     /* timezone handle process */
     if (0 == mo_tm->tm_q_off)
@@ -81,54 +81,56 @@ void time_struct_convert(_mo_tm_t *mo_tm, struct tm *_tm)
     {
         mo_tm->tm_hour = ((0 < mo_tm->tm_q_off) ? -mo_tm->tm_hour : mo_tm->tm_hour) + 24;
     }
-    else 
+    else
     {
-        goto __final; // not enffect the month day count, finished.
+        goto __final;    // not enffect the month day count, finished.
     }
 
     /* days-month-years */
     if (0 < mo_tm->tm_q_off)
     {
         // next day is not in the next month
-        if (mo_tm->tm_mday <= days_table[mo_tm->tm_mon] - 1) 
+        if (mo_tm->tm_mday <= days_table[mo_tm->tm_mon] - 1)
         {
             mo_tm->tm_mday++;
         }
         // next month is not in the next year
-        else if (11 > mo_tm->tm_mon + 1) 
+        else if (11 > mo_tm->tm_mon + 1)
         {
             mo_tm->tm_mday = 1;
             mo_tm->tm_mon++;
         }
         // next day is in the next year's first month
-        else 
+        else
         {
             mo_tm->tm_mday = 1;
-            mo_tm->tm_mon  = 0;
+            mo_tm->tm_mon = 0;
             mo_tm->tm_year++;
-            if (in_leap_year(mo_tm->tm_year + 1900)) days_table[1] = 29;
+            if (in_leap_year(mo_tm->tm_year + 1900))
+                days_table[1] = 29;
         }
     }
-    else 
+    else
     {
         // previous day is not in the previous month
-        if (1 < mo_tm->tm_mday) 
+        if (1 < mo_tm->tm_mday)
         {
             mo_tm->tm_mday--;
         }
         // previous month is not in the previous year
-        else if (0 <= mo_tm->tm_mon - 1) 
+        else if (0 <= mo_tm->tm_mon - 1)
         {
             mo_tm->tm_mday = days_table[mo_tm->tm_mon - 1];
             mo_tm->tm_mon--;
         }
         // previous day is in the last year's december
-        else 
+        else
         {
-            mo_tm->tm_mon  = 11;
+            mo_tm->tm_mon = 11;
             mo_tm->tm_mday = days_table[mo_tm->tm_mon];
             mo_tm->tm_year--;
-            if (in_leap_year(mo_tm->tm_year + 1900)) days_table[1] = 29;
+            if (in_leap_year(mo_tm->tm_year + 1900))
+                days_table[1] = 29;
         }
     }
 
@@ -145,13 +147,13 @@ __final:
     _tm->tm_yday += mo_tm->tm_mday - 1;
 
     /* for readable reason, copy param here. */
-    _tm->tm_isdst = -1;             // -1 DST means let system choose
-    _tm->tm_sec   = mo_tm->tm_sec;
-    _tm->tm_min   = mo_tm->tm_min;
-    _tm->tm_hour  = mo_tm->tm_hour;
-    _tm->tm_mday  = mo_tm->tm_mday;
-    _tm->tm_mon   = mo_tm->tm_mon;
-    _tm->tm_year  = mo_tm->tm_year;
+    _tm->tm_isdst = -1;    // -1 DST means let system choose
+    _tm->tm_sec = mo_tm->tm_sec;
+    _tm->tm_min = mo_tm->tm_min;
+    _tm->tm_hour = mo_tm->tm_hour;
+    _tm->tm_mday = mo_tm->tm_mday;
+    _tm->tm_mon = mo_tm->tm_mon;
+    _tm->tm_year = mo_tm->tm_year;
 
     return;
 }

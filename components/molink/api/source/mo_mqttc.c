@@ -28,7 +28,7 @@
 #include <string.h>
 
 #define MO_LOG_TAG "molink.mqttc"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifndef MQTTC_TASK_STACK_SIZE
@@ -57,15 +57,14 @@ static mo_mqttc_ops_t *get_mqttc_ops(mo_object_t *self)
     return ops;
 }
 
-
 /**
  ***********************************************************************************************************************
  * @brief           This function create an instance of a molink mqtt client
  *
- * @param[in]       module          The descriptor of molink module instance 
+ * @param[in]       module          The descriptor of molink module instance
  * @param[in]       create_opts     The create options of client. @ref mqttc_create_opts_t
- * 
- * @return          On success, return a molink mqtt client descriptor; 
+ *
+ * @return          On success, return a molink mqtt client descriptor;
  *                  On error, OS_NULL is returned.
  ***********************************************************************************************************************
  */
@@ -94,9 +93,9 @@ mo_mqttc_t *mo_mqttc_create(mo_object_t *module, mqttc_create_opts_t *create_opt
  ***********************************************************************************************************************
  * @brief           This function open the mqtt client connection to the server
  *
- * @param[in]       client          The descriptor of molink mqtt client instance 
+ * @param[in]       client          The descriptor of molink mqtt client instance
  * @param[in]       connect_opts    The connect options of client. @ref mqttc_conn_opts_t
- * 
+ *
  * @return          Returns the result of the operation
  * @retval          OS_ERROR        Connect failed
  * @retval          OS_ETIMEOUT     Connect timeout
@@ -164,10 +163,10 @@ static void mqttc_close_session(mo_mqttc_t *client)
  ***********************************************************************************************************************
  * @brief           This function tries to publish the message to a given topic
  *
- * @param[in]       client          The descriptor of molink mqtt client instance 
+ * @param[in]       client          The descriptor of molink mqtt client instance
  * @param[in]       topic_filter    The topic associated with this message
  * @param[in]       msg             The message to be published. @ref mqttc_msg_t
- * 
+ *
  * @return          Returns the result of the operation
  * @retval          OS_ERROR        Publish failed
  * @retval          OS_ETIMEOUT     Publish timeout
@@ -225,10 +224,10 @@ os_err_t mo_mqttc_publish(mo_mqttc_t *client, const char *topic_filter, mqttc_ms
  ***********************************************************************************************************************
  * @brief           This function set or remove a per topic message handler
  *
- * @param[in]       client          The descriptor of molink mqtt client instance 
+ * @param[in]       client          The descriptor of molink mqtt client instance
  * @param[in]       topic_filter    The topic filter set the message handler for
  * @param[in]       handler         Pointer to the message handler function or NULL to remove. @ref mqttc_msg_handler_t
- * 
+ *
  * @return          Returns the result of the operation
  * @retval          OS_ERROR        Set failed
  * @retval          OS_EOK          Set successfully
@@ -240,7 +239,7 @@ os_err_t mo_mqttc_set_msg_handler(mo_mqttc_t *client, const char *topic_filter, 
     OS_ASSERT(OS_NULL != topic_filter);
 
     os_err_t result = OS_ERROR;
-    
+
     os_int32_t i = -1;
 
     /* first check for an existing matching slot */
@@ -252,7 +251,7 @@ os_err_t mo_mqttc_set_msg_handler(mo_mqttc_t *client, const char *topic_filter, 
             if (OS_NULL == handler) /* remove existing */
             {
                 client->msg_handlers[i].topic_filter = OS_NULL;
-                client->msg_handlers[i].handler      = OS_NULL;
+                client->msg_handlers[i].handler = OS_NULL;
             }
             result = OS_EOK;
             break;
@@ -275,7 +274,7 @@ os_err_t mo_mqttc_set_msg_handler(mo_mqttc_t *client, const char *topic_filter, 
         if (i < MQTTC_MAX_MESSAGE_HANDLERS)
         {
             client->msg_handlers[i].topic_filter = topic_filter;
-            client->msg_handlers[i].handler      = handler;
+            client->msg_handlers[i].handler = handler;
         }
     }
 
@@ -286,11 +285,11 @@ os_err_t mo_mqttc_set_msg_handler(mo_mqttc_t *client, const char *topic_filter, 
  ***********************************************************************************************************************
  * @brief           This function attempts to subscribe a client to a single topic
  *
- * @param[in]       client          The descriptor of molink mqtt client instance 
+ * @param[in]       client          The descriptor of molink mqtt client instance
  * @param[in]       topic_filter    The subscription topic
  * @param[in]       qos             The requested quality of service for the subscription.
  * @param[in]       handler         Pointer to the message handler function. @ref mqttc_msg_handler_t
- * 
+ *
  * @return          Returns the result of the operation
  * @retval          OS_ERROR        Subscribe failed
  * @retval          OS_ETIMEOUT     Subscribe timeout
@@ -344,7 +343,7 @@ os_err_t mo_mqttc_subscribe(mo_mqttc_t *client, const char *topic_filter, mqttc_
 #if defined(MOLINK_USING_MQTTC_TASK)
     os_mutex_unlock(&client->mutex);
 #endif
-    
+
     return result;
 }
 
@@ -352,9 +351,9 @@ os_err_t mo_mqttc_subscribe(mo_mqttc_t *client, const char *topic_filter, mqttc_
  ***********************************************************************************************************************
  * @brief           This function attempts to remove an existing subscription made by the specified client.
  *
- * @param[in]       client          The descriptor of molink mqtt client instance 
+ * @param[in]       client          The descriptor of molink mqtt client instance
  * @param[in]       topic_filter    The topic for the subscription to be removed
- * 
+ *
  * @return          Returns the result of the operation
  * @retval          OS_ERROR        Remove failed
  * @retval          OS_ETIMEOUT     Remove timeout
@@ -396,7 +395,7 @@ os_err_t mo_mqttc_unsubscribe(mo_mqttc_t *client, const char *topic_filter)
 
     os_err_t result = ops->unsubscribe(client, topic_filter);
     if (OS_EOK == result)
-    {   
+    {
         /* remove the subscription message handler associated with this topic, if there is one */
         result = mo_mqttc_set_msg_handler(client, topic_filter, OS_NULL);
     }
@@ -417,8 +416,8 @@ os_err_t mo_mqttc_unsubscribe(mo_mqttc_t *client, const char *topic_filter)
  ***********************************************************************************************************************
  * @brief           This function attempts to disconnect the client from the MQTT server
  *
- * @param[in]       client          The descriptor of molink mqtt client instance 
- * 
+ * @param[in]       client          The descriptor of molink mqtt client instance
+ *
  * @return          Returns the result of the operation
  * @retval          OS_ERROR        Disconnect failed
  * @retval          OS_ETIMEOUT     Disconnect timeout
@@ -468,11 +467,11 @@ os_err_t mo_mqttc_disconnect(mo_mqttc_t *client)
 
 /**
  ***********************************************************************************************************************
- * @brief           This function allows the client application to test whether or not 
+ * @brief           This function allows the client application to test whether or not
  *                  a client is currently connected to the MQTT server.
  *
- * @param[in]       client          The descriptor of molink mqtt client instance 
- * 
+ * @param[in]       client          The descriptor of molink mqtt client instance
+ *
  * @return          Boolean OS_TURE if the client is connected, otherwise OS_FALSE.
  ***********************************************************************************************************************
  */
@@ -488,8 +487,8 @@ os_bool_t mo_mqttc_isconnect(mo_mqttc_t *client)
  ***********************************************************************************************************************
  * @brief           This function destroy an instance of a molink mqtt client
  *
- * @param[in]       client          The descriptor of molink mqtt client instance 
- * 
+ * @param[in]       client          The descriptor of molink mqtt client instance
+ *
  * @return          Returns the result of the operation
  * @retval          OS_ERROR        Destroy failed
  * @retval          OS_EOK          Destroy successfully
@@ -535,12 +534,12 @@ os_err_t mo_mqttc_destroy(mo_mqttc_t *client)
  * assume topic filter and name is in correct format
  * # can only be at end
  * + and # can only be next to separator
-*/ 
-static os_bool_t is_topic_matched(char* topicFilter, mqttc_string_t* topic_name)
+ */
+static os_bool_t is_topic_matched(char *topicFilter, mqttc_string_t *topic_name)
 {
-    char* curf = topicFilter;
-    char* curn = topic_name->data;
-    char* curn_end = curn + topic_name->len;
+    char *curf = topicFilter;
+    char *curn = topic_name->data;
+    char *curn_end = curn + topic_name->len;
 
     while (*curf && curn < curn_end)
     {
@@ -549,8 +548,8 @@ static os_bool_t is_topic_matched(char* topicFilter, mqttc_string_t* topic_name)
         if (*curf != '+' && *curf != '#' && *curf != *curn)
             break;
         if (*curf == '+')
-        {   // skip until we meet the next separator, or end of string
-            char* nextpos = curn + 1;
+        {    // skip until we meet the next separator, or end of string
+            char *nextpos = curn + 1;
             while (nextpos < curn_end && *nextpos != '/')
                 nextpos = ++curn + 1;
         }
@@ -586,7 +585,7 @@ static os_err_t deliver_message(mo_mqttc_t *client, mqttc_msg_data_t *msg)
         client->default_handler(msg);
         result = OS_EOK;
     }
-    
+
     return result;
 }
 
@@ -595,16 +594,16 @@ static os_err_t mqttc_pop_message(mo_mqttc_t *client, os_tick_t timeout)
     mqttc_msg_data_t *msg = OS_NULL;
     os_size_t msg_len = 0;
 
-    os_err_t result = os_mq_recv(&client->mq, (const void**)&msg, sizeof(msg), timeout, &msg_len);
+    os_err_t result = os_mq_recv(&client->mq, (const void **)&msg, sizeof(msg), timeout, &msg_len);
     if (client->stat != MQTTC_STAT_CONNECT && (OS_EEMPTY == result || OS_ETIMEOUT == result))
     {
         DEBUG("Module %s mqtt client %d does not connect to server, pop message failed!",
-                  module->name,
-                  client->mqttc_id);
+              module->name,
+              client->mqttc_id);
         return OS_ERROR;
     }
 
-    switch(result)
+    switch (result)
     {
     case OS_ERROR:
         ERROR("Module %s mqtt client %d pop message error", client->module->name, client->mqttc_id);
@@ -637,8 +636,8 @@ static os_err_t mqttc_pop_message(mo_mqttc_t *client, os_tick_t timeout)
  *                  call this function periodically to allow processing of message
  *
  * @param[in]       client          The descriptor of molink mqtt client instance
- * @param[in]       timeout_ms      The length of time to wait for a message in milliseconds. 
- * 
+ * @param[in]       timeout_ms      The length of time to wait for a message in milliseconds.
+ *
  * @return          Returns the result of the operation
  ***********************************************************************************************************************
  */
@@ -670,7 +669,7 @@ os_err_t mo_mqttc_yield(mo_mqttc_t *client, os_uint32_t timeout_ms)
         }
 
     } while (1);
-    
+
     return result;
 }
 
@@ -681,11 +680,11 @@ static void mqttc_run(void *parameter)
     while (1)
     {
 #if defined(MOLINK_USING_MQTTC_TASK)
-    os_mutex_lock(&client->mutex, OS_WAIT_FOREVER);
+        os_mutex_lock(&client->mutex, OS_WAIT_FOREVER);
 #endif
-    mqttc_pop_message(client, os_tick_from_ms(500));
+        mqttc_pop_message(client, os_tick_from_ms(500));
 #if defined(MOLINK_USING_MQTTC_TASK)
-    os_mutex_unlock(&client->mutex);
+        os_mutex_unlock(&client->mutex);
 #endif
     }
 }
@@ -696,7 +695,7 @@ static void mqttc_run(void *parameter)
  * @brief           MQTT start background task for a client.  After this, mo_mqttc_yield should not be called.
  *
  * @param[in]       client          The descriptor of molink mqtt client instance
- * 
+ *
  * @return          Returns the result of the operation
  ***********************************************************************************************************************
  */
@@ -708,18 +707,14 @@ os_err_t mo_mqttc_start_task(mo_mqttc_t *client)
 
     snprintf(task_name, OS_NAME_MAX, "%smqc%d", client->module->name, client->mqttc_id);
 
-    client->task = os_task_create(task_name, 
-                                  mqttc_run,
-                                  client,
-                                  MQTTC_TASK_STACK_SIZE,
-                                  MQTTC_TASK_PRIORITY,
-                                  MQTTC_TASK_TIMESLICE);
+    client->task =
+        os_task_create(task_name, mqttc_run, client, MQTTC_TASK_STACK_SIZE, MQTTC_TASK_PRIORITY, MQTTC_TASK_TIMESLICE);
     if (OS_NULL == client->task)
     {
         ERROR("Create Module %s mqtt client %d task failed!", client->module->name, client->mqttc_id);
         return OS_ERROR;
     }
-    
+
     return os_task_startup(client->task);
 }
 #endif
@@ -740,7 +735,7 @@ os_err_t mo_mqttc_data_queue_push_notice(mo_mqttc_t *client, mqttc_msg_data_t *m
         result = OS_ERROR;
         ERROR("MQTT client id %d push state error", client->mqttc_id);
     }
-    
+
     return result;
 }
 
@@ -765,9 +760,9 @@ void mo_mqttc_data_queue_destroy(mo_mqttc_t *client)
 
     os_data_queue_t *msg_queue = &client->msg_queue;
 
-    os_err_t          result    = OS_EOK;
-    os_size_t         data_size = 0;
-    mqttc_msg_data_t *msg_ptr  = OS_NULL;
+    os_err_t result = OS_EOK;
+    os_size_t data_size = 0;
+    mqttc_msg_data_t *msg_ptr = OS_NULL;
 
     do
     {

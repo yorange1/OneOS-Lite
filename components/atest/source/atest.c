@@ -2,13 +2,13 @@
  ***********************************************************************************************************************
  * Copyright (c) 2020, China Mobile Communications Group Co.,Ltd.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on 
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
  * @file        atest.c
@@ -44,64 +44,65 @@
 #error "Atest task priority is greater than or equal to OS_TASK_PRIORITY_MAX"
 #endif
 
-#define ATEST_NAME_MAX_LEN          128
-#define ATEST_TAG                   "ATEST"
+#define ATEST_NAME_MAX_LEN 128
+#define ATEST_TAG          "ATEST"
 
 struct atest_tc_table_info
 {
-    atest_tc_entry_t    *tc_table;
-    os_uint32_t          tc_num;
+    atest_tc_entry_t *tc_table;
+    os_uint32_t tc_num;
 };
 typedef struct atest_tc_table_info atest_tc_table_info_t;
 
 struct atest_ctrl_info
 {
-    char                    tc_name[ATEST_NAME_MAX_LEN];
-    os_int32_t              loop_cnt;
-    os_bool_t               use_task;
-    os_bool_t               fail_stop;
-    os_bool_t               print_help;
-    enum atest_tc_priority  run_priority;
-    atest_stats_t           test_stats;
-    atest_tp_stats_t        tp_stats;
+    char tc_name[ATEST_NAME_MAX_LEN];
+    os_int32_t loop_cnt;
+    os_bool_t use_task;
+    os_bool_t fail_stop;
+    os_bool_t print_help;
+    enum atest_tc_priority run_priority;
+    atest_stats_t test_stats;
+    atest_tp_stats_t tp_stats;
 };
 typedef struct atest_ctrl_info atest_ctrl_info_t;
 
-static atest_tc_table_info_t    gs_tc_table_info;
-static atest_ctrl_info_t        gs_ctrl_info;
+static atest_tc_table_info_t gs_tc_table_info;
+static atest_ctrl_info_t gs_ctrl_info;
 
-static os_bool_t                gs_is_busy = OS_FALSE;
+static os_bool_t gs_is_busy = OS_FALSE;
 
-#if defined(__ICCARM__) || defined(__ICCRX__)           /* For IAR compiler */
-#pragma section="AtestTcTab"
+#if defined(__ICCARM__) || defined(__ICCRX__) /* For IAR compiler */
+#pragma section = "AtestTcTab"
 #endif
 
 static os_err_t atest_init(void)
 {
     /* Initialize the atest commands table.*/
-#if defined(__CC_ARM) || defined(__CLANG_ARM)           /* ARM C Compiler */
+#if defined(__CC_ARM) || defined(__CLANG_ARM) /* ARM C Compiler */
     extern const int AtestTcTab$$Base;
     extern const int AtestTcTab$$Limit;
-    
+
     gs_tc_table_info.tc_table = (atest_tc_entry_t *)&AtestTcTab$$Base;
-    gs_tc_table_info.tc_num   = (atest_tc_entry_t *)&AtestTcTab$$Limit - gs_tc_table_info.tc_table;
-    
-#elif defined(__ICCARM__) || defined(__ICCRX__)         /* For IAR Compiler */
+    gs_tc_table_info.tc_num = (atest_tc_entry_t *)&AtestTcTab$$Limit - gs_tc_table_info.tc_table;
+
+#elif defined(__ICCARM__) || defined(__ICCRX__) /* For IAR Compiler */
     gs_tc_table_info.tc_table = (atest_tc_entry_t *)__section_begin("AtestTcTab");
-    gs_tc_table_info.tc_num   = (atest_tc_entry_t *)__section_end("AtestTcTab") - gs_tc_table_info.tc_table;
-    
-#elif defined(__GNUC__)                                 /* For GCC Compiler */
+    gs_tc_table_info.tc_num = (atest_tc_entry_t *)__section_end("AtestTcTab") - gs_tc_table_info.tc_table;
+
+#elif defined(__GNUC__) /* For GCC Compiler */
     extern const int __atest_tc_table_start;
     extern const int __atest_tc_table_end;
-    
+
     gs_tc_table_info.tc_table = (atest_tc_entry_t *)&__atest_tc_table_start;
-    gs_tc_table_info.tc_num   = (atest_tc_entry_t *)&__atest_tc_table_end - gs_tc_table_info.tc_table;;
+    gs_tc_table_info.tc_num = (atest_tc_entry_t *)&__atest_tc_table_end - gs_tc_table_info.tc_table;
+    ;
 #else
 #error "Use the compilier that is not supported!!!"
 #endif
 
     os_kprintf("Atest is initialized success!\r\n");
-    
+
     return OS_EOK;
 }
 OS_PREV_INIT(atest_init, OS_INIT_SUBLEVEL_LOW);
@@ -134,24 +135,24 @@ void atest_unit_run(atest_unit_func_t func, const char *unit_func_name)
     if (gs_ctrl_info.tp_stats.tp_failed_num == old_tp_failed_num)
     {
         gs_ctrl_info.test_stats.tu_passed_num++;
-    
+
         os_kprintf("[   TU   ] [ PASSED ] Unit name (%s), tp passed (%u), tp failed (%u).\r\n",
-              unit_func_name,
-              gs_ctrl_info.tp_stats.tp_passed_num - old_tp_passed_num,
-              gs_ctrl_info.tp_stats.tp_failed_num - old_tp_failed_num);
+                   unit_func_name,
+                   gs_ctrl_info.tp_stats.tp_passed_num - old_tp_passed_num,
+                   gs_ctrl_info.tp_stats.tp_failed_num - old_tp_failed_num);
     }
     else
     {
         gs_ctrl_info.test_stats.tu_failed_num++;
-    
+
         os_kprintf("[   TU   ] [ FAILED ] Unit name (%s), tp passed (%u), tp failed (%u).\r\n",
-              unit_func_name,
-              gs_ctrl_info.tp_stats.tp_passed_num - old_tp_passed_num,
-              gs_ctrl_info.tp_stats.tp_failed_num - old_tp_failed_num);
+                   unit_func_name,
+                   gs_ctrl_info.tp_stats.tp_passed_num - old_tp_passed_num,
+                   gs_ctrl_info.tp_stats.tp_failed_num - old_tp_failed_num);
     }
 
     os_kprintf("\r\n");
-    
+
     return;
 }
 
@@ -191,7 +192,7 @@ static const char *atest_file_basename(const char *file)
     {
         rst = (char *)(slash_pos + 1);
     }
-    
+
     return (const char *)rst;
 }
 
@@ -216,22 +217,19 @@ void atest_assert(os_bool_t condition, const char *file, os_int32_t line, const 
     {
         gs_ctrl_info.tp_stats.tp_failed_num++;
         gs_ctrl_info.test_stats.tp_failed_num++;
-        
+
         os_kprintf("[   TP   ] [ ASSERT ] File: (%s); func: (%s:%d); msg: (%s)\r\n",
-              atest_file_basename(file),
-              func,
-              line,
-              msg);
+                   atest_file_basename(file),
+                   func,
+                   line,
+                   msg);
     }
     else
     {
         gs_ctrl_info.tp_stats.tp_passed_num++;
         gs_ctrl_info.test_stats.tp_passed_num++;
-    
-        os_kprintf("[   TP   ] [ PASSED ] File: (%s); func: (%s:%d).\r\n",
-              atest_file_basename(file),
-              func,
-              line);
+
+        os_kprintf("[   TP   ] [ PASSED ] File: (%s); func: (%s:%d).\r\n", atest_file_basename(file), func, line);
     }
 
     return;
@@ -239,7 +237,7 @@ void atest_assert(os_bool_t condition, const char *file, os_int32_t line, const 
 
 /**
  ***********************************************************************************************************************
- * @brief           Judge whether to assert according to the string comparison result and the desired comparison 
+ * @brief           Judge whether to assert according to the string comparison result and the desired comparison
  *                  condition.
  *
  * @param[in]       str_a           String a.
@@ -255,13 +253,13 @@ void atest_assert(os_bool_t condition, const char *file, os_int32_t line, const 
  * @return          None.
  ***********************************************************************************************************************
  */
-void atest_assert_string(const char     *str_a,
-                         const char     *str_b,
-                         os_bool_t       equal,
-                         const char     *file,
-                         os_int32_t      line,
-                         const char     *func,
-                         const char     *msg)
+void atest_assert_string(const char *str_a,
+                         const char *str_b,
+                         os_bool_t equal,
+                         const char *file,
+                         os_int32_t line,
+                         const char *func,
+                         const char *msg)
 {
     if ((OS_NULL == str_a) || (OS_NULL == str_b))
     {
@@ -297,7 +295,7 @@ void atest_assert_string(const char     *str_a,
 
 /**
  ***********************************************************************************************************************
- * @brief           Judge whether to assert according to the buffer comparison result and the desired comparison 
+ * @brief           Judge whether to assert according to the buffer comparison result and the desired comparison
  *                  condition.
  *
  * @param[in]       buff_a          Buffer a.
@@ -316,12 +314,12 @@ void atest_assert_string(const char     *str_a,
  */
 void atest_assert_buf(const os_uint8_t *buff_a,
                       const os_uint8_t *buff_b,
-                      os_size_t         size,
-                      os_bool_t         equal,
-                      const char       *file,
-                      os_int32_t        line,
-                      const char       *func,
-                      const char       *msg)
+                      os_size_t size,
+                      os_bool_t equal,
+                      const char *file,
+                      os_int32_t line,
+                      const char *func,
+                      const char *msg)
 {
     if ((OS_NULL == buff_a) || (OS_NULL == buff_b))
     {
@@ -342,7 +340,7 @@ void atest_assert_buf(const os_uint8_t *buff_a,
     }
     else
     {
-        if (!memcmp(buff_a , buff_b, size))
+        if (!memcmp(buff_a, buff_b, size))
         {
             atest_assert(OS_FALSE, file, line, func, msg);
         }
@@ -358,57 +356,60 @@ void atest_assert_buf(const os_uint8_t *buff_a,
 static void atest_help(void)
 {
     os_kprintf("\r\n");
-  
+
     os_kprintf("Command: atest_run\r\n");
     os_kprintf("   Info: Execute testcases.\r\n");
     os_kprintf(" Format: atest_run [-n testacse name] [-l loop count] [-p priority level] [-t] [-s] [-h]\r\n");
     os_kprintf("\r\n");
-  
+
     os_kprintf("  Usage:\r\n");
-  
+
     os_kprintf("         -n     Specify a testcase name.\r\n");
     os_kprintf("                If don't specify this option, run all testcases.\r\n");
     os_kprintf("\r\n");
-    
+
     os_kprintf("         -l     Specify a loop count that the testcase runs.\r\n");
     os_kprintf("                If don't specify this option, the testcase only run one times.\r\n");
     os_kprintf("\r\n");
-    
-    os_kprintf("         -p     Specify a priority level. Only testcases greater or equal than this level can be run.\r\n");
+
+    os_kprintf(
+        "         -p     Specify a priority level. Only testcases greater or equal than this level can be run.\r\n");
     os_kprintf("                H  -- High priority level.\r\n");
     os_kprintf("                M  -- Middle priority level.\r\n");
     os_kprintf("                L  -- Low priority level.\r\n");
     os_kprintf("                If don't specify this option, low priority level is be used by default.\r\n");
     os_kprintf("\r\n");
-    
+
     os_kprintf("         -t     Create a new task to execute the testcase(s).\r\n");
     os_kprintf("                If don't specify this option, execute the testcase(s) in shell task.\r\n");
     os_kprintf("\r\n");
-    
-    os_kprintf("         -s     If specify this option, as long as a testcase fails, the subsequent testcases are no\r\n"
-               "                longer running.\r\n");
-    os_kprintf("                If don't specify this option, when a testcase fails, the subsequent testcases still run.\r\n");
+
+    os_kprintf(
+        "         -s     If specify this option, as long as a testcase fails, the subsequent testcases are no\r\n"
+        "                longer running.\r\n");
+    os_kprintf(
+        "                If don't specify this option, when a testcase fails, the subsequent testcases still run.\r\n");
     os_kprintf("\r\n");
-    
+
     os_kprintf("         -h     Print help information of atest_run command.\r\n");
     os_kprintf("                If specify this option, other options are ignored.\r\n");
     os_kprintf("\r\n");
-  
+
     return;
 }
 
-static os_err_t atest_ctrl_info_get(os_int32_t argc, char * const *argv, atest_ctrl_info_t *ctrl_info)
+static os_err_t atest_ctrl_info_get(os_int32_t argc, char *const *argv, atest_ctrl_info_t *ctrl_info)
 {
     opt_state_t state;
-    os_int32_t  opt_ret;
-    os_int32_t  ret;
+    os_int32_t opt_ret;
+    os_int32_t ret;
 
     memset(ctrl_info, 0, sizeof(atest_ctrl_info_t));
-    ctrl_info->loop_cnt        = 1;
-    ctrl_info->use_task        = OS_FALSE;
-    ctrl_info->fail_stop       = OS_FALSE;
-    ctrl_info->print_help      = OS_FALSE;
-    ctrl_info->run_priority    = TC_PRIORITY_LOW;
+    ctrl_info->loop_cnt = 1;
+    ctrl_info->use_task = OS_FALSE;
+    ctrl_info->fail_stop = OS_FALSE;
+    ctrl_info->print_help = OS_FALSE;
+    ctrl_info->run_priority = TC_PRIORITY_LOW;
 
     memset(&state, 0, sizeof(state));
     opt_init(&state, 1);
@@ -427,14 +428,14 @@ static os_err_t atest_ctrl_info_get(os_int32_t argc, char * const *argv, atest_c
             ret = OS_ERROR;
             break;
         }
-    
+
         switch (opt_ret)
         {
         case 'n':
             memset(ctrl_info->tc_name, 0, ATEST_NAME_MAX_LEN);
             strncpy(ctrl_info->tc_name, state.opt_arg, ATEST_NAME_MAX_LEN);
             break;
-            
+
         case 'l':
             ctrl_info->loop_cnt = atoi(state.opt_arg);
             if (ctrl_info->loop_cnt <= 0)
@@ -444,9 +445,9 @@ static os_err_t atest_ctrl_info_get(os_int32_t argc, char * const *argv, atest_c
                 ret = OS_EINVAL;
                 break;
             }
-            
+
             break;
-            
+
         case 'p':
             if (!strcmp(state.opt_arg, "H"))
             {
@@ -467,20 +468,20 @@ static os_err_t atest_ctrl_info_get(os_int32_t argc, char * const *argv, atest_c
                 ret = OS_EINVAL;
                 break;
             }
-            
+
             break;
-            
+
         case 't':
             ctrl_info->use_task = OS_TRUE;
             break;
-            
+
         case 's':
             ctrl_info->fail_stop = OS_TRUE;
             break;
         case 'h':
             ctrl_info->print_help = OS_TRUE;
             break;
-            
+
         default:
             os_kprintf("Invalid option: %c\r\n", (char)opt_ret);
 
@@ -511,7 +512,7 @@ static os_err_t atest_run_a_testcase(atest_tc_entry_t *tc_entry, atest_ctrl_info
     {
         os_kprintf("[   TC   ] [ ====== ] Testcase (%s) begin to run.\r\n", tc_entry->name);
         os_kprintf("\r\n");
-        
+
         if (OS_NULL != tc_entry->init)
         {
             init_ret = tc_entry->init();
@@ -527,20 +528,20 @@ static os_err_t atest_run_a_testcase(atest_tc_entry_t *tc_entry, atest_ctrl_info
         if (OS_NULL != tc_entry->tc)
         {
             tc_entry->tc();
-                    
+
             if (0 == ctrl_info->tp_stats.tp_failed_num)
             {
                 os_kprintf("[   TC   ] [ PASSED ] Testcase (%s), tp passed (%u), tp failed (%u)\r\n",
-                      tc_entry->name,
-                      ctrl_info->tp_stats.tp_passed_num,
-                      ctrl_info->tp_stats.tp_failed_num);
+                           tc_entry->name,
+                           ctrl_info->tp_stats.tp_passed_num,
+                           ctrl_info->tp_stats.tp_failed_num);
             }
             else
             {
                 os_kprintf("[   TC   ] [ FAILED ] Testcase (%s), tp passed (%u), tp failed (%u)\r\n",
-                      tc_entry->name,
-                      ctrl_info->tp_stats.tp_passed_num,
-                      ctrl_info->tp_stats.tp_failed_num);
+                           tc_entry->name,
+                           ctrl_info->tp_stats.tp_passed_num,
+                           ctrl_info->tp_stats.tp_failed_num);
                 ret = OS_ERROR;
             }
         }
@@ -560,19 +561,19 @@ static os_err_t atest_run_a_testcase(atest_tc_entry_t *tc_entry, atest_ctrl_info
                 ret = OS_ERROR;
                 break;
             }
-        }   
+        }
     } while (0);
 
     return ret;
 }
 
-static atest_tc_entry_t *atest_get_next_tc_entry(const atest_ctrl_info_t     *ctrl_info,
+static atest_tc_entry_t *atest_get_next_tc_entry(const atest_ctrl_info_t *ctrl_info,
                                                  const atest_tc_table_info_t *tc_table_info,
-                                                 os_uint16_t                 *next_query_index)
+                                                 os_uint16_t *next_query_index)
 {
     atest_tc_entry_t *tc_entry;
-    os_size_t         cmp_len;
-    os_uint16_t       index;
+    os_size_t cmp_len;
+    os_uint16_t index;
 
     if (*next_query_index >= tc_table_info->tc_num)
     {
@@ -617,13 +618,13 @@ static atest_tc_entry_t *atest_get_next_tc_entry(const atest_ctrl_info_t     *ct
 static void atest_tc_do_run(void *arg)
 {
     atest_ctrl_info_t *ctrl_info;
-    atest_tc_entry_t  *tc_entry;
-    os_bool_t          found_entry;
-    os_bool_t          abort;
-    os_uint16_t        loop_index;
-    os_uint16_t        next_query_index;
-    os_uint16_t        total;
-    os_err_t           ret;
+    atest_tc_entry_t *tc_entry;
+    os_bool_t found_entry;
+    os_bool_t abort;
+    os_uint16_t loop_index;
+    os_uint16_t next_query_index;
+    os_uint16_t total;
+    os_err_t ret;
 
     ctrl_info = (atest_ctrl_info_t *)arg;
     ctrl_info->test_stats.tc_passed_num = 0;
@@ -634,16 +635,16 @@ static void atest_tc_do_run(void *arg)
     ctrl_info->test_stats.tp_failed_num = 0;
 
     os_kprintf("\r\n");
-    
+
     abort = OS_FALSE;
 
     for (loop_index = 0; loop_index < ctrl_info->loop_cnt; loop_index++)
-    {  
+    {
         os_kprintf("-----------------------------------Loop: %u-------------------------------------\r\n",
                    loop_index + 1);
         os_kprintf("\r\n");
-    
-        found_entry      = OS_FALSE;
+
+        found_entry = OS_FALSE;
         next_query_index = 0;
 
         while (1)
@@ -658,21 +659,21 @@ static void atest_tc_do_run(void *arg)
             {
                 found_entry = OS_TRUE;
             }
-              
+
             ret = atest_run_a_testcase(tc_entry, ctrl_info);
             if (OS_EOK == ret)
             {
-                ctrl_info->test_stats.tc_passed_num++;    
+                ctrl_info->test_stats.tc_passed_num++;
             }
             else
             {
                 ctrl_info->test_stats.tc_failed_num++;
-                
+
                 if (ctrl_info->fail_stop)
                 {
                     abort = OS_TRUE;
                     break;
-                } 
+                }
             }
 
             os_kprintf("\r\n");
@@ -743,7 +744,7 @@ static void atest_tc_do_run(void *arg)
 static os_err_t atest_tc_run(os_int32_t argc, char **argv)
 {
     os_task_t *task;
-    os_err_t   ret;
+    os_err_t ret;
 
     ret = OS_EOK;
 
@@ -752,7 +753,7 @@ static os_err_t atest_tc_run(os_int32_t argc, char **argv)
         if (OS_TRUE == gs_is_busy)
         {
             os_kprintf("Testcases are running, please try again later.\r\n");
-            
+
             ret = OS_EBUSY;
             break;
         }
@@ -764,14 +765,14 @@ static os_err_t atest_tc_run(os_int32_t argc, char **argv)
         {
             atest_help();
             gs_is_busy = OS_FALSE;
-            
+
             break;
         }
 
         if (OS_TRUE == gs_ctrl_info.print_help)
         {
             atest_help();
-        
+
             gs_is_busy = OS_FALSE;
             break;
         }
@@ -800,15 +801,17 @@ static os_err_t atest_tc_run(os_int32_t argc, char **argv)
                 os_kprintf("Create atest task failed, execute testcase(s) failed.\r\n");
 
                 gs_is_busy = OS_FALSE;
-                
+
                 ret = OS_ERROR;
             }
         }
     } while (0);
-    
+
     return ret;
 }
-SH_CMD_EXPORT(atest_run, atest_tc_run, "atest_run [-n testacse name] [-l loop count] [-p priority level] [-t] [-s] [-h]");
+SH_CMD_EXPORT(atest_run,
+              atest_tc_run,
+              "atest_run [-n testacse name] [-l loop count] [-p priority level] [-t] [-s] [-h]");
 
 /**
  ***********************************************************************************************************************
@@ -824,14 +827,14 @@ SH_CMD_EXPORT(atest_run, atest_tc_run, "atest_run [-n testacse name] [-l loop co
  */
 OS_UNUSED static os_err_t atest_tc_list(os_int32_t argc, char **argv)
 {
-    os_size_t  index;
+    os_size_t index;
     os_int32_t priority;
-    char      *prior_str[TC_PRIORITY_CNT_MAX];
+    char *prior_str[TC_PRIORITY_CNT_MAX];
 
-    prior_str[TC_PRIORITY_HIGH]    = "High";
-    prior_str[TC_PRIORITY_MIDDLE]  = "Middle";
-    prior_str[TC_PRIORITY_LOW]     = "Low";
-    
+    prior_str[TC_PRIORITY_HIGH] = "High";
+    prior_str[TC_PRIORITY_MIDDLE] = "Middle";
+    prior_str[TC_PRIORITY_LOW] = "Low";
+
     os_kprintf("\r\n");
     os_kprintf("%-61.s %-10.s\r\n", "Testcase name", "Priority");
     os_kprintf("---------------------------------                             --------\r\n");
@@ -844,12 +847,12 @@ OS_UNUSED static os_err_t atest_tc_list(os_int32_t argc, char **argv)
         }
 
         priority = (os_int32_t)gs_tc_table_info.tc_table[index].priority;
-        
+
         if ((priority < TC_PRIORITY_HIGH) || (priority > TC_PRIORITY_LOW))
         {
-            priority = TC_PRIORITY_CNT_MAX;   
+            priority = TC_PRIORITY_CNT_MAX;
         }
-    
+
         os_kprintf("%-62s %s\r\n",
                    gs_tc_table_info.tc_table[index].name,
                    priority != TC_PRIORITY_CNT_MAX ? prior_str[priority] : "Invalid");
@@ -876,10 +879,9 @@ SH_CMD_EXPORT(atest_list, atest_tc_list, "Display all atest testcases");
 static void atest_tc_occupancy(void)
 {
     /* Do nothing */
-    
+
     return;
 }
 ATEST_TC_EXPORT(atest_occupancy, atest_tc_occupancy, OS_NULL, OS_NULL, TC_PRIORITY_CNT_MAX);
 
 #endif /* OS_USING_ATEST */
-

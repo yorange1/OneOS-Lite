@@ -33,8 +33,8 @@
 #define MO_LOG_LVL MO_LOG_INFO
 #include <mo_log.h>
 
-#define SEND_DATA_MAX_SIZE               (512)
-#define SIM7020_SEND_HEXDATA_BLOCK_SIZE  (256)
+#define SEND_DATA_MAX_SIZE              (512)
+#define SIM7020_SEND_HEXDATA_BLOCK_SIZE (256)
 
 #define SIM7020_NETCONN_MQ_NAME "sim7020_nc_mq"
 
@@ -43,7 +43,7 @@
 #endif
 
 #ifndef SIM7020_NETCONN_MQ_MSG_MAX
-#define SIM7020_NETCONN_MQ_MSG_MAX  (8)
+#define SIM7020_NETCONN_MQ_MSG_MAX (8)
 #endif
 
 #ifdef SIM7020_USING_NETCONN_OPS
@@ -103,7 +103,7 @@ os_err_t sim7020_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
     mo_sim7020_t *sim7020 = os_container_of(module, mo_sim7020_t, parent);
 
     info->netconn_array = sim7020->netconn;
-    info->netconn_nums  = sizeof(sim7020->netconn) / sizeof(sim7020->netconn[0]);
+    info->netconn_nums = sizeof(sim7020->netconn) / sizeof(sim7020->netconn[0]);
 
     return OS_EOK;
 }
@@ -111,8 +111,8 @@ os_err_t sim7020_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
 mo_netconn_t *sim7020_netconn_create(mo_object_t *module, mo_netconn_type_t type)
 {
     mo_sim7020_t *sim7020 = os_container_of(module, mo_sim7020_t, parent);
-    at_parser_t  *parser  = &module->parser;
-    os_err_t      result  = OS_EOK;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
 
     sim7020_lock(&sim7020->netconn_lock);
 
@@ -190,7 +190,7 @@ mo_netconn_t *sim7020_netconn_create(mo_object_t *module, mo_netconn_type_t type
 os_err_t sim7020_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 {
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_ERROR;
+    os_err_t result = OS_ERROR;
 
     INFO("Module %s in %d netconn status", module->name, netconn->stat);
 
@@ -224,9 +224,9 @@ os_err_t sim7020_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 
     INFO("Module %s netconn_id: %d destroyed", module->name, netconn->connect_id);
 
-    netconn->connect_id  = -1;
-    netconn->stat        = NETCONN_STAT_NULL;
-    netconn->type        = NETCONN_TYPE_NULL;
+    netconn->connect_id = -1;
+    netconn->stat = NETCONN_STAT_NULL;
+    netconn->type = NETCONN_TYPE_NULL;
     netconn->remote_port = 0;
     inet_aton("0.0.0.0", &netconn->remote_ip);
 
@@ -242,10 +242,10 @@ os_err_t sim7020_netconn_gethostbyname(mo_object_t *self, const char *domain_nam
 
     char resp_buff[AT_RESP_BUFF_SIZE_256] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
+    at_resp_t resp = {.buff = resp_buff,
                       .buff_size = sizeof(resp_buff),
-                      .line_num  = 2,
-                      .timeout   = 20 * OS_TICK_PER_SECOND};
+                      .line_num = 2,
+                      .timeout = 20 * OS_TICK_PER_SECOND};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+CDNSGIP=\"%s\"", domain_name);
     if (result < 0)
@@ -294,11 +294,9 @@ __exit:
 static os_err_t sim7020_tcp_udp_connect(at_parser_t *parser, os_int32_t connect_id, char *ip_addr, os_uint16_t port)
 {
     char resp_buff[AT_RESP_BUFF_SIZE_128] = {0};
-    char buf[AT_RESP_BUFF_SIZE_DEF]       = {0};
+    char buf[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 20 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 20 * OS_TICK_PER_SECOND};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+CSOCON=%d,%u,\"%s\"", connect_id, port, ip_addr);
     if (result != OS_EOK)
@@ -327,7 +325,7 @@ __exit:
 os_err_t sim7020_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port)
 {
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_EOK;
+    os_err_t result = OS_EOK;
 
     char remote_ip[IPADDR_MAX_STR_LEN + 1] = {0};
 
@@ -343,7 +341,7 @@ os_err_t sim7020_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_
 
     ip_addr_copy(netconn->remote_ip, addr);
     netconn->remote_port = port;
-    netconn->stat        = NETCONN_STAT_CONNECT;
+    netconn->stat = NETCONN_STAT_CONNECT;
 
     DEBUG("Module %s connect to %s:%u successfully!", module->name, remote_ip, port);
 
@@ -352,8 +350,8 @@ os_err_t sim7020_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_
 
 static os_size_t sim7020_one_hexdata_block_send(at_parser_t *parser, const char *data, os_size_t size)
 {
-    os_size_t  sent_size     = 0; /* raw data sent size */
-    os_size_t  curr_pkt_size = 0; /* raw data current packet size */
+    os_size_t sent_size = 0;     /* raw data sent size */
+    os_size_t curr_pkt_size = 0; /* raw data current packet size */
 
     char hex_str_buff[SIM7020_SEND_HEXDATA_BLOCK_SIZE + 1] = {0};
 
@@ -385,12 +383,12 @@ __exit:
 
 os_size_t sim7020_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
-    at_parser_t *parser       = &module->parser;
-    os_err_t     result       = OS_EOK;
-    os_size_t    sent_size    = 0;
-    os_size_t    cur_pkt_size = 0;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    os_size_t sent_size = 0;
+    os_size_t cur_pkt_size = 0;
 
-    char send_cmd [AT_RESP_BUFF_SIZE_DEF] = {0};
+    char send_cmd[AT_RESP_BUFF_SIZE_DEF] = {0};
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 20 * OS_TICK_PER_SECOND};
@@ -464,7 +462,7 @@ static void urc_close_func(struct at_parser *parser, const char *data, os_size_t
     OS_ASSERT(OS_NULL != data);
 
     os_int32_t connect_id = 0;
-    os_int32_t err_code   = 0;
+    os_int32_t err_code = 0;
 
     sscanf(data, "+CSOERR: %d,%d", &connect_id, &err_code);
 
@@ -490,7 +488,7 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != data);
 
     os_int32_t connect_id = 0;
-    os_int32_t data_size  = 0;
+    os_int32_t data_size = 0;
 
     /* For ex: +CSONMI: 0,8,30313233 -- the actual data is "0123"*/
     sscanf(data, "+CSONMI: %d,%d,", &connect_id, &data_size);

@@ -186,7 +186,7 @@ os_err_t ec200x_600s_get_firmware_version(mo_object_t *self, mo_firmware_version
     }
 
     const char *source_line = at_resp_get_line(&resp, 1);
-    os_size_t   line_length = strlen(source_line);
+    os_size_t line_length = strlen(source_line);
 
     char **dest_line = &version->ver_info[0];
 
@@ -203,8 +203,6 @@ os_err_t ec200x_600s_get_firmware_version(mo_object_t *self, mo_firmware_version
     return OS_EOK;
 }
 
-
-
 #ifndef EC200X_600S_DTR_PIN_NUM
 #define EC200X_600S_DTR_PIN_NUM (-1)
 #endif
@@ -220,10 +218,10 @@ os_err_t ec200x_600s_sleep_mode_set(mo_object_t *self, os_uint8_t fun_lvl)
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
     os_err_t result;
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 20 * OS_TICK_PER_SECOND};
-    
+
     os_pin_mode(EC200X_600S_DTR_PIN_NUM, PIN_MODE_OUTPUT);
     os_pin_mode(EC200X_600S_WAKE_IN_PIN_NUM, PIN_MODE_OUTPUT);
-      
+
     if (fun_lvl == 1)
     {
         result = at_parser_exec_cmd(parser, &resp, "AT+QSCLK=1");
@@ -231,33 +229,31 @@ os_err_t ec200x_600s_sleep_mode_set(mo_object_t *self, os_uint8_t fun_lvl)
         {
             return result;
         }
-        os_pin_write(EC200X_600S_DTR_PIN_NUM,PIN_HIGH);
-        os_pin_write(EC200X_600S_WAKE_IN_PIN_NUM,PIN_HIGH);
-        
-        os_task_msleep(6000); 
+        os_pin_write(EC200X_600S_DTR_PIN_NUM, PIN_HIGH);
+        os_pin_write(EC200X_600S_WAKE_IN_PIN_NUM, PIN_HIGH);
+
+        os_task_msleep(6000);
     }
     else if (fun_lvl == 0)
-    {        
-        os_pin_write(EC200X_600S_DTR_PIN_NUM,PIN_LOW);
-        os_pin_write(EC200X_600S_WAKE_IN_PIN_NUM,PIN_LOW);
-        
+    {
+        os_pin_write(EC200X_600S_DTR_PIN_NUM, PIN_LOW);
+        os_pin_write(EC200X_600S_WAKE_IN_PIN_NUM, PIN_LOW);
+
         os_task_msleep(200);
-        
+
         os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+QSCLK=0");
         if (result != OS_EOK)
         {
             return result;
-        }    
-    }  
+        }
+    }
     else
     {
         ERROR("Set sleep mode arg error,the arg is 0 or 1!");
         return OS_ERROR;
     }
-    
+
     return OS_EOK;
 }
-
-
 
 #endif /* EC200X_600S_USING_GENERAL_OPS */

@@ -36,12 +36,12 @@
 
 #ifdef SIM7600CE_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test   = sim7600ce_at_test,
-    .get_imei  = sim7600ce_get_imei,
-    .get_imsi  = sim7600ce_get_imsi,
+    .at_test = sim7600ce_at_test,
+    .get_imei = sim7600ce_get_imei,
+    .get_imsi = sim7600ce_get_imsi,
     .get_iccid = sim7600ce_get_iccid,
-    .get_cfun  = sim7600ce_get_cfun,
-    .set_cfun  = sim7600ce_set_cfun,
+    .get_cfun = sim7600ce_get_cfun,
+    .set_cfun = sim7600ce_set_cfun,
 };
 #endif /* SIM7600CE_USING_GENERAL_OPS */
 
@@ -49,11 +49,11 @@ static const struct mo_general_ops gs_general_ops = {
 static const struct mo_netserv_ops gs_netserv_ops = {
     .set_attach = sim7600ce_set_attach,
     .get_attach = sim7600ce_get_attach,
-    .set_reg    = sim7600ce_set_reg,
-    .get_reg    = sim7600ce_get_reg,
-    .set_cgact  = sim7600ce_set_cgact,
-    .get_cgact  = sim7600ce_get_cgact,
-    .get_csq    = sim7600ce_get_csq,
+    .set_reg = sim7600ce_set_reg,
+    .get_reg = sim7600ce_get_reg,
+    .set_cgact = sim7600ce_set_cgact,
+    .get_cgact = sim7600ce_get_cgact,
+    .get_csq = sim7600ce_get_csq,
 };
 #endif /* SIM7600CE_USING_NETSERV_OPS */
 
@@ -65,7 +65,7 @@ static const struct mo_ping_ops gs_ping_ops = {
 
 #ifdef SIM7600CE_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig   = sim7600ce_ifconfig,
+    .ifconfig = sim7600ce_ifconfig,
     .get_ipaddr = sim7600ce_get_ipaddr,
 };
 #endif /* SIM7600CE_USING_IFCONFIG_OPS */
@@ -74,14 +74,14 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern void sim7600ce_netconn_init(mo_sim7600ce_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create        = sim7600ce_netconn_create,
-    .destroy       = sim7600ce_netconn_destroy,
+    .create = sim7600ce_netconn_create,
+    .destroy = sim7600ce_netconn_destroy,
 #ifdef SIM7600CE_USING_DNS
     .gethostbyname = sim7600ce_netconn_gethostbyname,
 #endif
-    .connect       = sim7600ce_netconn_connect,
-    .send          = sim7600ce_netconn_send,
-    .get_info      = sim7600ce_netconn_get_info,
+    .connect = sim7600ce_netconn_connect,
+    .send = sim7600ce_netconn_send,
+    .get_info = sim7600ce_netconn_get_info,
 };
 #endif /* SIM7600CE_USING_NETCONN_OPS */
 
@@ -98,9 +98,7 @@ static os_err_t sim7600ce_at_init(mo_object_t *self)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 2 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 2 * OS_TICK_PER_SECOND};
 
     return at_parser_exec_cmd(parser, &resp, "ATE0");
 }
@@ -200,7 +198,7 @@ int sim7600ce_auto_create(void)
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = SIM7600CE_NAME,
+    mo_parser_config_t parser_config = {.parser_name = SIM7600CE_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = SIM7600CE_RECV_BUFF_LEN};
 

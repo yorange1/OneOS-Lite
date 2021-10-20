@@ -29,15 +29,15 @@
 #include <os_task.h>
 
 #define MO_LOG_TAG "molink.core"
-#define MO_LOG_LVL  MO_LOG_EMERG
+#define MO_LOG_LVL MO_LOG_EMERG
 #include "mo_log.h"
 
 #ifdef NET_USING_MOLINK
 
 #ifdef MOLINK_USING_MULTI_MODULES
-static os_slist_node_t gs_mo_object_list    = {0};
+static os_slist_node_t gs_mo_object_list = {0};
 #endif
-static mo_object_t    *gs_mo_object_default = OS_NULL;
+static mo_object_t *gs_mo_object_default = OS_NULL;
 
 #if defined(MOLINK_USING_SINGLE_MODULE)
 mo_object_t *mo_object_get(void)
@@ -72,8 +72,8 @@ static void mo_object_list_del(mo_object_t *self)
 {
     OS_ASSERT(self != OS_NULL);
 
-    os_slist_node_t *node  = OS_NULL;
-    mo_object_t     *entry = OS_NULL;
+    os_slist_node_t *node = OS_NULL;
+    mo_object_t *entry = OS_NULL;
 
     os_schedule_lock();
 
@@ -99,8 +99,8 @@ mo_object_t *mo_object_get_by_name(const char *name)
 {
     OS_ASSERT(name != OS_NULL);
 
-    os_slist_node_t *node  = OS_NULL;
-    mo_object_t     *entry = OS_NULL;
+    os_slist_node_t *node = OS_NULL;
+    mo_object_t *entry = OS_NULL;
 
     if (OS_NULL == gs_mo_object_list.next)
     {
@@ -149,8 +149,8 @@ mo_object_t *module_object_get_by_device(os_device_t *device)
 {
     OS_ASSERT(device != OS_NULL);
 
-    os_slist_node_t *node  = OS_NULL;
-    mo_object_t     *entry = OS_NULL;
+    os_slist_node_t *node = OS_NULL;
+    mo_object_t *entry = OS_NULL;
 
     if (OS_NULL == gs_mo_object_list.next)
     {
@@ -199,7 +199,7 @@ static os_err_t mo_object_init_with_mcu(mo_object_t *self, const char *name, mo_
 
 #if defined(MOLINK_USING_SINGLE_MODULE)
     mo_object_set(self);
-#elif defined(MOLINK_USING_MULTI_MODULES)    
+#elif defined(MOLINK_USING_MULTI_MODULES)
     mo_object_list_add(self);
 #endif
 

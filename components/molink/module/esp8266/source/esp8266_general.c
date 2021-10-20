@@ -37,9 +37,7 @@ os_err_t esp8266_at_test(mo_object_t *self)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     return at_parser_exec_cmd(parser, &resp, "AT");
 }
@@ -50,9 +48,7 @@ os_err_t esp8266_get_firmware_version(mo_object_t *self, mo_firmware_version_t *
 
     char resp_buff[AT_RESP_BUFF_SIZE_256] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+GMR");
     if (result != OS_EOK)
@@ -71,7 +67,7 @@ os_err_t esp8266_get_firmware_version(mo_object_t *self, mo_firmware_version_t *
     for (int i = 1; i <= resp.line_counts - 1; i++)
     {
         const char *source_line = at_resp_get_line(&resp, i);
-        os_size_t   line_length = strlen(source_line) - 1;
+        os_size_t line_length = strlen(source_line) - 1;
 
         char **dest_line = &version->ver_info[version->line_counts];
 
@@ -84,7 +80,7 @@ os_err_t esp8266_get_firmware_version(mo_object_t *self, mo_firmware_version_t *
         }
 
         strncpy(*dest_line, source_line, line_length);
-        version->line_counts ++;
+        version->line_counts++;
     }
 
     return OS_EOK;

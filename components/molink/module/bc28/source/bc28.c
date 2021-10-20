@@ -29,7 +29,7 @@
 #include <os_memory.h>
 
 #define MO_LOG_TAG "bc28"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef MOLINK_USING_BC28
@@ -38,12 +38,12 @@
 
 #ifdef BC28_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test               = bc28_at_test,
-    .get_imei              = bc28_get_imei,
-    .get_imsi              = bc28_get_imsi,
-    .get_iccid             = bc28_get_iccid,
-    .get_cfun              = bc28_get_cfun,
-    .set_cfun              = bc28_set_cfun,
+    .at_test = bc28_at_test,
+    .get_imei = bc28_get_imei,
+    .get_imsi = bc28_get_imsi,
+    .get_iccid = bc28_get_iccid,
+    .get_cfun = bc28_get_cfun,
+    .set_cfun = bc28_set_cfun,
 };
 #endif /* BC28_USING_GENERAL_OPS */
 
@@ -51,34 +51,34 @@ static const struct mo_general_ops gs_general_ops = {
 extern void bc28_netserv_init(mo_bc28_t *module);
 
 static const struct mo_netserv_ops gs_netserv_ops = {
-    .set_attach            = bc28_set_attach,
-    .get_attach            = bc28_get_attach,
-    .set_reg               = bc28_set_reg,
-    .get_reg               = bc28_get_reg,
-    .set_cgact             = bc28_set_cgact,
-    .get_cgact             = bc28_get_cgact,
-    .get_csq               = bc28_get_csq,
-    .get_radio             = bc28_get_radio,
-    .set_psm               = bc28_set_psm,
-    .get_psm               = bc28_get_psm,
-    .set_edrx_cfg          = bc28_set_edrx_cfg,
-    .get_edrx_cfg          = bc28_get_edrx_cfg,
-    .get_edrx_dynamic      = bc28_get_edrx_dynamic,
+    .set_attach = bc28_set_attach,
+    .get_attach = bc28_get_attach,
+    .set_reg = bc28_set_reg,
+    .get_reg = bc28_get_reg,
+    .set_cgact = bc28_set_cgact,
+    .get_cgact = bc28_get_cgact,
+    .get_csq = bc28_get_csq,
+    .get_radio = bc28_get_radio,
+    .set_psm = bc28_set_psm,
+    .get_psm = bc28_get_psm,
+    .set_edrx_cfg = bc28_set_edrx_cfg,
+    .get_edrx_cfg = bc28_get_edrx_cfg,
+    .get_edrx_dynamic = bc28_get_edrx_dynamic,
 };
 #endif /* BC28_USING_NETSERV_OPS */
 
 #ifdef BC28_USING_PING_OPS
 static const struct mo_ping_ops gs_ping_ops = {
-    .ping                  = bc28_ping,
+    .ping = bc28_ping,
 };
 #endif /* BC28_USING_PING_OPS */
 
 #ifdef BC28_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig              = bc28_ifconfig,
-    .get_ipaddr            = bc28_get_ipaddr,
-    .set_dnsserver         = bc28_set_dnsserver,
-    .get_dnsserver         = bc28_get_dnsserver,
+    .ifconfig = bc28_ifconfig,
+    .get_ipaddr = bc28_get_ipaddr,
+    .set_dnsserver = bc28_set_dnsserver,
+    .get_dnsserver = bc28_get_dnsserver,
 };
 #endif /* BC28_USING_IFCONFIG_OPS */
 
@@ -86,39 +86,39 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern void bc28_netconn_init(mo_bc28_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create                = bc28_netconn_create,
-    .destroy               = bc28_netconn_destroy,
+    .create = bc28_netconn_create,
+    .destroy = bc28_netconn_destroy,
 #ifdef BC28_USING_DNS
-    .gethostbyname         = bc28_netconn_gethostbyname,
+    .gethostbyname = bc28_netconn_gethostbyname,
 #endif
-    .connect               = bc28_netconn_connect,
-    .send                  = bc28_netconn_send,
-    .get_info              = bc28_netconn_get_info,
+    .connect = bc28_netconn_connect,
+    .send = bc28_netconn_send,
+    .get_info = bc28_netconn_get_info,
 };
 #endif /* BC28_USING_NETCONN_OPS */
 
 #ifdef BC28_USING_ONENET_NB_OPS
 extern os_err_t bc28_onenetnb_init(mo_bc28_t *module);
-extern void     bc28_onenetnb_deinit(mo_bc28_t *module);
+extern void bc28_onenetnb_deinit(mo_bc28_t *module);
 
 static const mo_onenet_ops_t gs_onenet_ops = {
-    .onenetnb_get_config   = bc28_onenetnb_get_config,
-    .onenetnb_set_config   = bc28_onenetnb_set_config,
-    .onenetnb_create       = bc28_onenetnb_create,
-    .onenetnb_delete       = bc28_onenetnb_delete,
-    .onenetnb_addobj       = bc28_onenetnb_addobj,
-    .onenetnb_delobj       = bc28_onenetnb_delobj,
-    .onenetnb_open         = bc28_onenetnb_open,
-    .onenetnb_close        = bc28_onenetnb_close,
-    .onenetnb_discoverrsp  = bc28_onenetnb_discoverrsp,
-    .onenetnb_observersp   = bc28_onenetnb_observersp,
-    .onenetnb_readrsp      = bc28_onenetnb_readrsp,
-    .onenetnb_writersp     = bc28_onenetnb_writersp,
-    .onenetnb_executersp   = bc28_onenetnb_executersp,
+    .onenetnb_get_config = bc28_onenetnb_get_config,
+    .onenetnb_set_config = bc28_onenetnb_set_config,
+    .onenetnb_create = bc28_onenetnb_create,
+    .onenetnb_delete = bc28_onenetnb_delete,
+    .onenetnb_addobj = bc28_onenetnb_addobj,
+    .onenetnb_delobj = bc28_onenetnb_delobj,
+    .onenetnb_open = bc28_onenetnb_open,
+    .onenetnb_close = bc28_onenetnb_close,
+    .onenetnb_discoverrsp = bc28_onenetnb_discoverrsp,
+    .onenetnb_observersp = bc28_onenetnb_observersp,
+    .onenetnb_readrsp = bc28_onenetnb_readrsp,
+    .onenetnb_writersp = bc28_onenetnb_writersp,
+    .onenetnb_executersp = bc28_onenetnb_executersp,
     .onenetnb_parameterrsp = bc28_onenetnb_parameterrsp,
-    .onenetnb_notify       = bc28_onenetnb_notify,
-    .onenetnb_update       = bc28_onenetnb_update,
-    .onenetnb_cb_register  = bc28_onenetnb_cb_register,
+    .onenetnb_notify = bc28_onenetnb_notify,
+    .onenetnb_update = bc28_onenetnb_update,
+    .onenetnb_cb_register = bc28_onenetnb_cb_register,
 };
 #endif /* BC28_USING_ONENET_OPS */
 
@@ -144,7 +144,7 @@ static os_err_t bc28_at_init(mo_object_t *self)
 mo_object_t *module_bc28_create(const char *name, void *parser_config)
 {
     os_err_t result = OS_ERROR;
-    
+
     mo_bc28_t *module = (mo_bc28_t *)os_calloc(1, sizeof(mo_bc28_t));
     if (OS_NULL == module)
     {
@@ -197,7 +197,7 @@ mo_object_t *module_bc28_create(const char *name, void *parser_config)
     }
     module->parent.ops_table[MODULE_OPS_ONENET_NB] = &gs_onenet_ops;
 #endif /* BC28_USING_ONENET_NB_OPS */
-	
+
 __exit:
     if (OS_EOK != result)
     {
@@ -221,7 +221,7 @@ __exit:
         }
 
         os_free(module);
-        
+
         return OS_NULL;
     }
 
@@ -262,12 +262,12 @@ int bc28_auto_create(void)
         ERROR("Auto create failed, Can not find BC28 interface device %s!", BC28_DEVICE_NAME);
         return OS_ERROR;
     }
-	
-	uart_config.baud_rate = BC28_DEVICE_RATE;
+
+    uart_config.baud_rate = BC28_DEVICE_RATE;
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = BC28_NAME,
+    mo_parser_config_t parser_config = {.parser_name = BC28_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = BC28_RECV_BUFF_LEN};
 

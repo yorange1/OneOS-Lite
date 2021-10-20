@@ -7,8 +7,7 @@
 #include <vfs_select.h>
 #endif
 
-int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, 
-        struct timeval *timeout)
+int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout)
 {
 #if defined(OS_USING_VFS)
     return vfs_select(nfds, readfds, writefds, exceptfds, timeout);

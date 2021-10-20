@@ -1,31 +1,31 @@
- /**
- ***********************************************************************************************************************
- * Copyright (c) 2020, China Mobile Communications Group Co.,Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
- *
- * @file        gm510.c
- *
- * @brief       gm510.c module api
- *
- * @revision
- * Date         Author          Notes
- * 2020-11-13   OneOS Team      First Version
- ***********************************************************************************************************************
- */
+/**
+***********************************************************************************************************************
+* Copyright (c) 2020, China Mobile Communications Group Co.,Ltd.
+*
+* Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+* the License. You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+* an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+* specific language governing permissions and limitations under the License.
+*
+* @file        gm510.c
+*
+* @brief       gm510.c module api
+*
+* @revision
+* Date         Author          Notes
+* 2020-11-13   OneOS Team      First Version
+***********************************************************************************************************************
+*/
 
 #include "gm510.h"
 #include <stdlib.h>
 
 #define MO_LOG_TAG "gm510"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef MOLINK_USING_GM510
@@ -34,32 +34,32 @@
 
 #ifdef GM510_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test   = gm510_at_test,
-    .get_imei  = gm510_get_imei,
-    .get_imsi  = gm510_get_imsi,
+    .at_test = gm510_at_test,
+    .get_imei = gm510_get_imei,
+    .get_imsi = gm510_get_imsi,
     .get_iccid = gm510_get_iccid,
-    .get_cfun  = gm510_get_cfun,
-    .set_cfun  = gm510_set_cfun,
+    .get_cfun = gm510_get_cfun,
+    .set_cfun = gm510_set_cfun,
     .get_firmware_version = gm510_get_firmware_version,
 };
 #endif /* GM510_USING_GENERAL_OPS */
 
 #ifdef GM510_USING_NETSERV_OPS
 static const struct mo_netserv_ops gs_netserv_ops = {
-    .set_attach    = gm510_set_attach,
-    .get_attach    = gm510_get_attach,
-    .set_reg       = gm510_set_reg,
-    .get_reg       = gm510_get_reg,
-    .set_cgact     = gm510_set_cgact,
-    .get_cgact     = gm510_get_cgact,
-    .get_csq       = gm510_get_csq,
+    .set_attach = gm510_set_attach,
+    .get_attach = gm510_get_attach,
+    .set_reg = gm510_set_reg,
+    .get_reg = gm510_get_reg,
+    .set_cgact = gm510_set_cgact,
+    .get_cgact = gm510_get_cgact,
+    .get_csq = gm510_get_csq,
 };
 #endif /* GM510_USING_NETSERV_OPS */
 
 #ifdef GM510_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig             = gm510_ifconfig,
-    .get_ipaddr           = gm510_get_ipaddr,
+    .ifconfig = gm510_ifconfig,
+    .get_ipaddr = gm510_get_ipaddr,
 };
 #endif /* GM510_USING_IFCONFIG_OPS */
 
@@ -67,18 +67,16 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern void gm510_netconn_init(mo_gm510_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create        = gm510_netconn_create,
-    .destroy       = gm510_netconn_destroy,
-    .get_info      = gm510_netconn_get_info,
-    .connect       = gm510_netconn_connect,
-    .send          = gm510_netconn_send,
+    .create = gm510_netconn_create,
+    .destroy = gm510_netconn_destroy,
+    .get_info = gm510_netconn_get_info,
+    .connect = gm510_netconn_connect,
+    .send = gm510_netconn_send,
 #ifdef GM510_USING_DNS
     .gethostbyname = gm510_netconn_gethostbyname,
 #endif
 };
 #endif /* GM510_USING_NETCONN_OPS */
-
-
 
 static os_err_t gm510_at_init(mo_object_t *self)
 {
@@ -93,9 +91,7 @@ static os_err_t gm510_at_init(mo_object_t *self)
 
     char resp_buff[32] = {0};
 
-    at_resp_t resp = {.buff = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     return at_parser_exec_cmd(parser, &resp, "ATE0");
 }
@@ -108,7 +104,7 @@ mo_object_t *module_gm510_create(const char *name, void *parser_config)
         ERROR("Create %s module instance failed, no enough memory.", name);
         return OS_NULL;
     }
-    
+
     os_task_msleep(5000);
     /* make sure gm510 power on and be ready */
     os_err_t result = mo_object_init(&(module->parent), name, parser_config);
@@ -131,11 +127,11 @@ mo_object_t *module_gm510_create(const char *name, void *parser_config)
 #ifdef GM510_USING_NETSERV_OPS
     module->parent.ops_table[MODULE_OPS_NETSERV] = &gs_netserv_ops;
 #endif /* GM510_USING_NETSERV_OPS */
-        
+
 #ifdef GM510_USING_IFCONFIG_OPS
     module->parent.ops_table[MODULE_OPS_IFCONFIG] = &gs_ifconfig_ops;
 #endif /* GM510_USING_IFCONFIG_OPS */
-        
+
 #ifdef GM510_USING_NETCONN_OPS
     module->parent.ops_table[MODULE_OPS_NETCONN] = &gs_netconn_ops;
 
@@ -171,13 +167,13 @@ os_err_t module_gm510_destroy(mo_object_t *self)
     mo_gm510_t *module = os_container_of(self, mo_gm510_t, parent);
 
     mo_object_deinit(self);
-    
+
 #ifdef GM510_USING_NETCONN_OPS
 
     os_event_deinit(&module->netconn_evt);
 
     os_mutex_deinit(&module->netconn_lock);
-    
+
 #endif /* GM510_USING_NETCONN_OPS */
 
     os_free(module);
@@ -203,7 +199,7 @@ int gm510_auto_create(void)
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = GM510_NAME,
+    mo_parser_config_t parser_config = {.parser_name = GM510_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = GM510_RECV_BUFF_LEN};
 
@@ -217,8 +213,7 @@ int gm510_auto_create(void)
     INFO("Auto create %s module object success!", GM510_NAME);
     return OS_EOK;
 }
-OS_CMPOENT_INIT(gm510_auto_create,OS_INIT_SUBLEVEL_MIDDLE);
+OS_CMPOENT_INIT(gm510_auto_create, OS_INIT_SUBLEVEL_MIDDLE);
 
 #endif /* GM510_AUTO_CREATE */
 #endif /* MOLINK_USING_GM510 */
-

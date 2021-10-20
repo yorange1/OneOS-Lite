@@ -69,25 +69,26 @@ extern "C" {
 #endif
 
 #ifndef M5311_NETCONN_NUM
-#define M5311_NETCONN_NUM   (5)
+#define M5311_NETCONN_NUM (5)
 #endif
 
-typedef struct mo_m5311 {
+typedef struct mo_m5311
+{
     mo_object_t parent;
 #ifdef M5311_USING_NETCONN_OPS
     mo_netconn_t netconn[M5311_NETCONN_NUM];
-    os_mutex_t   netconn_lock;
-    char        *netconn_data;
-    os_event_t   netconn_evt;
+    os_mutex_t netconn_lock;
+    char *netconn_data;
+    os_event_t netconn_evt;
 #endif /* M5311_USING_NETCONN_OPS */
 #ifdef M5311_USING_ONENET_NB_OPS
-    os_mutex_t   onenetnb_lock;
-    os_event_t   onenetnb_evt;
+    os_mutex_t onenetnb_lock;
+    os_event_t onenetnb_evt;
 #endif /* M5311_USING_ONENET_NB_OPS */
 } mo_m5311_t;
 
 mo_object_t *module_m5311_create(const char *name, void *parser_config);
-os_err_t     module_m5311_destroy(mo_object_t *self);
+os_err_t module_m5311_destroy(mo_object_t *self);
 
 #endif /* MOLINK_USING_M5311 */
 

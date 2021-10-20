@@ -77,12 +77,12 @@ typedef struct mo_ec200x_600s
     os_int32_t curr_connect;
     os_event_t netconn_evt;
     os_mutex_t netconn_lock;
-    void      *netconn_data;
+    void *netconn_data;
 #endif /* EC200X_600S_USING_NETCONN_OPS */
 } mo_ec200x_600s_t;
 
 mo_object_t *module_ec200x_600s_create(const char *name, void *parser_config);
-os_err_t     module_ec200x_600s_destroy(mo_object_t *self);
+os_err_t module_ec200x_600s_destroy(mo_object_t *self);
 
 #endif /* MOLINK_USING_EC200X_600S */
 

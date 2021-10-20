@@ -165,7 +165,7 @@ os_err_t m5310a_set_cfun(mo_object_t *self, os_uint8_t fun_lvl)
 
 os_err_t m5310a_get_firmware_version(mo_object_t *self, mo_firmware_version_t *version)
 {
-   at_parser_t *parser = &self->parser;
+    at_parser_t *parser = &self->parser;
 
     char resp_buff[AT_RESP_BUFF_SIZE_256] = {0};
 
@@ -188,7 +188,7 @@ os_err_t m5310a_get_firmware_version(mo_object_t *self, mo_firmware_version_t *v
     for (int i = 2; i <= resp.line_counts - 1; i += 2)
     {
         const char *source_line = at_resp_get_line(&resp, i);
-        os_size_t   line_length = strlen(source_line);
+        os_size_t line_length = strlen(source_line);
 
         char **dest_line = &version->ver_info[version->line_counts];
 
@@ -201,7 +201,7 @@ os_err_t m5310a_get_firmware_version(mo_object_t *self, mo_firmware_version_t *v
         }
 
         strncpy(*dest_line, source_line, line_length);
-        version->line_counts ++;
+        version->line_counts++;
     }
 
     return OS_EOK;

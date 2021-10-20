@@ -23,7 +23,7 @@
 #include "mo_ping.h"
 
 #define MO_LOG_TAG "molink.ping"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef MOLINK_USING_PING_OPS

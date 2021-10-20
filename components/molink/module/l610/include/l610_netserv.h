@@ -40,7 +40,7 @@ os_err_t l610_set_cgact(mo_object_t *self, os_uint8_t cid, os_uint8_t act_n);
 os_err_t l610_get_cgact(mo_object_t *self, os_uint8_t *cid, os_uint8_t *act_stat);
 os_err_t l610_get_csq(mo_object_t *self, os_uint8_t *rssi, os_uint8_t *ber);
 os_err_t l610_netserv_open(mo_object_t *self);
-os_err_t l610_get_cell_info(mo_object_t *self, onepos_cell_info_t* onepos_cell_info);
+os_err_t l610_get_cell_info(mo_object_t *self, onepos_cell_info_t *onepos_cell_info);
 
 #endif /* L610_USING_NETSERV_OPS */
 

@@ -78,7 +78,7 @@ extern "C" {
 #define CMIOT_SEND_BUF_MAXLEN    (CMIOT_COAP_MAX_LEN)
 #endif
 
-cmiot_char * cmiot_get_sdk_version(void);
+cmiot_char *cmiot_get_sdk_version(void);
 cmiot_uint32 cmiot_get_down_start_time(void);
 cmiot_uint32 cmiot_get_down_end_time(void);
 cmiot_uint32 cmiot_get_data_max_len(void);

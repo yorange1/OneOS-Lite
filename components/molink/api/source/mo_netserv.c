@@ -27,7 +27,7 @@
 #include <string.h>
 
 #define MO_LOG_TAG "molink.nerserv"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef MOLINK_USING_NETSERV_OPS
@@ -50,8 +50,8 @@ static mo_netserv_ops_t *get_netserv_ops(mo_object_t *self)
  *
  * @param[in]       self            The descriptor of molink module instance
  * @param[in]       attach_stat     Indicates the state of PS attachment
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Set the state of PS attachment successfully
  * @retval          OS_ERROR        Set the state of PS attachment error
  * @retval          OS_ETIMEOUT     Set the state of PS attachment timeout
@@ -83,8 +83,8 @@ os_err_t mo_set_attach(mo_object_t *self, os_uint8_t attach_stat)
  *
  * @param[in]       self            The descriptor of molink module instance
  * @param[out]      attach_stat     The buffer to store the state of PS attachment
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Get the state of PS attachment successfully
  * @retval          OS_ERROR        Get the state of PS attachment error
  * @retval          OS_ETIMEOUT     Get the state of PS attachment timeout
@@ -117,8 +117,8 @@ os_err_t mo_get_attach(mo_object_t *self, os_uint8_t *attach_stat)
  *
  * @param[in]       self            The descriptor of molink module instance
  * @param[in]       reg_n           The presentation of an network registration urc data
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Set the presentation of an network registration urc data successfully
  * @retval          OS_ERROR        Set the presentation of an network registration urc data error
  * @retval          OS_ETIMEOUT     Set the presentation of an network registration urc data timeout
@@ -137,22 +137,22 @@ os_err_t mo_set_reg(mo_object_t *self, os_uint8_t reg_n)
 
     if (OS_NULL == ops->set_reg)
     {
-    ERROR("Module %s does not support set register state operate", self->name);
-    return OS_ERROR;
-	}
+        ERROR("Module %s does not support set register state operate", self->name);
+        return OS_ERROR;
+    }
 
-	return ops->set_reg(self, reg_n);
+    return ops->set_reg(self, reg_n);
 }
 
 /**
  ***********************************************************************************************************************
- * @brief           Execute AT command to get the presentation of an network registration urc data and 
+ * @brief           Execute AT command to get the presentation of an network registration urc data and
  *                  the network registration status
  *
  * @param[in]       self            The descriptor of molink module instance
  * @param[out]      info            The struct to store the presentation of an network registration info
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Get successfully
  * @retval          OS_ERROR        Get error
  * @retval          OS_ETIMEOUT     Get timeout
@@ -186,8 +186,8 @@ os_err_t mo_get_reg(mo_object_t *self, eps_reg_info_t *info)
  * @param[in]       self            The descriptor of molink module instance
  * @param[in]       cid             A numeric parameter which specifies a particular PDP context
  * @param[in]       act_stat        Indicates the state of PDP context activation
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Activate or deactivate PDP Context successfully
  * @retval          OS_ERROR        Activate or deactivate PDP Context error
  * @retval          OS_ETIMEOUT     Activate or deactivate PDP Context timeout
@@ -208,20 +208,20 @@ os_err_t mo_set_cgact(mo_object_t *self, os_uint8_t cid, os_uint8_t act_stat)
     {
         ERROR("Module %s does not support set cgact operate", self->name);
         return OS_ERROR;
-	}
+    }
 
-	return ops->set_cgact(self, cid, act_stat);
+    return ops->set_cgact(self, cid, act_stat);
 }
 
 /**
  ***********************************************************************************************************************
- * @brief           Execute AT command to get the state of PDP context activation 
+ * @brief           Execute AT command to get the state of PDP context activation
  *
  * @param[in]       self            The descriptor of molink module instance
  * @param[out]      cid             The buffer to store the cid
  * @param[out]      act_stat        The buffer to store the state of PDP context activation
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Get the state of PDP context activation successfully
  * @retval          OS_ERROR        Get the state of PDP context activation error
  * @retval          OS_ETIMEOUT     Get the state of PDP context activation timeout
@@ -232,7 +232,7 @@ os_err_t mo_get_cgact(mo_object_t *self, os_uint8_t *cid, os_uint8_t *act_stat)
     OS_ASSERT(OS_NULL != self);
     OS_ASSERT(OS_NULL != cid);
     OS_ASSERT(OS_NULL != act_stat);
-    
+
     mo_netserv_ops_t *ops = get_netserv_ops(self);
 
     if (OS_NULL == ops)
@@ -251,14 +251,14 @@ os_err_t mo_get_cgact(mo_object_t *self, os_uint8_t *cid, os_uint8_t *act_stat)
 
 /**
  ***********************************************************************************************************************
- * @brief           Execute AT command to get the signal strength indication <rssi> and 
+ * @brief           Execute AT command to get the signal strength indication <rssi> and
  *                  channel bit error rate <ber> from the ME
  *
  * @param[in]       self            The descriptor of molink module instance
  * @param[out]      rssi            The buffer to store the signal strength
  * @param[out]      ber             The buffer to store the channel bit error rate
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Get the signal quality successfully
  * @retval          OS_ERROR        Get the signal quality error
  * @retval          OS_ETIMEOUT     Get the signal quality timeout
@@ -292,8 +292,8 @@ os_err_t mo_get_csq(mo_object_t *self, os_uint8_t *rssi, os_uint8_t *ber)
  *
  * @param[in]       self            The descriptor of molink module instance
  * @param[out]      radio_info      The buffer to store the UE statistics
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Get the signal quality successfully
  * @retval          OS_ERROR        Get the signal quality error
  * @retval          OS_ETIMEOUT     Get the signal quality timeout
@@ -326,14 +326,14 @@ os_err_t mo_get_radio(mo_object_t *self, radio_info_t *radio_info)
  *
  * @param[in]       self              The descriptor of molink module instance
  * @param[out]      onepos_cell_info  The buffer to store cell infomation
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK             Get cell infomation successfully
  * @retval          OS_ETIMEOUT        Get cell infomation timeout
  * @retval          OS_ERROR           Get cell infomation error
  ***********************************************************************************************************************
  */
-os_err_t mo_get_cell_info(mo_object_t *self, onepos_cell_info_t* onepos_cell_info)
+os_err_t mo_get_cell_info(mo_object_t *self, onepos_cell_info_t *onepos_cell_info)
 {
     OS_ASSERT(OS_NULL != self);
     OS_ASSERT(OS_NULL != onepos_cell_info);
@@ -351,7 +351,7 @@ os_err_t mo_get_cell_info(mo_object_t *self, onepos_cell_info_t* onepos_cell_inf
         return OS_ERROR;
     }
 
-    return ops->get_cell_info(self, onepos_cell_info);	
+    return ops->get_cell_info(self, onepos_cell_info);
 }
 
 /**
@@ -360,8 +360,8 @@ os_err_t mo_get_cell_info(mo_object_t *self, onepos_cell_info_t* onepos_cell_inf
  *
  * @param[in]       self            The descriptor of molink module instance
  * @param[in]       info            The PSM setting info
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Set module PSM(power saving mode) configuration successfully
  * @retval          OS_ERROR        Set module PSM(power saving mode) configuration error
  * @retval          OS_ETIMEOUT     Set module PSM(power saving mode) configuration timeout
@@ -393,8 +393,8 @@ os_err_t mo_set_psm(mo_object_t *self, mo_psm_info_t info)
  *
  * @param[in]       self            The descriptor of molink module instance
  * @param[in]       info            The pointer of mo_psm_info_t to store PSM info
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Get module PSM(power saving mode) info successfully
  * @retval          OS_ERROR        Get module PSM(power saving mode) info error
  * @retval          OS_ETIMEOUT     Get module PSM(power saving mode) info timeout
@@ -427,8 +427,8 @@ os_err_t mo_get_psm(mo_object_t *self, mo_psm_info_t *info)
  *
  * @param[in]       self            The descriptor of molink module instance
  * @param[in]       cfg             The eDRX setting info
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Set module eDRX's configuration successfully
  * @retval          OS_ERROR        Set module eDRX's configuration error
  * @retval          OS_ETIMEOUT     Set module eDRX's configuration timeout
@@ -460,8 +460,8 @@ os_err_t mo_set_edrx_cfg(mo_object_t *self, mo_edrx_cfg_t cfg)
  *
  * @param[in]       self            The descriptor of molink module instance
  * @param[in]       edrx_local      Witch struct that holds eDRX setting info
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Get module eDRX's configuration successfully
  * @retval          OS_ERROR        Get module eDRX's configuration error
  * @retval          OS_ETIMEOUT     Get module eDRX's configuration timeout
@@ -494,8 +494,8 @@ os_err_t mo_get_edrx_cfg(mo_object_t *self, mo_edrx_t *edrx_local)
  *
  * @param[in]       self            The descriptor of molink module instance
  * @param[in]       edrx_dynamic    Witch struct that holds Effective parameters
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Get module eDRX's dynamic parameters successfully
  * @retval          OS_ERROR        Get module eDRX's dynamic parameters error
  * @retval          OS_ETIMEOUT     Get module eDRX's dynamic parameters timeout
@@ -529,8 +529,8 @@ os_err_t mo_get_edrx_dynamic(mo_object_t *self, mo_edrx_t *edrx_dynamic)
  * @param[in]       self            The descriptor of molink module instance
  * @param[in]       band_list       String that hold chosen using bands
  * @param[in]       num             band number in band_list
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Set module using bands successfully
  * @retval          OS_ERROR        Set module using bands error
  * @retval          OS_ETIMEOUT     Set module using bands timeout
@@ -563,8 +563,8 @@ os_err_t mo_set_band(mo_object_t *self, char band_list[], os_uint8_t num)
  *
  * @param[in]       self            The descriptor of molink module instance
  * @param[in]       earfcn          Struct that hold earfcn configurations
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Set module locking to specific earfcn successfully
  * @retval          OS_ERROR        Set module locking to specific earfcn error
  * @retval          OS_ETIMEOUT     Set module locking to specific earfcn timeout
@@ -596,8 +596,8 @@ os_err_t mo_set_earfcn(mo_object_t *self, mo_earfcn_t earfcn)
  *
  * @param[in]       self            The descriptor of molink module instance
  * @param[in]       earfcn          Struct that hold returning earfcn configurations
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Get module earfcn successfully
  * @retval          OS_ERROR        Get module earfcn error
  * @retval          OS_ETIMEOUT     Get module earfcn timeout
@@ -630,7 +630,7 @@ os_err_t mo_get_earfcn(mo_object_t *self, mo_earfcn_t *earfcn)
  *
  * @param[in]       self            The descriptor of molink module instance
  *
- * @return          On success, return OS_EOK; on error, return a error code. 
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Clear stored earfcn successfully
  * @retval          OS_ERROR        Clear stored earfcn error
  * @retval          OS_ETIMEOUT     Clear stored earfcn timeout
@@ -662,7 +662,7 @@ os_err_t mo_clear_stored_earfcn(mo_object_t *self)
  *
  * @param[in]       self            The descriptor of molink module instance
  *
- * @return          On success, return OS_EOK; on error, return a error code. 
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Clear PLMN successfully
  * @retval          OS_ERROR        Clear PLMN error
  * @retval          OS_ETIMEOUT     Clear PLMN timeout
@@ -696,12 +696,12 @@ os_err_t mo_clear_plmn(mo_object_t *self)
 #include <mo_common.h>
 #include <os_util.h>
 
-os_err_t module_get_reg_sh(int argc, char* argv[])
-{    
+os_err_t module_get_reg_sh(int argc, char *argv[])
+{
     eps_reg_info_t info;
-    
+
     mo_object_t *mo_def_obj = OS_NULL;
-    
+
     mo_def_obj = mo_get_default();
     if (OS_NULL == mo_def_obj)
     {
@@ -713,7 +713,7 @@ os_err_t module_get_reg_sh(int argc, char* argv[])
     {
         INFO("Get reg reg_n:%d, reg_status:%d!\n", info.reg_n, info.reg_stat);
     }
-    
+
     return OS_EOK;
 }
 SH_CMD_EXPORT(mo_get_reg, module_get_reg_sh, "Get module network reg status");

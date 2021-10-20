@@ -29,7 +29,7 @@
 #include <stdlib.h>
 
 #define MO_LOG_TAG "ec20_netconn"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #define SEND_DATA_MAX_SIZE (1460)
@@ -42,7 +42,7 @@
 #endif
 
 #ifndef EC20_NETCONN_MQ_MSG_MAX
-#define EC20_NETCONN_MQ_MSG_MAX  (5)
+#define EC20_NETCONN_MQ_MSG_MAX (5)
 #endif
 
 #define SET_EVENT(socket, event) (((socket + 1) << 16) | (event))
@@ -133,7 +133,7 @@ os_err_t ec20_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
     mo_ec20_t *ec20 = os_container_of(module, mo_ec20_t, parent);
 
     info->netconn_array = ec20->netconn;
-    info->netconn_nums  = sizeof(ec20->netconn) / sizeof(ec20->netconn[0]);
+    info->netconn_nums = sizeof(ec20->netconn) / sizeof(ec20->netconn[0]);
 
     return OS_EOK;
 }
@@ -141,7 +141,7 @@ os_err_t ec20_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
 os_err_t ec20_pdp_act(mo_object_t *module)
 {
     char tmp_data[20] = {0};
-    char APN[10]      = {0};
+    char APN[10] = {0};
 
     at_parser_t *parser = &module->parser;
 
@@ -162,7 +162,6 @@ os_err_t ec20_pdp_act(mo_object_t *module)
     {
         goto __exit;
     }
-
 
     if (strcmp(tmp_data, "CHINA MOBILE") == 0)
     {
@@ -225,16 +224,13 @@ mo_netconn_t *ec20_netconn_create(mo_object_t *module, mo_netconn_type_t type)
         return OS_NULL;
     }
 
-    netconn->mq = os_mq_create(EC20_NETCONN_MQ_NAME,
-                               EC20_NETCONN_MQ_MSG_SIZE,
-                               EC20_NETCONN_MQ_MSG_MAX);
+    netconn->mq = os_mq_create(EC20_NETCONN_MQ_NAME, EC20_NETCONN_MQ_MSG_SIZE, EC20_NETCONN_MQ_MSG_MAX);
     if (OS_NULL == netconn->mq)
     {
         ERROR("%s data queue create failed, no enough memory.", module->name);
         ec20_unlock(&ec20->netconn_lock);
         return OS_NULL;
     }
-
 
     netconn->stat = NETCONN_STAT_INIT;
     netconn->type = type;
@@ -247,7 +243,7 @@ mo_netconn_t *ec20_netconn_create(mo_object_t *module, mo_netconn_type_t type)
 os_err_t ec20_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 {
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_ERROR;
+    os_err_t result = OS_ERROR;
 
     DEBUG("Module %s in %d netconn status", module->name, netconn->stat);
 
@@ -263,8 +259,8 @@ os_err_t ec20_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
         if (result != OS_EOK)
         {
             ERROR("Module %s destroy %s netconn failed",
-                      module->name,
-                      (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
+                  module->name,
+                  (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
             return result;
         }
         break;
@@ -281,9 +277,9 @@ os_err_t ec20_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 
     INFO("Module %s netconn id %d destroyed", module->name, netconn->connect_id);
 
-    netconn->connect_id  = -1;
-    netconn->stat        = NETCONN_STAT_NULL;
-    netconn->type        = NETCONN_TYPE_NULL;
+    netconn->connect_id = -1;
+    netconn->stat = NETCONN_STAT_NULL;
+    netconn->type = NETCONN_TYPE_NULL;
     netconn->remote_port = 0;
     inet_aton("0.0.0.0", &netconn->remote_ip);
 
@@ -381,7 +377,7 @@ __exit:
     {
         ip_addr_copy(netconn->remote_ip, addr);
         netconn->remote_port = port;
-        netconn->stat        = NETCONN_STAT_CONNECT;
+        netconn->stat = NETCONN_STAT_CONNECT;
 
         DEBUG("Module %s connect to %s:%d successfully!", module->name, remote_ip, port);
     }
@@ -395,11 +391,11 @@ __exit:
 
 os_size_t ec20_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
-    at_parser_t *parser    = &module->parser;
-    os_err_t     result    = OS_EOK;
-    os_size_t    sent_size = 0;
-    os_size_t    curr_size = 0;
-    os_uint32_t  event     = 0;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    os_size_t sent_size = 0;
+    os_size_t curr_size = 0;
+    os_uint32_t event = 0;
 
     mo_ec20_t *ec20 = os_container_of(module, mo_ec20_t, parent);
 
@@ -409,9 +405,7 @@ os_size_t ec20_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const ch
 
     char resp_buff[EC20_RESP_DEF_SIZE] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 10 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 10 * OS_TICK_PER_SECOND};
 
     at_parser_set_end_mark(parser, ">", 1);
 
@@ -502,7 +496,7 @@ os_err_t ec20_netconn_gethostbyname(mo_object_t *self, const char *domain_name, 
     OS_ASSERT(OS_NULL != addr);
 
     at_parser_t *parser = &self->parser;
-    os_err_t     result = OS_EOK;
+    os_err_t result = OS_EOK;
     char resp_buff[EC20_RESP_DEF_SIZE] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = OS_TICK_PER_SECOND};
@@ -558,9 +552,9 @@ static void urc_connect_func(struct at_parser *parser, const char *data, os_size
     mo_ec20_t *ec20 = os_container_of(module, mo_ec20_t, parent);
 
     os_int32_t connect_id = 0;
-    os_int32_t result     = 0;
+    os_int32_t result = 0;
 
-    sscanf(data, "+QIOPEN: %d,%d", &connect_id , &result);
+    sscanf(data, "+QIOPEN: %d,%d", &connect_id, &result);
 
     if (0 == result)
     {
@@ -623,7 +617,7 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != data);
 
     os_int32_t connect_id = 0;
-    os_int32_t data_size  = 0;
+    os_int32_t data_size = 0;
 
     sscanf(data, "+QIURC: \"recv\",%d,%d", &connect_id, &data_size);
 
@@ -638,13 +632,13 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
         return;
     }
 
-    char *recv_buff    = os_calloc(1, data_size);
-    char  temp_buff[8] = {0};
+    char *recv_buff = os_calloc(1, data_size);
+    char temp_buff[8] = {0};
     if (recv_buff == OS_NULL)
     {
         /* read and clean the coming data */
         ERROR("Calloc recv buff %d bytes fail, no enough memory", data_size);
-        os_size_t temp_size    = 0;
+        os_size_t temp_size = 0;
         while (temp_size < data_size)
         {
             if (data_size - temp_size > sizeof(temp_buff))
@@ -762,9 +756,9 @@ static void urc_qiurc_func(struct at_parser *parser, const char *data, os_size_t
 }
 
 static at_urc_t gs_urc_table[] = {
-    {.prefix = "SEND",     .suffix = "\r\n", .func = urc_send_func},
+    {.prefix = "SEND", .suffix = "\r\n", .func = urc_send_func},
     {.prefix = "+QIOPEN:", .suffix = "\r\n", .func = urc_connect_func},
-    {.prefix = "+QIURC:",  .suffix = "\r\n", .func = urc_qiurc_func},
+    {.prefix = "+QIURC:", .suffix = "\r\n", .func = urc_qiurc_func},
 };
 
 void ec20_netconn_init(mo_ec20_t *module)
@@ -776,7 +770,7 @@ void ec20_netconn_init(mo_ec20_t *module)
         module->netconn[i].connect_id = -1;
     }
 
-	ec20_pdp_act(&module->parent);
+    ec20_pdp_act(&module->parent);
 
     /* Set netconn urc table */
     at_parser_t *parser = &(module->parent.parser);

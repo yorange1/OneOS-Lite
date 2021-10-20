@@ -25,31 +25,31 @@
 #include "mo_common.h"
 
 #define MO_LOG_TAG "module.onenet_nb"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #define CALL_MODULE_FUNC(FUNC_NAME, OPT_NAME)                                                                          \
     do                                                                                                                 \
     {                                                                                                                  \
         os_err_t error = OS_ERROR;                                                                                     \
-        va_list  args  = {0};                                                                                          \
+        va_list args = {0};                                                                                            \
         va_start(args, format);                                                                                        \
                                                                                                                        \
-        if (OS_NULL == module)                                                                                           \
+        if (OS_NULL == module)                                                                                         \
         {                                                                                                              \
-            module = mo_get_default();                                                                                   \
+            module = mo_get_default();                                                                                 \
         }                                                                                                              \
-        mo_onenet_ops_t *ops = module_get_onenet_ops(module);                                                            \
+        mo_onenet_ops_t *ops = module_get_onenet_ops(module);                                                          \
         if (OS_NULL == ops)                                                                                            \
         {                                                                                                              \
             return error;                                                                                              \
         }                                                                                                              \
         if (OS_NULL == ops->FUNC_NAME)                                                                                 \
         {                                                                                                              \
-            ERROR("Module %s does not support %s operate", module->name, OPT_NAME);                                      \
+            ERROR("Module %s does not support %s operate", module->name, OPT_NAME);                                    \
             return OS_ERROR;                                                                                           \
         }                                                                                                              \
-        error = ops->FUNC_NAME(module, timeout, resp, format, args);                                                     \
+        error = ops->FUNC_NAME(module, timeout, resp, format, args);                                                   \
         va_end(args);                                                                                                  \
                                                                                                                        \
         return error;                                                                                                  \
@@ -57,7 +57,7 @@
 
 OS_INLINE mo_onenet_ops_t *module_get_onenet_ops(mo_object_t *module)
 {
-    if(OS_NULL == module)
+    if (OS_NULL == module)
     {
         ERROR("%s Input module is NULL.", __func__);
         return OS_NULL;
@@ -83,8 +83,8 @@ OS_INLINE mo_onenet_ops_t *module_get_onenet_ops(mo_object_t *module)
  * @param[in]       format          Reserved, please set an empty sting "".
  * @param[in]       ...             Reserved.
  *
- * @return          On success, return OS_EOK; 
- *                  On error, return an error code. 
+ * @return          On success, return OS_EOK;
+ *                  On error, return an error code.
  * @retval          OS_EOK          Success
  * @retval          OS_ERROR        Failed
  * @retval          OS_EBUSY        Busy
@@ -107,8 +107,8 @@ os_err_t mo_onenetnb_get_config(mo_object_t *module, os_int32_t timeout, void *r
  * @param[in]       format          The parameter expression of command @see AT Commands Manual.
  * @param[in]       ...             The expression arguments..
  *
- * @return          On success, return OS_EOK; 
- *                  On error, return an error code. 
+ * @return          On success, return OS_EOK;
+ *                  On error, return an error code.
  * @retval          OS_EOK          Success
  * @retval          OS_ERROR        Failed
  * @retval          OS_EBUSY        Busy
@@ -131,8 +131,8 @@ os_err_t mo_onenetnb_set_config(mo_object_t *module, os_int32_t timeout, void *r
  * @param[in]       format          The parameter expression of command @see AT Commands Manual.
  * @param[in]       ...             The expression arguments..
  *
- * @return          On success, return OS_EOK; 
- *                  On error, return an error code. 
+ * @return          On success, return OS_EOK;
+ *                  On error, return an error code.
  * @retval          OS_EOK          Success
  * @retval          OS_ERROR        Failed
  * @retval          OS_EBUSY        Busy
@@ -155,8 +155,8 @@ os_err_t mo_onenetnb_create(mo_object_t *module, os_int32_t timeout, void *resp,
  * @param[in]       format          The parameter expression of command @see AT Commands Manual.
  * @param[in]       ...             The expression arguments..
  *
- * @return          On success, return OS_EOK; 
- *                  On error, return an error code. 
+ * @return          On success, return OS_EOK;
+ *                  On error, return an error code.
  * @retval          OS_EOK          Success
  * @retval          OS_ERROR        Failed
  * @retval          OS_EBUSY        Busy
@@ -179,8 +179,8 @@ os_err_t mo_onenetnb_createex(mo_object_t *module, os_int32_t timeout, void *res
  * @param[in]       format          The parameter expression of command @see AT Commands Manual.
  * @param[in]       ...             The expression arguments..
  *
- * @return          On success, return OS_EOK; 
- *                  On error, return an error code. 
+ * @return          On success, return OS_EOK;
+ *                  On error, return an error code.
  * @retval          OS_EOK          Success
  * @retval          OS_ERROR        Failed
  * @retval          OS_EBUSY        Busy
@@ -203,8 +203,8 @@ os_err_t mo_onenetnb_delete(mo_object_t *module, os_int32_t timeout, void *resp,
  * @param[in]       format          The parameter expression of command @see AT Commands Manual.
  * @param[in]       ...             The expression arguments..
  *
- * @return          On success, return OS_EOK; 
- *                  On error, return an error code. 
+ * @return          On success, return OS_EOK;
+ *                  On error, return an error code.
  * @retval          OS_EOK          Success
  * @retval          OS_ERROR        Failed
  * @retval          OS_EBUSY        Busy
@@ -227,8 +227,8 @@ os_err_t mo_onenetnb_addobj(mo_object_t *module, os_int32_t timeout, void *resp,
  * @param[in]       format          The parameter expression of command @see AT Commands Manual.
  * @param[in]       ...             The expression arguments..
  *
- * @return          On success, return OS_EOK; 
- *                  On error, return an error code. 
+ * @return          On success, return OS_EOK;
+ *                  On error, return an error code.
  * @retval          OS_EOK          Success
  * @retval          OS_ERROR        Failed
  * @retval          OS_EBUSY        Busy
@@ -251,8 +251,8 @@ os_err_t mo_onenetnb_delobj(mo_object_t *module, os_int32_t timeout, void *resp,
  * @param[in]       format          The parameter expression of command @see AT Commands Manual.
  * @param[in]       ...             The expression arguments..
  *
- * @return          On success, return OS_EOK; 
- *                  On error, return an error code. 
+ * @return          On success, return OS_EOK;
+ *                  On error, return an error code.
  * @retval          OS_EOK          Success
  * @retval          OS_ERROR        Failed
  * @retval          OS_EBUSY        Busy
@@ -275,8 +275,8 @@ os_err_t mo_onenetnb_nmi(mo_object_t *module, os_int32_t timeout, void *resp, co
  * @param[in]       format          The parameter expression of command @see AT Commands Manual.
  * @param[in]       ...             The expression arguments..
  *
- * @return          On success, return OS_EOK; 
- *                  On error, return an error code. 
+ * @return          On success, return OS_EOK;
+ *                  On error, return an error code.
  * @retval          OS_EOK          Success
  * @retval          OS_ERROR        Failed
  * @retval          OS_EBUSY        Busy
@@ -299,8 +299,8 @@ os_err_t mo_onenetnb_open(mo_object_t *module, os_int32_t timeout, void *resp, c
  * @param[in]       format          The parameter expression of command @see AT Commands Manual.
  * @param[in]       ...             The expression arguments..
  *
- * @return          On success, return OS_EOK; 
- *                  On error, return an error code. 
+ * @return          On success, return OS_EOK;
+ *                  On error, return an error code.
  * @retval          OS_EOK          Success
  * @retval          OS_ERROR        Failed
  * @retval          OS_EBUSY        Busy
@@ -323,8 +323,8 @@ os_err_t mo_onenetnb_close(mo_object_t *module, os_int32_t timeout, void *resp, 
  * @param[in]       format          The parameter expression of command @see AT Commands Manual.
  * @param[in]       ...             The expression arguments..
  *
- * @return          On success, return OS_EOK; 
- *                  On error, return an error code. 
+ * @return          On success, return OS_EOK;
+ *                  On error, return an error code.
  * @retval          OS_EOK          Success
  * @retval          OS_ERROR        Failed
  * @retval          OS_EBUSY        Busy
@@ -347,8 +347,8 @@ os_err_t mo_onenetnb_discoverrsp(mo_object_t *module, os_int32_t timeout, void *
  * @param[in]       format          The parameter expression of command @see AT Commands Manual.
  * @param[in]       ...             The expression arguments..
  *
- * @return          On success, return OS_EOK; 
- *                  On error, return an error code. 
+ * @return          On success, return OS_EOK;
+ *                  On error, return an error code.
  * @retval          OS_EOK          Success
  * @retval          OS_ERROR        Failed
  * @retval          OS_EBUSY        Busy
@@ -371,8 +371,8 @@ os_err_t mo_onenetnb_observersp(mo_object_t *module, os_int32_t timeout, void *r
  * @param[in]       format          The parameter expression of command @see AT Commands Manual.
  * @param[in]       ...             The expression arguments..
  *
- * @return          On success, return OS_EOK; 
- *                  On error, return an error code. 
+ * @return          On success, return OS_EOK;
+ *                  On error, return an error code.
  * @retval          OS_EOK          Success
  * @retval          OS_ERROR        Failed
  * @retval          OS_EBUSY        Busy
@@ -395,8 +395,8 @@ os_err_t mo_onenetnb_readrsp(mo_object_t *module, os_int32_t timeout, void *resp
  * @param[in]       format          The parameter expression of command @see AT Commands Manual.
  * @param[in]       ...             The expression arguments..
  *
- * @return          On success, return OS_EOK; 
- *                  On error, return an error code. 
+ * @return          On success, return OS_EOK;
+ *                  On error, return an error code.
  * @retval          OS_EOK          Success
  * @retval          OS_ERROR        Failed
  * @retval          OS_EBUSY        Busy
@@ -419,8 +419,8 @@ os_err_t mo_onenetnb_writersp(mo_object_t *module, os_int32_t timeout, void *res
  * @param[in]       format          The parameter expression of command @see AT Commands Manual.
  * @param[in]       ...             The expression arguments..
  *
- * @return          On success, return OS_EOK; 
- *                  On error, return an error code. 
+ * @return          On success, return OS_EOK;
+ *                  On error, return an error code.
  * @retval          OS_EOK          Success
  * @retval          OS_ERROR        Failed
  * @retval          OS_EBUSY        Busy
@@ -443,8 +443,8 @@ os_err_t mo_onenetnb_executersp(mo_object_t *module, os_int32_t timeout, void *r
  * @param[in]       format          The parameter expression of command @see AT Commands Manual.
  * @param[in]       ...             The expression arguments..
  *
- * @return          On success, return OS_EOK; 
- *                  On error, return an error code. 
+ * @return          On success, return OS_EOK;
+ *                  On error, return an error code.
  * @retval          OS_EOK          Success
  * @retval          OS_ERROR        Failed
  * @retval          OS_EBUSY        Busy
@@ -467,8 +467,8 @@ os_err_t mo_onenetnb_parameterrsp(mo_object_t *module, os_int32_t timeout, void 
  * @param[in]       format          The parameter expression of command @see AT Commands Manual.
  * @param[in]       ...             The expression arguments..
  *
- * @return          On success, return OS_EOK; 
- *                  On error, return an error code. 
+ * @return          On success, return OS_EOK;
+ *                  On error, return an error code.
  * @retval          OS_EOK          Success
  * @retval          OS_ERROR        Failed
  * @retval          OS_EBUSY        Busy
@@ -491,8 +491,8 @@ os_err_t mo_onenetnb_notify(mo_object_t *module, os_int32_t timeout, void *resp,
  * @param[in]       format          The parameter expression of command @see AT Commands Manual.
  * @param[in]       ...             The expression arguments..
  *
- * @return          On success, return OS_EOK; 
- *                  On error, return an error code. 
+ * @return          On success, return OS_EOK;
+ *                  On error, return an error code.
  * @retval          OS_EOK          Success
  * @retval          OS_ERROR        Failed
  * @retval          OS_EBUSY        Busy
@@ -507,7 +507,8 @@ os_err_t mo_onenetnb_update(mo_object_t *module, os_int32_t timeout, void *resp,
 /**
  ***********************************************************************************************************************
  * @brief           Fetch unread 'write' operations in URC non-default mode
- *                  OneNet LwM2M extend function,Fetch unread 'write' operations in URC non-default mode(OneMo platform only)
+ *                  OneNet LwM2M extend function,Fetch unread 'write' operations in URC non-default mode(OneMo platform
+ *only)
  *
  * @param[in]       module            The descriptor of molink module instance.
  * @param[in]       timeout         The AT parser get resp timeout value, set by os ticks.
@@ -515,8 +516,8 @@ os_err_t mo_onenetnb_update(mo_object_t *module, os_int32_t timeout, void *resp,
  * @param[in]       format          The parameter expression of command @see AT Commands Manual.
  * @param[in]       ...             The expression arguments..
  *
- * @return          On success, return OS_EOK; 
- *                  On error, return an error code. 
+ * @return          On success, return OS_EOK;
+ *                  On error, return an error code.
  * @retval          OS_EOK          Success
  * @retval          OS_ERROR        Failed
  * @retval          OS_EBUSY        Busy
@@ -531,13 +532,14 @@ os_err_t mo_onenetnb_get_write(mo_object_t *module, os_int32_t timeout, void *re
 /**
  ***********************************************************************************************************************
  * @brief           Reigster the user callbacks that is used to get the URC messages
- *                  Extend function,Reigster the user callbacks that is used to get the URC messages(Quectel platform only)
+ *                  Extend function,Reigster the user callbacks that is used to get the URC messages(Quectel platform
+ *only)
  *
  * @param[in]       module            The descriptor of molink module instance.
  * @param[in]       user_callbacks  A mo_onenet_cb_t type struct contains user callbacks.
  *
- * @return          On success, return OS_EOK; 
- *                  On error, return an error code. 
+ * @return          On success, return OS_EOK;
+ *                  On error, return an error code.
  * @retval          OS_EOK          Success
  * @retval          OS_ERROR        Failed
  ***********************************************************************************************************************
@@ -686,9 +688,9 @@ os_err_t module_onenetnb_notify_sh(int argc, char *argv[])
     {
         ++uip;
         ERROR("notify mid:0, obj:3200, insid:0, resid:5750, type:1, len: %d, value: %s, index:0, flag:0, ack_id:%d\n",
-               atoi(argv[1]),
-               argv[2],
-               uip);
+              atoi(argv[1]),
+              argv[2],
+              uip);
     }
     return OS_EOK;
 }
@@ -718,14 +720,14 @@ os_err_t module_onenetnb_get_write_sh(int argc, char *argv[])
     if (mo_onenetnb_get_write(OS_NULL, 2000, &mgr, "0") == OS_EOK)
     {
         ERROR("result ref:%d, mid:%d, objid:%d, insid:%d, resid:%d, type:%d, len:%d, value:%s\n",
-               mgr.ref,
-               mgr.mid,
-               mgr.objid,
-               mgr.insid,
-               mgr.resid,
-               mgr.type,
-               mgr.len,
-               mgr.value);
+              mgr.ref,
+              mgr.mid,
+              mgr.objid,
+              mgr.insid,
+              mgr.resid,
+              mgr.type,
+              mgr.len,
+              mgr.value);
     }
     free(mgr.value);
 

@@ -27,7 +27,7 @@
 #include <string.h>
 
 #define MO_LOG_TAG "sim7070x"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef MOLINK_USING_SIM7070X
@@ -37,17 +37,17 @@
 enum sim7070x_pdp_status
 {
     PDP_DEACTIVED = 0,
-    PDP_ACTIVED   = 1,
+    PDP_ACTIVED = 1,
 };
 
 #ifdef SIM7070X_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test   = sim7070x_at_test,
-    .get_imei  = sim7070x_get_imei,
-    .get_imsi  = sim7070x_get_imsi,
+    .at_test = sim7070x_at_test,
+    .get_imei = sim7070x_get_imei,
+    .get_imsi = sim7070x_get_imsi,
     .get_iccid = sim7070x_get_iccid,
-    .get_cfun  = sim7070x_get_cfun,
-    .set_cfun  = sim7070x_set_cfun,
+    .get_cfun = sim7070x_get_cfun,
+    .set_cfun = sim7070x_set_cfun,
     .get_firmware_version = sim7070x_get_firmware_version,
 };
 #endif /* SIM7070X_USING_GENERAL_OPS */
@@ -56,11 +56,11 @@ static const struct mo_general_ops gs_general_ops = {
 static const struct mo_netserv_ops gs_netserv_ops = {
     .set_attach = sim7070x_set_attach,
     .get_attach = sim7070x_get_attach,
-    .set_reg    = sim7070x_set_reg,
-    .get_reg    = sim7070x_get_reg,
-    .set_cgact  = sim7070x_set_cgact,
-    .get_cgact  = sim7070x_get_cgact,
-    .get_csq    = sim7070x_get_csq,
+    .set_reg = sim7070x_set_reg,
+    .get_reg = sim7070x_get_reg,
+    .set_cgact = sim7070x_set_cgact,
+    .get_cgact = sim7070x_get_cgact,
+    .get_csq = sim7070x_get_csq,
 };
 #endif /* SIM7070X_USING_NETSERV_OPS */
 
@@ -72,7 +72,7 @@ static const struct mo_ping_ops gs_ping_ops = {
 
 #ifdef SIM7070X_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig   = sim7070x_ifconfig,
+    .ifconfig = sim7070x_ifconfig,
     .get_ipaddr = sim7070x_get_ipaddr,
 };
 #endif /* SIM7070X_USING_IFCONFIG_OPS */
@@ -81,14 +81,14 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern void sim7070x_netconn_init(mo_sim7070x_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create        = sim7070x_netconn_create,
-    .destroy       = sim7070x_netconn_destroy,
+    .create = sim7070x_netconn_create,
+    .destroy = sim7070x_netconn_destroy,
 #ifdef SIM7070X_USING_DNS
     .gethostbyname = sim7070x_netconn_gethostbyname,
 #endif
-    .connect       = sim7070x_netconn_connect,
-    .send          = sim7070x_netconn_send,
-    .get_info      = sim7070x_netconn_get_info,
+    .connect = sim7070x_netconn_connect,
+    .send = sim7070x_netconn_send,
+    .get_info = sim7070x_netconn_get_info,
 };
 #endif /* SIM7070X_USING_NETCONN_OPS */
 
@@ -105,9 +105,7 @@ static os_err_t sim7070x_at_init(mo_object_t *self)
 
     char resp_buff[32] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 2 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 2 * OS_TICK_PER_SECOND};
 
     return at_parser_exec_cmd(parser, &resp, "ATE0");
 }
@@ -118,10 +116,10 @@ static os_err_t sim7070x_set_app_network_pdpidx0(mo_object_t *self)
 
     os_uint32_t cid = 0;
     os_uint32_t stat = 0;
-    os_err_t   result = OS_EOK;
+    os_err_t result = OS_EOK;
 
     char resp_buff[256] = {0};
-    char temp[64]       = {0};
+    char temp[64] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 10 * OS_TICK_PER_SECOND};
 
@@ -149,7 +147,7 @@ static os_err_t sim7070x_set_app_network_pdpidx0(mo_object_t *self)
 
     os_task_msleep(5000);
 
-        /* PDP index0 config to ctnb (APN delivered by the CAT-M or NB-IOT network) */
+    /* PDP index0 config to ctnb (APN delivered by the CAT-M or NB-IOT network) */
     result = at_parser_exec_cmd(parser, &resp, "AT+CNCFG=0,1,\"ctnb\"");
     if (result != OS_EOK)
     {
@@ -158,7 +156,7 @@ static os_err_t sim7070x_set_app_network_pdpidx0(mo_object_t *self)
     }
 
     resp.line_num = 2;
-    resp.timeout  = 30 * OS_TICK_PER_SECOND;
+    resp.timeout = 30 * OS_TICK_PER_SECOND;
     /* APP network pdp index0 active */
     result = at_parser_exec_cmd(parser, &resp, "AT+CNACT=0,1");
     if (result != OS_EOK)
@@ -174,7 +172,7 @@ static os_err_t sim7070x_set_app_network_pdpidx0(mo_object_t *self)
     }
 
     resp.line_num = 0;
-    resp.timeout  = 3 * OS_TICK_PER_SECOND;
+    resp.timeout = 3 * OS_TICK_PER_SECOND;
     /* PDP context activate? */
     for (int i = 0; i < SIM7070X_RETRY_TIMES; i++)
     {
@@ -211,7 +209,7 @@ static os_err_t sim7070x_get_app_network_pdpidx0_status(mo_object_t *self, os_ui
     at_parser_t *parser = &self->parser;
 
     char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
-    char resp_buff[128]                 = {0};
+    char resp_buff[128] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 3 * OS_TICK_PER_SECOND};
 
@@ -359,7 +357,7 @@ int sim7070x_auto_create(void)
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = SIM7070X_NAME,
+    mo_parser_config_t parser_config = {.parser_name = SIM7070X_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = SIM7070X_RECV_BUFF_LEN};
 
@@ -375,7 +373,7 @@ int sim7070x_auto_create(void)
 
     return OS_EOK;
 }
-OS_CMPOENT_INIT(sim7070x_auto_create,OS_INIT_SUBLEVEL_MIDDLE);
+OS_CMPOENT_INIT(sim7070x_auto_create, OS_INIT_SUBLEVEL_MIDDLE);
 
 #endif /* SIM7070X_AUTO_CREATE */
 

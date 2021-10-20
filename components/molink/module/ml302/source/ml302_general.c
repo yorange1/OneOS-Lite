@@ -26,7 +26,7 @@
 #include <string.h>
 
 #define MO_LOG_TAG "ml302_general"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef ML302_USING_GENERAL_OPS
@@ -42,7 +42,7 @@ os_err_t ml302_at_test(mo_object_t *self)
     return at_parser_exec_cmd(parser, &resp, "AT");
 }
 
-os_err_t ml302_get_imei(mo_object_t * self,char * value,os_size_t len)
+os_err_t ml302_get_imei(mo_object_t *self, char *value, os_size_t len)
 {
     OS_ASSERT(len > MO_IMEI_LEN);
 
@@ -51,7 +51,7 @@ os_err_t ml302_get_imei(mo_object_t * self,char * value,os_size_t len)
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = OS_TICK_PER_SECOND};
 
-    if(OS_EOK != at_parser_exec_cmd(parser, &resp, "AT+CGSN=1"))
+    if (OS_EOK != at_parser_exec_cmd(parser, &resp, "AT+CGSN=1"))
     {
         return OS_ERROR;
     }
@@ -69,7 +69,7 @@ os_err_t ml302_get_imei(mo_object_t * self,char * value,os_size_t len)
     return OS_EOK;
 }
 
-os_err_t ml302_get_imsi(mo_object_t * self,char * value,os_size_t len)
+os_err_t ml302_get_imsi(mo_object_t *self, char *value, os_size_t len)
 {
     OS_ASSERT(len > MO_IMSI_LEN);
 
@@ -78,12 +78,12 @@ os_err_t ml302_get_imsi(mo_object_t * self,char * value,os_size_t len)
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 3 * OS_TICK_PER_SECOND};
 
-    if(OS_EOK != at_parser_exec_cmd(parser, &resp, "AT+CIMI"))
+    if (OS_EOK != at_parser_exec_cmd(parser, &resp, "AT+CIMI"))
     {
         return OS_ERROR;
     }
 
-    if(at_resp_get_data_by_line(&resp, 1, "%s", value) <= 0)
+    if (at_resp_get_data_by_line(&resp, 1, "%s", value) <= 0)
     {
         ERROR("Get %s module imsi failed.");
         return OS_ERROR;
@@ -91,12 +91,12 @@ os_err_t ml302_get_imsi(mo_object_t * self,char * value,os_size_t len)
 
     value[MO_IMSI_LEN] = '\0';
 
-    DEBUG("%s module imsi:%s",self->name,value);
+    DEBUG("%s module imsi:%s", self->name, value);
 
     return OS_EOK;
 }
 
-os_err_t ml302_get_iccid(mo_object_t * self,char * value,os_size_t len)
+os_err_t ml302_get_iccid(mo_object_t *self, char *value, os_size_t len)
 {
     OS_ASSERT(len > MO_ICCID_LEN);
 
@@ -105,12 +105,12 @@ os_err_t ml302_get_iccid(mo_object_t * self,char * value,os_size_t len)
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = OS_TICK_PER_SECOND};
 
-    if(OS_EOK != at_parser_exec_cmd(parser, &resp, "AT+ICCID"))
+    if (OS_EOK != at_parser_exec_cmd(parser, &resp, "AT+ICCID"))
     {
         return OS_ERROR;
     }
 
-    if(at_resp_get_data_by_kw(&resp, "+ICCID:", "+ICCID: %s", value) <= 0)
+    if (at_resp_get_data_by_kw(&resp, "+ICCID:", "+ICCID: %s", value) <= 0)
     {
         ERROR("Get %s module ccid failed.", self->parser);
         return OS_ERROR;
@@ -121,7 +121,7 @@ os_err_t ml302_get_iccid(mo_object_t * self,char * value,os_size_t len)
     return OS_EOK;
 }
 
-os_err_t ml302_get_cfun(mo_object_t * self,os_uint8_t *fun_lvl)
+os_err_t ml302_get_cfun(mo_object_t *self, os_uint8_t *fun_lvl)
 {
     at_parser_t *parser = &self->parser;
 
@@ -134,7 +134,7 @@ os_err_t ml302_get_cfun(mo_object_t * self,os_uint8_t *fun_lvl)
         return OS_ERROR;
     }
 
-    if(at_resp_get_data_by_kw(&resp, "+CFUN:", "+CFUN: %hhu",fun_lvl) <= 0)
+    if (at_resp_get_data_by_kw(&resp, "+CFUN:", "+CFUN: %hhu", fun_lvl) <= 0)
     {
         ERROR("Get %s module level of functionality failed.", self->name);
         return OS_ERROR;
@@ -160,9 +160,7 @@ os_err_t ml302_get_firmware_version(mo_object_t *self, mo_firmware_version_t *ve
 
     char resp_buff[256] = {0};
 
-    at_resp_t resp = {.buff = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+GMR");
     if (result != OS_EOK)
@@ -177,7 +175,7 @@ os_err_t ml302_get_firmware_version(mo_object_t *self, mo_firmware_version_t *ve
     }
 
     const char *source_line = at_resp_get_line(&resp, 1);
-    os_size_t   line_length = strlen(source_line);
+    os_size_t line_length = strlen(source_line);
 
     char **dest_line = &version->ver_info[0];
 
@@ -196,4 +194,3 @@ os_err_t ml302_get_firmware_version(mo_object_t *self, mo_firmware_version_t *ve
 }
 
 #endif /* ML302_USING_GENERAL_OPS */
-

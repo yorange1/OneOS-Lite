@@ -44,7 +44,7 @@
 #endif
 
 #ifndef ESP8266_NETCONN_MQ_MSG_MAX
-#define ESP8266_NETCONN_MQ_MSG_MAX  (10)
+#define ESP8266_NETCONN_MQ_MSG_MAX (10)
 #endif
 
 #define SET_EVENT(socket, event) (((socket + 1) << 16) | (event))
@@ -131,7 +131,7 @@ os_err_t esp8266_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
     mo_esp8266_t *esp8266 = os_container_of(module, mo_esp8266_t, parent);
 
     info->netconn_array = esp8266->netconn;
-    info->netconn_nums  = sizeof(esp8266->netconn) / sizeof(esp8266->netconn[0]);
+    info->netconn_nums = sizeof(esp8266->netconn) / sizeof(esp8266->netconn[0]);
 
     return OS_EOK;
 }
@@ -169,7 +169,7 @@ mo_netconn_t *esp8266_netconn_create(mo_object_t *module, mo_netconn_type_t type
 os_err_t esp8266_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 {
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_ERROR;
+    os_err_t result = OS_ERROR;
 
     DEBUG("Module %s in %d netconn status", module->name, netconn->stat);
 
@@ -211,9 +211,9 @@ os_err_t esp8266_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 
     INFO("Module %s netconn id %d destroyed", module->name, netconn->connect_id);
 
-    netconn->connect_id  = -1;
-    netconn->stat        = NETCONN_STAT_NULL;
-    netconn->type        = NETCONN_TYPE_NULL;
+    netconn->connect_id = -1;
+    netconn->stat = NETCONN_STAT_NULL;
+    netconn->type = NETCONN_TYPE_NULL;
     netconn->remote_port = 0;
 #ifdef MOLINK_USING_SOCKETS_OPS
     netconn->socket_id = -1;
@@ -238,9 +238,9 @@ os_err_t esp8266_netconn_bind(mo_object_t *module, mo_netconn_t *netconn, ip_add
 
     char remote_ip[IPADDR_MAX_STR_LEN + 1] = {0};
 
-    //INFO("loacl addr step 1:0x%08x", addr.addr);
-    //addr.addr |= 0x000000FF;
-    //INFO("loacl addr step 2:0x%08x", addr.addr);
+    // INFO("loacl addr step 1:0x%08x", addr.addr);
+    // addr.addr |= 0x000000FF;
+    // INFO("loacl addr step 2:0x%08x", addr.addr);
     strncpy(remote_ip, inet_ntoa(addr), IPADDR_MAX_STR_LEN);
 
     INFO("loacl addr:%s", remote_ip);
@@ -254,7 +254,7 @@ os_err_t esp8266_netconn_bind(mo_object_t *module, mo_netconn_t *netconn, ip_add
                                     "AT+CIPSTART=%d,\"UDP\",\"%s\",0,%d,2",
                                     netconn->connect_id,
                                     remote_ip,
-                                    port);                                   
+                                    port);
         break;
     case NETCONN_TYPE_UDP_V6:
         result = at_parser_exec_cmd(parser,
@@ -273,13 +273,13 @@ os_err_t esp8266_netconn_bind(mo_object_t *module, mo_netconn_t *netconn, ip_add
     {
         goto __exit;
     }
-    
+
 __exit:
     if (OS_EOK == result)
     {
         ip_addr_copy(netconn->remote_ip, addr);
         netconn->remote_port = port;
-        netconn->stat        = NETCONN_STAT_CONNECT;
+        netconn->stat = NETCONN_STAT_CONNECT;
 
         INFO("Module %s connect to %s:%d successfully!", module->name, remote_ip, port);
     }
@@ -321,12 +321,8 @@ os_err_t esp8266_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_
 
 #ifdef ESP8266_USING_UDP
     case NETCONN_TYPE_UDP:
-        result = at_parser_exec_cmd(parser,
-                                    &resp,
-                                    "AT+CIPSTART=%d,\"UDP\",\"%s\",%d",
-                                    netconn->connect_id,
-                                    remote_ip,
-                                    port);
+        result =
+            at_parser_exec_cmd(parser, &resp, "AT+CIPSTART=%d,\"UDP\",\"%s\",%d", netconn->connect_id, remote_ip, port);
         break;
 #endif
 
@@ -346,7 +342,7 @@ __exit:
     {
         ip_addr_copy(netconn->remote_ip, addr);
         netconn->remote_port = port;
-        netconn->stat        = NETCONN_STAT_CONNECT;
+        netconn->stat = NETCONN_STAT_CONNECT;
 
         DEBUG("Module %s connect to %s:%d successfully!", module->name, remote_ip, port);
     }
@@ -359,24 +355,27 @@ __exit:
 }
 
 #ifdef ESP8266_USING_UDP
-os_size_t esp8266_netconn_sendto(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port, const char *data, os_size_t size)
+os_size_t esp8266_netconn_sendto(mo_object_t *module,
+                                 mo_netconn_t *netconn,
+                                 ip_addr_t addr,
+                                 os_uint16_t port,
+                                 const char *data,
+                                 os_size_t size)
 {
     char remote_ip[IPADDR_MAX_STR_LEN + 1] = {0};
-    at_parser_t *parser    = &module->parser;
-    os_err_t     result    = OS_EOK;
-    os_size_t    sent_size = 0;
-    os_size_t    curr_size = 0;
-    os_uint32_t  event     = 0;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    os_size_t sent_size = 0;
+    os_size_t curr_size = 0;
+    os_uint32_t event = 0;
 
     mo_esp8266_t *esp8266 = os_container_of(module, mo_esp8266_t, parent);
-    
+
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     strncpy(remote_ip, inet_ntoa(addr), IPADDR_MAX_STR_LEN);
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 5 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 5 * OS_TICK_PER_SECOND};
     at_parser_exec_lock(parser);
 
     esp8266->curr_connect = netconn->connect_id;
@@ -395,7 +394,13 @@ os_size_t esp8266_netconn_sendto(mo_object_t *module, mo_netconn_t *netconn, ip_
 
         /* Protect the data sending process, prevent other threads to send AT commands */
 
-        result = at_parser_exec_cmd(parser, &resp, "AT+CIPSEND=%d,%d,\"%s\",%d", netconn->connect_id, curr_size, remote_ip, port);
+        result = at_parser_exec_cmd(parser,
+                                    &resp,
+                                    "AT+CIPSEND=%d,%d,\"%s\",%d",
+                                    netconn->connect_id,
+                                    curr_size,
+                                    remote_ip,
+                                    port);
         if (result != OS_EOK)
         {
             goto __exit;
@@ -455,7 +460,7 @@ __exit:
     if (result != OS_EOK)
     {
         ERROR("Module %s netconn %d send %d bytes data failed!", parser->name, netconn->connect_id, size);
-        
+
         return 0;
     }
 
@@ -466,21 +471,19 @@ __exit:
 #ifdef ESP8266_USING_TCP
 os_size_t esp8266_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
-    at_parser_t *parser    = &module->parser;
-    os_err_t     result    = OS_EOK;
-    os_size_t    sent_size = 0;
-    os_size_t    curr_size = 0;
-    os_uint32_t  event     = 0;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    os_size_t sent_size = 0;
+    os_size_t curr_size = 0;
+    os_uint32_t event = 0;
 
     mo_esp8266_t *esp8266 = os_container_of(module, mo_esp8266_t, parent);
-    
+
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 5 * OS_TICK_PER_SECOND};
-					  
-	/* Protect the data sending process, prevent other threads to send AT commands */
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 5 * OS_TICK_PER_SECOND};
+
+    /* Protect the data sending process, prevent other threads to send AT commands */
     at_parser_exec_lock(parser);
 
     esp8266->curr_connect = netconn->connect_id;
@@ -585,9 +588,7 @@ os_err_t esp8266_netconn_gethostbyname(mo_object_t *module, const char *domain_n
 
     char resp_buff[AT_RESP_BUFF_SIZE_128] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 20 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 20 * OS_TICK_PER_SECOND};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+CIPDOMAIN=\"%s\"", domain_name);
     if (result != OS_EOK)
@@ -620,10 +621,10 @@ os_err_t esp8266_netconn_gethostbyname(mo_object_t *module, const char *domain_n
         inet_aton(recvip, addr);
 #ifdef MOLINK_USING_IPV4
 #ifdef MOLINK_USING_IPV6
-        if (IPADDR_ANY == addr->u_addr.ip4.addr || IPADDR_LOOPBACK == addr->u_addr.ip4.addr) 
+        if (IPADDR_ANY == addr->u_addr.ip4.addr || IPADDR_LOOPBACK == addr->u_addr.ip4.addr)
 #else
         if (IPADDR_ANY == addr->addr || IPADDR_LOOPBACK == addr->addr)
-#endif        
+#endif
         {
             ip_addr_set_zero(addr);
             result = OS_ERROR;
@@ -644,7 +645,7 @@ static void urc_send_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != parser);
     OS_ASSERT(OS_NULL != data);
 
-    mo_object_t  *module  = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
     mo_esp8266_t *esp8266 = os_container_of(module, mo_esp8266_t, parent);
 
     os_int32_t curr_connect = esp8266->curr_connect;
@@ -670,7 +671,7 @@ static void urc_close_func(struct at_parser *parser, const char *data, os_size_t
 
     sscanf(data, "%d,CLOSED", &connect_id);
 
-    mo_object_t  *module  = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
     mo_netconn_t *netconn = esp8266_get_netconn_by_id(module, connect_id);
 
     if (OS_NULL == netconn)
@@ -691,7 +692,7 @@ static void urc_send_bfsz_func(struct at_parser *parser, const char *data, os_si
     OS_ASSERT(OS_NULL != parser);
     OS_ASSERT(OS_NULL != data);
 
-    mo_object_t  *module  = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
     mo_esp8266_t *esp8266 = os_container_of(module, mo_esp8266_t, parent);
 
     os_int32_t send_bfsz = 0;
@@ -748,20 +749,20 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != parser);
     OS_ASSERT(OS_NULL != data);
 
-    os_int32_t  connect_id = 0;
-    os_int32_t  data_size  = 0;
-    ip_addr_t   addr       = {0};
-    os_uint16_t port       = 0;
+    os_int32_t connect_id = 0;
+    os_int32_t data_size = 0;
+    ip_addr_t addr = {0};
+    os_uint16_t port = 0;
     char ipd_prefix[80];
 
     memset(ipd_prefix, 0, sizeof(ipd_prefix));
     memcpy(ipd_prefix, data, size);
     mo_object_t *module = os_container_of(parser, mo_object_t, parser);
-    
+
 #ifdef ESP8266_USING_WIFI_OPS
     char remote_ip[IPADDR_MAX_STR_LEN + 1 + 2] = {0};
     int len;
-    
+
     mo_esp8266_t *esp8266 = os_container_of(module, mo_esp8266_t, parent);
 
     if (MO_WIFI_CIPINFO_SHOW_IP_PORT == esp8266->wifi_ipdinfo)
@@ -786,8 +787,9 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
 #endif
 
     os_int32_t timeout = data_size > 10 ? data_size : 10;
-	// INFO("--%s", ipd_prefix);
-    // INFO("Moudle %s netconn %d receive %d bytes data from[%s,%d]", parser->name, connect_id, data_size, remote_ip, port);
+    // INFO("--%s", ipd_prefix);
+    // INFO("Moudle %s netconn %d receive %d bytes data from[%s,%d]", parser->name, connect_id, data_size, remote_ip,
+    // port);
 
     mo_netconn_t *netconn = esp8266_get_netconn_by_id(module, connect_id);
 
@@ -802,8 +804,8 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
     {
         /* read and clean the coming data */
         ERROR("os_calloc recv buff %d bytes fail, no enough memory", data_size);
-        os_size_t temp_size    = 0;
-        char      temp_buff[8] = {0};
+        os_size_t temp_size = 0;
+        char temp_buff[8] = {0};
 
         while (temp_size < data_size)
         {
@@ -834,9 +836,9 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
     ip_addr_set_zero(&addr);
     if (NETCONN_TYPE_UDP_V6 == netconn->type || NETCONN_TYPE_TCP_V6 == netconn->type)
     {
-        IP_SET_TYPE(&addr, IPADDR_TYPE_V6);   
+        IP_SET_TYPE(&addr, IPADDR_TYPE_V6);
     }
-    
+
     inet_aton(remote_ip, &addr);
 #endif
     mo_wifi_netconn_data_recv_notice(netconn, addr, (os_uint16_t)port, recv_buff, data_size);
@@ -845,11 +847,11 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
 }
 
 static at_urc_t gs_urc_table[] = {
-    {.prefix = "SEND OK",   .suffix = "\r\n",        .func = urc_send_func},
-    {.prefix = "SEND FAIL", .suffix = "\r\n",        .func = urc_send_func},
-    {.prefix = "Recv",      .suffix = "bytes\r\n",   .func = urc_send_bfsz_func},
-    {.prefix = "+IPD",      .suffix = ",",           .func = urc_recv_func},
-    {.prefix = "",          .suffix = ",CLOSED\r\n", .func = urc_close_func},
+    {.prefix = "SEND OK", .suffix = "\r\n", .func = urc_send_func},
+    {.prefix = "SEND FAIL", .suffix = "\r\n", .func = urc_send_func},
+    {.prefix = "Recv", .suffix = "bytes\r\n", .func = urc_send_bfsz_func},
+    {.prefix = "+IPD", .suffix = ",", .func = urc_recv_func},
+    {.prefix = "", .suffix = ",CLOSED\r\n", .func = urc_close_func},
 };
 
 os_err_t esp8266_netconn_init(mo_esp8266_t *module)

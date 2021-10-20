@@ -33,8 +33,8 @@ extern "C" {
 
 /* These define is define for extending as follow functions under ARMCC or ARMCLANG */
 #if defined(__CC_ARM) || defined(__CLANG_ARM)
-extern size_t  strnlen(const char *s, size_t maxlen);
-extern char   *strdup(const char *s);
+extern size_t strnlen(const char *s, size_t maxlen);
+extern char *strdup(const char *s);
 #endif
 
 #ifdef __cplusplus
@@ -42,4 +42,3 @@ extern char   *strdup(const char *s);
 #endif
 
 #endif /* __STRING_EXT_H__ */
-

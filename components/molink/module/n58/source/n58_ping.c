@@ -41,17 +41,18 @@ os_err_t n58_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint3
     at_parser_t *parser = &self->parser;
 
     char resp_buff[AT_RESP_BUFF_SIZE_256] = {0};
-    char ip_addr[IPADDR_MAX_STR_LEN + 1]  = {0};
+    char ip_addr[IPADDR_MAX_STR_LEN + 1] = {0};
 
     os_uint32_t timeout_s = timeout / 1000; /* Milliseconds convert to seconds */
-    os_uint32_t req_time  = 0;
-    os_uint32_t ttl       = 0;
+    os_uint32_t req_time = 0;
+    os_uint32_t ttl = 0;
 
-    at_resp_t at_resp = {.buff      = resp_buff,
-                         .buff_size = sizeof(resp_buff),
-                         .line_num  = 5,
-                         .timeout   = (5 + timeout / 1000) * OS_TICK_PER_SECOND,
-                        };
+    at_resp_t at_resp = {
+        .buff = resp_buff,
+        .buff_size = sizeof(resp_buff),
+        .line_num = 5,
+        .timeout = (5 + timeout / 1000) * OS_TICK_PER_SECOND,
+    };
 
     if ((len > N58_MAX_PING_PKG_LEN) || (len < N58_MIN_PING_PKG_LEN))
     {
@@ -61,7 +62,10 @@ os_err_t n58_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint3
 
     if (timeout_s > N58_MAX_PING_TIMEOUT)
     {
-        ERROR("N58 ping: ping timeout %us is out of range[%ds, %ds].", timeout_s, N58_MIN_PING_TIMEOUT, N58_MAX_PING_TIMEOUT);
+        ERROR("N58 ping: ping timeout %us is out of range[%ds, %ds].",
+              timeout_s,
+              N58_MIN_PING_TIMEOUT,
+              N58_MAX_PING_TIMEOUT);
         return OS_ERROR;
     }
 
@@ -109,8 +113,8 @@ os_err_t n58_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint3
         inet_aton(ip_addr, &(resp->ip_addr));
 
         resp->data_len = len;
-        resp->ttl      = ttl;
-        resp->time     = req_time;
+        resp->ttl = ttl;
+        resp->time = req_time;
     }
 
     at_parser_exec_unlock(parser);

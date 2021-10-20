@@ -30,7 +30,7 @@
 #include <stdlib.h>
 
 #define MO_LOG_TAG "me3616_netconn"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #define SEND_DATA_MAX_SIZE (512)
@@ -43,11 +43,10 @@
 #endif
 
 #ifndef ME3616_NETCONN_MQ_MSG_MAX
-#define ME3616_NETCONN_MQ_MSG_MAX  (5)
+#define ME3616_NETCONN_MQ_MSG_MAX (5)
 #endif
 
 #ifdef ME3616_USING_NETCONN_OPS
-
 
 static os_err_t me3616_lock(os_mutex_t *mutex)
 {
@@ -61,20 +60,17 @@ static os_err_t me3616_unlock(os_mutex_t *mutex)
 
 static mo_netconn_t *me3616_netconn_alloc(mo_object_t *module, mo_netconn_type_t type)
 {
-    at_parser_t *parser      = &module->parser;
-    mo_me3616_t *me3616      = os_container_of(module, mo_me3616_t, parent);
-    os_uint8_t   socket_id   = 0; 
+    at_parser_t *parser = &module->parser;
+    mo_me3616_t *me3616 = os_container_of(module, mo_me3616_t, parent);
+    os_uint8_t socket_id = 0;
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 10 * OS_TICK_PER_SECOND
-                     };
-    
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 10 * OS_TICK_PER_SECOND};
+
     for (int i = 0; i < ME3616_NETCONN_NUM; i++)
     {
         if (NETCONN_STAT_NULL == me3616->netconn[i].stat)
-        { 
-            if(OS_EOK != at_parser_exec_cmd(parser, &resp, "AT+ESOC=1,%d,1", type))  
+        {
+            if (OS_EOK != at_parser_exec_cmd(parser, &resp, "AT+ESOC=1,%d,1", type))
             {
                 continue;
             }
@@ -82,7 +78,7 @@ static mo_netconn_t *me3616_netconn_alloc(mo_object_t *module, mo_netconn_type_t
             if (at_resp_get_data_by_kw(&resp, "+ESOC=", "+ESOC=%d", &socket_id) <= 0)
             {
                 continue;
-            }            
+            }
             me3616->netconn[i].connect_id = socket_id;
             return &me3616->netconn[i];
         }
@@ -104,7 +100,7 @@ static mo_netconn_t *me3616_get_netconn_by_id(mo_object_t *module, os_int32_t co
     }
 
     mo_me3616_t *me3616 = os_container_of(module, mo_me3616_t, parent);
-    
+
     for (int i = 0; i < ME3616_NETCONN_NUM; i++)
     {
         if (connect_id == me3616->netconn[i].connect_id)
@@ -114,7 +110,6 @@ static mo_netconn_t *me3616_get_netconn_by_id(mo_object_t *module, os_int32_t co
     }
 
     return OS_NULL;
-
 }
 
 os_err_t me3616_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
@@ -122,7 +117,7 @@ os_err_t me3616_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
     mo_me3616_t *me3616 = os_container_of(module, mo_me3616_t, parent);
 
     info->netconn_array = me3616->netconn;
-    info->netconn_nums  = sizeof(me3616->netconn) / sizeof(me3616->netconn[0]);
+    info->netconn_nums = sizeof(me3616->netconn) / sizeof(me3616->netconn[0]);
 
     return OS_EOK;
 }
@@ -133,9 +128,7 @@ mo_netconn_t *me3616_netconn_create(mo_object_t *module, mo_netconn_type_t type)
     me3616_lock(&me3616->netconn_lock);
     mo_netconn_t *netconn = me3616_netconn_alloc(module, type);
 
-    netconn->mq = os_mq_create(ME3616_NETCONN_MQ_NAME,
-                               ME3616_NETCONN_MQ_MSG_SIZE,
-                               ME3616_NETCONN_MQ_MSG_MAX);
+    netconn->mq = os_mq_create(ME3616_NETCONN_MQ_NAME, ME3616_NETCONN_MQ_MSG_SIZE, ME3616_NETCONN_MQ_MSG_MAX);
     if (OS_NULL == netconn->mq)
     {
         ERROR("%s data queue create failed, no enough memory.", module->name);
@@ -151,18 +144,15 @@ mo_netconn_t *me3616_netconn_create(mo_object_t *module, mo_netconn_type_t type)
 
 os_err_t me3616_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 {
-    at_parser_t *parser      = &module->parser;
-    os_err_t     result      = OS_ERROR;
-    
-    mo_me3616_t * me3616      = os_container_of(module, mo_me3616_t, parent);
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_ERROR;
+
+    mo_me3616_t *me3616 = os_container_of(module, mo_me3616_t, parent);
     me3616_lock(&me3616->netconn_lock);
-    
+
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 10 * OS_TICK_PER_SECOND
-                     };
-    
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 10 * OS_TICK_PER_SECOND};
+
     switch (netconn->stat)
     {
     case NETCONN_STAT_INIT:
@@ -171,12 +161,12 @@ os_err_t me3616_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
         if (result != OS_EOK)
         {
             ERROR("Module %s destroy %s netconn failed",
-                      module->name,
-                      (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
+                  module->name,
+                  (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
             me3616_unlock(&me3616->netconn_lock);
             return result;
         }
-   
+
         break;
     default:
         /* add handler when we need */
@@ -191,48 +181,43 @@ os_err_t me3616_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 
     INFO("Module %s netconn id %d destroyed", module->name, netconn->connect_id);
 
-    netconn->connect_id  = -1;
-    netconn->stat        = NETCONN_STAT_NULL;
-    netconn->type        = NETCONN_TYPE_NULL;
+    netconn->connect_id = -1;
+    netconn->stat = NETCONN_STAT_NULL;
+    netconn->type = NETCONN_TYPE_NULL;
     netconn->remote_port = 0;
     inet_aton("0.0.0.0", &netconn->remote_ip);
-    
+
     me3616_unlock(&me3616->netconn_lock);
-    
+
     return OS_EOK;
 }
 
-
-
 os_err_t me3616_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port)
 {
-    at_parser_t *parser     = &module->parser;
-    os_err_t    result      = OS_EOK;  
-    mo_me3616_t * me3616      = os_container_of(module, mo_me3616_t, parent);
-    
-	me3616_lock(&me3616->netconn_lock);
-    
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    mo_me3616_t *me3616 = os_container_of(module, mo_me3616_t, parent);
+
+    me3616_lock(&me3616->netconn_lock);
+
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 60 * OS_TICK_PER_SECOND};
 
     char remote_ip[IPADDR_MAX_STR_LEN + 1] = {0};
-    strncpy(remote_ip, inet_ntoa(addr), IPADDR_MAX_STR_LEN);	
-  
-    result = at_parser_exec_cmd(parser, &resp, "AT+ESOCON=%d,%d,\"%s\"", 
-                                               netconn->connect_id,
-                                               port,
-                                               remote_ip);    
+    strncpy(remote_ip, inet_ntoa(addr), IPADDR_MAX_STR_LEN);
+
+    result = at_parser_exec_cmd(parser, &resp, "AT+ESOCON=%d,%d,\"%s\"", netconn->connect_id, port, remote_ip);
     if (result != OS_EOK)
     {
         goto __exit;
     }
-  
+
 __exit:
     if (OS_EOK == result)
     {
         ip_addr_copy(netconn->remote_ip, addr);
         netconn->remote_port = port;
-        netconn->stat        = NETCONN_STAT_CONNECT;
+        netconn->stat = NETCONN_STAT_CONNECT;
 
         DEBUG("Module %s connect to %s:%d successfully!", module->name, remote_ip, port);
     }
@@ -247,47 +232,39 @@ __exit:
 
 os_size_t me3616_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
-    at_parser_t *parser         = &module->parser;
-    os_err_t     result         = OS_EOK;
-    
-    mo_me3616_t *me3616         = os_container_of(module, mo_me3616_t, parent);
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+
+    mo_me3616_t *me3616 = os_container_of(module, mo_me3616_t, parent);
 
     at_parser_exec_lock(parser);
-    
-    me3616->curr_connect        = netconn->connect_id;   
-    char        *hexstr         = os_calloc(1, size * 2 + 1);    
-    char         resp_buff[128] = {0};    
-    at_resp_t    resp           = {.buff      = resp_buff,
-                                   .buff_size = sizeof(resp_buff),
-                                   .timeout   = 5 * OS_TICK_PER_SECOND
-                                  }; 
-    
-    if(size > SEND_DATA_MAX_SIZE || size < SEND_DATA_MIN_SIZE) 
+
+    me3616->curr_connect = netconn->connect_id;
+    char *hexstr = os_calloc(1, size * 2 + 1);
+    char resp_buff[128] = {0};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 5 * OS_TICK_PER_SECOND};
+
+    if (size > SEND_DATA_MAX_SIZE || size < SEND_DATA_MIN_SIZE)
     {
-        ERROR("Moudle %s send data len: %d  out of the range [1,512]!",
-                  module->name,
-                  size );       
+        ERROR("Moudle %s send data len: %d  out of the range [1,512]!", module->name, size);
         result = OS_ERROR;
         goto __exit;
     }
-    
+
     if (OS_NULL == hexstr)
     {
-        ERROR("Moudle %s netconn %d calloc %d bytes memory failed!",
-                  module->name,
-                  netconn->connect_id,
-                  size * 2 + 1);
+        ERROR("Moudle %s netconn %d calloc %d bytes memory failed!", module->name, netconn->connect_id, size * 2 + 1);
         result = OS_ERROR;
         goto __exit;
     }
 
     bytes_to_hexstr(data, hexstr, size);
- 
+
     result = at_parser_exec_cmd(parser, &resp, "AT+ESOSEND=%d,%d,%s", netconn->connect_id, size, hexstr);
     if (result != OS_EOK)
     {
         goto __exit;
-    }                     
+    }
 
 __exit:
 
@@ -309,23 +286,23 @@ os_err_t me3616_netconn_gethostbyname(mo_object_t *self, const char *domain_name
     OS_ASSERT(OS_NULL != domain_name);
     OS_ASSERT(OS_NULL != addr);
 
-    at_parser_t *parser                 = &self->parser;
-    os_err_t     result                 = OS_EOK;
+    at_parser_t *parser = &self->parser;
+    os_err_t result = OS_EOK;
     char recvip[IPADDR_MAX_STR_LEN + 1] = {0};
-    char resp_buff[128]                 = {0};
+    char resp_buff[128] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 30 * OS_TICK_PER_SECOND};
 
     mo_me3616_t *me3616 = os_container_of(self, mo_me3616_t, parent);
 
     me3616->netconn_data = addr;
-    
+
     result = at_parser_exec_cmd(parser, &resp, "AT+EDNS=\"%s\"", domain_name);
     if (result != OS_EOK)
     {
         goto __exit;
     }
-    
+
     if (at_resp_get_data_by_kw(&resp, "IPV4:", "IPV4:%s", &recvip) <= 0)
     {
         result = OS_ERROR;
@@ -349,23 +326,26 @@ static void urc_err_func(struct at_parser *parser, const char *data, os_size_t s
 {
     OS_ASSERT(OS_NULL != parser);
     OS_ASSERT(OS_NULL != data);
-  
-    os_int32_t   error_code    = 0;
-    os_int32_t   connect_id    = -1;
-    mo_object_t  *module       = os_container_of(parser, mo_object_t, parser);
+
+    os_int32_t error_code = 0;
+    os_int32_t connect_id = -1;
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
 
     sscanf(data, "+ESOERR=%d,%d", &connect_id, &error_code);
-          
+
     mo_netconn_t *netconn = me3616_get_netconn_by_id(module, connect_id);
     if (OS_NULL == netconn)
     {
         return;
     }
-    ERROR("Module %s connect_id: %d recv error_code: %d and the netconn destroyed", module->name, connect_id, error_code);
-    
-    netconn->connect_id  = -1;
-    netconn->stat        = NETCONN_STAT_NULL;
-    netconn->type        = NETCONN_TYPE_NULL;
+    ERROR("Module %s connect_id: %d recv error_code: %d and the netconn destroyed",
+          module->name,
+          connect_id,
+          error_code);
+
+    netconn->connect_id = -1;
+    netconn->stat = NETCONN_STAT_NULL;
+    netconn->type = NETCONN_TYPE_NULL;
     netconn->remote_port = 0;
     inet_aton("0.0.0.0", &netconn->remote_ip);
 }
@@ -376,7 +356,7 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != data);
 
     os_int32_t connect_id = -1;
-    os_int32_t data_size  = 0;
+    os_int32_t data_size = 0;
 
     sscanf(data, "+ESONMI=%d,%d,", &connect_id, &data_size);
     INFO("Moudle %s netconn %d receive %d bytes data", parser->name, connect_id, data_size);
@@ -412,41 +392,41 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
 
     /* from mo_lib */
     hexstr_to_bytes(recv_buff, recv_str, data_size * 2);
-    
+
     mo_netconn_data_recv_notice(netconn, recv_str, data_size);
 
     os_free(recv_buff);
-    
-    return; 
+
+    return;
 }
 
 static at_urc_t gs_urc_table[] = {
-    {.prefix = "+ESONMI=",     .suffix = "\r\n",      .func = urc_recv_func},
-    {.prefix = "+ESOERR=",     .suffix = "\r\n",      .func = urc_err_func},
+    {.prefix = "+ESONMI=", .suffix = "\r\n", .func = urc_recv_func},
+    {.prefix = "+ESOERR=", .suffix = "\r\n", .func = urc_err_func},
 };
 
 static void me3616_network_init(mo_object_t *module)
 {
-    at_parser_t *parser        = &module->parser;
-    os_int32_t   enable_num    = 0;
-    os_int32_t   reg_state     = 0;
-    os_err_t     result        = OS_ERROR;
+    at_parser_t *parser = &module->parser;
+    os_int32_t enable_num = 0;
+    os_int32_t reg_state = 0;
+    os_err_t result = OS_ERROR;
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
-    
+
     result = at_parser_exec_cmd(parser, &resp, "AT+CEREG?");
     if (result != OS_EOK)
     {
         goto __exit;
     }
-    
-    if (at_resp_get_data_by_kw(&resp, "+CEREG:", "+CEREG: %d,%d", &enable_num , &reg_state) < 0)
+
+    if (at_resp_get_data_by_kw(&resp, "+CEREG:", "+CEREG: %d,%d", &enable_num, &reg_state) < 0)
     {
         result = OS_ERROR;
         goto __exit;
     }
-    
+
     if (1 == reg_state || 5 == reg_state)
     {
         result = OS_EOK;
@@ -455,10 +435,10 @@ static void me3616_network_init(mo_object_t *module)
     else
     {
         result = OS_ERROR;
-        goto __exit;       
+        goto __exit;
     }
 __exit:
-    if(result != OS_EOK)
+    if (result != OS_EOK)
     {
         WARN("ME3616 network init failed");
     }

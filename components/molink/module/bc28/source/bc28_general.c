@@ -24,12 +24,12 @@
 #include "bc28_general.h"
 
 #define MO_LOG_TAG "bc28.general"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef BC28_USING_GENERAL_OPS
 
-#define BC28_GENERAL_TIMEOUT_DFT  (1 * OS_TICK_PER_SECOND)
+#define BC28_GENERAL_TIMEOUT_DFT (1 * OS_TICK_PER_SECOND)
 
 os_err_t bc28_at_test(mo_object_t *module)
 {

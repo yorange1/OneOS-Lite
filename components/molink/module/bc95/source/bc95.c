@@ -29,7 +29,7 @@
 #include <os_memory.h>
 
 #define MO_LOG_TAG "bc95"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef MOLINK_USING_BC95
@@ -38,12 +38,12 @@
 
 #ifdef BC95_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test               = bc95_at_test,
-    .get_imei              = bc95_get_imei,
-    .get_imsi              = bc95_get_imsi,
-    .get_iccid             = bc95_get_iccid,
-    .get_cfun              = bc95_get_cfun,
-    .set_cfun              = bc95_set_cfun,
+    .at_test = bc95_at_test,
+    .get_imei = bc95_get_imei,
+    .get_imsi = bc95_get_imsi,
+    .get_iccid = bc95_get_iccid,
+    .get_cfun = bc95_get_cfun,
+    .set_cfun = bc95_set_cfun,
 };
 #endif /* BC95_USING_GENERAL_OPS */
 
@@ -51,34 +51,34 @@ static const struct mo_general_ops gs_general_ops = {
 extern void bc95_netserv_init(mo_bc95_t *module);
 
 static const struct mo_netserv_ops gs_netserv_ops = {
-    .set_attach            = bc95_set_attach,
-    .get_attach            = bc95_get_attach,
-    .set_reg               = bc95_set_reg,
-    .get_reg               = bc95_get_reg,
-    .set_cgact             = bc95_set_cgact,
-    .get_cgact             = bc95_get_cgact,
-    .get_csq               = bc95_get_csq,
-    .get_radio             = bc95_get_radio,
-    .set_psm               = bc95_set_psm,
-    .get_psm               = bc95_get_psm,
-    .set_edrx_cfg          = bc95_set_edrx_cfg,
-    .get_edrx_cfg          = bc95_get_edrx_cfg,
-    .get_edrx_dynamic      = bc95_get_edrx_dynamic,
+    .set_attach = bc95_set_attach,
+    .get_attach = bc95_get_attach,
+    .set_reg = bc95_set_reg,
+    .get_reg = bc95_get_reg,
+    .set_cgact = bc95_set_cgact,
+    .get_cgact = bc95_get_cgact,
+    .get_csq = bc95_get_csq,
+    .get_radio = bc95_get_radio,
+    .set_psm = bc95_set_psm,
+    .get_psm = bc95_get_psm,
+    .set_edrx_cfg = bc95_set_edrx_cfg,
+    .get_edrx_cfg = bc95_get_edrx_cfg,
+    .get_edrx_dynamic = bc95_get_edrx_dynamic,
 };
 #endif /* BC95_USING_NETSERV_OPS */
 
 #ifdef BC95_USING_PING_OPS
 static const struct mo_ping_ops gs_ping_ops = {
-    .ping                  = bc95_ping,
+    .ping = bc95_ping,
 };
 #endif /* BC95_USING_PING_OPS */
 
 #ifdef BC95_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig              = bc95_ifconfig,
-    .get_ipaddr            = bc95_get_ipaddr,
-    .set_dnsserver         = bc95_set_dnsserver,
-    .get_dnsserver         = bc95_get_dnsserver,
+    .ifconfig = bc95_ifconfig,
+    .get_ipaddr = bc95_get_ipaddr,
+    .set_dnsserver = bc95_set_dnsserver,
+    .get_dnsserver = bc95_get_dnsserver,
 };
 #endif /* BC95_USING_IFCONFIG_OPS */
 
@@ -86,39 +86,39 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern void bc95_netconn_init(mo_bc95_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create                = bc95_netconn_create,
-    .destroy               = bc95_netconn_destroy,
+    .create = bc95_netconn_create,
+    .destroy = bc95_netconn_destroy,
 #ifdef BC95_USING_DNS
-    .gethostbyname         = bc95_netconn_gethostbyname,
+    .gethostbyname = bc95_netconn_gethostbyname,
 #endif
-    .connect               = bc95_netconn_connect,
-    .send                  = bc95_netconn_send,
-    .get_info              = bc95_netconn_get_info,
+    .connect = bc95_netconn_connect,
+    .send = bc95_netconn_send,
+    .get_info = bc95_netconn_get_info,
 };
 #endif /* BC95_USING_NETCONN_OPS */
 
 #ifdef BC95_USING_ONENET_NB_OPS
 extern os_err_t bc95_onenetnb_init(mo_bc95_t *module);
-extern void     bc95_onenetnb_deinit(mo_bc95_t *module);
+extern void bc95_onenetnb_deinit(mo_bc95_t *module);
 
 static const mo_onenet_ops_t gs_onenet_ops = {
-    .onenetnb_get_config   = bc95_onenetnb_get_config,
-    .onenetnb_set_config   = bc95_onenetnb_set_config,
-    .onenetnb_create       = bc95_onenetnb_create,
-    .onenetnb_delete       = bc95_onenetnb_delete,
-    .onenetnb_addobj       = bc95_onenetnb_addobj,
-    .onenetnb_delobj       = bc95_onenetnb_delobj,
-    .onenetnb_open         = bc95_onenetnb_open,
-    .onenetnb_close        = bc95_onenetnb_close,
-    .onenetnb_discoverrsp  = bc95_onenetnb_discoverrsp,
-    .onenetnb_observersp   = bc95_onenetnb_observersp,
-    .onenetnb_readrsp      = bc95_onenetnb_readrsp,
-    .onenetnb_writersp     = bc95_onenetnb_writersp,
-    .onenetnb_executersp   = bc95_onenetnb_executersp,
+    .onenetnb_get_config = bc95_onenetnb_get_config,
+    .onenetnb_set_config = bc95_onenetnb_set_config,
+    .onenetnb_create = bc95_onenetnb_create,
+    .onenetnb_delete = bc95_onenetnb_delete,
+    .onenetnb_addobj = bc95_onenetnb_addobj,
+    .onenetnb_delobj = bc95_onenetnb_delobj,
+    .onenetnb_open = bc95_onenetnb_open,
+    .onenetnb_close = bc95_onenetnb_close,
+    .onenetnb_discoverrsp = bc95_onenetnb_discoverrsp,
+    .onenetnb_observersp = bc95_onenetnb_observersp,
+    .onenetnb_readrsp = bc95_onenetnb_readrsp,
+    .onenetnb_writersp = bc95_onenetnb_writersp,
+    .onenetnb_executersp = bc95_onenetnb_executersp,
     .onenetnb_parameterrsp = bc95_onenetnb_parameterrsp,
-    .onenetnb_notify       = bc95_onenetnb_notify,
-    .onenetnb_update       = bc95_onenetnb_update,
-    .onenetnb_cb_register  = bc95_onenetnb_cb_register,
+    .onenetnb_notify = bc95_onenetnb_notify,
+    .onenetnb_update = bc95_onenetnb_update,
+    .onenetnb_cb_register = bc95_onenetnb_cb_register,
 };
 #endif /* BC95_USING_ONENET_OPS */
 
@@ -144,7 +144,7 @@ static os_err_t bc95_at_init(mo_object_t *self)
 mo_object_t *module_bc95_create(const char *name, void *parser_config)
 {
     os_err_t result = OS_ERROR;
-    
+
     mo_bc95_t *module = (mo_bc95_t *)os_calloc(1, sizeof(mo_bc95_t));
     if (OS_NULL == module)
     {
@@ -197,7 +197,7 @@ mo_object_t *module_bc95_create(const char *name, void *parser_config)
     }
     module->parent.ops_table[MODULE_OPS_ONENET_NB] = &gs_onenet_ops;
 #endif /* BC95_USING_ONENET_NB_OPS */
-	
+
 __exit:
     if (OS_EOK != result)
     {
@@ -221,7 +221,7 @@ __exit:
         }
 
         os_free(module);
-        
+
         return OS_NULL;
     }
 
@@ -262,12 +262,12 @@ int bc95_auto_create(void)
         ERROR("Auto create failed, Can not find BC95 interface device %s!", BC95_DEVICE_NAME);
         return OS_ERROR;
     }
-	
-	uart_config.baud_rate = BC95_DEVICE_RATE;
+
+    uart_config.baud_rate = BC95_DEVICE_RATE;
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = BC95_NAME,
+    mo_parser_config_t parser_config = {.parser_name = BC95_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = BC95_RECV_BUFF_LEN};
 

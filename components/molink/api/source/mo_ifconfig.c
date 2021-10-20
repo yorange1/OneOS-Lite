@@ -26,7 +26,7 @@
 #include "mo_ifconfig.h"
 
 #define MO_LOG_TAG "molink.ifconfig"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef MOLINK_USING_IFCONFIG_OPS

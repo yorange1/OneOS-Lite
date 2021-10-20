@@ -47,4 +47,3 @@ os_err_t me3616_get_csq(mo_object_t *self, os_uint8_t *rssi, os_uint8_t *ber);
 #endif /* __cplusplus */
 
 #endif /* __ME3616_NETSERV_H__ */
-

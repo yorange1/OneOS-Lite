@@ -58,14 +58,14 @@ int select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset, st
 #endif
 
 struct hostent *gethostbyname(const char *name);
-int  getaddrinfo(const char *nodename, const char *servname, const struct addrinfo *hints, struct addrinfo **res);
+int getaddrinfo(const char *nodename, const char *servname, const struct addrinfo *hints, struct addrinfo **res);
 void freeaddrinfo(struct addrinfo *ai);
-int  getpeername(int fd, struct sockaddr *name, socklen_t *namelen);
-int  getsockname(int fd, struct sockaddr *name, socklen_t *namelen);
+int getpeername(int fd, struct sockaddr *name, socklen_t *namelen);
+int getsockname(int fd, struct sockaddr *name, socklen_t *namelen);
 
 #ifdef NET_USING_LWIP212
 const char *inet_ntop(int af, const void *src, char *dst, int32_t size);
-int         inet_pton(int af, const char *src, void *dst);
+int inet_pton(int af, const char *src, void *dst);
 #endif /* end of NET_USING_LWIP212 */
 
 #endif /* end of __SOCKET_H__ */

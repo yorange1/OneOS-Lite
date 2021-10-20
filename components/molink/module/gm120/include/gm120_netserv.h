@@ -47,4 +47,3 @@ os_err_t gm120_get_csq(mo_object_t *self, os_uint8_t *rssi, os_uint8_t *ber);
 #endif /* __cplusplus */
 
 #endif /* __GM120_NETSERV_H__ */
-

@@ -21,17 +21,16 @@
  ***********************************************************************************************************************
  */
 
-
-#ifndef  __ML302_GENERAL_H__
-#define  __ML302_GENERAL_H__
+#ifndef __ML302_GENERAL_H__
+#define __ML302_GENERAL_H__
 
 #include "mo_general.h"
 
-#ifdef   __cplusplus
-extern   "C" {
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-#ifdef   ML302_USING_GENERAL_OPS
+#ifdef ML302_USING_GENERAL_OPS
 
 os_err_t ml302_at_test(mo_object_t *self);
 os_err_t ml302_get_imei(mo_object_t *self, char *value, os_size_t len);
@@ -41,10 +40,10 @@ os_err_t ml302_get_cfun(mo_object_t *self, os_uint8_t *fun_lvl);
 os_err_t ml302_set_cfun(mo_object_t *self, os_uint8_t fun_lvl);
 os_err_t ml302_get_firmware_version(mo_object_t *self, mo_firmware_version_t *version);
 
-#endif   /* ML302_USING_GENERAL_OPS */
+#endif /* ML302_USING_GENERAL_OPS */
 
-#ifdef   __cplusplus
+#ifdef __cplusplus
 }
 #endif
 
-#endif   /* __ML302_GENERAL_H__ */
+#endif /* __ML302_GENERAL_H__ */

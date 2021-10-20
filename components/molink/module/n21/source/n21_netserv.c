@@ -29,9 +29,8 @@
 #include <stdio.h>
 
 #define MO_LOG_TAG "n21_netserv"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
-
 
 #ifdef N21_USING_NETSERV_OPS
 
@@ -41,9 +40,7 @@ os_err_t n21_set_attach(mo_object_t *self, os_uint8_t attach_stat)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff, 
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 30 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 30 * OS_TICK_PER_SECOND};
 
     return at_parser_exec_cmd(parser, &resp, "AT+CGATT=%d", attach_stat);
 }
@@ -54,9 +51,7 @@ os_err_t n21_get_attach(mo_object_t *self, os_uint8_t *attach_stat)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff, 
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+CGATT?");
     if (result != OS_EOK)
@@ -64,7 +59,7 @@ os_err_t n21_get_attach(mo_object_t *self, os_uint8_t *attach_stat)
         return OS_ERROR;
     }
 
-    if(at_resp_get_data_by_kw(&resp, "+CGATT:", "+CGATT:%hhu", attach_stat) <= 0)
+    if (at_resp_get_data_by_kw(&resp, "+CGATT:", "+CGATT:%hhu", attach_stat) <= 0)
     {
         ERROR("Get %s module attach state failed", self->name);
         return OS_ERROR;
@@ -79,9 +74,7 @@ os_err_t n21_set_reg(mo_object_t *self, os_uint8_t reg_n)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff, 
-                      .buff_size = sizeof(resp_buff), 
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     return at_parser_exec_cmd(parser, &resp, "AT+CEREG=%d", reg_n);
 }
@@ -92,9 +85,7 @@ os_err_t n21_get_reg(mo_object_t *self, eps_reg_info_t *info)
 
     char resp_buff[256] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff, 
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+CEREG?");
     if (result != OS_EOK)
@@ -117,9 +108,7 @@ os_err_t n21_get_csq(mo_object_t *self, os_uint8_t *rssi, os_uint8_t *ber)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+CSQ");
     if (result != OS_EOK)
@@ -137,4 +126,3 @@ os_err_t n21_get_csq(mo_object_t *self, os_uint8_t *rssi, os_uint8_t *ber)
 }
 
 #endif /* N21_USING_NETSERV_OPS */
-

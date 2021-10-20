@@ -31,10 +31,10 @@
 
 os_err_t esp32_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp)
 {
-    at_parser_t *parser    = &self->parser;
-    os_uint32_t  ping_time = 0;
+    at_parser_t *parser = &self->parser;
+    os_uint32_t ping_time = 0;
 
-    char ip_addr[IPADDR_MAX_STR_LEN + 1]  = {0};
+    char ip_addr[IPADDR_MAX_STR_LEN + 1] = {0};
     char resp_buff[AT_RESP_BUFF_SIZE_128] = {0};
 
     at_resp_t at_resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 10 * OS_TICK_PER_SECOND};
@@ -64,7 +64,8 @@ os_err_t esp32_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uin
         goto __exit;
     }
 
-    if ((at_resp_get_data_by_kw(&at_resp,  "+", "+%u", &ping_time) < 0) && (at_resp_get_data_by_kw(&at_resp,  "+PING", "+PING:%u", &ping_time) < 0))
+    if ((at_resp_get_data_by_kw(&at_resp, "+", "+%u", &ping_time) < 0) &&
+        (at_resp_get_data_by_kw(&at_resp, "+PING", "+PING:%u", &ping_time) < 0))
     {
         ERROR("ping: get the ping time error");
         result = OS_ERROR;
@@ -75,8 +76,8 @@ os_err_t esp32_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uin
     {
         inet_aton(ip_addr, &(resp->ip_addr));
         resp->data_len = 32; /* The default ICMP payload length is 32 bytes */
-        resp->ttl      = 0;  /* There is no TTL data in the response */
-        resp->time     = ping_time;
+        resp->ttl = 0;       /* There is no TTL data in the response */
+        resp->time = ping_time;
     }
 
 __exit:

@@ -41,7 +41,7 @@
 #endif
 
 static mo_easylog_t *easylog_obj = OS_NULL;
-static mo_object_t  *def_module  = OS_NULL;
+static mo_object_t *def_module = OS_NULL;
 
 static os_err_t mo_easylog_info_update(const os_uint8_t *user_data, os_size_t data_len);
 static os_err_t mo_easylog_get_sys_time(void);
@@ -50,19 +50,18 @@ static os_err_t mo_easylog_get_imsi(void);
 static os_err_t mo_easylog_get_iccid(void);
 static os_err_t mo_easylog_get_csq(void);
 static os_err_t mo_easylog_get_radio_info(void);
-static void     mo_easylog_init_user_data(const os_uint8_t *data, os_size_t len);
+static void mo_easylog_init_user_data(const os_uint8_t *data, os_size_t len);
 static os_uint8_t mo_easylog_calculate_tx_checksum(os_uint8_t *data, os_uint32_t len);
 static mo_easylog_network_status_t mo_easylog_get_network_status(mo_object_t *module, mo_easylog_t *e_obj);
-
 
 static mo_easylog_network_status_t mo_easylog_get_network_status(mo_object_t *module, mo_easylog_t *e_obj)
 {
     mo_easylog_network_status_t net_status = NETWORK_STATUS_OK;
 
-    os_err_t   reslut = OS_ERROR;
+    os_err_t reslut = OS_ERROR;
     os_uint8_t status = 0;
-    os_uint8_t rssi   = 0;
-    os_uint8_t ber    = 0;
+    os_uint8_t rssi = 0;
+    os_uint8_t ber = 0;
 
     char tmp[MO_IMSI_LEN + 1] = {0};
 
@@ -155,7 +154,7 @@ __exit:
 static os_err_t mo_easylog_get_sys_time(void)
 {
     time_t sys_time;
-    char   tmp[32] = {0};
+    char tmp[32] = {0};
 
     if (OS_NULL == easylog_obj)
     {
@@ -300,8 +299,8 @@ static void mo_easylog_init_user_data(const os_uint8_t *data, os_size_t len)
 #ifdef MOLINK_EASYLOG_USING_CHECKSUM
 static os_uint8_t mo_easylog_calculate_tx_checksum(os_uint8_t *data, os_uint32_t len)
 {
-    os_uint32_t i   = 0;
-    os_uint8_t  ret = 0;
+    os_uint32_t i = 0;
+    os_uint8_t ret = 0;
 
     if ((OS_NULL == data) || (len == 0))
     {
@@ -319,8 +318,8 @@ static os_uint8_t mo_easylog_calculate_tx_checksum(os_uint8_t *data, os_uint32_t
 
 os_uint8_t mo_easylog_rx_data_check(os_uint8_t *data, os_uint32_t len)
 {
-    os_uint32_t i   = 0;
-    os_uint8_t  ret = 0;
+    os_uint32_t i = 0;
+    os_uint8_t ret = 0;
 
     if ((OS_NULL == data) || (len == 0))
     {
@@ -492,8 +491,8 @@ os_err_t mo_easylog_info_printf(mo_easylog_t *easylog_obj)
 
 mo_easylog_t *mo_easylog_create(const os_uint8_t *user_data, os_size_t data_len)
 {
-    os_uint16_t size   = 0;
-    os_err_t    result = OS_EOK;
+    os_uint16_t size = 0;
+    os_err_t result = OS_EOK;
 
     def_module = mo_get_default();
     if (OS_NULL == def_module)
@@ -513,9 +512,9 @@ mo_easylog_t *mo_easylog_create(const os_uint8_t *user_data, os_size_t data_len)
 
     memset(easylog_obj, 0, size);
     easylog_obj->upload_flag = EASYLOG_NOT_UPLOAD;
-    easylog_obj->len         = size;
+    easylog_obj->len = size;
 
-    if(OS_EOK != mo_easylog_info_update(user_data, data_len))
+    if (OS_EOK != mo_easylog_info_update(user_data, data_len))
     {
         os_kprintf("Molink easylog info update fail\r\n");
     }
@@ -545,7 +544,7 @@ os_err_t mo_easylog_destory(mo_easylog_t *easylog)
         easylog_obj = OS_NULL;
     }
 
-    def_module  = OS_NULL;
+    def_module = OS_NULL;
 
     return OS_EOK;
 }

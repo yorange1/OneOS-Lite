@@ -32,13 +32,13 @@ extern "C" {
 
 #ifdef A7600X_USING_NETCONN_OPS
 
-os_err_t      a7600x_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info);
+os_err_t a7600x_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info);
 mo_netconn_t *a7600x_netconn_create(mo_object_t *module, mo_netconn_type_t type);
-os_err_t      a7600x_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn);
-os_err_t      a7600x_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port);
-os_size_t     a7600x_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size);
+os_err_t a7600x_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn);
+os_err_t a7600x_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port);
+os_size_t a7600x_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size);
 #ifdef A7600X_USING_DNS
-os_err_t      a7600x_netconn_gethostbyname(mo_object_t *self, const char *domain_name, ip_addr_t *addr);
+os_err_t a7600x_netconn_gethostbyname(mo_object_t *self, const char *domain_name, ip_addr_t *addr);
 #endif
 
 #endif /* A7600X_USING_NETCONN_OPS */

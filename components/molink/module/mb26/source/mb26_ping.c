@@ -36,9 +36,9 @@
 
 os_err_t mb26_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp)
 {
-    at_parser_t *parser          = &self->parser;
-    os_err_t     result          = OS_EOK;
-    os_uint32_t  req_time        = 0;
+    at_parser_t *parser = &self->parser;
+    os_err_t result = OS_EOK;
+    os_uint32_t req_time = 0;
 
     char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
 
@@ -51,14 +51,18 @@ os_err_t mb26_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint
     if ((len < MB26_MIN_PING_PKG_LEN) || (len > MB26_MAX_PING_PKG_LEN))
     {
         LOG_EXT_E("MB26 ping: ping package len[%u] is out of range[%u, %u].",
-                  len, MB26_MIN_PING_PKG_LEN, MB26_MAX_PING_PKG_LEN);
+                  len,
+                  MB26_MIN_PING_PKG_LEN,
+                  MB26_MAX_PING_PKG_LEN);
         return OS_ERROR;
     }
 
     if ((timeout < MB26_MIN_PING_TIMEOUT) || (timeout > MB26_MAX_PING_TIMEOUT))
     {
         LOG_EXT_E("MB26 ping: user set ping timeout value %ums is out of range[%ums, %ums].",
-                  timeout, MB26_MIN_PING_TIMEOUT, MB26_MAX_PING_TIMEOUT);
+                  timeout,
+                  MB26_MIN_PING_TIMEOUT,
+                  MB26_MAX_PING_TIMEOUT);
         return OS_ERROR;
     }
 
@@ -66,10 +70,10 @@ os_err_t mb26_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint
 
     char resp_buff[256] = {0};
     /* Need to wait for 4 lines response msg, and timeout comming with ms */
-    at_resp_t at_resp = {.buff      = resp_buff,
+    at_resp_t at_resp = {.buff = resp_buff,
                          .buff_size = sizeof(resp_buff),
-                         .line_num  = 6,
-                         .timeout   = (5 + timeout / 1000) * OS_TICK_PER_SECOND};
+                         .line_num = 6,
+                         .timeout = (5 + timeout / 1000) * OS_TICK_PER_SECOND};
 
     /* Default set timeout to 5000ms */
     /* Exec commond "AT+ECPING="180.101.147.115",1,64,10000 and wait response */
@@ -82,7 +86,8 @@ os_err_t mb26_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint
         goto __exit;
     }
 
-    if (at_resp_get_data_by_kw(&at_resp, "+ECPING: SUCC", "+ECPING: SUCC, dest: %[^,], RTT: %u", ipaddr, &req_time) <= 0)
+    if (at_resp_get_data_by_kw(&at_resp, "+ECPING: SUCC", "+ECPING: SUCC, dest: %[^,], RTT: %u", ipaddr, &req_time) <=
+        0)
     {
         LOG_EXT_E("MB26 ping %s fail: check network status and try to set a longer timeout.", host);
         result = OS_ERROR;
@@ -105,7 +110,7 @@ os_err_t mb26_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint
     {
         inet_aton(ipaddr, &(resp->ip_addr));
         resp->data_len = len;
-        resp->time     = req_time;
+        resp->time = req_time;
     }
 
 __exit:

@@ -2,13 +2,13 @@
  ***********************************************************************************************************************
  * Copyright (c) 2020, China Mobile Communications Group Co.,Ltd.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on 
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
  * @file        stdio.c
@@ -29,17 +29,17 @@
 #include <fcntl_ext.h>
 #include "libc_ext.h"
 
-#define STDIO_DEVICE_NAME_MAX   32
+#define STDIO_DEVICE_NAME_MAX 32
 
 int fileno(FILE *);
 
-static FILE* std_console = NULL;
+static FILE *std_console = NULL;
 
-int libc_stdio_set_console(const char* device_name, int mode)
+int libc_stdio_set_console(const char *device_name, int mode)
 {
     FILE *fp;
     char *file_mode;
-    char  name[STDIO_DEVICE_NAME_MAX];
+    char name[STDIO_DEVICE_NAME_MAX];
 
     snprintf(name, sizeof(name) - 1, "/dev/%s", device_name);
     name[STDIO_DEVICE_NAME_MAX - 1] = '\0';
@@ -71,11 +71,11 @@ int libc_stdio_set_console(const char* device_name, int mode)
 
         if (mode == O_RDWR)
         {
-            _GLOBAL_REENT->_stdin  = std_console;
+            _GLOBAL_REENT->_stdin = std_console;
         }
-        else 
+        else
         {
-            _GLOBAL_REENT->_stdin  = NULL;
+            _GLOBAL_REENT->_stdin = NULL;
         }
 
         if (mode == O_RDONLY)
@@ -111,4 +111,3 @@ int libc_stdio_get_console(void)
         return -1;
     }
 }
-

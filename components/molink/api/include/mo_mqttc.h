@@ -83,7 +83,7 @@ typedef enum mqttc_qos
  */
 typedef struct mqttc_string
 {
-    char     *data;
+    char *data;
     os_size_t len;
 } mqttc_string_t;
 
@@ -98,8 +98,8 @@ typedef struct mqttc_will_opts
 {
     mqttc_string_t topic_name; /* The LWT topic to which the LWT message will be published */
     mqttc_string_t message;    /* The LWT payload */
-    mqttc_qos_t    qos;        /* The quality of service setting for the LWT message */
-    os_uint8_t     retained;   /* The retained flag for the LWT message */
+    mqttc_qos_t qos;           /* The quality of service setting for the LWT message */
+    os_uint8_t retained;       /* The retained flag for the LWT message */
 } mqttc_will_opts_t;
 
 /**
@@ -111,12 +111,12 @@ typedef struct mqttc_will_opts
  */
 typedef struct mqttc_conn_opts
 {
-    mqttc_string_t client_id;    /* The MQTT client identifier string */
+    mqttc_string_t client_id; /* The MQTT client identifier string */
 
-    os_uint8_t  mqtt_version;    /* The Version of MQTT to be used.  3 = 3.1 4 = 3.1.1 */
-    os_uint32_t keep_alive;      /* The keep alive time, unit second */
-    os_uint8_t  clean_session;   /* The flag of clean_session option */
-    os_uint8_t  will_flag;       /* The flag of will option */
+    os_uint8_t mqtt_version;  /* The Version of MQTT to be used.  3 = 3.1 4 = 3.1.1 */
+    os_uint32_t keep_alive;   /* The keep alive time, unit second */
+    os_uint8_t clean_session; /* The flag of clean_session option */
+    os_uint8_t will_flag;     /* The flag of will option */
 
     mqttc_will_opts_t will_opts; /* The options of will */
 
@@ -133,10 +133,10 @@ typedef struct mqttc_conn_opts
  */
 typedef struct mqttc_create_opts
 {
-    mqttc_string_t address;         /* The MQTT server address */
-    os_uint16_t    port;            /* The MQTT server port */
-    os_uint32_t    command_timeout; /* The MQTT client ACK timeout, unit ms*/
-    os_size_t      max_msgs;        /* The max number of messages.*/
+    mqttc_string_t address;      /* The MQTT server address */
+    os_uint16_t port;            /* The MQTT server port */
+    os_uint32_t command_timeout; /* The MQTT client ACK timeout, unit ms*/
+    os_size_t max_msgs;          /* The max number of messages.*/
 } mqttc_create_opts_t;
 
 /**
@@ -148,12 +148,12 @@ typedef struct mqttc_create_opts
  */
 typedef struct mqttc_msg
 {
-    mqttc_qos_t qos;       /* The quality of service setting for the message */
+    mqttc_qos_t qos; /* The quality of service setting for the message */
 
-    os_uint8_t  retained;  /* The retained flag for the message */
-    os_uint8_t  dup;       /* The dup flag for the message*/
+    os_uint8_t retained; /* The retained flag for the message */
+    os_uint8_t dup;      /* The dup flag for the message*/
 
-    void     *payload;     /* The data of the message */ 
+    void *payload;         /* The data of the message */
     os_size_t payload_len; /* The length of data */
 } mqttc_msg_t;
 
@@ -166,7 +166,7 @@ typedef struct mqttc_msg
  */
 typedef struct mqttc_msg_data
 {
-    mqttc_msg_t    message;
+    mqttc_msg_t message;
     mqttc_string_t topic_name;
 } mqttc_msg_data_t;
 
@@ -177,7 +177,7 @@ typedef struct mqttc_msg_data
  * @brief       molink mqtt client message handler
  ***********************************************************************************************************************
  */
-typedef void (*mqttc_msg_handler_t)(mqttc_msg_data_t*);
+typedef void (*mqttc_msg_handler_t)(mqttc_msg_data_t *);
 
 /**
  ***********************************************************************************************************************
@@ -188,32 +188,32 @@ typedef void (*mqttc_msg_handler_t)(mqttc_msg_data_t*);
  */
 typedef struct mo_mqttc
 {
-    mo_object_t *module;         /* The module used by the MQTT client */
+    mo_object_t *module; /* The module used by the MQTT client */
 
-    os_uint32_t mqttc_id;        /* The MQTT client identity */
+    os_uint32_t mqttc_id; /* The MQTT client identity */
 
-    mqttc_stat_t stat;           /* The MQTT client status */
+    mqttc_stat_t stat; /* The MQTT client status */
 
-    char       *address;         /* The MQTT server address */
-    os_uint16_t port;            /* The MQTT server port */
+    char *address;    /* The MQTT server address */
+    os_uint16_t port; /* The MQTT server port */
 
     os_uint32_t keep_alive;      /* The keep alive time, unit second */
     os_uint32_t command_timeout; /* The MQTT client ACK timeout, unit ms*/
-    os_uint8_t  clean_session;   /* The flag of clean_session option */
+    os_uint8_t clean_session;    /* The flag of clean_session option */
 
     struct mqtt_msg_handlers
     {
-        const char  *topic_filter;
+        const char *topic_filter;
         mqttc_msg_handler_t handler;
-    } msg_handlers[MQTTC_MAX_MESSAGE_HANDLERS];  /* The MQTT client handlers */
-    
-    mqttc_msg_handler_t default_handler;         /* The MQTT client default handlers */
+    } msg_handlers[MQTTC_MAX_MESSAGE_HANDLERS]; /* The MQTT client handlers */
 
-    os_mq_t mq;                                  /* The queue used to receive the data */
+    mqttc_msg_handler_t default_handler; /* The MQTT client default handlers */
+
+    os_mq_t mq; /* The queue used to receive the data */
 
 #if defined(MOLINK_USING_MQTTC_TASK)
     os_mutex_t mutex;
-    os_task_t *task;             /* The thread that receives data and executes handler */
+    os_task_t *task; /* The thread that receives data and executes handler */
 #endif
 
 } mo_mqttc_t;
@@ -228,30 +228,27 @@ typedef struct mo_mqttc
 typedef struct mo_mqttc_ops
 {
     mo_mqttc_t *(*create)(mo_object_t *module, mqttc_create_opts_t *create_opts);
-    os_err_t    (*connect)(mo_mqttc_t *client, mqttc_conn_opts_t *conn_opts);
-    os_err_t    (*publish)(mo_mqttc_t *client, const char *topic_filter, mqttc_msg_t *msg);
-    os_err_t    (*subscribe)(mo_mqttc_t *client, const char *topic_filter, mqttc_qos_t qos);
-    os_err_t    (*unsubscribe)(mo_mqttc_t *client, const char *topic_filter);
-    os_err_t    (*disconnect)(mo_mqttc_t *client);
-    os_err_t    (*destroy)(mo_mqttc_t *client);
+    os_err_t (*connect)(mo_mqttc_t *client, mqttc_conn_opts_t *conn_opts);
+    os_err_t (*publish)(mo_mqttc_t *client, const char *topic_filter, mqttc_msg_t *msg);
+    os_err_t (*subscribe)(mo_mqttc_t *client, const char *topic_filter, mqttc_qos_t qos);
+    os_err_t (*unsubscribe)(mo_mqttc_t *client, const char *topic_filter);
+    os_err_t (*disconnect)(mo_mqttc_t *client);
+    os_err_t (*destroy)(mo_mqttc_t *client);
 } mo_mqttc_ops_t;
 
 mo_mqttc_t *mo_mqttc_create(mo_object_t *module, mqttc_create_opts_t *create_opts);
-os_err_t    mo_mqttc_connect(mo_mqttc_t *client, mqttc_conn_opts_t *conn_opts);
-os_err_t    mo_mqttc_publish(mo_mqttc_t *client, const char *topic_filter, mqttc_msg_t *msg);
-os_err_t    mo_mqttc_set_msg_handler(mo_mqttc_t *client, const char *topic_filter, mqttc_msg_handler_t handler);
-os_err_t    mo_mqttc_subscribe(mo_mqttc_t *client,
-                               const char *topic_filter,
-                               mqttc_qos_t qos,
-                               mqttc_msg_handler_t handler);
-os_err_t    mo_mqttc_unsubscribe(mo_mqttc_t *client, const char *topic_filter);
-os_err_t    mo_mqttc_disconnect(mo_mqttc_t *client);
-os_bool_t   mo_mqttc_isconnect(mo_mqttc_t *client);
-os_err_t    mo_mqttc_destroy(mo_mqttc_t *client);
-os_err_t    mo_mqttc_yield(mo_mqttc_t *client, os_uint32_t timeout_ms);
+os_err_t mo_mqttc_connect(mo_mqttc_t *client, mqttc_conn_opts_t *conn_opts);
+os_err_t mo_mqttc_publish(mo_mqttc_t *client, const char *topic_filter, mqttc_msg_t *msg);
+os_err_t mo_mqttc_set_msg_handler(mo_mqttc_t *client, const char *topic_filter, mqttc_msg_handler_t handler);
+os_err_t mo_mqttc_subscribe(mo_mqttc_t *client, const char *topic_filter, mqttc_qos_t qos, mqttc_msg_handler_t handler);
+os_err_t mo_mqttc_unsubscribe(mo_mqttc_t *client, const char *topic_filter);
+os_err_t mo_mqttc_disconnect(mo_mqttc_t *client);
+os_bool_t mo_mqttc_isconnect(mo_mqttc_t *client);
+os_err_t mo_mqttc_destroy(mo_mqttc_t *client);
+os_err_t mo_mqttc_yield(mo_mqttc_t *client, os_uint32_t timeout_ms);
 
 #if defined(MOLINK_USING_MQTTC_TASK)
-os_err_t    mo_mqttc_start_task(mo_mqttc_t *client);
+os_err_t mo_mqttc_start_task(mo_mqttc_t *client);
 #endif
 
 #ifdef __cplusplus

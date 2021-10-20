@@ -56,11 +56,11 @@
  */
 int net_ip4addr_aton(const char *cp, ip4_addr_t *addr)
 {
-    uint32_t  val      = 0;
-    uint8_t   base     = 0;
-    uint32_t  parts[4] = {0};
-    uint32_t *pp       = parts;
-    char      c        = *cp;
+    uint32_t val = 0;
+    uint8_t base = 0;
+    uint32_t parts[4] = {0};
+    uint32_t *pp = parts;
+    char c = *cp;
 
     for (;;)
     {
@@ -73,7 +73,7 @@ int net_ip4addr_aton(const char *cp, ip4_addr_t *addr)
         {
             return 0;
         }
-        val  = 0;
+        val = 0;
         base = 10;
         if (c == '0')
         {
@@ -81,7 +81,7 @@ int net_ip4addr_aton(const char *cp, ip4_addr_t *addr)
             if (c == 'x' || c == 'X')
             {
                 base = 16;
-                c    = *++cp;
+                c = *++cp;
             }
             else
             {
@@ -93,12 +93,12 @@ int net_ip4addr_aton(const char *cp, ip4_addr_t *addr)
             if (isdigit(c))
             {
                 val = (val * base) + (uint32_t)(c - '0');
-                c   = *++cp;
+                c = *++cp;
             }
             else if (base == 16 && isxdigit(c))
             {
                 val = (val << 4) | (uint32_t)(c + 10 - (islower(c) ? 'a' : 'A'));
-                c   = *++cp;
+                c = *++cp;
             }
             else
             {
@@ -118,7 +118,7 @@ int net_ip4addr_aton(const char *cp, ip4_addr_t *addr)
                 return 0;
             }
             *pp++ = val;
-            c     = *++cp;
+            c = *++cp;
         }
         else
         {
@@ -182,7 +182,6 @@ int net_ip4addr_aton(const char *cp, ip4_addr_t *addr)
         break;
     default:
         OS_ASSERT(0);
-
     }
     if (addr)
     {
@@ -205,14 +204,14 @@ int net_ip4addr_aton(const char *cp, ip4_addr_t *addr)
  */
 char *net_ip4addr_ntoa_r(const ip4_addr_t *addr, char *buf, int buflen)
 {
-    char     inv[3] = {0};
-    char    *rp     = OS_NULL;
+    char inv[3] = {0};
+    char *rp = OS_NULL;
     uint32_t s_addr = 0;
-    uint8_t *ap     = OS_NULL;
-    uint8_t  rem    = 0;
-    uint8_t  n      = 0;
-    uint8_t  i      = 0;
-    int32_t  len    = 0;
+    uint8_t *ap = OS_NULL;
+    uint8_t rem = 0;
+    uint8_t n = 0;
+    uint8_t i = 0;
+    int32_t len = 0;
 
     s_addr = ip4_addr_get_u32(addr);
 
@@ -304,8 +303,8 @@ OS_WEAK const struct in6_addr in6addr_any = IN6ADDR_ANY_INIT;
  */
 int net_ip6addr_aton(const char *cp, ip6_addr_t *addr)
 {
-    uint32_t addr_index          = 0;
-    uint32_t zero_blocks         = 8;
+    uint32_t addr_index = 0;
+    uint32_t zero_blocks = 8;
     uint32_t current_block_index = 0;
     uint32_t current_block_value = 0;
     const char *s;
@@ -439,10 +438,10 @@ char *net_ip6addr_ntoa_r(const ip6_addr_t *addr, char *buf, int buflen)
 {
     uint32_t current_block_index = 0;
     uint32_t current_block_value = 0;
-    uint32_t next_block_value    = 0;
-    int32_t  i                   = 0;
-    uint8_t  zero_flag           = 0;
-    uint8_t  empty_block_flag    = 0; /* used to indicate a zero chain for "::' */
+    uint32_t next_block_value = 0;
+    int32_t i = 0;
+    uint8_t zero_flag = 0;
+    uint8_t empty_block_flag = 0; /* used to indicate a zero chain for "::' */
 
     for (current_block_index = 0; current_block_index < 8; current_block_index++)
     {
@@ -480,7 +479,7 @@ char *net_ip6addr_ntoa_r(const ip6_addr_t *addr, char *buf, int buflen)
                 if (next_block_value == 0)
                 {
                     empty_block_flag = 1;
-                    buf[i++]         = ':';
+                    buf[i++] = ':';
                     if (i >= buflen)
                     {
                         return OS_NULL;
@@ -515,7 +514,7 @@ char *net_ip6addr_ntoa_r(const ip6_addr_t *addr, char *buf, int buflen)
         }
         else
         {
-            buf[i++]  = xchar(((current_block_value & 0xf000) >> 12));
+            buf[i++] = xchar(((current_block_value & 0xf000) >> 12));
             zero_flag = 0;
             if (i >= buflen)
             {
@@ -529,7 +528,7 @@ char *net_ip6addr_ntoa_r(const ip6_addr_t *addr, char *buf, int buflen)
         }
         else
         {
-            buf[i++]  = xchar(((current_block_value & 0xf00) >> 8));
+            buf[i++] = xchar(((current_block_value & 0xf00) >> 8));
             zero_flag = 0;
             if (i >= buflen)
             {
@@ -543,7 +542,7 @@ char *net_ip6addr_ntoa_r(const ip6_addr_t *addr, char *buf, int buflen)
         }
         else
         {
-            buf[i++]  = xchar(((current_block_value & 0xf0) >> 4));
+            buf[i++] = xchar(((current_block_value & 0xf0) >> 4));
             zero_flag = 0;
             if (i >= buflen)
             {
@@ -588,8 +587,8 @@ const char *net_inet_ntop(int af, const void *src, char *dst, int32_t size)
 #define AF_INET  2
 #define AF_INET6 10
 
-    const char *ret      = OS_NULL;
-    int         size_int = (int)size;
+    const char *ret = OS_NULL;
+    int size_int = (int)size;
     if (size_int < 0)
     {
         return OS_NULL;
@@ -598,11 +597,11 @@ const char *net_inet_ntop(int af, const void *src, char *dst, int32_t size)
     {
 #if NTEDEV_IPV4
     case AF_INET:
-        return net_ip4addr_ntoa_r((const ip4_addr_t*)src, dst, size_int);
+        return net_ip4addr_ntoa_r((const ip4_addr_t *)src, dst, size_int);
 #endif
 #if defined(MOLINK_USING_IPV6)
     case AF_INET6:
-        return net_ip6addr_ntoa_r((const ip6_addr_t*)src, dst, size_int);
+        return net_ip6addr_ntoa_r((const ip6_addr_t *)src, dst, size_int);
 #endif
     default:
         break;
@@ -620,7 +619,7 @@ int net_inet_pton(int af, const char *src, void *dst)
     {
 #if defined(MOLINK_USING_IPV4)
     case AF_INET:
-        err = net_ip4addr_aton(src, (ip4_addr_t*)dst);
+        err = net_ip4addr_aton(src, (ip4_addr_t *)dst);
         break;
 #endif
 #if defined(MOLINK_USING_IPV6)

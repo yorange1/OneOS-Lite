@@ -39,7 +39,7 @@ os_err_t me3630_w_get_reg(mo_object_t *self, eps_reg_info_t *info);
 os_err_t me3630_w_set_cgact(mo_object_t *self, os_uint8_t cid, os_uint8_t act_n);
 os_err_t me3630_w_get_cgact(mo_object_t *self, os_uint8_t *cid, os_uint8_t *act_stat);
 os_err_t me3630_w_get_csq(mo_object_t *self, os_uint8_t *rssi, os_uint8_t *ber);
-os_err_t me3630_w_get_cell_info(mo_object_t *self, onepos_cell_info_t* onepos_cell_info);  
+os_err_t me3630_w_get_cell_info(mo_object_t *self, onepos_cell_info_t *onepos_cell_info);
 #endif /* ME3630_W_USING_NETSERV_OPS */
 
 #ifdef __cplusplus
@@ -47,4 +47,3 @@ os_err_t me3630_w_get_cell_info(mo_object_t *self, onepos_cell_info_t* onepos_ce
 #endif /* __cplusplus */
 
 #endif /* __ME3630_W_NETSERV_H__ */
-

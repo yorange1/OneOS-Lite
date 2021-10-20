@@ -32,7 +32,7 @@
 #endif /* MOLINK_USING_IP */
 
 #define MO_LOG_TAG "air720uh_netserv"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef AIR720UH_USING_NETSERV_OPS

@@ -72,16 +72,16 @@ typedef struct mo_air720uh
 {
     mo_object_t parent;
 #ifdef AIR720UH_USING_NETCONN_OPS
-    mo_netconn_t    netconn[AIR720UH_NETCONN_NUM];
+    mo_netconn_t netconn[AIR720UH_NETCONN_NUM];
 
-    os_event_t      netconn_evt;
-    os_mutex_t      netconn_lock;
-    void            *netconn_data;
+    os_event_t netconn_evt;
+    os_mutex_t netconn_lock;
+    void *netconn_data;
 #endif /* AIR720UH_USING_NETCONN_OPS */
 } mo_air720uh_t;
 
 mo_object_t *module_air720uh_create(const char *name, void *parser_config);
-os_err_t     module_air720uh_destroy(mo_object_t *self);
+os_err_t module_air720uh_destroy(mo_object_t *self);
 
 #endif /* MOLINK_USING_AIR720UH */
 

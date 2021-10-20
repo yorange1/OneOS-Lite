@@ -41,5 +41,3 @@ os_err_t me3616_get_ipaddr(mo_object_t *self, char ip[]);
 #endif /* __cplusplus */
 
 #endif /* __ME3616_IFCONFIG_H__ */
-
-

@@ -36,12 +36,12 @@
 
 os_err_t m5310a_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp)
 {
-    at_parser_t *parser   = &self->parser;
-    os_err_t     result   = OS_EOK;
-    os_uint32_t  req_time = 0;
-    os_int16_t   ttl      = -1;
+    at_parser_t *parser = &self->parser;
+    os_err_t result = OS_EOK;
+    os_uint32_t req_time = 0;
+    os_int16_t ttl = -1;
 
-    char ipaddr[IPADDR_MAX_STR_LEN + 1]  = {0};
+    char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
     char ret_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     if (parser == OS_NULL)
@@ -72,10 +72,10 @@ os_err_t m5310a_ping(mo_object_t *self, const char *host, os_uint16_t len, os_ui
 
     char resp_buff[AT_RESP_BUFF_SIZE_256] = {0};
     /* Need to wait for 4 lines response msg, and timeout comming with ms */
-    at_resp_t at_resp = {.buff      = resp_buff,
+    at_resp_t at_resp = {.buff = resp_buff,
                          .buff_size = sizeof(resp_buff),
-                         .line_num  = 2,
-                         .timeout   = (5 + timeout / 1000) * OS_TICK_PER_SECOND};
+                         .line_num = 2,
+                         .timeout = (5 + timeout / 1000) * OS_TICK_PER_SECOND};
 
     /* Default set timeout to 5000ms */
     /* It is found that the ping packet of M5310-A takes 4 seconds to return */
@@ -116,8 +116,8 @@ os_err_t m5310a_ping(mo_object_t *self, const char *host, os_uint16_t len, os_ui
     {
         inet_aton(ipaddr, &(resp->ip_addr));
         resp->data_len = len;
-        resp->ttl      = ttl;
-        resp->time     = req_time;
+        resp->ttl = ttl;
+        resp->time = req_time;
     }
 
 __exit:

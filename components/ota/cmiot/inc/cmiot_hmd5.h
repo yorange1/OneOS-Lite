@@ -45,17 +45,17 @@ typedef struct
 {
     cmiot_md5_ctx_t ictx;
     cmiot_md5_ctx_t octx;
-    cmiot_char      imd[MD5_DIGESTSIZE];
-    cmiot_char      omd[MD5_DIGESTSIZE];
-    cmiot_char      buf[MD5_BLOCKSIZE];
+    cmiot_char imd[MD5_DIGESTSIZE];
+    cmiot_char omd[MD5_DIGESTSIZE];
+    cmiot_char buf[MD5_BLOCKSIZE];
 } cmiot_hmd5_ctx_t;
 
 cmiot_char *
-             cmiot_get_signptr(cmiot_char *mid, cmiot_char *product_id, cmiot_char *product_secret, cmiot_uint32 utc_time);
+cmiot_get_signptr(cmiot_char *mid, cmiot_char *product_id, cmiot_char *product_secret, cmiot_uint32 utc_time);
 cmiot_uint32 cmiot_md5_calc(void);
 cmiot_uint32 cmiot_get_md5_result(void);
-void         cmiot_set_md5_result(cmiot_uint32 result);
-cmiot_int32  cmiot_md5_calc_internal(cmiot_uint32 buflen, cmiot_char *md5out);
+void cmiot_set_md5_result(cmiot_uint32 result);
+cmiot_int32 cmiot_md5_calc_internal(cmiot_uint32 buflen, cmiot_char *md5out);
 
 #ifdef __cplusplus
 }

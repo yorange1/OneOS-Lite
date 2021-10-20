@@ -58,7 +58,7 @@ os_err_t a7670x_get_attach(mo_object_t *self, os_uint8_t *attach_stat)
         return OS_ERROR;
     }
 
-    if(at_resp_get_data_by_kw(&resp, "+CGATT:", "+CGATT: %hhu", attach_stat) <= 0)
+    if (at_resp_get_data_by_kw(&resp, "+CGATT:", "+CGATT: %hhu", attach_stat) <= 0)
     {
         ERROR("Get %s module attach state failed", self->name);
         return OS_ERROR;
@@ -158,98 +158,97 @@ os_err_t a7670x_get_csq(mo_object_t *self, os_uint8_t *rssi, os_uint8_t *ber)
     return OS_EOK;
 }
 
-#define GET_A7670X_RSSI(rxlev)   (0 - (63 - rxlev + 48))
-#define A7670X_MODULE_NET_TYPE   5
-os_err_t a7670x_get_cell_info(mo_object_t *self, onepos_cell_info_t* onepos_cell_info)  
-{  
-    os_err_t     ret       = OS_EOK;  
-    cell_info_t *cell_info = OS_NULL;  
-    char        *temp_buff = OS_NULL;  
-    os_uint32_t  cell_num  = 0;   
-    os_uint32_t  rxlev     = 0;  
+#define GET_A7670X_RSSI(rxlev) (0 - (63 - rxlev + 48))
+#define A7670X_MODULE_NET_TYPE 5
+os_err_t a7670x_get_cell_info(mo_object_t *self, onepos_cell_info_t *onepos_cell_info)
+{
+    os_err_t ret = OS_EOK;
+    cell_info_t *cell_info = OS_NULL;
+    char *temp_buff = OS_NULL;
+    os_uint32_t cell_num = 0;
+    os_uint32_t rxlev = 0;
 
-    at_parser_t *parser = &self->parser;  
-  
-    if (parser == OS_NULL)  
-    {  
-        ERROR("A7670X ping: at parser is NULL.");  
-        return OS_ERROR;  
-    }  
-    if(!onepos_cell_info)  
-    {  
-        ERROR("input param is error!");  
-        return OS_ERROR;  
-    }  
-  
-    at_resp_t resp = {.buff      = os_calloc(1, 1024),  
-                      .buff_size = 1024,  
-                      .timeout   = 50 * OS_TICK_PER_SECOND  
-                     };  
-  
-    if (OS_NULL == resp.buff)  
-    {  
-        ERROR("Calloc a7670x cell info response memory failed!");  
-        ret = OS_ENOMEM;  
-        goto __exit;  
-    }  
-  
-    /* neighbor cell */  
-    if (at_parser_exec_cmd(parser, &resp, "AT+CPSI?") < 0)  
-    {  
-        ret = OS_ERROR;  
-        ERROR("AT cmd exec fail: AT+CPSI?\n");  
-        goto __exit;  
-    }  
-    DEBUG("resp->line_counts : %d\r\n", resp.line_counts);  
-  
-    cell_info = os_calloc(1, sizeof(cell_info_t)); 
-    if(NULL == cell_info)  
-    {  
-        ERROR("malloc cell_info is null");  
-        ret = OS_ENOMEM;  
-        return ret;  
-    }  
-  
-    INFO("                MCC         MNC          CID         LAC       RSSI\n");  
-    INFO("           ------------ ------------ ------------ ------------ ----\n");  
- 
-    /* main cell */  
-  
-    temp_buff = (char*)at_resp_get_line(&resp, 1); 
-    
-    if(strlen(temp_buff) > 25)  
+    at_parser_t *parser = &self->parser;
+
+    if (parser == OS_NULL)
     {
-        sscanf(temp_buff,  
-               "+CPSI:%*[^,],%*[^,],%u-%u,0x%x,%u, %*[^,], %*[^,], %*[^,], %*[^,], %*[^,], %*[^,], %*[^,], %u, %*[^\r]",       
-               &cell_info[cell_num].mcc,  
-               &cell_info[cell_num].mnc, 
+        ERROR("A7670X ping: at parser is NULL.");
+        return OS_ERROR;
+    }
+    if (!onepos_cell_info)
+    {
+        ERROR("input param is error!");
+        return OS_ERROR;
+    }
+
+    at_resp_t resp = {.buff = os_calloc(1, 1024), .buff_size = 1024, .timeout = 50 * OS_TICK_PER_SECOND};
+
+    if (OS_NULL == resp.buff)
+    {
+        ERROR("Calloc a7670x cell info response memory failed!");
+        ret = OS_ENOMEM;
+        goto __exit;
+    }
+
+    /* neighbor cell */
+    if (at_parser_exec_cmd(parser, &resp, "AT+CPSI?") < 0)
+    {
+        ret = OS_ERROR;
+        ERROR("AT cmd exec fail: AT+CPSI?\n");
+        goto __exit;
+    }
+    DEBUG("resp->line_counts : %d\r\n", resp.line_counts);
+
+    cell_info = os_calloc(1, sizeof(cell_info_t));
+    if (NULL == cell_info)
+    {
+        ERROR("malloc cell_info is null");
+        ret = OS_ENOMEM;
+        return ret;
+    }
+
+    INFO("                MCC         MNC          CID         LAC       RSSI\n");
+    INFO("           ------------ ------------ ------------ ------------ ----\n");
+
+    /* main cell */
+
+    temp_buff = (char *)at_resp_get_line(&resp, 1);
+
+    if (strlen(temp_buff) > 25)
+    {
+        sscanf(temp_buff,
+               "+CPSI:%*[^,],%*[^,],%u-%u,0x%x,%u, %*[^,], %*[^,], %*[^,], %*[^,], %*[^,], %*[^,], %*[^,], %u, %*[^\r]",
+               &cell_info[cell_num].mcc,
+               &cell_info[cell_num].mnc,
                &cell_info[cell_num].lac,
                &cell_info[cell_num].cid,
-               &rxlev        
-               ); 
-         cell_info[cell_num].ss = GET_A7670X_RSSI(rxlev); 
-         INFO("cell_info: %-12u %-12u %-12u %-12u %-4d\n",  
-                  cell_info[cell_num].mcc, cell_info[cell_num].mnc, cell_info[cell_num].cid,  
-                  cell_info[cell_num].lac, cell_info[cell_num].ss);        
-    }         
-    else  
-    {  
-        cell_num --;  
-    }  
-    INFO("           ------------ ------------ ------------ ------------ ----\n");  
-  
-    onepos_cell_info->cell_num = ++cell_num;  
-    onepos_cell_info->cell_info = cell_info;  
-    onepos_cell_info->net_type = A7670X_MODULE_NET_TYPE;  
-  
-__exit:  
-  
-    if (resp.buff != OS_NULL)  
-    {  
-        os_free(resp.buff);  
-    }  
-  
-    return ret;  
-}  
+               &rxlev);
+        cell_info[cell_num].ss = GET_A7670X_RSSI(rxlev);
+        INFO("cell_info: %-12u %-12u %-12u %-12u %-4d\n",
+             cell_info[cell_num].mcc,
+             cell_info[cell_num].mnc,
+             cell_info[cell_num].cid,
+             cell_info[cell_num].lac,
+             cell_info[cell_num].ss);
+    }
+    else
+    {
+        cell_num--;
+    }
+    INFO("           ------------ ------------ ------------ ------------ ----\n");
+
+    onepos_cell_info->cell_num = ++cell_num;
+    onepos_cell_info->cell_info = cell_info;
+    onepos_cell_info->net_type = A7670X_MODULE_NET_TYPE;
+
+__exit:
+
+    if (resp.buff != OS_NULL)
+    {
+        os_free(resp.buff);
+    }
+
+    return ret;
+}
 
 #endif /* A7670X_USING_NETSERV_OPS */

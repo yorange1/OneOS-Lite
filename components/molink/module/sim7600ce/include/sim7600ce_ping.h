@@ -31,7 +31,8 @@ extern "C" {
 
 #ifdef SIM7600CE_USING_PING_OPS
 
-os_err_t sim7600ce_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp);
+os_err_t
+sim7600ce_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp);
 
 #endif /* SIM7600CE_USING_PING_OPS */
 

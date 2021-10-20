@@ -30,7 +30,7 @@
 #include <string.h>
 
 #define MO_LOG_TAG "gm190_ifconfig.h"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef GM190_USING_IFCONFIG_OPS
@@ -56,12 +56,12 @@ os_err_t gm190_ifconfig(mo_object_t *self)
     }
 
     os_uint8_t rssi = 0;
-    os_uint8_t ber  = 0;
+    os_uint8_t ber = 0;
 
     if (gm190_get_csq(self, &rssi, &ber) != OS_EOK)
     {
         rssi = 0;
-        ber  = 0;
+        ber = 0;
     }
 
     os_kprintf("\r\nLIST AT MODULE INFORMATIONS\r\n");
@@ -88,10 +88,10 @@ os_err_t gm190_ifconfig(mo_object_t *self)
 
 os_err_t gm190_get_ipaddr(mo_object_t *self, char ip[])
 {
-#define GM190_IPADDR_MAX_STR_LEN  (64)
+#define GM190_IPADDR_MAX_STR_LEN (64)
     at_parser_t *parser = &self->parser;
-    os_int8_t    ucid   = -1;
-    os_int8_t    len    = -1;
+    os_int8_t ucid = -1;
+    os_int8_t len = -1;
 
     char ipaddr[GM190_IPADDR_MAX_STR_LEN + 1] = {0};
 
@@ -122,7 +122,7 @@ os_err_t gm190_get_ipaddr(mo_object_t *self, char ip[])
     }
     else
     {
-        strncpy(ip, ipaddr,len);
+        strncpy(ip, ipaddr, len);
         DEBUG("IP address: %s", ip);
     }
 
@@ -132,4 +132,3 @@ __exit:
 }
 
 #endif /* GM190_USING_IFCONFIG_OPS */
-

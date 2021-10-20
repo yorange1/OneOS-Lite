@@ -26,4 +26,3 @@
 #include <sys/dirent.h>
 
 #endif /* __DIRENT_H__ */
-

@@ -33,10 +33,10 @@ extern "C" {
 #ifdef GM190_USING_NETCONN_OPS
 
 mo_netconn_t *gm190_netconn_create(mo_object_t *module, mo_netconn_type_t type);
-os_err_t      gm190_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info);
-os_err_t      gm190_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn);
-os_err_t      gm190_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port);
-os_size_t     gm190_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size);
+os_err_t gm190_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info);
+os_err_t gm190_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn);
+os_err_t gm190_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port);
+os_size_t gm190_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size);
 
 #endif /* GM190_USING_NETCONN_OPS */
 
@@ -45,4 +45,3 @@ os_size_t     gm190_netconn_send(mo_object_t *module, mo_netconn_t *netconn, con
 #endif /* __cplusplus */
 
 #endif /* __M5310A_NETCONN_H__ */
-

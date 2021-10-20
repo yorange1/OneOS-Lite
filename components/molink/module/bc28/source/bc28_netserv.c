@@ -29,7 +29,7 @@
 #include <string.h>
 
 #define MO_LOG_TAG "bc28.netserv"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef BC28_USING_NETSERV_OPS
@@ -59,7 +59,7 @@ os_err_t bc28_get_attach(mo_object_t *module, os_uint8_t *attach_stat)
         return OS_ERROR;
     }
 
-    if(at_resp_get_data_by_kw(&resp, "+CGATT:", "+CGATT:%hhu", attach_stat) <= 0)
+    if (at_resp_get_data_by_kw(&resp, "+CGATT:", "+CGATT:%hhu", attach_stat) <= 0)
     {
         ERROR("Get %s module attach state failed", module->name);
         return OS_ERROR;
@@ -226,17 +226,19 @@ __exit:
 os_err_t bc28_set_psm(mo_object_t *module, mo_psm_info_t info)
 {
     at_parser_t *parser = &module->parser;
-    
+
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 1 * OS_TICK_PER_SECOND};
 
-    return at_parser_exec_cmd(parser, &resp, "AT+CPSMS=%d,%s,%s,%s,%s", 
-                                              info.psm_mode, 
-                                              info.periodic_rau,
-                                              info.gprs_ready_timer,
-                                              info.periodic_tau,
-                                              info.active_time);
+    return at_parser_exec_cmd(parser,
+                              &resp,
+                              "AT+CPSMS=%d,%s,%s,%s,%s",
+                              info.psm_mode,
+                              info.periodic_rau,
+                              info.gprs_ready_timer,
+                              info.periodic_tau,
+                              info.active_time);
 }
 
 os_err_t bc28_get_psm(mo_object_t *module, mo_psm_info_t *info)
@@ -254,7 +256,12 @@ os_err_t bc28_get_psm(mo_object_t *module, mo_psm_info_t *info)
 
     memset(info, 0, sizeof(mo_psm_info_t));
 
-    if ( 0 >= at_resp_get_data_by_kw(&resp, "+CPSMS", "+CPSMS: %d,,,%[^,],%s", &info->psm_mode, info->periodic_tau, info->active_time))
+    if (0 >= at_resp_get_data_by_kw(&resp,
+                                    "+CPSMS",
+                                    "+CPSMS: %d,,,%[^,],%s",
+                                    &info->psm_mode,
+                                    info->periodic_tau,
+                                    info->active_time))
     {
         ERROR("Get %s module psm info failed", module->name);
         return OS_ERROR;
@@ -266,14 +273,12 @@ os_err_t bc28_get_psm(mo_object_t *module, mo_psm_info_t *info)
 os_err_t bc28_set_edrx_cfg(mo_object_t *module, mo_edrx_cfg_t cfg)
 {
     at_parser_t *parser = &module->parser;
-    
+
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 1 * OS_TICK_PER_SECOND};
 
-    return at_parser_exec_cmd(parser, &resp, "AT+CEDRXS=%d,5,%s", 
-                                              cfg.mode, 
-                                              cfg.edrx.req_edrx_value);
+    return at_parser_exec_cmd(parser, &resp, "AT+CEDRXS=%d,5,%s", cfg.mode, cfg.edrx.req_edrx_value);
 }
 
 os_err_t bc28_get_edrx_cfg(mo_object_t *module, mo_edrx_t *edrx_local)
@@ -292,9 +297,11 @@ os_err_t bc28_get_edrx_cfg(mo_object_t *module, mo_edrx_t *edrx_local)
 
     memset(edrx_local, 0, sizeof(mo_edrx_t));
 
-    if (0 >= at_resp_get_data_by_kw(&resp, "+CEDRXS", "+CEDRXS: %d,\"%[^\"]", 
-                                                       &edrx_local->act_type, 
-                                                        edrx_local->req_edrx_value))
+    if (0 >= at_resp_get_data_by_kw(&resp,
+                                    "+CEDRXS",
+                                    "+CEDRXS: %d,\"%[^\"]",
+                                    &edrx_local->act_type,
+                                    edrx_local->req_edrx_value))
     {
         ERROR("Get %s module edrx local config failed", module->name);
         return OS_ERROR;
@@ -319,11 +326,13 @@ os_err_t bc28_get_edrx_dynamic(mo_object_t *module, mo_edrx_t *edrx_dynamic)
 
     memset(edrx_dynamic, 0, sizeof(mo_edrx_t));
 
-    if (0 >= at_resp_get_data_by_kw(&resp, "+CEDRXRDP", "+CEDRXRDP: %d,\"%[^\"]\",\"%[^\"]\",\"%[^\"]\"", 
-                                                         &edrx_dynamic->act_type,
-                                                          edrx_dynamic->req_edrx_value,
-                                                          edrx_dynamic->nw_edrx_value,
-                                                          edrx_dynamic->paging_time_window))
+    if (0 >= at_resp_get_data_by_kw(&resp,
+                                    "+CEDRXRDP",
+                                    "+CEDRXRDP: %d,\"%[^\"]\",\"%[^\"]\",\"%[^\"]\"",
+                                    &edrx_dynamic->act_type,
+                                    edrx_dynamic->req_edrx_value,
+                                    edrx_dynamic->nw_edrx_value,
+                                    edrx_dynamic->paging_time_window))
     {
         ERROR("Get %s module edrx dynamic config failed", module->name);
         return OS_ERROR;
@@ -339,11 +348,12 @@ void bc28_edrx_urc_handler(struct at_parser *parser, const char *data, os_size_t
 
     mo_edrx_t edrx_urc;
     memset(&edrx_urc, 0, sizeof(mo_edrx_t));
-    sscanf(data, "+CEDRXP: %d,\"%[^\"]\",\"%[^\"]\",\"%[^\"]\"", 
-                  (int *)&edrx_urc.act_type,
-                   edrx_urc.req_edrx_value,
-                   edrx_urc.nw_edrx_value,
-                   edrx_urc.paging_time_window);
+    sscanf(data,
+           "+CEDRXP: %d,\"%[^\"]\",\"%[^\"]\",\"%[^\"]\"",
+           (int *)&edrx_urc.act_type,
+           edrx_urc.req_edrx_value,
+           edrx_urc.nw_edrx_value,
+           edrx_urc.paging_time_window);
     INFO("Get %s module edrx urc act_type[%d]", parser->name, edrx_urc.act_type);
     INFO("Get %s module edrx urc req_edrx_value[%s]", parser->name, edrx_urc.req_edrx_value);
     INFO("Get %s module edrx urc nw_edrx_value[%s]", parser->name, edrx_urc.nw_edrx_value);
@@ -353,7 +363,7 @@ void bc28_edrx_urc_handler(struct at_parser *parser, const char *data, os_size_t
 }
 
 static at_urc_t bc28_netserv_urc_table[] = {
-    {.prefix = "+CEDRXP:",  .suffix = "\r\n", .func = bc28_edrx_urc_handler},
+    {.prefix = "+CEDRXP:", .suffix = "\r\n", .func = bc28_edrx_urc_handler},
 };
 
 void bc28_netserv_init(mo_bc28_t *module)

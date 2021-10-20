@@ -36,40 +36,40 @@
 
 #ifdef M5310A_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test              = m5310a_at_test,
-    .get_imei             = m5310a_get_imei,
-    .get_imsi             = m5310a_get_imsi,
-    .get_iccid            = m5310a_get_iccid,
-    .get_cfun             = m5310a_get_cfun,
-    .set_cfun             = m5310a_set_cfun,
+    .at_test = m5310a_at_test,
+    .get_imei = m5310a_get_imei,
+    .get_imsi = m5310a_get_imsi,
+    .get_iccid = m5310a_get_iccid,
+    .get_cfun = m5310a_get_cfun,
+    .set_cfun = m5310a_set_cfun,
     .get_firmware_version = m5310a_get_firmware_version,
 };
 #endif /* M5310A_USING_GENERAL_OPS */
 
 #ifdef M5310A_USING_NETSERV_OPS
 static const struct mo_netserv_ops gs_netserv_ops = {
-    .set_attach           = m5310a_set_attach,
-    .get_attach           = m5310a_get_attach,
-    .set_reg              = m5310a_set_reg,
-    .get_reg              = m5310a_get_reg,
-    .set_cgact            = m5310a_set_cgact,
-    .get_cgact            = m5310a_get_cgact,
-    .get_csq              = m5310a_get_csq,
-    .get_radio            = m5310a_get_radio,
-    .clear_stored_earfcn  = m5310a_clear_stored_earfcn,
+    .set_attach = m5310a_set_attach,
+    .get_attach = m5310a_get_attach,
+    .set_reg = m5310a_set_reg,
+    .get_reg = m5310a_get_reg,
+    .set_cgact = m5310a_set_cgact,
+    .get_cgact = m5310a_get_cgact,
+    .get_csq = m5310a_get_csq,
+    .get_radio = m5310a_get_radio,
+    .clear_stored_earfcn = m5310a_clear_stored_earfcn,
 };
 #endif /* M5310A_USING_NETSERV_OPS */
 
 #ifdef M5310A_USING_PING_OPS
 static const struct mo_ping_ops gs_ping_ops = {
-    .ping                 = m5310a_ping,
+    .ping = m5310a_ping,
 };
 #endif /* M5310A_USING_PING_OPS */
 
 #ifdef M5310A_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig             = m5310a_ifconfig,
-    .get_ipaddr           = m5310a_get_ipaddr,
+    .ifconfig = m5310a_ifconfig,
+    .get_ipaddr = m5310a_get_ipaddr,
 };
 #endif /* M5310A_USING_IFCONFIG_OPS */
 
@@ -77,31 +77,31 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern void m5310a_netconn_init(mo_m5310a_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create               = m5310a_netconn_create,
-    .destroy              = m5310a_netconn_destroy,
+    .create = m5310a_netconn_create,
+    .destroy = m5310a_netconn_destroy,
 #ifdef M5310A_USING_DNS
-    .gethostbyname        = m5310a_netconn_gethostbyname,
+    .gethostbyname = m5310a_netconn_gethostbyname,
 #endif
-    .connect              = m5310a_netconn_connect,
-    .send                 = m5310a_netconn_send,
-    .get_info             = m5310a_netconn_get_info,
+    .connect = m5310a_netconn_connect,
+    .send = m5310a_netconn_send,
+    .get_info = m5310a_netconn_get_info,
 };
 #endif /* M5310A_USING_NETCONN_OPS */
 
 #ifdef M5310A_USING_ONENET_NB_OPS
 static const mo_onenet_ops_t gs_onenet_ops = {
-    .onenetnb_create      = m5310_onenetnb_create,
-    .onenetnb_createex    = m5310_onenetnb_createex,
-    .onenetnb_addobj      = m5310_onenetnb_addobj,
+    .onenetnb_create = m5310_onenetnb_create,
+    .onenetnb_createex = m5310_onenetnb_createex,
+    .onenetnb_addobj = m5310_onenetnb_addobj,
     .onenetnb_discoverrsp = m5310_onenetnb_discoverrsp,
-    .onenetnb_nmi         = m5310_onenetnb_set_nmi,
-    .onenetnb_open        = m5310_onenetnb_open,
-    .onenetnb_notify      = m5310_onenetnb_notify,
-    .onenetnb_update      = m5310_onenetnb_update,
-    .onenetnb_get_write   = m5310_onenetnb_get_write,
-    .onenetnb_writersp    = m5310_onenetnb_writersp,
+    .onenetnb_nmi = m5310_onenetnb_set_nmi,
+    .onenetnb_open = m5310_onenetnb_open,
+    .onenetnb_notify = m5310_onenetnb_notify,
+    .onenetnb_update = m5310_onenetnb_update,
+    .onenetnb_get_write = m5310_onenetnb_get_write,
+    .onenetnb_writersp = m5310_onenetnb_writersp,
 #ifdef OS_USING_SHELL
-    .onenetnb_all         = m5310_onenetnb_all,
+    .onenetnb_all = m5310_onenetnb_all,
 #endif
 };
 #endif /* M5310A_USING_ONENET_OPS */
@@ -216,7 +216,7 @@ int m5310_auto_create(void)
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = M5310A_NAME,
+    mo_parser_config_t parser_config = {.parser_name = M5310A_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = M5310A_RECV_BUFF_LEN};
 

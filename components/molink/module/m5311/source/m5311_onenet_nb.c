@@ -30,7 +30,7 @@
 #include <stdio.h>
 
 #define MO_LOG_TAG "m5311.onenet_nb"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #define M5311_ONENET_EVENTID_BOOTSTRAP_OK       (2)
@@ -43,15 +43,15 @@
 #define M5311_ONENET_EVENTID_DELETE_BY_PLATFORM (31)
 #define M5311_ONENET_EVENTID_DTLS_IP_AGINT      (32)
 
-#define M5311_ONENET_EVENT_BOOTSTRAP_OK         (1L << 0)
-#define M5311_ONENET_EVENT_BOOTSTRAP_FAIL       (1L << 1)
-#define M5311_ONENET_EVENT_REG_OK               (1L << 2)
-#define M5311_ONENET_EVENT_REG_FAIL             (1L << 3)
-#define M5311_ONENET_EVENT_UPDATE_OK            (1L << 4)
-#define M5311_ONENET_EVENT_LOGOUT               (1L << 5)
-#define M5311_ONENET_EVENT_NOTIFY_OK            (1L << 6)
-#define M5311_ONENET_EVENT_DELETE_BY_PLATFORM   (1L << 7)
-#define M5311_ONENET_EVENT_DTLS_IP_AGINT        (1L << 8)
+#define M5311_ONENET_EVENT_BOOTSTRAP_OK       (1L << 0)
+#define M5311_ONENET_EVENT_BOOTSTRAP_FAIL     (1L << 1)
+#define M5311_ONENET_EVENT_REG_OK             (1L << 2)
+#define M5311_ONENET_EVENT_REG_FAIL           (1L << 3)
+#define M5311_ONENET_EVENT_UPDATE_OK          (1L << 4)
+#define M5311_ONENET_EVENT_LOGOUT             (1L << 5)
+#define M5311_ONENET_EVENT_NOTIFY_OK          (1L << 6)
+#define M5311_ONENET_EVENT_DELETE_BY_PLATFORM (1L << 7)
+#define M5311_ONENET_EVENT_DTLS_IP_AGINT      (1L << 8)
 
 static os_err_t m5311_nb_lock(os_mutex_t *mutex)
 {
@@ -69,12 +69,12 @@ DEFINE_M5311_ONENET_FUNC(m5311_onenetnb_create, ONENET_NB_FUNC_ARGS)
     OS_ASSERT(resp != OS_NULL);
     OS_ASSERT(format != OS_NULL);
 
-    os_err_t     result = OS_ERROR;
-    os_uint8_t   ref    = 0;
+    os_err_t result = OS_ERROR;
+    os_uint8_t ref = 0;
     at_parser_t *parser = &module->parser;
 
     char tmp_format[AT_RESP_BUFF_SIZE_128] = "AT+MIPLCREATE=";
-    char resp_buff [AT_RESP_BUFF_SIZE_DEF] = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     strncpy(tmp_format + strlen(tmp_format), format, strlen(format));
 
@@ -104,7 +104,7 @@ DEFINE_M5311_ONENET_FUNC(m5311_onenetnb_delete, ONENET_NB_FUNC_ARGS)
     at_parser_t *parser = &module->parser;
 
     char tmp_format[AT_RESP_BUFF_SIZE_DEF] = "AT+MIPLDELETE=";
-    char resp_buff [AT_RESP_BUFF_SIZE_DEF] = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     strncpy(tmp_format + strlen(tmp_format), format, strlen(format));
 
@@ -119,13 +119,13 @@ DEFINE_M5311_ONENET_FUNC(m5311_onenetnb_createex, ONENET_NB_FUNC_ARGS)
     OS_ASSERT(resp != OS_NULL);
     OS_ASSERT(format != OS_NULL);
 
-    os_err_t     result = OS_ERROR;
+    os_err_t result = OS_ERROR;
     at_parser_t *parser = &module->parser;
 
     os_uint8_t ref = 0;
 
     char tmp_format[AT_RESP_BUFF_SIZE_DEF] = "AT+MIPLCREATEEX=";
-    char resp_buff [AT_RESP_BUFF_SIZE_DEF] = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     strncpy(tmp_format + strlen(tmp_format), format, strlen(format));
 
@@ -155,7 +155,7 @@ DEFINE_M5311_ONENET_FUNC(m5311_onenetnb_addobj, ONENET_NB_FUNC_ARGS)
     at_parser_t *parser = &module->parser;
 
     char tmp_format[AT_RESP_BUFF_SIZE_DEF] = "AT+MIPLADDOBJ=";
-    char resp_buff [AT_RESP_BUFF_SIZE_DEF] = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     strncpy(tmp_format + strlen(tmp_format), format, strlen(format));
 
@@ -172,7 +172,7 @@ DEFINE_M5311_ONENET_FUNC(m5311_onenetnb_delobj, ONENET_NB_FUNC_ARGS)
     at_parser_t *parser = &module->parser;
 
     char tmp_format[AT_RESP_BUFF_SIZE_DEF] = "AT+MIPLDELOBJ=";
-    char resp_buff [AT_RESP_BUFF_SIZE_DEF] = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     strncpy(tmp_format + strlen(tmp_format), format, strlen(format));
 
@@ -186,11 +186,11 @@ DEFINE_M5311_ONENET_FUNC(m5311_onenetnb_discoverrsp, ONENET_NB_FUNC_ARGS)
     OS_ASSERT(module != OS_NULL);
     OS_ASSERT(format != OS_NULL);
 
-    os_err_t     result = OS_ERROR;
+    os_err_t result = OS_ERROR;
     at_parser_t *parser = &module->parser;
 
     char tmp_format[AT_RESP_BUFF_SIZE_128] = "AT+MIPLDISCOVERRSP=";
-    char resp_buff [AT_RESP_BUFF_SIZE_DEF] = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     strncpy(tmp_format + strlen(tmp_format), format, strlen(format));
 
@@ -209,11 +209,11 @@ DEFINE_M5311_ONENET_FUNC(m5311_onenetnb_set_nmi, ONENET_NB_FUNC_ARGS)
     OS_ASSERT(module != OS_NULL);
     OS_ASSERT(format != OS_NULL);
 
-    os_err_t     result = OS_ERROR;
+    os_err_t result = OS_ERROR;
     at_parser_t *parser = &module->parser;
 
     char tmp_format[AT_RESP_BUFF_SIZE_DEF] = "AT+MIPLNMI=";
-    char resp_buff [AT_RESP_BUFF_SIZE_DEF] = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     strncpy(tmp_format + strlen(tmp_format), format, strlen(format));
 
@@ -232,21 +232,19 @@ DEFINE_M5311_ONENET_FUNC(m5311_onenetnb_open, ONENET_NB_FUNC_ARGS)
     OS_ASSERT(module != OS_NULL);
     OS_ASSERT(format != OS_NULL);
 
-    os_err_t     result = OS_ERROR;
-    os_uint32_t  event  = 0;
+    os_err_t result = OS_ERROR;
+    os_uint32_t event = 0;
     at_parser_t *parser = &module->parser;
-    mo_m5311_t  *m5311  = os_container_of(module, mo_m5311_t, parent);
+    mo_m5311_t *m5311 = os_container_of(module, mo_m5311_t, parent);
 
     m5311_nb_lock(&m5311->onenetnb_lock);
 
     char tmp_format[AT_RESP_BUFF_SIZE_DEF] = "AT+MIPLOPEN=";
-    char resp_buff [AT_RESP_BUFF_SIZE_128] = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_128] = {0};
 
     strncpy(tmp_format + strlen(tmp_format), format, strlen(format));
 
-    at_resp_t at_resp = {.buff      = resp_buff,
-                         .buff_size = sizeof(resp_buff),
-                         .timeout   = os_tick_from_ms(timeout)};
+    at_resp_t at_resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = os_tick_from_ms(timeout)};
 
     os_event_clear(&m5311->onenetnb_evt, M5311_ONENET_EVENT_REG_OK | M5311_ONENET_EVENT_REG_FAIL);
 
@@ -291,21 +289,19 @@ DEFINE_M5311_ONENET_FUNC(m5311_onenetnb_close, ONENET_NB_FUNC_ARGS)
     OS_ASSERT(module != OS_NULL);
     OS_ASSERT(format != OS_NULL);
 
-    os_err_t     result = OS_ERROR;
-    os_uint32_t  event  = 0;
+    os_err_t result = OS_ERROR;
+    os_uint32_t event = 0;
     at_parser_t *parser = &module->parser;
-    mo_m5311_t  *m5311  = os_container_of(module, mo_m5311_t, parent);
+    mo_m5311_t *m5311 = os_container_of(module, mo_m5311_t, parent);
 
     m5311_nb_lock(&m5311->onenetnb_lock);
 
     char tmp_format[AT_RESP_BUFF_SIZE_DEF] = "AT+MIPLCLOSE=";
-    char resp_buff [AT_RESP_BUFF_SIZE_DEF] = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     strncpy(tmp_format + strlen(tmp_format), format, strlen(format));
 
-    at_resp_t at_resp = {.buff      = resp_buff,
-                         .buff_size = sizeof(resp_buff),
-                         .timeout   = os_tick_from_ms(timeout)};
+    at_resp_t at_resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = os_tick_from_ms(timeout)};
 
     os_event_clear(&m5311->onenetnb_evt, M5311_ONENET_EVENT_LOGOUT);
 
@@ -342,8 +338,8 @@ __exit:
 os_err_t m5311_get_onenetnb_notify_ackid(const char *format, va_list args, os_uint16_t *id)
 {
     /* if has ackid, must be the 11 element */
-    int        num_count = 1;
-    os_int32_t id_tmp    = -1;
+    int num_count = 1;
+    os_int32_t id_tmp = -1;
     os_uint8_t qualifier;
 
     for (; *format; ++format)
@@ -433,21 +429,19 @@ DEFINE_M5311_ONENET_FUNC(m5311_onenetnb_notify, ONENET_NB_FUNC_ARGS)
     OS_ASSERT(module != OS_NULL);
     OS_ASSERT(format != OS_NULL);
 
-    os_err_t     result = OS_ERROR;
-    os_uint32_t  event  = 0;
+    os_err_t result = OS_ERROR;
+    os_uint32_t event = 0;
     at_parser_t *parser = &module->parser;
-    mo_m5311_t  *m5311  = os_container_of(module, mo_m5311_t, parent);
+    mo_m5311_t *m5311 = os_container_of(module, mo_m5311_t, parent);
 
     m5311_nb_lock(&m5311->onenetnb_lock);
 
-    char resp_buff[AT_RESP_BUFF_SIZE_DEF]  = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
     char tmp_format[AT_RESP_BUFF_SIZE_128] = "AT+MIPLNOTIFY=";
 
     strncpy(tmp_format + strlen(tmp_format), format, strlen(format));
 
-    at_resp_t at_resp = {.buff      = resp_buff,
-                         .buff_size = sizeof(resp_buff),
-                         .timeout   = os_tick_from_ms(timeout)};
+    at_resp_t at_resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = os_tick_from_ms(timeout)};
 
     os_event_clear(&m5311->onenetnb_evt, M5311_ONENET_EVENT_NOTIFY_OK);
 
@@ -486,10 +480,10 @@ DEFINE_M5311_ONENET_FUNC(m5311_onenetnb_update, ONENET_NB_FUNC_ARGS)
     OS_ASSERT(module != OS_NULL);
     OS_ASSERT(format != OS_NULL);
 
-    at_parser_t *parser   = &module->parser;
+    at_parser_t *parser = &module->parser;
 
     char tmp_format[AT_RESP_BUFF_SIZE_DEF] = "AT+MIPLUPDATE=";
-    char resp_buff [AT_RESP_BUFF_SIZE_DEF] = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     strncpy(tmp_format + strlen(tmp_format), format, strlen(format));
 
@@ -510,11 +504,11 @@ DEFINE_M5311_ONENET_FUNC(m5311_onenetnb_get_write, ONENET_NB_FUNC_ARGS)
         return OS_ERROR;
     }
 
-    os_err_t     result = OS_ERROR;
+    os_err_t result = OS_ERROR;
     at_parser_t *parser = &module->parser;
 
     char tmp_format[AT_RESP_BUFF_SIZE_128] = "AT+MIPLMGR=";
-    char resp_buff [AT_RESP_BUFF_SIZE_256] = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_256] = {0};
 
     strncpy(tmp_format + strlen(tmp_format), format, strlen(format));
 
@@ -551,7 +545,7 @@ DEFINE_M5311_ONENET_FUNC(m5311_onenetnb_writersp, ONENET_NB_FUNC_ARGS)
     OS_ASSERT(module != OS_NULL);
     OS_ASSERT(format != OS_NULL);
 
-    os_err_t     result = OS_ERROR;
+    os_err_t result = OS_ERROR;
     at_parser_t *parser = &module->parser;
 
     char tmp_format[128] = "AT+MIPLWRITERSP=";
@@ -575,7 +569,7 @@ DEFINE_M5311_ONENET_FUNC(m5311_onenetnb_get_nmi, ONENET_NB_FUNC_ARGS)
     OS_ASSERT(module != OS_NULL);
     OS_ASSERT(resp != OS_NULL);
 
-    os_err_t     result = OS_ERROR;
+    os_err_t result = OS_ERROR;
     at_parser_t *parser = &module->parser;
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
@@ -595,7 +589,7 @@ DEFINE_M5311_ONENET_FUNC(m5311_onenetnb_get_nmi, ONENET_NB_FUNC_ARGS)
     {
         goto __exit;
     }
-    ((m5311_nmi_t *)resp)->ref  = ref;
+    ((m5311_nmi_t *)resp)->ref = ref;
     ((m5311_nmi_t *)resp)->nnmi = nnmi;
     ((m5311_nmi_t *)resp)->nsmi = nsmi;
 
@@ -612,9 +606,9 @@ static void urc_onenetnb_miplnsmi_msg_func(struct at_parser *parser, const char 
     OS_ASSERT(OS_NULL != data);
 
     mo_object_t *module = os_container_of(parser, mo_object_t, parser);
-    os_int32_t  ref     = 0;
-    os_int32_t  status  = 0;
-    os_int32_t  num     = 0;
+    os_int32_t ref = 0;
+    os_int32_t status = 0;
+    os_int32_t num = 0;
 
     if (0 >= sscanf(data, "+MIPLNSMI:%d,%d,%d", &ref, &status, &num))
     {
@@ -640,9 +634,9 @@ static void urc_onenetnb_evt_recv_func(struct at_parser *parser, const char *dat
     OS_ASSERT(OS_NULL != data);
 
     mo_object_t *module = os_container_of(parser, mo_object_t, parser);
-    mo_m5311_t  *m5311  = os_container_of(module, mo_m5311_t, parent);
-    os_int32_t   ref    = 0;
-    os_int32_t   evtid  = 0;
+    mo_m5311_t *m5311 = os_container_of(module, mo_m5311_t, parent);
+    os_int32_t ref = 0;
+    os_int32_t evtid = 0;
 
     /* +MIPLEVENT:0,2\r\n */
     if (0 >= sscanf(data, "+MIPLEVENT:%d,%d", &ref, &evtid))
@@ -702,8 +696,8 @@ static void urc_onenetnb_evt_recv_func(struct at_parser *parser, const char *dat
 }
 
 static at_urc_t onenet_nb_urc_table[] = {
-    {.prefix = "+MIPLEVENT:",  .suffix = "\r\n", .func = urc_onenetnb_evt_recv_func},
-    {.prefix = "+MIPLNSMI:",   .suffix = "\r\n", .func = urc_onenetnb_miplnsmi_msg_func},
+    {.prefix = "+MIPLEVENT:", .suffix = "\r\n", .func = urc_onenetnb_evt_recv_func},
+    {.prefix = "+MIPLNSMI:", .suffix = "\r\n", .func = urc_onenetnb_miplnsmi_msg_func},
 };
 
 void m5311_onenetnb_init(mo_m5311_t *module)
@@ -719,7 +713,7 @@ DEFINE_M5311_ONENET_FUNC(m5311_onenetnb_all, ONENET_NB_FUNC_ARGS)
     OS_ASSERT(module != OS_NULL);
     OS_ASSERT(format != OS_NULL);
 
-    os_err_t     result = OS_ERROR;
+    os_err_t result = OS_ERROR;
     at_parser_t *parser = &module->parser;
 
     char resp_buff[256] = {0};

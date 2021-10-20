@@ -29,7 +29,7 @@
 #include <stdlib.h>
 
 #define MO_LOG_TAG "gm190_netconn"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #define SEND_DATA_MAX_SIZE    (1400)
@@ -40,7 +40,7 @@
 #endif
 
 #ifndef GM190_NETCONN_MQ_MSG_MAX
-#define GM190_NETCONN_MQ_MSG_MAX  (5)
+#define GM190_NETCONN_MQ_MSG_MAX (5)
 #endif
 
 #define SET_EVENT(socket, event) (((socket + 1) << 16) | (event))
@@ -52,9 +52,9 @@
 
 #ifdef GM190_USING_NETCONN_OPS
 
-static os_bool_t  gm190_pdp_set(mo_object_t *module)
+static os_bool_t gm190_pdp_set(mo_object_t *module)
 {
-    at_parser_t *parser       = &module->parser;
+    at_parser_t *parser = &module->parser;
     char resp_buff[256] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 20 * AT_RESP_TIMEOUT_DEF};
@@ -75,15 +75,14 @@ static os_bool_t  gm190_pdp_set(mo_object_t *module)
     }
 
     return OS_TRUE;
-
 }
 
 static os_bool_t gm190_check_zipcall(mo_object_t *module, os_int32_t connect_id)
 {
-    at_parser_t *parser           = &module->parser;
-    char         zipcall[30]      = {0};
-    char         resp_buff[256]   = {0};
-    char         zpas[30]         = {0};
+    at_parser_t *parser = &module->parser;
+    char zipcall[30] = {0};
+    char resp_buff[256] = {0};
+    char zpas[30] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 20 * AT_RESP_TIMEOUT_DEF};
 
@@ -115,7 +114,7 @@ static os_bool_t gm190_check_zipcall(mo_object_t *module, os_int32_t connect_id)
         return OS_FALSE;
     }
 
-    if ('1' != zipcall[0] )
+    if ('1' != zipcall[0])
     {
         if (at_parser_exec_cmd(parser, &resp, "AT+ZIPCALL=1") != OS_EOK)
         {
@@ -127,7 +126,6 @@ static os_bool_t gm190_check_zipcall(mo_object_t *module, os_int32_t connect_id)
 
     INFO("Check call ip ready!");
     return OS_TRUE;
-
 }
 
 static os_err_t gm190_lock(os_mutex_t *mutex)
@@ -140,24 +138,24 @@ static os_err_t gm190_unlock(os_mutex_t *mutex)
     return os_mutex_recursive_unlock(mutex);
 }
 
-static os_err_t gm190_check_state(mo_object_t *module,os_int32_t connect_id)
+static os_err_t gm190_check_state(mo_object_t *module, os_int32_t connect_id)
 {
-    at_parser_t *parser         = &module->parser;
-    char         resp_buff[256] = {0};
-    os_err_t     result         = OS_ERROR;
-    os_uint16_t  recv_id        = 0;
-    os_uint16_t  recv_stat      = 0;
+    at_parser_t *parser = &module->parser;
+    char resp_buff[256] = {0};
+    os_err_t result = OS_ERROR;
+    os_uint16_t recv_id = 0;
+    os_uint16_t recv_stat = 0;
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 6 * OS_TICK_PER_SECOND};
 
-    if (at_parser_exec_cmd(parser, &resp, "AT+ZIPSTAT=%d",connect_id) != OS_EOK)
+    if (at_parser_exec_cmd(parser, &resp, "AT+ZIPSTAT=%d", connect_id) != OS_EOK)
     {
-        ERROR("Check connecd id %d state failed!",connect_id);
+        ERROR("Check connecd id %d state failed!", connect_id);
         result = OS_ERROR;
         goto __exit;
     }
 
-    if(at_resp_get_data_by_kw(&resp, "+ZIPSTAT:", "+ZIPSTAT: %d,%d",&recv_id, &recv_stat) <= 0)
+    if (at_resp_get_data_by_kw(&resp, "+ZIPSTAT:", "+ZIPSTAT: %d,%d", &recv_id, &recv_stat) <= 0)
     {
         ERROR("Get %s module zipstat key word failed.", module->name);
         result = OS_ERROR;
@@ -237,7 +235,6 @@ static mo_netconn_t *gm190_get_netconn_by_id(mo_object_t *module, os_int32_t con
     }
 
     return OS_NULL;
-
 }
 
 os_err_t gm190_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
@@ -245,7 +242,7 @@ os_err_t gm190_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
     mo_gm190_t *gm190 = os_container_of(module, mo_gm190_t, parent);
 
     info->netconn_array = gm190->netconn;
-    info->netconn_nums  = sizeof(gm190->netconn) / sizeof(gm190->netconn[0]);
+    info->netconn_nums = sizeof(gm190->netconn) / sizeof(gm190->netconn[0]);
 
     return OS_EOK;
 }
@@ -263,9 +260,7 @@ mo_netconn_t *gm190_netconn_create(mo_object_t *module, mo_netconn_type_t type)
         return OS_NULL;
     }
 
-    netconn->mq = os_mq_create(GM190_NETCONN_MQ_NAME,
-                               GM190_NETCONN_MQ_MSG_SIZE,
-                               GM190_NETCONN_MQ_MSG_MAX);
+    netconn->mq = os_mq_create(GM190_NETCONN_MQ_NAME, GM190_NETCONN_MQ_MSG_SIZE, GM190_NETCONN_MQ_MSG_MAX);
     if (OS_NULL == netconn->mq)
     {
         ERROR("%s data queue create failed, no enough memory.", module->name);
@@ -282,19 +277,16 @@ mo_netconn_t *gm190_netconn_create(mo_object_t *module, mo_netconn_type_t type)
 os_err_t gm190_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 {
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_ERROR;
-    char         zipstat[10] = {0};
-    int          i           = 0;
+    os_err_t result = OS_ERROR;
+    char zipstat[10] = {0};
+    int i = 0;
 
     mo_gm190_t *gm190 = os_container_of(module, mo_gm190_t, parent);
     gm190_lock(&gm190->netconn_lock);
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 10 * OS_TICK_PER_SECOND
-                     };
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 10 * OS_TICK_PER_SECOND};
 
     switch (netconn->stat)
     {
@@ -306,8 +298,8 @@ os_err_t gm190_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
         if (result != OS_EOK)
         {
             ERROR("Module %s destroy %s netconn failed",
-                      module->name,
-                      (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
+                  module->name,
+                  (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
 
             gm190_unlock(&gm190->netconn_lock);
             return result;
@@ -316,7 +308,7 @@ os_err_t gm190_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
         do
         {
             os_task_msleep(1000);
-            result = at_parser_exec_cmd(parser, &resp, "AT+ZIPSTAT=%d",netconn->connect_id);
+            result = at_parser_exec_cmd(parser, &resp, "AT+ZIPSTAT=%d", netconn->connect_id);
 
             if (result != OS_EOK)
             {
@@ -332,8 +324,7 @@ os_err_t gm190_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
                 return result;
             }
             i++;
-        }
-        while('3' == zipstat[2]);
+        } while ('3' == zipstat[2]);
 
         if ('0' != zipstat[2])
         {
@@ -356,9 +347,9 @@ os_err_t gm190_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 
     INFO("Module %s netconn id %d destroyed", module->name, netconn->connect_id);
 
-    netconn->connect_id  = -1;
-    netconn->stat        = NETCONN_STAT_NULL;
-    netconn->type        = NETCONN_TYPE_NULL;
+    netconn->connect_id = -1;
+    netconn->stat = NETCONN_STAT_NULL;
+    netconn->type = NETCONN_TYPE_NULL;
     netconn->remote_port = 0;
     inet_aton("0.0.0.0", &netconn->remote_ip);
 
@@ -367,14 +358,12 @@ os_err_t gm190_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
     return OS_EOK;
 }
 
-
-
 os_err_t gm190_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port)
 {
 #define ZIP_CALL_TIMES (3)
     at_parser_t *parser = &module->parser;
-    os_err_t    result  = OS_EOK;
-    mo_gm190_t * gm190  = os_container_of(module, mo_gm190_t, parent);
+    os_err_t result = OS_EOK;
+    mo_gm190_t *gm190 = os_container_of(module, mo_gm190_t, parent);
 
     gm190_lock(&gm190->netconn_lock);
 
@@ -397,7 +386,7 @@ os_err_t gm190_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_ad
         {
             ERROR("Wait module %s call ip !", module->name);
             i++;
-            if(i > ZIP_CALL_TIMES)
+            if (i > ZIP_CALL_TIMES)
             {
                 ERROR("Wait module %s call ip failed !", module->name);
                 break;
@@ -410,23 +399,13 @@ os_err_t gm190_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_ad
     {
 #ifdef GM190_USING_TCP
     case NETCONN_TYPE_TCP:
-        result = at_parser_exec_cmd(parser,
-                                    &resp,
-                                    "AT+ZIPOPEN=%d,0,%s,%d",
-                                    netconn->connect_id,
-                                    remote_ip,
-                                    port);
+        result = at_parser_exec_cmd(parser, &resp, "AT+ZIPOPEN=%d,0,%s,%d", netconn->connect_id, remote_ip, port);
         break;
 #endif
 
 #ifdef GM190_USING_UDP
     case NETCONN_TYPE_UDP:
-        result = at_parser_exec_cmd(parser,
-                                    &resp,
-                                    "AT+ZIPOPEN=%d,1,%s,%d",
-                                    netconn->connect_id,
-                                    remote_ip,
-                                    port);
+        result = at_parser_exec_cmd(parser, &resp, "AT+ZIPOPEN=%d,1,%s,%d", netconn->connect_id, remote_ip, port);
         break;
 #endif
 
@@ -442,7 +421,7 @@ os_err_t gm190_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_ad
 
     os_task_msleep(1000);
 
-    if (OS_EOK == gm190_check_state(module,netconn->connect_id))
+    if (OS_EOK == gm190_check_state(module, netconn->connect_id))
     {
         ERROR("Module %s netconn id %d connect fail", module->name, netconn->connect_id);
         result = OS_ERROR;
@@ -454,7 +433,7 @@ __exit:
     {
         ip_addr_copy(netconn->remote_ip, addr);
         netconn->remote_port = port;
-        netconn->stat        = NETCONN_STAT_CONNECT;
+        netconn->stat = NETCONN_STAT_CONNECT;
 
         DEBUG("Module %s connect to %s:%d successfully!", module->name, remote_ip, port);
     }
@@ -469,13 +448,13 @@ __exit:
 
 os_size_t gm190_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
-    at_parser_t *parser     = &module->parser;
-    os_err_t     result     = OS_EOK;
-    os_size_t    sent_size  = 0;
-    int          curr_size  = 0;
-    os_uint32_t  event      = 0;
-    char         at_cmd[30] = {0};
-    int          cmd_len    = 0;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    os_size_t sent_size = 0;
+    int curr_size = 0;
+    os_uint32_t event = 0;
+    char at_cmd[30] = {0};
+    int cmd_len = 0;
     mo_gm190_t *gm190 = os_container_of(module, mo_gm190_t, parent);
 
     at_parser_exec_lock(parser);
@@ -500,12 +479,12 @@ os_size_t gm190_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const c
             curr_size = SEND_DATA_MAX_SIZE;
         }
 
-        cmd_len = sprintf(at_cmd,"AT+ZIPSENDRAW=%d,%d\r\n", netconn->connect_id, curr_size);
-        if(cmd_len <= 0)
+        cmd_len = sprintf(at_cmd, "AT+ZIPSENDRAW=%d,%d\r\n", netconn->connect_id, curr_size);
+        if (cmd_len <= 0)
         {
             goto __exit;
         }
-        INFO("cmd_len = %d, strlen(at_cmd) = %d",cmd_len,strlen(at_cmd));
+        INFO("cmd_len = %d, strlen(at_cmd) = %d", cmd_len, strlen(at_cmd));
 
         if (at_parser_send(parser, at_cmd, cmd_len) <= 0)
         {
@@ -583,9 +562,9 @@ static void urc_send_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != data);
 
     os_int32_t connect_id = 0;
-    os_int32_t data_size  = 0;
-    mo_object_t *module   = os_container_of(parser, mo_object_t, parser);
-    mo_gm190_t *gm190     = os_container_of(module, mo_gm190_t, parent);
+    os_int32_t data_size = 0;
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
+    mo_gm190_t *gm190 = os_container_of(module, mo_gm190_t, parent);
 
     sscanf(data, "+ZIPSENDRAW: %d,%d", &connect_id, &data_size);
 
@@ -603,13 +582,13 @@ static void urc_send_func(struct at_parser *parser, const char *data, os_size_t 
 
 static void urc_recv_data_func(struct at_parser *parser, mo_netconn_t *netconn, os_size_t data_size)
 {
-    mo_object_t *module  = os_container_of(parser, mo_object_t, parser);
-    os_int32_t   timeout = data_size > 10 ? data_size : 10;
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
+    os_int32_t timeout = data_size > 10 ? data_size : 10;
 
     INFO("Moudle %s netconn %d receive %d bytes data", parser->name, netconn->connect_id, data_size);
 
-    char *recv_buff    = os_calloc(1, data_size);
-    char  temp_buff[8] = {0};
+    char *recv_buff = os_calloc(1, data_size);
+    char temp_buff[8] = {0};
     if (recv_buff == OS_NULL)
     {
         /* read and clean the coming data */
@@ -659,7 +638,7 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
 
     os_int32_t connect_id = atoi(&tmp_ch);
 
-    mo_object_t  *module  = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
 
     mo_netconn_t *netconn = gm190_get_netconn_by_id(module, connect_id);
     if (OS_NULL == netconn)
@@ -702,7 +681,7 @@ static void urc_conn_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != parser);
     OS_ASSERT(OS_NULL != data);
 
-    mo_object_t *module           = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
     mo_gm190_t *gm190 = os_container_of(module, mo_gm190_t, parent);
 
     os_int32_t curr_connect = gm190->curr_connect;
@@ -711,17 +690,17 @@ static void urc_conn_func(struct at_parser *parser, const char *data, os_size_t 
 }
 
 static at_urc_t gs_urc_table[] = {
-    {.prefix = "+ZIPSENDRAW:", .suffix = "\r\n",           .func = urc_send_func},
-    {.prefix = "",             .suffix = "+ZIPRECV:",      .func = urc_recv_func},
-    {.prefix = "CONNECT",      .suffix = "\r\n",           .func = urc_conn_func},
+    {.prefix = "+ZIPSENDRAW:", .suffix = "\r\n", .func = urc_send_func},
+    {.prefix = "", .suffix = "+ZIPRECV:", .func = urc_recv_func},
+    {.prefix = "CONNECT", .suffix = "\r\n", .func = urc_conn_func},
 };
 
 static void gm190_network_init(mo_object_t *module)
 {
-    at_parser_t *parser        = &module->parser;
-    os_int32_t   enable_num    = 0;
-    os_int32_t   reg_state     = 0;
-    os_err_t     result        = OS_ERROR;
+    at_parser_t *parser = &module->parser;
+    os_int32_t enable_num = 0;
+    os_int32_t reg_state = 0;
+    os_err_t result = OS_ERROR;
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
@@ -731,7 +710,7 @@ static void gm190_network_init(mo_object_t *module)
     {
         goto __exit;
     }
-    if (at_resp_get_data_by_kw(&resp, "+CREG:", "+CREG: %d,%d", &enable_num , &reg_state) < 0)
+    if (at_resp_get_data_by_kw(&resp, "+CREG:", "+CREG: %d,%d", &enable_num, &reg_state) < 0)
     {
         result = OS_ERROR;
         goto __exit;
@@ -748,14 +727,12 @@ static void gm190_network_init(mo_object_t *module)
     {
         result = OS_ERROR;
         goto __exit;
-
     }
 
     if (at_parser_exec_cmd(parser, &resp, "AT+CFUN=0") != OS_EOK)
     {
         result = OS_ERROR;
         goto __exit;
-
     }
 
     if (at_parser_exec_cmd(parser, &resp, "AT+CFUN=1") != OS_EOK)
@@ -770,7 +747,7 @@ static void gm190_network_init(mo_object_t *module)
         goto __exit;
     }
 
-    if (at_resp_get_data_by_kw(&resp, "+CREG:", "+CREG: %d,%d", &enable_num , &reg_state) < 0)
+    if (at_resp_get_data_by_kw(&resp, "+CREG:", "+CREG: %d,%d", &enable_num, &reg_state) < 0)
     {
         goto __exit;
     }
@@ -787,7 +764,7 @@ static void gm190_network_init(mo_object_t *module)
     }
 
 __exit:
-    if(result != OS_EOK)
+    if (result != OS_EOK)
     {
         WARN("GM190 network init failed");
     }
@@ -814,5 +791,3 @@ void gm190_netconn_init(mo_gm190_t *module)
 }
 
 #endif /* GM190_USING_NETCONN_OPS */
-
-

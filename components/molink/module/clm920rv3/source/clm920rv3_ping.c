@@ -27,19 +27,20 @@
 #ifdef CLM920RV3_USING_PING_OPS
 
 #define MO_LOG_TAG "clm920rv3.ping"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
-os_err_t clm920rv3_ping(mo_object_t *module, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp)
+os_err_t
+clm920rv3_ping(mo_object_t *module, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp)
 {
     /* CLM920RV3 ping function just for test use, not officially support for now. */
-    
-    at_parser_t *parser        = &module->parser;
-    os_err_t     result        = OS_EOK;
-    os_int32_t   response      = -1;
-    os_uint16_t  recv_data_len = 0;
-    os_uint32_t  ping_time     = 0;
-    os_int16_t   ttl           = -1;
+
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    os_int32_t response = -1;
+    os_uint16_t recv_data_len = 0;
+    os_uint32_t ping_time = 0;
+    os_int16_t ttl = -1;
 
     memset(resp, 0, sizeof(ping_resp_t));
 
@@ -57,10 +58,10 @@ os_err_t clm920rv3_ping(mo_object_t *module, const char *host, os_uint16_t len, 
     char resp_buff[8 * AT_RESP_BUFF_SIZE_DEF] = {0};
 
     /* Need to wait for 7 lines response msg */
-    at_resp_t at_resp = {.buff      = resp_buff,
+    at_resp_t at_resp = {.buff = resp_buff,
                          .buff_size = sizeof(resp_buff),
-                         .line_num  = 2,
-                         .timeout   = 4 * OS_TICK_PER_SECOND};
+                         .line_num = 2,
+                         .timeout = 4 * OS_TICK_PER_SECOND};
 
     /* REF: CLM920RV3 CPING */
     if (at_parser_exec_cmd(parser, &at_resp, "AT+CPING=%s", host) < 0)
@@ -95,8 +96,8 @@ os_err_t clm920rv3_ping(mo_object_t *module, const char *host, os_uint16_t len, 
         inet_aton(ip_addr, &(resp->ip_addr));
 
         resp->data_len = recv_data_len;
-        resp->time     = ping_time;
-        resp->ttl      = ttl;
+        resp->time = ping_time;
+        resp->ttl = ttl;
 
         result = OS_EOK;
         break;
@@ -108,7 +109,8 @@ os_err_t clm920rv3_ping(mo_object_t *module, const char *host, os_uint16_t len, 
 
 __exit:
 
-    if (OS_EOK != result) ERROR("CLM920RV3 ping failed.");
+    if (OS_EOK != result)
+        ERROR("CLM920RV3 ping failed.");
 
     return result;
 }

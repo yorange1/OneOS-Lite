@@ -36,16 +36,16 @@
 os_err_t esp8266_ifconfig(mo_object_t *self)
 {
     const char *mode_to_str[] = {
-        [MO_WIFI_MODE_NULL]   = "Null",
-        [MO_WIFI_MODE_STA]    = "Station",
-        [MO_WIFI_MODE_AP]     = "SoftAP",
+        [MO_WIFI_MODE_NULL] = "Null",
+        [MO_WIFI_MODE_STA] = "Station",
+        [MO_WIFI_MODE_AP] = "SoftAP",
         [MO_WIFI_MODE_AP_STA] = "SoftAP+Station",
     };
 
     const char *stat_to_str[] = {
-        [MO_WIFI_STAT_NULL]         = "Null",
-        [MO_WIFI_STAT_INIT]         = "Initial",
-        [MO_WIFI_STAT_CONNECTED]    = "Connected",
+        [MO_WIFI_STAT_NULL] = "Null",
+        [MO_WIFI_STAT_INIT] = "Initial",
+        [MO_WIFI_STAT_CONNECTED] = "Connected",
         [MO_WIFI_STAT_DISCONNECTED] = "Disconnected",
     };
 
@@ -94,9 +94,9 @@ os_err_t esp8266_ifconfig(mo_object_t *self)
 os_err_t esp8266_get_ipaddr(mo_object_t *self, char ip[])
 {
     at_parser_t *parser = &self->parser;
-    os_int8_t    len    = -1;
+    os_int8_t len = -1;
 
-    char ipaddr[IPADDR_MAX_STR_LEN + 1]   = {0};
+    char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
     char resp_buff[AT_RESP_BUFF_SIZE_256] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 5 * OS_TICK_PER_SECOND};
@@ -151,9 +151,7 @@ os_err_t esp8266_set_dnsserver(mo_object_t *self, dns_server_t dns)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     os_err_t result = OS_EOK;
 
@@ -175,9 +173,7 @@ os_err_t esp8266_get_dnsserver(mo_object_t *self, dns_server_t *dns)
 
     char resp_buff[AT_RESP_BUFF_SIZE_256] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+CIPDNS_DEF?");
     if (result != OS_EOK)

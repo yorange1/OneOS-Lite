@@ -37,7 +37,7 @@ os_err_t n58_get_attach(mo_object_t *self, os_uint8_t *attach_stat);
 os_err_t n58_set_reg(mo_object_t *self, os_uint8_t reg_n);
 os_err_t n58_get_reg(mo_object_t *self, eps_reg_info_t *info);
 os_err_t n58_get_csq(mo_object_t *self, os_uint8_t *rssi, os_uint8_t *ber);
-os_err_t n58_get_cell_info(mo_object_t *self, onepos_cell_info_t* onepos_cell_info);
+os_err_t n58_get_cell_info(mo_object_t *self, onepos_cell_info_t *onepos_cell_info);
 
 #endif /* N58_USING_NETSERV_OPS */
 

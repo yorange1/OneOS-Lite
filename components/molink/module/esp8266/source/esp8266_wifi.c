@@ -133,8 +133,8 @@ os_err_t esp8266_wifi_set_mode(mo_object_t *module, mo_wifi_mode_t mode)
 
 mo_wifi_mode_t esp8266_wifi_get_mode(mo_object_t *module)
 {
-    at_parser_t   *parser    = &module->parser;
-    os_int8_t      mode_data = 0;
+    at_parser_t *parser = &module->parser;
+    os_int8_t mode_data = 0;
     mo_wifi_mode_t wifi_mode = MO_WIFI_MODE_NULL;
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
@@ -152,7 +152,6 @@ mo_wifi_mode_t esp8266_wifi_get_mode(mo_object_t *module)
         result = OS_ERROR;
         goto __exit;
     }
-
 
     switch (mode_data)
     {
@@ -179,7 +178,7 @@ __exit:
 mo_wifi_stat_t esp8266_wifi_get_stat(mo_object_t *module)
 {
     mo_esp8266_t *esp8266 = os_container_of(module, mo_esp8266_t, parent);
-    at_parser_t  *parser  = &module->parser;
+    at_parser_t *parser = &module->parser;
 
     if (esp8266->wifi_stat >= MO_WIFI_STAT_GOT_IP)
     {
@@ -231,15 +230,20 @@ mo_wifi_stat_t esp8266_wifi_get_stat(mo_object_t *module)
     return esp8266->wifi_stat;
 }
 
-os_err_t esp8266_wifi_get_sta_cip(mo_object_t *module, ip_addr_t *ip, ip_addr_t *gw, ip_addr_t *mask, ip_addr_t *ip6_ll, ip_addr_t *ip6_gl)
+os_err_t esp8266_wifi_get_sta_cip(mo_object_t *module,
+                                  ip_addr_t *ip,
+                                  ip_addr_t *gw,
+                                  ip_addr_t *mask,
+                                  ip_addr_t *ip6_ll,
+                                  ip_addr_t *ip6_gl)
 {
     at_parser_t *parser = &module->parser;
-    os_int8_t    len    = -1;
-//    mo_esp8266_t *esp8266 = os_container_of(module, mo_esp8266_t, parent);
+    os_int8_t len = -1;
+    //    mo_esp8266_t *esp8266 = os_container_of(module, mo_esp8266_t, parent);
 
     char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
-    //char gateway[IPADDR_MAX_STR_LEN + 1] = {0};
-    //char netmask[IPADDR_MAX_STR_LEN + 1] = {0};
+    // char gateway[IPADDR_MAX_STR_LEN + 1] = {0};
+    // char netmask[IPADDR_MAX_STR_LEN + 1] = {0};
     char resp_buff[AT_RESP_BUFF_SIZE_256] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 5 * OS_TICK_PER_SECOND};
@@ -270,13 +274,13 @@ os_err_t esp8266_wifi_get_sta_cip(mo_object_t *module, ip_addr_t *ip, ip_addr_t 
             IP_SET_TYPE(ip, IPADDR_TYPE_V4);
             inet_aton(ipaddr, ip);
         }
-// #ifdef MOLINK_USING_IPV4
-// #ifdef MOLINK_USING_IPV6
-//         ip->u_addr.ip4.addr = inet_addr(ipaddr);
-// #else
-//         ip->addr = inet_addr(ipaddr);
-// #endif
-// #endif
+        // #ifdef MOLINK_USING_IPV4
+        // #ifdef MOLINK_USING_IPV6
+        //         ip->u_addr.ip4.addr = inet_addr(ipaddr);
+        // #else
+        //         ip->addr = inet_addr(ipaddr);
+        // #endif
+        // #endif
         DEBUG("IP address: %s", ipaddr);
     }
 
@@ -300,13 +304,13 @@ os_err_t esp8266_wifi_get_sta_cip(mo_object_t *module, ip_addr_t *ip, ip_addr_t 
             IP_SET_TYPE(gw, IPADDR_TYPE_V4);
             inet_aton(ipaddr, gw);
         }
-// #ifdef MOLINK_USING_IPV4
-// #ifdef MOLINK_USING_IPV6
-//         gw->u_addr.ip4.addr = inet_addr(ipaddr);
-// #else
-//         gw->addr = inet_addr(ipaddr);
-// #endif
-// #endif
+        // #ifdef MOLINK_USING_IPV4
+        // #ifdef MOLINK_USING_IPV6
+        //         gw->u_addr.ip4.addr = inet_addr(ipaddr);
+        // #else
+        //         gw->addr = inet_addr(ipaddr);
+        // #endif
+        // #endif
         DEBUG("Gateway: %s", ipaddr);
     }
 
@@ -330,13 +334,13 @@ os_err_t esp8266_wifi_get_sta_cip(mo_object_t *module, ip_addr_t *ip, ip_addr_t 
             IP_SET_TYPE(mask, IPADDR_TYPE_V4);
             inet_aton(ipaddr, mask);
         }
-// #ifdef MOLINK_USING_IPV4
-// #ifdef MOLINK_USING_IPV6
-//         mask->u_addr.ip4.addr = inet_addr(ipaddr);
-// #else
-//         mask->addr = inet_addr(ipaddr);
-// #endif
-// #endif
+        // #ifdef MOLINK_USING_IPV4
+        // #ifdef MOLINK_USING_IPV6
+        //         mask->u_addr.ip4.addr = inet_addr(ipaddr);
+        // #else
+        //         mask->addr = inet_addr(ipaddr);
+        // #endif
+        // #endif
         DEBUG("Netmask: %s", ipaddr);
     }
 
@@ -362,7 +366,7 @@ os_err_t esp8266_wifi_get_sta_cip(mo_object_t *module, ip_addr_t *ip, ip_addr_t 
             if (OS_NULL != ip6_ll)
             {
                 IP_SET_TYPE(ip6_ll, IPADDR_TYPE_V6);
-                inet_aton(ipaddr, ip6_ll); 
+                inet_aton(ipaddr, ip6_ll);
             }
         }
 
@@ -384,7 +388,7 @@ os_err_t esp8266_wifi_get_sta_cip(mo_object_t *module, ip_addr_t *ip, ip_addr_t 
             if (OS_NULL != ip6_gl)
             {
                 IP_SET_TYPE(ip6_gl, IPADDR_TYPE_V6);
-                inet_aton(ipaddr, ip6_gl); 
+                inet_aton(ipaddr, ip6_gl);
             }
         }
     }
@@ -404,20 +408,20 @@ os_err_t esp8266_wifi_set_ap_cip(mo_object_t *module, char *ip, char *gw, char *
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 10 * OS_TICK_PER_SECOND};
 
     snprintf(cmd, sizeof(cmd), "AT+CIPAP=\"%s\"", ip);
-    
+
     return at_parser_exec_cmd(parser, &resp, cmd);
 }
 
 os_err_t esp8266_wifi_get_ap_cip(mo_object_t *module, ip_addr_t *ip, ip_addr_t *gw, ip_addr_t *mask)
 {
     at_parser_t *parser = &module->parser;
-    
+
     char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
     char gateway[IPADDR_MAX_STR_LEN + 1] = {0};
     char netmask[IPADDR_MAX_STR_LEN + 1] = {0};
     char resp_buff[AT_RESP_BUFF_SIZE_256] = {0};
     int len;
-    
+
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 10 * OS_TICK_PER_SECOND};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+CIPAP?");
@@ -447,7 +451,7 @@ os_err_t esp8266_wifi_get_ap_cip(mo_object_t *module, ip_addr_t *ip, ip_addr_t *
 #else
         ip->addr = inet_addr(ipaddr);
 #endif
-#endif   
+#endif
         DEBUG("IP address: %s", ipaddr);
     }
 
@@ -469,8 +473,8 @@ os_err_t esp8266_wifi_get_ap_cip(mo_object_t *module, ip_addr_t *ip, ip_addr_t *
 #ifdef MOLINK_USING_IPV4
 #ifdef MOLINK_USING_IPV6
         gw->u_addr.ip4.addr = inet_addr(gateway);
-#else       
-        gw->addr = inet_addr(gateway); 
+#else
+        gw->addr = inet_addr(gateway);
 #endif
 #endif
         DEBUG("Gateway: %s", gateway);
@@ -507,26 +511,30 @@ __exit:
 }
 
 /* Returns int value of hex string character |c| */
-static uint8_t hex_to_uint(uint8_t c) {
-  if ('0' <= c && c <= '9') {
-    return (uint8_t)(c - '0');
-  }
-  if ('A' <= c && c <= 'F') {
-    return (uint8_t)(c - 'A' + 10);
-  }
-  if ('a' <= c && c <= 'f') {
-    return (uint8_t)(c - 'a' + 10);
-  }
-  return 0;
+static uint8_t hex_to_uint(uint8_t c)
+{
+    if ('0' <= c && c <= '9')
+    {
+        return (uint8_t)(c - '0');
+    }
+    if ('A' <= c && c <= 'F')
+    {
+        return (uint8_t)(c - 'A' + 10);
+    }
+    if ('a' <= c && c <= 'f')
+    {
+        return (uint8_t)(c - 'a' + 10);
+    }
+    return 0;
 }
 
 os_err_t esp8266_wifi_get_sta_mac(mo_object_t *module, char mac[])
 {
-    at_parser_t  *parser  = &module->parser;
+    at_parser_t *parser = &module->parser;
     const char *mac_resp;
     char *resp_buff = calloc(1, 128);
     char mac_key[] = "+CIPSTAMAC:\"";
-	const char *mac_start;
+    const char *mac_start;
     int index;
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = 128, .timeout = 5 * OS_TICK_PER_SECOND};
@@ -543,20 +551,20 @@ os_err_t esp8266_wifi_get_sta_mac(mo_object_t *module, char mac[])
     {
         free(resp_buff);
 
-        return OS_ERROR;     
+        return OS_ERROR;
     }
 
-	mac_start = mac_resp + strlen(mac_key);
-	for (index = 0; index < 6; index++)
-	{
-		mac[index] = hex_to_uint(*mac_start);
-		mac[index] = mac[index] << 4;
+    mac_start = mac_resp + strlen(mac_key);
+    for (index = 0; index < 6; index++)
+    {
+        mac[index] = hex_to_uint(*mac_start);
+        mac[index] = mac[index] << 4;
 
-		mac_start++;
-		mac[index] += hex_to_uint(*mac_start);
-		mac_start++;
-		mac_start++;
-	}
+        mac_start++;
+        mac[index] += hex_to_uint(*mac_start);
+        mac_start++;
+        mac_start++;
+    }
 
     free(resp_buff);
 
@@ -565,11 +573,11 @@ os_err_t esp8266_wifi_get_sta_mac(mo_object_t *module, char mac[])
 
 os_err_t esp8266_wifi_get_ap_mac(mo_object_t *module, char mac[])
 {
-    at_parser_t  *parser  = &module->parser;
+    at_parser_t *parser = &module->parser;
     const char *mac_resp;
     char *resp_buff = calloc(1, 128);
     char mac_key[] = "+CIPAPMAC:\"";
-	const char *mac_start;
+    const char *mac_start;
     int index;
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = 128, .timeout = 5 * OS_TICK_PER_SECOND};
@@ -584,21 +592,21 @@ os_err_t esp8266_wifi_get_ap_mac(mo_object_t *module, char mac[])
     if (OS_NULL == mac_resp)
     {
         free(resp_buff);
-        return OS_ERROR;     
+        return OS_ERROR;
     }
 
-	mac_start = mac_resp + strlen(mac_key);
-	for (index = 0; index < 6; index++)
-	{
-		mac[index] = hex_to_uint(*mac_start);
-		mac[index] = mac[index] << 4;
+    mac_start = mac_resp + strlen(mac_key);
+    for (index = 0; index < 6; index++)
+    {
+        mac[index] = hex_to_uint(*mac_start);
+        mac[index] = mac[index] << 4;
 
-		mac_start++;
-		mac[index] += hex_to_uint(*mac_start);
-		mac_start++;
-		mac_start++;
-	}
-    
+        mac_start++;
+        mac[index] += hex_to_uint(*mac_start);
+        mac_start++;
+        mac_start++;
+    }
+
     free(resp_buff);
 
     return OS_EOK;
@@ -606,16 +614,16 @@ os_err_t esp8266_wifi_get_ap_mac(mo_object_t *module, char mac[])
 
 os_err_t esp8266_wifi_scan_info(mo_object_t *module, char *ssid, mo_wifi_scan_result_t *scan_result)
 {
-    at_parser_t *parser   = &module->parser;
-    os_err_t     result   = OS_EOK;
-    os_int32_t   ecn_mode = 0;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    os_int32_t ecn_mode = 0;
 
     const char *data_format1 = "+CWLAP:(%d,\"%[^\"]\",%d,\"%[^\"]\",%d,%*s)";
     const char *data_format2 = "+CWLAP:(%*d,\"\",%d,\"%[^\"]\",%d,%*s)";
 
-    at_resp_t resp = {.buff      = os_calloc(1, ESP8266_SCAN_RESP_BUFF_LEN),
+    at_resp_t resp = {.buff = os_calloc(1, ESP8266_SCAN_RESP_BUFF_LEN),
                       .buff_size = ESP8266_SCAN_RESP_BUFF_LEN,
-                      .timeout   = 5 * OS_TICK_PER_SECOND};
+                      .timeout = 5 * OS_TICK_PER_SECOND};
 
     if (OS_NULL == resp.buff)
     {
@@ -668,12 +676,8 @@ os_err_t esp8266_wifi_scan_info(mo_object_t *module, char *ssid, mo_wifi_scan_re
         if (1 == get_result)
         {
             /* ssid is null  */
-            get_result = at_resp_get_data_by_line(&resp,
-                                                  i + 1,
-                                                  data_format2,
-                                                  &tmp->rssi,
-                                                  tmp->bssid.bssid_str,
-                                                  &tmp->channel);
+            get_result =
+                at_resp_get_data_by_line(&resp, i + 1, data_format2, &tmp->rssi, tmp->bssid.bssid_str, &tmp->channel);
         }
 
         if (get_result > 0)
@@ -726,7 +730,7 @@ __exit:
         {
             os_free(scan_result->info_array);
         }
-		os_task_msleep(1000);
+        os_task_msleep(1000);
     }
 
     if (resp.buff != OS_NULL)
@@ -778,7 +782,8 @@ os_err_t esp8266_wifi_disconnect_ap(mo_object_t *module)
     return at_parser_exec_cmd(parser, &resp, "AT+CWQAP");
 }
 
-os_err_t esp8266_wifi_start_ap(mo_object_t *module, const char *ssid, const char *password, os_uint8_t channel, os_uint8_t ecn)
+os_err_t
+esp8266_wifi_start_ap(mo_object_t *module, const char *ssid, const char *password, os_uint8_t channel, os_uint8_t ecn)
 {
     at_parser_t *parser = &module->parser;
 
@@ -797,8 +802,8 @@ os_err_t esp8266_wifi_start_ap(mo_object_t *module, const char *ssid, const char
 
 os_err_t esp8266_wifi_stop_ap(mo_object_t *module)
 {
-    //at_parser_t *parser = &module->parser;
-    
+    // at_parser_t *parser = &module->parser;
+
     return OS_EOK;
 }
 
@@ -806,7 +811,7 @@ static void urc_connect_func(struct at_parser *parser, const char *data, os_size
 {
     OS_ASSERT(OS_NULL != data);
 
-    mo_object_t  *module  = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
     mo_esp8266_t *esp8266 = os_container_of(module, mo_esp8266_t, parent);
 
     if (strstr(data, "WIFI CONNECTED"))
@@ -823,7 +828,7 @@ static void urc_connect_func(struct at_parser *parser, const char *data, os_size
 
 static void urc_ip_func(struct at_parser *parser, const char *data, os_size_t size)
 {
-    mo_object_t  *module  = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
     mo_esp8266_t *esp8266 = os_container_of(module, mo_esp8266_t, parent);
 
     INFO("ESP8266 WIFI has get ip");
@@ -832,7 +837,7 @@ static void urc_ip_func(struct at_parser *parser, const char *data, os_size_t si
 
 static void urc_ipv6_func(struct at_parser *parser, const char *data, os_size_t size)
 {
-    mo_object_t  *module  = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
     mo_esp8266_t *esp8266 = os_container_of(module, mo_esp8266_t, parent);
 
     INFO("ESP8266 WIFI has get ipv6 gl");
@@ -856,13 +861,13 @@ static void urc_dist_sta_ip_func(struct at_parser *parser, const char *data, os_
 }
 
 static at_urc_t gs_urc_table[] = {
-    {.prefix = "WIFI CONNECTED",        .suffix = "\n",   .func = urc_connect_func},
-    {.prefix = "WIFI DISCONNECT",       .suffix = "\r\n", .func = urc_connect_func},
-    {.prefix = "WIFI GOT IPv6 GL",      .suffix = "\r\n", .func = urc_ipv6_func},
-    {.prefix = "WIFI GOT IP",           .suffix = "\r\n", .func = urc_ip_func},
-    {.prefix = "+STA_CONNECTED:",       .suffix = "\n",   .func = urc_sta_connected_func},
-    {.prefix = "+STA_DISCONNECTED:",    .suffix = "\n",   .func = urc_sta_disconnected_func},
-    {.prefix = "+DIST_STA_IP:",         .suffix = "\n",   .func = urc_dist_sta_ip_func},
+    {.prefix = "WIFI CONNECTED", .suffix = "\n", .func = urc_connect_func},
+    {.prefix = "WIFI DISCONNECT", .suffix = "\r\n", .func = urc_connect_func},
+    {.prefix = "WIFI GOT IPv6 GL", .suffix = "\r\n", .func = urc_ipv6_func},
+    {.prefix = "WIFI GOT IP", .suffix = "\r\n", .func = urc_ip_func},
+    {.prefix = "+STA_CONNECTED:", .suffix = "\n", .func = urc_sta_connected_func},
+    {.prefix = "+STA_DISCONNECTED:", .suffix = "\n", .func = urc_sta_disconnected_func},
+    {.prefix = "+DIST_STA_IP:", .suffix = "\n", .func = urc_dist_sta_ip_func},
 };
 
 os_err_t esp8266_wifi_init(mo_object_t *module)

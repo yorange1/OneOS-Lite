@@ -29,9 +29,8 @@
 #include <stdlib.h>
 
 #define MO_LOG_TAG "n21_netconn"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
-
 
 #define TCP_SEND_DATA_MAX_SIZE (4096)
 #define UDP_SEND_DATA_MAX_SIZE (1024)
@@ -43,7 +42,7 @@
 #endif
 
 #ifndef N21_NETCONN_MQ_MSG_MAX
-#define N21_NETCONN_MQ_MSG_MAX  (5)
+#define N21_NETCONN_MQ_MSG_MAX (5)
 #endif
 
 #define SET_EVENT(socket, event) (((socket + 1) << 16) | (event))
@@ -74,9 +73,7 @@ static os_bool_t n21_check_netconn_state(mo_object_t *module, os_int32_t connect
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     if (at_parser_exec_cmd(parser, &resp, "AT+IPSTATUS=%d", connect_id) != OS_EOK)
     {
@@ -151,7 +148,7 @@ os_err_t n21_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
     mo_n21_t *n21 = os_container_of(module, mo_n21_t, parent);
 
     info->netconn_array = n21->netconn;
-    info->netconn_nums  = sizeof(n21->netconn) / sizeof(n21->netconn[0]);
+    info->netconn_nums = sizeof(n21->netconn) / sizeof(n21->netconn[0]);
 
     return OS_EOK;
 }
@@ -162,9 +159,7 @@ static os_err_t n21_netconn_set_format(mo_object_t *module)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     if (at_parser_exec_cmd(parser, &resp, "AT+RECVMODE?") != OS_EOK)
     {
@@ -209,9 +204,7 @@ mo_netconn_t *n21_netconn_create(mo_object_t *module, mo_netconn_type_t type)
         return OS_NULL;
     }
 
-    netconn->mq = os_mq_create(N21_NETCONN_MQ_NAME,
-                               N21_NETCONN_MQ_MSG_SIZE,
-                               N21_NETCONN_MQ_MSG_MAX);
+    netconn->mq = os_mq_create(N21_NETCONN_MQ_NAME, N21_NETCONN_MQ_MSG_SIZE, N21_NETCONN_MQ_MSG_MAX);
     if (OS_NULL == netconn->mq)
     {
         ERROR("%s data queue create failed, no enough memory.", module->name);
@@ -232,10 +225,7 @@ static os_err_t n21_netconn_do_destroy(mo_object_t *module, mo_netconn_t *netcon
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = AT_RESP_TIMEOUT_DEF,
-                      .line_num  = 1};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF, .line_num = 1};
 
     os_err_t result = OS_EOK;
 
@@ -250,18 +240,14 @@ static os_err_t n21_netconn_do_destroy(mo_object_t *module, mo_netconn_t *netcon
 
     if (result != OS_EOK)
     {
-         ERROR("Module %s destroy %s netconn failed",
-                  module->name,
-                  (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
+        ERROR("Module %s destroy %s netconn failed", module->name, (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
         return result;
     }
 
     const char *source_line = at_resp_get_line(&resp, 1);
     if (OS_NULL == source_line)
     {
-        ERROR("Module %s destroy %s netconn failed",
-                  module->name,
-                  (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
+        ERROR("Module %s destroy %s netconn failed", module->name, (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
         return OS_ERROR;
     }
 
@@ -305,9 +291,9 @@ os_err_t n21_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 
     INFO("Module %s netconn id %d destroyed", module->name, netconn->connect_id);
 
-    netconn->connect_id  = -1;
-    netconn->stat        = NETCONN_STAT_NULL;
-    netconn->type        = NETCONN_TYPE_NULL;
+    netconn->connect_id = -1;
+    netconn->stat = NETCONN_STAT_NULL;
+    netconn->type = NETCONN_TYPE_NULL;
     netconn->remote_port = 0;
     inet_aton("0.0.0.0", &netconn->remote_ip);
 
@@ -328,9 +314,7 @@ os_err_t n21_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 60 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 60 * OS_TICK_PER_SECOND};
 
     char remote_ip[IPADDR_MAX_STR_LEN + 1] = {0};
 
@@ -340,7 +324,7 @@ os_err_t n21_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr
     /* AT+UDPSETUP=<n>,<ip>,<port> */
 
     if (NETCONN_TYPE_TCP == netconn->type)
-    {   /* AT+TCPSETUP=<n>,<ip>,<port> */
+    { /* AT+TCPSETUP=<n>,<ip>,<port> */
         result = at_parser_exec_cmd(parser, &resp, "AT+TCPSETUP=%d,%s,%d", netconn->connect_id, remote_ip, port);
     }
     else /* NETCONN_TYPE_UDP == netconn->type */
@@ -388,7 +372,7 @@ __exit:
     {
         ip_addr_copy(netconn->remote_ip, addr);
         netconn->remote_port = port;
-        netconn->stat        = NETCONN_STAT_CONNECT;
+        netconn->stat = NETCONN_STAT_CONNECT;
 
         DEBUG("Module %s connect to %s:%d successfully!", module->name, remote_ip, port);
     }
@@ -402,11 +386,11 @@ __exit:
 
 os_size_t n21_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
-    at_parser_t *parser    = &module->parser;
-    os_err_t     result    = OS_EOK;
-    os_size_t    sent_size = 0;
-    os_size_t    curr_size = 0;
-    os_uint32_t  event     = 0;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    os_size_t sent_size = 0;
+    os_size_t curr_size = 0;
+    os_uint32_t event = 0;
 
     mo_n21_t *n21 = os_container_of(module, mo_n21_t, parent);
 
@@ -416,14 +400,12 @@ os_size_t n21_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const cha
 
     char resp_buff[128] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 12 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 12 * OS_TICK_PER_SECOND};
 
     at_parser_set_end_mark(parser, ">", 1);
 
-    os_size_t sent_max_size  = 0;
-    char      cmd_format[17] = {0};
+    os_size_t sent_max_size = 0;
+    char cmd_format[17] = {0};
     if (NETCONN_TYPE_TCP == netconn->type)
     {
         /* AT+TCPSEND=<n>,<length> */
@@ -525,14 +507,14 @@ os_err_t n21_netconn_gethostbyname(mo_object_t *self, const char *domain_name, i
     OS_ASSERT(OS_NULL != addr);
 
     at_parser_t *parser = &self->parser;
-    os_err_t     result = OS_EOK;
+    os_err_t result = OS_EOK;
 
     char resp_buff[128] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
+    at_resp_t resp = {.buff = resp_buff,
                       .buff_size = sizeof(resp_buff),
-                      .timeout   = 15 * OS_TICK_PER_SECOND,
-                      .line_num  = 2};
+                      .timeout = 15 * OS_TICK_PER_SECOND,
+                      .line_num = 2};
 
     result = at_parser_exec_cmd(parser, &resp, "AT+CDNSGIP=\"%s\"", domain_name);
     if (result != OS_EOK)
@@ -569,10 +551,7 @@ os_err_t n21_netconn_gethostbyname(mo_object_t *self, const char *domain_name, i
     }
     else
     {
-        DEBUG("Module %s domain resolve: \"%s\" domain ip is %s, addrlen %d",
-                  domain_name,
-                  recvip,
-                  strlen(recvip));
+        DEBUG("Module %s domain resolve: \"%s\" domain ip is %s, addrlen %d", domain_name, recvip, strlen(recvip));
         inet_aton(recvip, addr);
 
         if (IPADDR_ANY == addr->addr || IPADDR_LOOPBACK == addr->addr)
@@ -614,7 +593,7 @@ static void urc_connect_func(struct at_parser *parser, const char *data, os_size
     OS_ASSERT(OS_NULL != data);
 
     mo_object_t *module = os_container_of(parser, mo_object_t, parser);
-    mo_n21_t    *n21    = os_container_of(module, mo_n21_t, parent);
+    mo_n21_t *n21 = os_container_of(module, mo_n21_t, parent);
 
     os_int32_t connect_id = 0;
 
@@ -645,7 +624,7 @@ static void urc_send_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != data);
 
     mo_object_t *module = os_container_of(parser, mo_object_t, parser);
-    mo_n21_t   *n21   = os_container_of(module, mo_n21_t, parent);
+    mo_n21_t *n21 = os_container_of(module, mo_n21_t, parent);
 
     os_int32_t connect_id = 0;
 
@@ -711,8 +690,8 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
 
     INFO("Moudle %s netconn %d receive %d bytes data", parser->name, netconn->connect_id, data_size);
 
-    char *recv_buff    = os_calloc(1, data_size);
-    char  temp_buff[8] = {0};
+    char *recv_buff = os_calloc(1, data_size);
+    char temp_buff[8] = {0};
     if (recv_buff == OS_NULL)
     {
         /* read and clean the coming data */
@@ -752,13 +731,13 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
 }
 
 static at_urc_t gs_urc_table[] = {
-    {.prefix = "+TCPSEND",    .suffix = "\r\n",      .func = urc_send_func},
-    {.prefix = "+UDPSEND",    .suffix = "\r\n",      .func = urc_send_func},
-    {.prefix = "+TCPSETUP:",  .suffix = "\r\n",      .func = urc_connect_func},
-    {.prefix = "+UDPSETUP:",  .suffix = "\r\n",      .func = urc_connect_func},
-    {.prefix = "+TCPCLOSE:",  .suffix = "Closed\r\n",.func = urc_close_func},
-    {.prefix = "",            .suffix = "+TCPRECV:", .func = urc_recv_func},
-    {.prefix = "",            .suffix = "+UDPRECV:", .func = urc_recv_func},
+    {.prefix = "+TCPSEND", .suffix = "\r\n", .func = urc_send_func},
+    {.prefix = "+UDPSEND", .suffix = "\r\n", .func = urc_send_func},
+    {.prefix = "+TCPSETUP:", .suffix = "\r\n", .func = urc_connect_func},
+    {.prefix = "+UDPSETUP:", .suffix = "\r\n", .func = urc_connect_func},
+    {.prefix = "+TCPCLOSE:", .suffix = "Closed\r\n", .func = urc_close_func},
+    {.prefix = "", .suffix = "+TCPRECV:", .func = urc_recv_func},
+    {.prefix = "", .suffix = "+UDPRECV:", .func = urc_recv_func},
 };
 
 void n21_netconn_init(mo_n21_t *module)

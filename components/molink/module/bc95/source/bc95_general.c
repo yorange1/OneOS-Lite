@@ -24,12 +24,12 @@
 #include "bc95_general.h"
 
 #define MO_LOG_TAG "bc95.general"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef BC95_USING_GENERAL_OPS
 
-#define BC95_GENERAL_TIMEOUT_DFT  (1 * OS_TICK_PER_SECOND)
+#define BC95_GENERAL_TIMEOUT_DFT (1 * OS_TICK_PER_SECOND)
 
 os_err_t bc95_at_test(mo_object_t *module)
 {

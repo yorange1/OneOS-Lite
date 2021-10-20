@@ -43,11 +43,11 @@ os_err_t ec20_ppp_init(mo_object_t *module)
 {
     OS_ASSERT(OS_NULL != module);
 
-    os_err_t result     = OS_EOK;
+    os_err_t result = OS_EOK;
     at_parser_t *parser = &module->parser;
 
-    char tmp_data[20]   = {0};
-    char APN[10]        = {0};
+    char tmp_data[20] = {0};
+    char APN[10] = {0};
     char resp_buff[256] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = OS_TICK_PER_SECOND};
@@ -71,7 +71,7 @@ os_err_t ec20_ppp_init(mo_object_t *module)
 
     /* Query current Network Operator */
     result = at_parser_exec_cmd(parser, &resp, "AT+COPS?");
-    
+
     if (result != OS_EOK)
     {
         LOG_EXT_E("%s query APN failed!", __func__);
@@ -100,18 +100,19 @@ os_err_t ec20_ppp_init(mo_object_t *module)
     /* Set PDP context */
     memset(resp_buff, 0, sizeof(resp_buff));
     result = at_parser_exec_cmd(parser, &resp, "AT+CGDCONT=1,\"IP\",\"%s\"", APN);
-    
+
     if (OS_EOK != result)
     {
         LOG_EXT_E("%s set apn failed!", __func__);
         goto __exit;
     }
-    else LOG_EXT_I("%s set apn success", __func__);
+    else
+        LOG_EXT_I("%s set apn success", __func__);
 
     /* deact pdp max timeout:40s */
     resp.timeout = 40 * OS_TICK_PER_SECOND;
     result = at_parser_exec_cmd(parser, &resp, "AT+QIDEACT=1");
-    
+
     if (result != OS_EOK)
     {
         LOG_EXT_E("%s deactice PDP context (QIDEACT) failed!", __func__);
@@ -121,7 +122,7 @@ os_err_t ec20_ppp_init(mo_object_t *module)
     /* act pdp max timeout:150s */
     resp.timeout = 150 * OS_TICK_PER_SECOND;
     result = at_parser_exec_cmd(parser, &resp, "AT+QIACT=1");
-    
+
     if (result != OS_EOK)
     {
         LOG_EXT_E("%s actice PDP context (QIACT) failed!", __func__);
@@ -142,13 +143,10 @@ os_err_t ec20_ppp_dial(mo_object_t *module)
     OS_ASSERT(OS_NULL != module);
 
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_EOK;
+    os_err_t result = OS_EOK;
     char resp_buff[256] = {0};
 
-    at_resp_t resp = {.buff = resp_buff,
-                      .line_num = 2,
-                      .buff_size = sizeof(resp_buff), 
-                      .timeout = OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .line_num = 2, .buff_size = sizeof(resp_buff), .timeout = OS_TICK_PER_SECOND};
 
     /*  Start PPP dialing by ATD*99# */
     result = at_parser_exec_cmd(parser, &resp, "ATD*99#");
@@ -182,7 +180,7 @@ __exit:
     {
         LOG_EXT_I("%s Into PPP data mode!", __func__);
     }
-    
+
     return result;
 }
 
@@ -192,8 +190,8 @@ os_err_t ec20_ppp_exit(mo_object_t *module)
 
     /* ec20 needs more than 1s around +++ input */
     const int EC20_PPP_EXIT_DELAY_MS = 2000;
-    
-    os_err_t     result = OS_EOK;
+
+    os_err_t result = OS_EOK;
     at_parser_t *parser = &module->parser;
 
     /* rebind device for ppp using */
@@ -203,43 +201,41 @@ os_err_t ec20_ppp_exit(mo_object_t *module)
         LOG_EXT_E("%s at rebind device failed!", __func__);
         goto __exit;
     }
-    
+
     /* exit ppp, do not send anything to device in exit process */
 
     /* 1) Do not input any character within 1s or longer before inputting “+++”. */
     os_task_mdelay(EC20_PPP_EXIT_DELAY_MS);
-    
+
     /* 2) Input “+++” within 1s, and no other characters can be inputted during the time. */
     os_device_write_block(parser->device, 0, "+++", 3);
-    
+
     /* 3) Do not input any character within 1s after “+++” has been inputted. */
     os_task_mdelay(EC20_PPP_EXIT_DELAY_MS);
 
     /* unlock at_parser_exec lock */
     at_parser_exec_unlock(parser);
-    
+
     /* test result by at cmd */
     for (int i = 0; i < 5; i++)
     {
         result = mo_at_test(module);
-        if (OS_EOK == result) break;
+        if (OS_EOK == result)
+            break;
     }
-    
+
 __exit:
 
     if (OS_EOK != result)
     {
         LOG_EXT_E("%s ppp exit failed", __func__);
     }
-    else 
+    else
     {
         LOG_EXT_I("%s ppp exit success, into command mode.", __func__);
     }
 
-    
     return result;
 }
-
-
 
 #endif /* EC20_USING_PPP_OPS */

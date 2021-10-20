@@ -25,23 +25,23 @@
 #include <string.h>
 
 #define MO_LOG_TAG "ec20_ping"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
-#define EC20_MIN_PING_TIME   (1)
-#define EC20_MAX_PING_TIME   (255)
+#define EC20_MIN_PING_TIME (1)
+#define EC20_MAX_PING_TIME (255)
 
 #ifdef EC20_USING_PING_OPS
 
 os_err_t ec20_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp)
 {
-    at_parser_t *parser        = &self->parser;
-    os_err_t     result        = OS_EOK;
-    os_int32_t   response      = -1;
-    os_uint16_t  recv_data_len = 0;
-    os_uint32_t  ping_time     = 0;
-    os_int16_t   ttl           = -1;
-    os_uint32_t  timeout_s     = timeout / 1000;
+    at_parser_t *parser = &self->parser;
+    os_err_t result = OS_EOK;
+    os_int32_t response = -1;
+    os_uint16_t recv_data_len = 0;
+    os_uint32_t ping_time = 0;
+    os_int16_t ttl = -1;
+    os_uint32_t timeout_s = timeout / 1000;
 
     memset(resp, 0, sizeof(ping_resp_t));
 
@@ -49,34 +49,36 @@ os_err_t ec20_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint
 
     if (parser == OS_NULL)
     {
-       ERROR("EC20 ping: at parser is NULL.");
+        ERROR("EC20 ping: at parser is NULL.");
         return OS_ERROR;
     }
 
-   DEBUG("EC20 series module does not support setting ping package size.");
+    DEBUG("EC20 series module does not support setting ping package size.");
 
     /* ec20 ping timeout_s range: 1s-255s */
     if ((timeout_s < EC20_MIN_PING_TIME) || (timeout_s > EC20_MAX_PING_TIME))
     {
-       ERROR("EC20 ping: ping timeout_s %us is out of range[%ds, %ds].",
-                  timeout_s, EC20_MIN_PING_TIME, EC20_MAX_PING_TIME);
+        ERROR("EC20 ping: ping timeout_s %us is out of range[%ds, %ds].",
+              timeout_s,
+              EC20_MIN_PING_TIME,
+              EC20_MAX_PING_TIME);
         return OS_ERROR;
     }
 
-   DEBUG("EC20 ping: %s, timeout_s: %us", host, timeout_s);
+    DEBUG("EC20 ping: %s, timeout_s: %us", host, timeout_s);
 
     char resp_buff[256] = {0};
 
     /* Need to wait for 4 lines response msg */
-    at_resp_t at_resp = {.buff      = resp_buff,
+    at_resp_t at_resp = {.buff = resp_buff,
                          .buff_size = sizeof(resp_buff),
-                         .line_num  = 3,
-                         .timeout   = (5 + timeout_s) * OS_TICK_PER_SECOND};
+                         .line_num = 3,
+                         .timeout = (5 + timeout_s) * OS_TICK_PER_SECOND};
 
     /* REF: EC20 QPING */
     if (at_parser_exec_cmd(parser, &at_resp, "AT+QPING=1,\"%s\",%u,1", host, timeout_s) < 0)
     {
-       ERROR("Ping: AT cmd exec fail: AT+QPING=1,\"%s\",%u,1", host, timeout_s);
+        ERROR("Ping: AT cmd exec fail: AT+QPING=1,\"%s\",%u,1", host, timeout_s);
         result = OS_ERROR;
         goto __exit;
     }
@@ -106,8 +108,8 @@ os_err_t ec20_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint
         inet_aton(ip_addr, &(resp->ip_addr));
 
         resp->data_len = recv_data_len;
-        resp->time     = ping_time;
-        resp->ttl      = ttl;
+        resp->time = ping_time;
+        resp->ttl = ttl;
 
         result = OS_EOK;
         break;

@@ -29,7 +29,7 @@
 #include <string.h>
 
 #define MO_LOG_TAG "air723ug_ifconfig"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef AIR723UG_USING_IFCONFIG_OPS
@@ -55,12 +55,12 @@ os_err_t air723ug_ifconfig(mo_object_t *self)
     }
 
     os_uint8_t rssi = 0;
-    os_uint8_t ber  = 0;
+    os_uint8_t ber = 0;
 
     if (air723ug_get_csq(self, &rssi, &ber) != OS_EOK)
     {
         rssi = 0;
-        ber  = 0;
+        ber = 0;
     }
 
     os_kprintf("\r\nLIST AT MODULE INFORMATIONS\r\n");
@@ -88,7 +88,7 @@ os_err_t air723ug_ifconfig(mo_object_t *self)
 os_err_t air723ug_get_ipaddr(mo_object_t *self, char ip[])
 {
     at_parser_t *parser = &self->parser;
-    os_int8_t    len    = -1;
+    os_int8_t len = -1;
 
     char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
 

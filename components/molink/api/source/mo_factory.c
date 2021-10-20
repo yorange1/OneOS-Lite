@@ -25,7 +25,7 @@
 #include <inttypes.h>
 
 #define MO_LOG_TAG "module.factory"
-#define MO_LOG_LVL  MO_LOG_EMERG
+#define MO_LOG_LVL MO_LOG_EMERG
 #include "mo_log.h"
 
 /***************************************** Start to list of NB-IoT modules ********************************************/
@@ -81,7 +81,6 @@
 #endif
 /***************************************** End of NB-IoT modules list *************************************************/
 
-
 /*************************************** Start to list of 4G cat1 modules *********************************************/
 #ifdef MOLINK_USING_EC200X_600S
 #include "ec200x_600s.h"
@@ -123,7 +122,6 @@
 #endif
 /**************************************** End of 4G cat1 modules list *************************************************/
 
-
 /*************************************** Start to list of 4G cat4 modules *********************************************/
 
 #ifdef MOLINK_USING_GM510
@@ -144,7 +142,6 @@
 
 /**************************************** End of 4G cat4 modules list *************************************************/
 
-
 /*************************************** Start to list of wifi modules ************************************************/
 #ifdef MOLINK_USING_ESP8266
 #include "esp8266.h"
@@ -153,7 +150,6 @@
 #include "esp32.h"
 #endif
 /***************************************** End of wifi modules list ***************************************************/
-
 
 static const mo_create_fn gs_mo_create_t[] = {
 /* Type of NB-IoT modules */
@@ -242,7 +238,6 @@ static const mo_create_fn gs_mo_create_t[] = {
 #ifdef MOLINK_USING_ME3630_W
     [MODULE_TYPE_ME3630_W] = module_me3630_w_create,
 #endif
-
 
 /* Type of wifi modules */
 #ifdef MOLINK_USING_ESP8266

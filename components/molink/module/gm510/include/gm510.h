@@ -69,16 +69,16 @@ typedef struct mo_gm510
     mo_object_t parent;
 #ifdef GM510_USING_NETCONN_OPS
     mo_netconn_t netconn[GM510_NETCONN_NUM];
-	
-	os_int32_t curr_connect;
+
+    os_int32_t curr_connect;
     os_event_t netconn_evt;
     os_mutex_t netconn_lock;
-    void      *netconn_data;
+    void *netconn_data;
 #endif /* GM510_USING_NETCONN_OPS */
 } mo_gm510_t;
 
 mo_object_t *module_gm510_create(const char *name, void *parser_config);
-os_err_t     module_gm510_destroy(mo_object_t *self);
+os_err_t module_gm510_destroy(mo_object_t *self);
 
 #endif /* MOLINK_USING_GM510 */
 
@@ -87,4 +87,3 @@ os_err_t     module_gm510_destroy(mo_object_t *self);
 #endif /* __cplusplus */
 
 #endif /* __GM510_H__ */
-

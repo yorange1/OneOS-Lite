@@ -41,7 +41,7 @@
 #endif
 
 #ifndef ESP32_NETCONN_MQ_MSG_MAX
-#define ESP32_NETCONN_MQ_MSG_MAX  (10)
+#define ESP32_NETCONN_MQ_MSG_MAX (10)
 #endif
 
 #define SET_EVENT(socket, event) (((socket + 1) << 16) | (event))
@@ -69,7 +69,7 @@ static os_err_t esp32_unlock(os_mutex_t *mutex)
 
 static mo_netconn_t *esp32_netconn_alloc(mo_object_t *module)
 {
-    mo_esp32_t  *esp32  = os_container_of(module, mo_esp32_t, parent);
+    mo_esp32_t *esp32 = os_container_of(module, mo_esp32_t, parent);
     at_parser_t *parser = &module->parser;
 
     char check_kw[AT_RESP_BUFF_SIZE_DEF / 4] = {0};
@@ -127,7 +127,7 @@ os_err_t esp32_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
     mo_esp32_t *esp32 = os_container_of(module, mo_esp32_t, parent);
 
     info->netconn_array = esp32->netconn;
-    info->netconn_nums  = sizeof(esp32->netconn) / sizeof(esp32->netconn[0]);
+    info->netconn_nums = sizeof(esp32->netconn) / sizeof(esp32->netconn[0]);
 
     return OS_EOK;
 }
@@ -165,7 +165,7 @@ mo_netconn_t *esp32_netconn_create(mo_object_t *module, mo_netconn_type_t type)
 os_err_t esp32_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 {
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_ERROR;
+    os_err_t result = OS_ERROR;
 
     DEBUG("Module %s in %d netconn status", module->name, netconn->stat);
 
@@ -188,8 +188,8 @@ os_err_t esp32_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
         if (result != OS_EOK)
         {
             ERROR("Module %s destroy %s netconn failed",
-                      module->name,
-                      (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
+                  module->name,
+                  (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
             esp32_unlock(&esp32->netconn_lock);
             return result;
         }
@@ -208,9 +208,9 @@ os_err_t esp32_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 
     INFO("Module %s netconn id %d destroyed", module->name, netconn->connect_id);
 
-    netconn->connect_id  = -1;
-    netconn->stat        = NETCONN_STAT_NULL;
-    netconn->type        = NETCONN_TYPE_NULL;
+    netconn->connect_id = -1;
+    netconn->stat = NETCONN_STAT_NULL;
+    netconn->type = NETCONN_TYPE_NULL;
     netconn->remote_port = 0;
     inet_aton("0.0.0.0", &netconn->remote_ip);
 
@@ -231,7 +231,7 @@ os_err_t esp32_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_ad
     }
     esp32_lock(&esp32->netconn_lock);
 
-    char resp_buff[AT_RESP_BUFF_SIZE_DEF]  = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
     char remote_ip[IPADDR_MAX_STR_LEN + 1] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 150 * OS_TICK_PER_SECOND};
@@ -255,12 +255,8 @@ os_err_t esp32_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_ad
 
 #ifdef ESP32_USING_UDP
     case NETCONN_TYPE_UDP:
-        result = at_parser_exec_cmd(parser,
-                                    &resp,
-                                    "AT+CIPSTART=%d,\"UDP\",\"%s\",%d",
-                                    netconn->connect_id,
-                                    remote_ip,
-                                    port);
+        result =
+            at_parser_exec_cmd(parser, &resp, "AT+CIPSTART=%d,\"UDP\",\"%s\",%d", netconn->connect_id, remote_ip, port);
         break;
 #endif
 
@@ -280,7 +276,7 @@ __exit:
     {
         ip_addr_copy(netconn->remote_ip, addr);
         netconn->remote_port = port;
-        netconn->stat        = NETCONN_STAT_CONNECT;
+        netconn->stat = NETCONN_STAT_CONNECT;
 
         DEBUG("Module %s connect to %s:%d successfully!", module->name, remote_ip, port);
     }
@@ -296,11 +292,11 @@ __exit:
 
 os_size_t esp32_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
-    at_parser_t *parser    = &module->parser;
-    os_err_t     result    = OS_EOK;
-    os_size_t    sent_size = 0;
-    os_size_t    curr_size = 0;
-    os_uint32_t  event     = 0;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    os_size_t sent_size = 0;
+    os_size_t curr_size = 0;
+    os_uint32_t event = 0;
 
     mo_esp32_t *esp32 = os_container_of(module, mo_esp32_t, parent);
 
@@ -408,7 +404,7 @@ os_err_t esp32_netconn_gethostbyname(mo_object_t *module, const char *domain_nam
     at_parser_t *parser = &module->parser;
 
     char resp_buff[AT_RESP_BUFF_SIZE_128] = {0};
-    char recvip[IPADDR_MAX_STR_LEN + 1]   = {0};
+    char recvip[IPADDR_MAX_STR_LEN + 1] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 20 * OS_TICK_PER_SECOND};
 
@@ -463,7 +459,7 @@ static void urc_send_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != data);
 
     mo_object_t *module = os_container_of(parser, mo_object_t, parser);
-    mo_esp32_t  *esp32  = os_container_of(module, mo_esp32_t, parent);
+    mo_esp32_t *esp32 = os_container_of(module, mo_esp32_t, parent);
 
     os_int32_t curr_connect = esp32->curr_connect;
 
@@ -488,7 +484,7 @@ static void urc_close_func(struct at_parser *parser, const char *data, os_size_t
 
     sscanf(data, "%d,CLOSED", &connect_id);
 
-    mo_object_t  *module  = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
     mo_netconn_t *netconn = esp32_get_netconn_by_id(module, connect_id);
     if (netconn == OS_NULL)
     {
@@ -509,7 +505,7 @@ static void urc_send_bfsz_func(struct at_parser *parser, const char *data, os_si
     OS_ASSERT(OS_NULL != data);
 
     mo_object_t *module = os_container_of(parser, mo_object_t, parser);
-    mo_esp32_t  *esp32  = os_container_of(module, mo_esp32_t, parent);
+    mo_esp32_t *esp32 = os_container_of(module, mo_esp32_t, parent);
 
     os_int32_t send_bfsz = 0;
 
@@ -526,7 +522,7 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != data);
 
     os_int32_t connect_id = 0;
-    os_int32_t data_size  = 0;
+    os_int32_t data_size = 0;
 
     sscanf(data, "+IPD,%d,%d:", &connect_id, &data_size);
 
@@ -534,7 +530,7 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
 
     INFO("Moudle %s netconn %d receive %d bytes data", parser->name, connect_id, data_size);
 
-    mo_object_t  *module  = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
     mo_netconn_t *netconn = esp32_get_netconn_by_id(module, connect_id);
     if (netconn == OS_NULL)
     {
@@ -547,8 +543,8 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
     {
         /* read and clean the coming data */
         ERROR("Calloc recv buff %d bytes fail, no enough memory", data_size * 2);
-        os_size_t temp_size    = 0;
-        char      temp_buff[8] = {0};
+        os_size_t temp_size = 0;
+        char temp_buff[8] = {0};
         while (temp_size < data_size)
         {
             if (data_size - temp_size > sizeof(temp_buff))
@@ -579,11 +575,11 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
 }
 
 static at_urc_t gs_urc_table[] = {
-    {.prefix = "SEND OK",   .suffix = "\r\n",        .func = urc_send_func},
-    {.prefix = "SEND FAIL", .suffix = "\r\n",        .func = urc_send_func},
-    {.prefix = "Recv",      .suffix = "bytes\r\n",   .func = urc_send_bfsz_func},
-    {.prefix = "+IPD",      .suffix = ":",           .func = urc_recv_func},
-    {.prefix = "",          .suffix = ",CLOSED\r\n", .func = urc_close_func},
+    {.prefix = "SEND OK", .suffix = "\r\n", .func = urc_send_func},
+    {.prefix = "SEND FAIL", .suffix = "\r\n", .func = urc_send_func},
+    {.prefix = "Recv", .suffix = "bytes\r\n", .func = urc_send_bfsz_func},
+    {.prefix = "+IPD", .suffix = ":", .func = urc_recv_func},
+    {.prefix = "", .suffix = ",CLOSED\r\n", .func = urc_close_func},
 };
 
 os_err_t esp32_netconn_init(mo_esp32_t *module)

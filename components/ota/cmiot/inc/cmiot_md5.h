@@ -38,13 +38,13 @@ typedef struct
 {
     cmiot_uint32 count[2];
     cmiot_uint32 state[4];
-    cmiot_uint8  buffer[MD5_BLOCKSIZE];
+    cmiot_uint8 buffer[MD5_BLOCKSIZE];
 } cmiot_md5_ctx_t;
 
 typedef struct
 {
-    cmiot_uint8  content1;
-    cmiot_uint8  content2;
+    cmiot_uint8 content1;
+    cmiot_uint8 content2;
     cmiot_uint32 content3;
 } cmiot_md5_data_t;
 

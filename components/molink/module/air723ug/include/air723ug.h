@@ -72,16 +72,16 @@ typedef struct mo_air723ug
 {
     mo_object_t parent;
 #ifdef AIR723UG_USING_NETCONN_OPS
-    mo_netconn_t    netconn[AIR723UG_NETCONN_NUM];
+    mo_netconn_t netconn[AIR723UG_NETCONN_NUM];
 
-    os_event_t      netconn_evt;
-    os_mutex_t      netconn_lock;
-    void            *netconn_data;
+    os_event_t netconn_evt;
+    os_mutex_t netconn_lock;
+    void *netconn_data;
 #endif /* AIR723UG_USING_NETCONN_OPS */
 } mo_air723ug_t;
 
 mo_object_t *module_air723ug_create(const char *name, void *parser_config);
-os_err_t     module_air723ug_destroy(mo_object_t *self);
+os_err_t module_air723ug_destroy(mo_object_t *self);
 
 #endif /* MOLINK_USING_AIR723UG */
 

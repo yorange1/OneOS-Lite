@@ -43,7 +43,7 @@ os_err_t ec200x_600s_set_attach(mo_object_t *self, os_uint8_t attach_stat)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff, .buff_size = sizeof(resp_buff), .timeout   = 140 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 140 * OS_TICK_PER_SECOND};
 
     return at_parser_exec_cmd(parser, &resp, "AT+CGATT=%hhu", attach_stat);
 }
@@ -62,7 +62,7 @@ os_err_t ec200x_600s_get_attach(mo_object_t *self, os_uint8_t *attach_stat)
         return OS_ERROR;
     }
 
-    if(at_resp_get_data_by_kw(&resp, "+CGATT:", "+CGATT: %hhu", attach_stat) <= 0)
+    if (at_resp_get_data_by_kw(&resp, "+CGATT:", "+CGATT: %hhu", attach_stat) <= 0)
     {
         ERROR("Get %s module attach state failed", self->name);
         return OS_ERROR;

@@ -77,12 +77,12 @@ typedef struct mo_sim7020
     mo_object_t parent;
 #ifdef SIM7020_USING_NETCONN_OPS
     mo_netconn_t netconn[SIM7020_NETCONN_NUM];
-    os_mutex_t   netconn_lock;
+    os_mutex_t netconn_lock;
 #endif /* SIM7020_USING_NETCONN_OPS */
 } mo_sim7020_t;
 
 mo_object_t *module_sim7020_create(const char *name, void *parser_config);
-os_err_t     module_sim7020_destroy(mo_object_t *self);
+os_err_t module_sim7020_destroy(mo_object_t *self);
 
 #endif /* MOLINK_USING_SIM7020 */
 

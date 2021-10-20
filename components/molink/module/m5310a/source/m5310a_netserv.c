@@ -58,7 +58,7 @@ os_err_t m5310a_get_attach(mo_object_t *self, os_uint8_t *attach_stat)
         return OS_ERROR;
     }
 
-    if(at_resp_get_data_by_kw(&resp, "+CGATT:", "+CGATT:%hhu", attach_stat) <= 0)
+    if (at_resp_get_data_by_kw(&resp, "+CGATT:", "+CGATT:%hhu", attach_stat) <= 0)
     {
         ERROR("Get %s module attach state failed", self->name);
         return OS_ERROR;

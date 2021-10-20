@@ -24,7 +24,7 @@
 #include "mo_common.h"
 
 #define MO_LOG_TAG "molink.ppp"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef MOLINK_USING_PPP_OPS
@@ -46,8 +46,8 @@ static mo_ppp_ops_t *get_ppp_ops(mo_object_t *module)
  * @brief           module ppp init session, check status & active pdp context
  *
  * @param[in]       module          The descriptor of molink module instance
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Init successfully
  * @retval          OS_ETIMEOUT     Init timeout
  * @retval          OS_ERROR        Init error
@@ -70,7 +70,6 @@ os_err_t mo_ppp_init(mo_object_t *module)
     }
 
     return ops->ppp_init(module);
-
 }
 
 /**
@@ -79,8 +78,8 @@ os_err_t mo_ppp_init(mo_object_t *module)
  *                  execute this func before init lwip ppp create
  *
  * @param[in]       module          The descriptor of molink module instance
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Dail successfully
  * @retval          OS_ETIMEOUT     Dail timeout
  * @retval          OS_ERROR        Dail error
@@ -111,8 +110,8 @@ os_err_t mo_ppp_dial(mo_object_t *module)
  *                  execute this func after ppp_close
  *
  * @param[in]       module          The descriptor of molink module instance
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Dail successfully
  * @retval          OS_ETIMEOUT     Dail timeout
  * @retval          OS_ERROR        Dail error
