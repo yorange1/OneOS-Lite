@@ -5,7 +5,7 @@ import osconfig
 if os.getenv('OS_ROOT'):
     OS_ROOT = os.getenv('OS_ROOT')
 else:
-    OS_ROOT = os.path.normpath(os.getcwd() + '/../..')
+    OS_ROOT = os.path.normpath(os.getcwd() + '/../../../..')
 
 sys.path = sys.path + [os.path.join(OS_ROOT, 'scripts')]
 try:

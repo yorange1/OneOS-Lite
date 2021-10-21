@@ -25,7 +25,7 @@
 
 static void user_task(void *parameter)
 {
-    //int i = 0;
+    int i = 0;
 
     for (i = 0; i < led_table_size; i++)
     {

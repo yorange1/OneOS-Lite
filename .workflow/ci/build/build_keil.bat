@@ -8,7 +8,7 @@ IF ERRORLEVEL 1 (
     GOTO NOTINPATHERROR
 )
 
-FOR %%a IN ("%~dp0\.") DO FOR %%b IN ("%%~dpa\.") DO FOR %%c IN ("%%~dpb\.") DO SET PROJECT_DIR=%%~dpnxc\.workflow\ci\projects_compile
+FOR %%a IN ("%~dp0\.") DO FOR %%b IN ("%%~dpa\.") DO FOR %%c IN ("%%~dpb\.") DO FOR %%d IN ("%%~dpc\.") DO SET PROJECT_DIR=%%~dpnxd\.workflow\ci\projects_compile
 
 ECHO Projects Directory: %PROJECT_DIR%
 

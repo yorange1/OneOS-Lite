@@ -691,6 +691,10 @@
 
 #define OS_USING_SUBMODULE
 /* end of Submodule */
+
+/* PowerManager */
+
+/* end of PowerManager */
 /* end of Thirdparty */
 
 #endif /* __ONEOS_CONFIG_H__ */

@@ -1,7 +1,7 @@
 mainmenu "OneOS-Lite Configuration"
 
 #Define the relative path to root directory of os code
-OS_ROOT=../..
+OS_ROOT=../../../..
 SRC_HAL=st
 
 config BOARD_CMCC_ONEOS
