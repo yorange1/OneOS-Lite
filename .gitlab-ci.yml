@@ -9,13 +9,13 @@ stages:
 check:format:
   stage: check
   tags:
-    - win_ci
+    - oneos-runner
   script:
     - python .workflow/ci/format_check/run-clang-format.py --clang-format-executable .workflow/ci/format_check/clang-format.exe -r components/
 
 build:windows:keil:
   stage: build
   tags: 
-    - win_ci
+    - oneos-runner
   script:
     - .workflow/ci/build/build_keil.bat
