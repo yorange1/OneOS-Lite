@@ -510,7 +510,9 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
         for (int comma_num = 0; comma_num < 2; data++)
         {
             if (*data == ',')
+            {
                 comma_num++;
+            }
         }
         /*quote shifting*/
         data++;
