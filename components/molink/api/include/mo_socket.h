@@ -419,7 +419,7 @@ int mo_poll(int socket, struct vfs_pollfd *req, os_bool_t poll_setup);
 /* End of Mo Socket API */
 
 /* BSD Socket API */
-#define MOLINK_COMPAT_BSD_SOCKET
+//#define MOLINK_COMPAT_BSD_SOCKET
 
 #if defined(MOLINK_USING_SINGLE_MODULE) && defined(MOLINK_COMPAT_BSD_SOCKET)
 #if defined(NET_USING_BSD)
