@@ -568,30 +568,26 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
 
     if (netconn->stat == NETCONN_STAT_CONNECT)
     {
-        /* bufflen >= strsize + 1 */
-        char *recv_buff = os_calloc(1, data_size * 2 + 1);
-        if (recv_buff == OS_NULL)
-        {
-            ERROR("Calloc recv buff %d bytes fail, no enough memory", data_size * 2 + 1);
-            return;
-        }
 
         /* Get receive data to receive buffer */
-        /* Alert! if using sscanf stores strings, be rember allocating enouth memory! */
-        sscanf(data, "+NSORF:%*d,%*[^,],%*d,%*d,%[^,]", recv_buff);
+        /* sscanf(data, "+NSORF:%*d,%*[^,],%*d,%*d,%[^,]", recv_buff); */
+        for (int comma_num = 0; comma_num < 4; data++)
+        {
+            if (*data == ',')
+            {
+                comma_num++;
+            }
+        }
 
         char *recv_str = os_calloc(1, data_size + 1);
         if (recv_str == OS_NULL)
         {
             ERROR("Calloc recv str %d bytes fail, no enough memory", data_size + 1);
-            os_free(recv_buff);
             return;
         }
 
-        hexstr_to_bytes(recv_buff, recv_str, data_size * 2);
+        hexstr_to_bytes(data, recv_str, data_size * 2);
         mo_netconn_data_recv_notice(netconn, recv_str, data_size);
-
-        os_free(recv_buff);
     }
 
     return;
