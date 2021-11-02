@@ -2,6 +2,7 @@
 
 - **快速上手篇**
   - [快速上手](/docs/quick_guide/README.md)
+  - [源码子模块管理](/docs/quick_guide/quickstart/submodule.md)
 
 - **没板子也能跑**
   - [Keil模拟STM32F103](/docs/quick_guide/simulator/keilsimulator.md)
