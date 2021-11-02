@@ -69,13 +69,13 @@ git submodule add git@10.12.3.198:luoshunyuan/telnetd.git thirdparty/telnetd
 
 如果需要更改子仓库，可先在对应的子仓库目录中，打开`git`命令行，进入对应贡献组件的git仓库管理，并执行代码提交操作：
 
-![](C:/Users/luosy/Music/15.OneOS-Lite的源码管理方式-子模块管理/1.gif)
+![](./1.gif)
 
 因为修改了子模块仓库代码并提交了，但是主仓库的指针依旧指向那个老的子仓库的`commit id`，如果不提交这个修改的话，别人拉取主项目并且使用`git submodule update`更新子模块还是会拉取到修改前的代码。
 
 因此，这时候需要把主项目进行提交更新。
 
-![](C:/Users/luosy/Music/15.OneOS-Lite的源码管理方式-子模块管理/2.gif)
+![](./2.gif)
 
 ## 删除废弃模块
 
