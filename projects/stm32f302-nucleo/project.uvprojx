@@ -337,7 +337,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>STM32F302x8, USE_HAL_DRIVER</Define>
+              <Define>USE_HAL_DRIVER, STM32F302x8</Define>
               <Undefine></Undefine>
               <IncludePath>.;application;..\..\arch\arm\armv7m\include;board;board\CubeMX_Config\Inc;board\ports;..\..\components\ringbuf\include;..\..\components\dlog\include;..\..\drivers;..\..\drivers\bus;..\..\drivers\console;..\..\drivers\misc;..\..\drivers\pin;..\..\drivers\serial;..\..\drivers\timer;..\..\drivers\hal\st\devices;..\..\drivers\hal\st\drivers;..\..\drivers\hal\st\drivers\config;..\..\drivers\hal\st\drivers\drv_flash;..\..\drivers\hal\st\STM32F3xx_HAL\CMSIS\Device\ST\STM32F3xx\Include;..\..\drivers\hal\st\STM32F3xx_HAL\STM32F3xx_HAL_Driver\Inc;..\..\drivers\hal\st\STM32F3xx_HAL\CMSIS\Include;..\..\oneos-kernel\include;..\..\components\libc\include;..\..\components\libc\include\extension;..\..\components\libc\include\armlibc;..\..\components\shell\include</IncludePath>
             </VariousControls>
