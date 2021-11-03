@@ -114,5 +114,32 @@ git submodule add git@10.12.3.198:luoshunyuan/telnetd.git thirdparty/telnetd
    git push
    ```
 
+除此之外，也可使用另一种删除`git`子模块的流程：
 
+1. 使用`git submodule deinit`命令卸载一个子模块(即从`.git/config`中删除整个`submodule.$name`部分及其工作树。):
 
+    ```
+    git submodule deinit thirdparty/cJSON
+
+    或指定参数 '--force' 删除子模块的工作树，即使存在本地修改。
+    git submodule deinit --force thirdparty/cJSON
+    ```
+
+2. 删除存储库中的子模块：
+
+    `git rm thirdparty/cJSON`
+
+3. 在编辑器中删除`.gitmodules`相关内容：
+
+   ```
+   [submodule "thirdparty/cJSON"]
+   	path = thirdparty/cJSON
+   	url = git@10.12.3.198:luoshunyuan/cJSON.git
+   ```
+
+4. 提交修改：
+
+   ```
+   git commit -am "delete submodule"
+   git push
+   ```
