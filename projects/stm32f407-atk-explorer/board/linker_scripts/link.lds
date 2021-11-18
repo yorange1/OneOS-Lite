@@ -19,7 +19,7 @@ SECTIONS
     {
         . = ALIGN(4);
         _stext = .;
-        KEEP(*(vtor_table))            /* Startup code */
+        KEEP(*(.isr_vector))            /* Startup code */
 
         . = ALIGN(4);
         *(.text)                        /* remaining code */
