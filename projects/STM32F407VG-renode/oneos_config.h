@@ -90,7 +90,7 @@
 
 #define OS_USING_SERIAL
 #define OS_SERIAL_DELAY_CLOSE
-#define OS_SERIAL_RX_BUFSZ 64
+#define OS_SERIAL_RX_BUFSZ 4
 #define OS_SERIAL_TX_BUFSZ 64
 /* end of Serial */
 
@@ -123,8 +123,8 @@
 #define SERIES_STM32F4
 #define SOC_STM32F4XX
 #define BSP_BOOT_OPTION
-#define BSP_TEXT_SECTION_ADDR 0x0800c000
-#define BSP_TEXT_SECTION_SIZE 0x000f4000
+#define BSP_TEXT_SECTION_ADDR 0x08000000
+#define BSP_TEXT_SECTION_SIZE 0x00100000
 #define BSP_DATA_SECTION_ADDR 0x20000000
 #define BSP_DATA_SECTION_SIZE 0x00020000
 
@@ -188,6 +188,10 @@
 
 #define OS_USING_SUBMODULE
 /* end of Submodule */
+
+/* PowerManager */
+
+/* end of PowerManager */
 /* end of Thirdparty */
 
 #endif /* __ONEOS_CONFIG_H__ */
