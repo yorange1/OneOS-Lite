@@ -8,11 +8,11 @@ machine LoadPlatformDescription @platforms/boards/stm32f4_discovery.repl
 
 cpu PerformanceInMips 125
 
-showAnalyzer sysbus.uart1
+showAnalyzer sysbus.usart1
 
 macro reset
 """
-    sysbus LoadELF @D:\gitee\OneOS-Lite\out\STM32F407VG-renode\oneos.elf
+    sysbus LoadELF @D:\luosy\gitee\OneOS-Lite\out\STM32F407VG-renode\oneos.elf
 
 """
 

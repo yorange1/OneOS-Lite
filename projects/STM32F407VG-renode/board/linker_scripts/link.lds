@@ -5,7 +5,7 @@
 /* Program Entry, set to mark it as "used" and avoid gc */
 MEMORY
 {
-    ROM  (rx) : ORIGIN = 0x0800c000, LENGTH = 0x000f4000 /* 0x000f4000 flash */
+    ROM  (rx) : ORIGIN = 0x08000000, LENGTH = 0x00100000 /* 0x00100000 flash */
     RAM1 (rx) : ORIGIN = 0x20000000, LENGTH = 0x00020000 /* 0x00020000 sram */
     RAM2 (rw) : ORIGIN = 0x10000000, LENGTH =   64k /* 64K sram */
 }

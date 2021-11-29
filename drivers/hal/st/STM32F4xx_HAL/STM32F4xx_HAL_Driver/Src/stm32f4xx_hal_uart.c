@@ -3020,7 +3020,7 @@ static HAL_StatusTypeDef UART_Receive_IT(UART_HandleTypeDef *huart)
       }
     }
 
-    if (--huart->RxXferCount == 0U)
+    if (--huart->RxXferCount == 0)
     {
       /* Disable the UART Data Register not empty Interrupt */
       __HAL_UART_DISABLE_IT(huart, UART_IT_RXNE);
