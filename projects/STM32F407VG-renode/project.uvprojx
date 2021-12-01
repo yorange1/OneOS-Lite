@@ -10,7 +10,7 @@
       <TargetName>oneos</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -111,12 +111,12 @@
         <DllOption>
           <SimDllName>SARMCM3.DLL</SimDllName>
           <SimDllArguments> -REMAP -MPU</SimDllArguments>
-          <SimDlgDll>DARMSTM.DLL</SimDlgDll>
-          <SimDlgDllArguments>-pSTM32F407VG</SimDlgDllArguments>
+          <SimDlgDll>DCM.DLL</SimDlgDll>
+          <SimDlgDllArguments>-pCM4</SimDlgDllArguments>
           <TargetDllName>SARMCM3.DLL</TargetDllName>
           <TargetDllArguments> -MPU</TargetDllArguments>
-          <TargetDlgDll>TARMSTM.DLL</TargetDlgDll>
-          <TargetDlgDllArguments>-pSTM32F407VG</TargetDlgDllArguments>
+          <TargetDlgDll>TCM.DLL</TargetDlgDll>
+          <TargetDlgDllArguments>-pCM4</TargetDlgDllArguments>
         </DllOption>
         <DebugOption>
           <OPTHX>
@@ -764,11 +764,6 @@
               <FilePath>..\..\oneos-kernel\source\os_task.c</FilePath>
             </File>
             <File>
-              <FileName>os_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\oneos-kernel\source\os_timer.c</FilePath>
-            </File>
-            <File>
               <FileName>os_util.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\oneos-kernel\source\os_util.c</FilePath>
@@ -777,11 +772,6 @@
               <FileName>os_version.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\oneos-kernel\source\os_version.c</FilePath>
-            </File>
-            <File>
-              <FileName>os_workqueue.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\oneos-kernel\source\os_workqueue.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -964,6 +954,11 @@
     <Layers>
       <Layer>
         <LayName>&lt;Project Info&gt;</LayName>
+        <LayDesc></LayDesc>
+        <LayUrl></LayUrl>
+        <LayKeys></LayKeys>
+        <LayCat></LayCat>
+        <LayLic></LayLic>
         <LayTarg>0</LayTarg>
         <LayPrjMark>1</LayPrjMark>
       </Layer>
