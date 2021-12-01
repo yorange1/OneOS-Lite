@@ -64,8 +64,8 @@ os_err_t esp32_wifi_set_mode(mo_object_t *module, mo_wifi_mode_t mode)
 
 mo_wifi_mode_t esp32_wifi_get_mode(mo_object_t *module)
 {
-    at_parser_t   *parser    = &module->parser;
-    os_int8_t      mode_data = 0;
+    at_parser_t *parser = &module->parser;
+    os_int8_t mode_data = 0;
     mo_wifi_mode_t wifi_mode = MO_WIFI_MODE_NULL;
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
@@ -106,7 +106,7 @@ __exit:
 
 mo_wifi_stat_t esp32_wifi_get_stat(mo_object_t *module)
 {
-    mo_esp32_t  *esp32  = os_container_of(module, mo_esp32_t, parent);
+    mo_esp32_t *esp32 = os_container_of(module, mo_esp32_t, parent);
     at_parser_t *parser = &module->parser;
 
     char *resp_buff = os_calloc(1, AT_RESP_BUFF_SIZE_384);
@@ -156,16 +156,16 @@ mo_wifi_stat_t esp32_wifi_get_stat(mo_object_t *module)
 
 os_err_t esp32_wifi_scan_info(mo_object_t *module, char *ssid, mo_wifi_scan_result_t *scan_result)
 {
-    at_parser_t *parser   = &module->parser;
-    os_err_t     result   = OS_EOK;
-	os_int32_t   ecn_mode = 0;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    os_int32_t ecn_mode = 0;
 
     const char *data_format1 = "+CWLAP:(%d,\"%[^\"]\",%d,\"%[^\"]\",%d,%*s)";
     const char *data_format2 = "+CWLAP:(%*d,\"\",%d,\"%[^\"]\",%d,%*s)";
 
-    at_resp_t resp = {.buff      = os_calloc(1, ESP32_SCAN_RESP_BUFF_LEN),
+    at_resp_t resp = {.buff = os_calloc(1, ESP32_SCAN_RESP_BUFF_LEN),
                       .buff_size = ESP32_SCAN_RESP_BUFF_LEN,
-                      .timeout   = 10 * OS_TICK_PER_SECOND};
+                      .timeout = 10 * OS_TICK_PER_SECOND};
 
     if (resp.buff == OS_NULL)
     {
@@ -218,12 +218,8 @@ os_err_t esp32_wifi_scan_info(mo_object_t *module, char *ssid, mo_wifi_scan_resu
         if (1 == get_result)
         {
             /* ssid is null  */
-            get_result = at_resp_get_data_by_line(&resp,
-                                                  i + 1,
-                                                  data_format2,
-                                                  &tmp->rssi,
-                                                  tmp->bssid.bssid_str,
-                                                  &tmp->channel);
+            get_result =
+                at_resp_get_data_by_line(&resp, i + 1, data_format2, &tmp->rssi, tmp->bssid.bssid_str, &tmp->channel);
         }
 
         if (get_result > 0)
@@ -318,7 +314,7 @@ static void urc_connect_func(struct at_parser *parser, const char *data, os_size
     OS_ASSERT(OS_NULL != data);
 
     mo_object_t *module = os_container_of(parser, mo_object_t, parser);
-    mo_esp32_t  *esp32  = os_container_of(module, mo_esp32_t, parent);
+    mo_esp32_t *esp32 = os_container_of(module, mo_esp32_t, parent);
 
     if (strstr(data, "WIFI CONNECTED"))
     {
@@ -340,9 +336,9 @@ static void urc_ip_func(struct at_parser *parser, const char *data, os_size_t si
 }
 
 static at_urc_t gs_urc_table[] = {
-    {.prefix = "WIFI CONNECTED",  .suffix = "\r\n", .func = urc_connect_func},
+    {.prefix = "WIFI CONNECTED", .suffix = "\r\n", .func = urc_connect_func},
     {.prefix = "WIFI DISCONNECT", .suffix = "\r\n", .func = urc_connect_func},
-    {.prefix = "WIFI GOT IP",     .suffix = "\r\n", .func = urc_ip_func},
+    {.prefix = "WIFI GOT IP", .suffix = "\r\n", .func = urc_ip_func},
 };
 
 os_err_t esp32_wifi_init(mo_object_t *module)

@@ -106,17 +106,17 @@ os_err_t mb26_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
     mo_mb26_t *mb26 = os_container_of(module, mo_mb26_t, parent);
 
     info->netconn_array = mb26->netconn;
-    info->netconn_nums  = sizeof(mb26->netconn) / sizeof(mb26->netconn[0]);
+    info->netconn_nums = sizeof(mb26->netconn) / sizeof(mb26->netconn[0]);
 
     return OS_EOK;
 }
 
 mo_netconn_t *mb26_netconn_create(mo_object_t *module, mo_netconn_type_t type)
 {
-    mo_mb26_t   *mb26    = os_container_of(module, mo_mb26_t, parent);
-    at_parser_t *parser  = &module->parser;
-    os_err_t     result  = OS_EOK;
-    os_int32_t   conn_id = -1;
+    mo_mb26_t *mb26 = os_container_of(module, mo_mb26_t, parent);
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    os_int32_t conn_id = -1;
 
     mb26_lock(&mb26->netconn_lock);
 
@@ -191,7 +191,7 @@ mo_netconn_t *mb26_netconn_create(mo_object_t *module, mo_netconn_type_t type)
 os_err_t mb26_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 {
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_ERROR;
+    os_err_t result = OS_ERROR;
 
     LOG_EXT_I("Module %s in %d netconn status", module->name, netconn->stat);
 
@@ -224,9 +224,9 @@ os_err_t mb26_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 
     LOG_EXT_I("Module %s netconn_id: %d destroyed", module->name, netconn->connect_id);
 
-    netconn->connect_id  = -1;
-    netconn->stat        = NETCONN_STAT_NULL;
-    netconn->type        = NETCONN_TYPE_NULL;
+    netconn->connect_id = -1;
+    netconn->stat = NETCONN_STAT_NULL;
+    netconn->type = NETCONN_TYPE_NULL;
     netconn->remote_port = 0;
     inet_aton("0.0.0.0", &netconn->remote_ip);
 
@@ -238,13 +238,11 @@ os_err_t mb26_netconn_gethostbyname(mo_object_t *self, const char *domain_name, 
 {
     at_parser_t *parser = &self->parser;
 
-	char recvip[IPADDR_MAX_STR_LEN + 1] = {0};
+    char recvip[IPADDR_MAX_STR_LEN + 1] = {0};
 
     char resp_buff[256] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 20 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 20 * OS_TICK_PER_SECOND};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+ECDNS=\"%s\"", domain_name);
     if (result < 0)
@@ -271,10 +269,10 @@ os_err_t mb26_netconn_gethostbyname(mo_object_t *self, const char *domain_name, 
     else
     {
         LOG_EXT_D("Module %s domain resolve: \"%s\" domain ip is %s, addrlen %d",
-                   self->name,
-                   domain_name,
-                   recvip,
-                   strlen(recvip));
+                  self->name,
+                  domain_name,
+                  recvip,
+                  strlen(recvip));
 
         inet_aton(recvip, addr);
         if (IPADDR_ANY == addr->addr || IPADDR_LOOPBACK == addr->addr)
@@ -296,14 +294,12 @@ __exit:
 os_err_t mb26_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port)
 {
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_EOK;
+    os_err_t result = OS_EOK;
 
     char remote_ip[IPADDR_MAX_STR_LEN + 1] = {0};
-    char resp_buff[AT_RESP_BUFF_SIZE_DEF]  = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 20 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 20 * OS_TICK_PER_SECOND};
 
     strncpy(remote_ip, inet_ntoa(addr), IPADDR_MAX_STR_LEN);
     result = at_parser_exec_cmd(parser, &resp, "AT+SKTCONNECT=%d,%s,%d", netconn->connect_id, remote_ip, port);
@@ -315,7 +311,7 @@ os_err_t mb26_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_add
 
     ip_addr_copy(netconn->remote_ip, addr);
     netconn->remote_port = port;
-    netconn->stat        = NETCONN_STAT_CONNECT;
+    netconn->stat = NETCONN_STAT_CONNECT;
 
     LOG_EXT_D("Module %s connection[%d] connect to %s: %d success", module->name, netconn->connect_id, remote_ip, port);
 
@@ -324,11 +320,11 @@ os_err_t mb26_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_add
 
 static os_size_t mb26_tcp_udp_send(at_parser_t *parser, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
-    os_err_t   result       = OS_EOK;
-    os_size_t  sent_size    = 0;
-    os_size_t  cur_pkt_size = 0;
+    os_err_t result = OS_EOK;
+    os_size_t sent_size = 0;
+    os_size_t cur_pkt_size = 0;
 
-    char send_cmd [AT_RESP_BUFF_SIZE_DEF] = {0};
+    char send_cmd[AT_RESP_BUFF_SIZE_DEF] = {0};
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 10 * OS_TICK_PER_SECOND};
@@ -387,10 +383,7 @@ __exit:
 
     if (result != OS_EOK)
     {
-        LOG_EXT_E("Module %s netconn %d send %d bytes data failed!",
-                  parser->name,
-                  netconn->connect_id,
-                  size);
+        LOG_EXT_E("Module %s netconn %d send %d bytes data failed!", parser->name, netconn->connect_id, size);
         return 0;
     }
 
@@ -399,8 +392,8 @@ __exit:
 
 os_size_t mb26_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
-    at_parser_t *parser    = &module->parser;
-    os_size_t    sent_size = 0;
+    at_parser_t *parser = &module->parser;
+    os_size_t sent_size = 0;
 
     char *hexstr = calloc(1, size * 2 + 1);
     if (OS_NULL == hexstr)
@@ -431,18 +424,18 @@ static void urc_close_func(struct at_parser *parser, const char *data, os_size_t
     OS_ASSERT(OS_NULL != data);
 
     os_int32_t connect_id = -1;
-    os_int32_t err_code   = -1;
+    os_int32_t err_code = -1;
 
     /* URC msg: +SKTERR: fd,<errno> */
-    sscanf(data, "+SKTERR: %d,%d", &connect_id,&err_code);
+    sscanf(data, "+SKTERR: %d,%d", &connect_id, &err_code);
 
-    if((connect_id <= 0) || (connect_id > MB26_NETCONN_NUM))
+    if ((connect_id <= 0) || (connect_id > MB26_NETCONN_NUM))
     {
         LOG_EXT_E("Module %s receive error close urc data of connect %d", parser->name, connect_id);
         return;
     }
 
-    mo_object_t  *module  = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
     mo_netconn_t *netconn = mb26_get_netconn_by_id(module, connect_id);
     if (OS_NULL == netconn)
     {
@@ -463,19 +456,19 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != data);
 
     os_int32_t connect_id = 0;
-    os_int32_t data_size  = 0;
+    os_int32_t data_size = 0;
 
     /* +SKTRECV: 1,10,"30313233343536373839" */
     sscanf(data, "+SKTRECV: %d,%d,", &connect_id, &data_size);
 
-    if((connect_id <= 0) || (connect_id > MB26_NETCONN_NUM))
+    if ((connect_id <= 0) || (connect_id > MB26_NETCONN_NUM))
     {
         LOG_EXT_E("Module %s receive error recv urc data of connect %d", parser->name, connect_id);
         return;
     }
 
     LOG_EXT_I("Moudle %s netconn %d receive %d bytes data", parser->name, connect_id, data_size);
-    mo_object_t  *module  = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
     mo_netconn_t *netconn = mb26_get_netconn_by_id(module, connect_id);
     if (OS_NULL == netconn)
     {
@@ -485,38 +478,36 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
 
     if (netconn->stat == NETCONN_STAT_CONNECT)
     {
-        /* It actually takes double the memory to receive and process, bufflen >= strsize * 2 + 1 */
-        char *recv_buff = calloc(1, data_size * 2 + 1);
-        if (recv_buff == OS_NULL)
-        {
-            LOG_EXT_E("Calloc recv buff %d bytes fail, no enough memory", data_size * 2 + 1);
-            return;
-        }
 
         /* Get receive data to receive buffer */
-        /* Alert! if using sscanf stores strings, be rember allocating enouth memory! */
-        sscanf(data, "+SKTRECV: %*d,%*d,\"%[^\"]", recv_buff);
+        /* sscanf(data, "+SKTRECV: %*d,%*d,\"%[^\"]", recv_buff); */
+        for (int comma_num = 0; comma_num < 2; data++)
+        {
+            if (*data == ',')
+            {
+                comma_num++;
+            }
+        }
+        /*quote shifting*/
+        data++;
 
         char *recv_str = calloc(1, data_size + 1);
         if (recv_str == OS_NULL)
         {
             LOG_EXT_E("Calloc recv str %d bytes fail, no enough memory", data_size + 1);
-            free(recv_buff);
             return;
         }
 
         /* Hex char "303132333435" -->  char "012345" */
-        hexstr_to_bytes(recv_buff, recv_str, data_size * 2);
+        hexstr_to_bytes(data, recv_str, data_size * 2);
         mo_netconn_data_recv_notice(netconn, recv_str, data_size);
-
-        free(recv_buff);
     }
 
     return;
 }
 
 static at_urc_t gs_urc_table[] = {
-    {.prefix = "+SKTERR:",  .suffix = "\r\n", .func = urc_close_func},
+    {.prefix = "+SKTERR:", .suffix = "\r\n", .func = urc_close_func},
     {.prefix = "+SKTRECV:", .suffix = "\r\n", .func = urc_recv_func},
 };
 

@@ -31,7 +31,8 @@ extern "C" {
 
 #ifdef CLM920RV3_USING_PING_OPS
 
-os_err_t clm920rv3_ping(mo_object_t *module, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp);
+os_err_t
+clm920rv3_ping(mo_object_t *module, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp);
 
 #endif /* CLM920RV3_USING_PING_OPS */
 

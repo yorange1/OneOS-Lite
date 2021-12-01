@@ -39,7 +39,7 @@ mo_object_t *mo_get(void);
 #elif defined(MOLINK_USING_MULTI_MODULES)
 mo_object_t *mo_get_by_name(const char *name);
 mo_object_t *mo_get_default(void);
-void         mo_set_default(mo_object_t *self);
+void mo_set_default(mo_object_t *self);
 #endif
 
 #ifdef __cplusplus

@@ -2,13 +2,13 @@
  ***********************************************************************************************************************
  * Copyright (c) 2020, China Mobile Communications Group Co.,Ltd.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on 
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
  * @file        shell_process.c
@@ -40,14 +40,14 @@
 
 static os_int32_t sh_split(char *cmd, os_size_t length, char *argv[SHELL_ARG_MAX])
 {
-    char      *ptr;
-    os_size_t  position;
-    os_size_t  argc;
-    os_size_t  i;
+    char *ptr;
+    os_size_t position;
+    os_size_t argc;
+    os_size_t i;
 
-    ptr      = cmd;
+    ptr = cmd;
     position = 0;
-    argc     = 0;
+    argc = 0;
 
     while (position < length)
     {
@@ -67,15 +67,15 @@ static os_int32_t sh_split(char *cmd, os_size_t length, char *argv[SHELL_ARG_MAX
         if (argc >= SHELL_ARG_MAX)
         {
             os_kprintf("Too many args ! We only Use:\r\n");
-            for(i = 0; i < argc; i++)
+            for (i = 0; i < argc; i++)
             {
                 os_kprintf("%s ", argv[i]);
             }
             os_kprintf("\r\n");
-            
+
             break;
         }
-        
+
         /* Handle string */
         if (*ptr == '"')
         {
@@ -95,16 +95,16 @@ static os_int32_t sh_split(char *cmd, os_size_t length, char *argv[SHELL_ARG_MAX
                         position++;
                     }
                 }
-                
+
                 ptr++;
                 position++;
             }
-            
+
             if (position >= length)
             {
                 break;
             }
-            
+
             /* Skip '"' */
             *ptr = '\0';
             ptr++;
@@ -120,7 +120,7 @@ static os_int32_t sh_split(char *cmd, os_size_t length, char *argv[SHELL_ARG_MAX
                 ptr++;
                 position++;
             }
-            
+
             if (position >= length)
             {
                 break;
@@ -136,8 +136,8 @@ static cmd_function_t sh_get_cmd_func(char *cmd, os_int32_t size)
     sh_cmd_entry_t *syscall_tmp;
     sh_cmd_entry_t *table_begin;
     sh_cmd_entry_t *table_end;
-    cmd_function_t  cmd_func;
-    os_uint16_t     cmd_prefix_len;
+    cmd_function_t cmd_func;
+    os_uint16_t cmd_prefix_len;
 
     cmd_func = OS_NULL;
 
@@ -151,8 +151,8 @@ static cmd_function_t sh_get_cmd_func(char *cmd, os_int32_t size)
             continue;
         }
 
-        if (!strncmp(&syscall_tmp->name[cmd_prefix_len], cmd, size)
-            && (syscall_tmp->name[cmd_prefix_len + size] == '\0'))
+        if (!strncmp(&syscall_tmp->name[cmd_prefix_len], cmd, size) &&
+            (syscall_tmp->name[cmd_prefix_len + size] == '\0'))
         {
             cmd_func = (cmd_function_t)syscall_tmp->func;
             break;
@@ -164,16 +164,16 @@ static cmd_function_t sh_get_cmd_func(char *cmd, os_int32_t size)
 
 static os_err_t sh_do_exec_cmd(char *cmd, os_size_t length, os_err_t *retp)
 {
-    os_int32_t      argc;
-    os_size_t       cmd0_size;
-    cmd_function_t  cmd_func;
-    char           *argv[SHELL_ARG_MAX];
-    os_err_t        ret;
+    os_int32_t argc;
+    os_size_t cmd0_size;
+    cmd_function_t cmd_func;
+    char *argv[SHELL_ARG_MAX];
+    os_err_t ret;
 
     OS_ASSERT(cmd);
     OS_ASSERT(retp);
 
-    ret       = OS_EOK;
+    ret = OS_EOK;
     cmd0_size = 0U;
 
     /* Find the size of first command */
@@ -181,7 +181,7 @@ static os_err_t sh_do_exec_cmd(char *cmd, os_size_t length, os_err_t *retp)
     {
         cmd0_size++;
     }
-    
+
     if (0U == cmd0_size)
     {
         os_kprintf("cmd 0 size \r\n");
@@ -191,18 +191,18 @@ static os_err_t sh_do_exec_cmd(char *cmd, os_size_t length, os_err_t *retp)
     {
         (void)memset(argv, 0, sizeof(argv));
         cmd_func = sh_get_cmd_func(cmd, cmd0_size);
-        argc     = sh_split(cmd, length, argv);
+        argc = sh_split(cmd, length, argv);
 
         if ((OS_NULL != cmd_func) && (0 != argc))
         {
-            *retp = cmd_func(argc, argv); 
+            *retp = cmd_func(argc, argv);
         }
         else
         {
             ret = OS_ERROR;
         }
     }
-    
+
     return ret;
 }
 
@@ -210,7 +210,7 @@ static os_err_t sh_do_exec_cmd(char *cmd, os_size_t length, os_err_t *retp)
  ***********************************************************************************************************************
  * @brief           Execute command.
  *
- * @param[in]       cmd             Command string, including command name and command arguments.         
+ * @param[in]       cmd             Command string, including command name and command arguments.
  * @param[in]       length          Command string length.
  *
  * @return          Execute command result.
@@ -220,14 +220,14 @@ static os_err_t sh_do_exec_cmd(char *cmd, os_size_t length, os_err_t *retp)
  */
 os_err_t sh_do_exec(char *cmd, os_size_t length)
 {
-    char     *tcmd;
-    os_err_t  cmd_ret;
-    os_err_t  ret;
+    char *tcmd;
+    os_err_t cmd_ret;
+    os_err_t ret;
 
     ret = OS_EOK;
 
     /* Strim the beginning of command */
-    while (((*cmd  == ' ') || (*cmd == '\t')) && (length > 0))
+    while (((*cmd == ' ') || (*cmd == '\t')) && (length > 0))
     {
         cmd++;
         length--;
@@ -241,7 +241,7 @@ os_err_t sh_do_exec(char *cmd, os_size_t length)
             ret = cmd_ret;
         }
         else
-        {   
+        {
             /* Truncate the cmd at the first space. */
             tcmd = cmd;
             while ((*tcmd != ' ') && (*tcmd != '\0'))
@@ -249,23 +249,23 @@ os_err_t sh_do_exec(char *cmd, os_size_t length)
                 tcmd++;
             }
             *tcmd = '\0';
-            
+
             os_kprintf("%s: command not found.\r\n", cmd);
         }
     }
-    
+
     return ret;
 }
 
 os_err_t sh_exec(const char *cmd)
 {
-    char     *cmd_str;
+    char *cmd_str;
     os_size_t cmd_length;
-    os_err_t  ret;
-    
+    os_err_t ret;
+
     OS_ASSERT(cmd != OS_NULL);
 
-    ret        = OS_EOK;
+    ret = OS_EOK;
     cmd_length = strlen(cmd);
 
     /* 1 is used to reserve space for '\0' */
@@ -284,7 +284,7 @@ os_err_t sh_exec(const char *cmd)
         os_free(cmd_str);
         cmd_str = OS_NULL;
     }
-    
+
     return ret;
 }
 
@@ -305,14 +305,14 @@ static os_int32_t sh_string_same_part_length(const char *cmd_str1, const char *c
 #ifdef OS_USING_VFS
 static void sh_do_auto_complete_path(char *path, os_size_t size)
 {
-#define FULL_PATH_LEN_MAX       256
+#define FULL_PATH_LEN_MAX 256
 
-    DIR           *dir = OS_NULL;
+    DIR *dir = OS_NULL;
     struct dirent *dirent = OS_NULL;
-    char          *full_path;
-    char          *ptr;
-    char          *index;
-    char          *end_addr = path + size;
+    char *full_path;
+    char *ptr;
+    char *index;
+    char *end_addr = path + size;
 
     OS_ASSERT(OS_NULL != path);
 
@@ -329,7 +329,7 @@ static void sh_do_auto_complete_path(char *path, os_size_t size)
     if (*path != '/')
     {
         getcwd(full_path, FULL_PATH_LEN_MAX);
-        
+
         if (full_path[strlen(full_path) - 1] != '/')
         {
             strcat(full_path, "/");
@@ -339,9 +339,9 @@ static void sh_do_auto_complete_path(char *path, os_size_t size)
     {
         *full_path = '\0';
     }
-    
+
     index = OS_NULL;
-    ptr   = path;
+    ptr = path;
 
     for (;;)
     {
@@ -349,12 +349,12 @@ static void sh_do_auto_complete_path(char *path, os_size_t size)
         {
             index = ptr + 1;
         }
-        
+
         if (!(*ptr))
         {
             break;
         }
-        
+
         ptr++;
     }
 
@@ -405,7 +405,7 @@ static void sh_do_auto_complete_path(char *path, os_size_t size)
             {
                 break;
             }
-            
+
             os_kprintf("%s\r\n", dirent->d_name);
         }
     }
@@ -422,12 +422,12 @@ static void sh_do_auto_complete_path(char *path, os_size_t size)
             {
                 break;
             }
-            
+
             /* Matched the prefix string */
             if (!strncmp(index, dirent->d_name, strlen(index)))
             {
                 os_kprintf("%s\r\n", dirent->d_name);
-            
+
                 if (0 == min_length)
                 {
                     min_length = strlen(dirent->d_name);
@@ -464,14 +464,14 @@ static void sh_do_auto_complete_path(char *path, os_size_t size)
 
 static os_bool_t sh_auto_complete_path(char *prefix, os_size_t size)
 {
-    char        *ptr;
-    const char  *end_addr;
-    os_bool_t    is_complete_path;
+    char *ptr;
+    const char *end_addr;
+    os_bool_t is_complete_path;
 
     is_complete_path = OS_FALSE;
 
     end_addr = prefix + size;
-    ptr      = prefix + strlen(prefix);
+    ptr = prefix + strlen(prefix);
 
     /* Check whether a space in the prefix */
     while (ptr != prefix)
@@ -497,26 +497,26 @@ static os_bool_t sh_auto_complete_path(char *prefix, os_size_t size)
  *
  * @param[in,out]   prefix          The prefix of path or command.
  * @param[in]       size            The size of buffer.
- * 
+ *
  * @return          None.
  ***********************************************************************************************************************
  */
 void sh_auto_complete(char *prefix, os_size_t size)
 {
-    os_int32_t      length;
-    os_int32_t      min_length;
+    os_int32_t length;
+    os_int32_t min_length;
     sh_cmd_entry_t *syscall_tmp;
     sh_cmd_entry_t *syscall_begin;
     sh_cmd_entry_t *syscall_end;
-    const char     *name_ptr;
-    const char     *cmd_name;
-    os_bool_t       is_complete_path;
-    os_bool_t       is_null_str;
+    const char *name_ptr;
+    const char *cmd_name;
+    os_bool_t is_complete_path;
+    os_bool_t is_null_str;
 
     os_kprintf("\r\n");
 
     is_complete_path = OS_FALSE;
-    is_null_str      = OS_FALSE;
+    is_null_str = OS_FALSE;
 
     if (*prefix == '\0')
     {
@@ -531,11 +531,11 @@ void sh_auto_complete(char *prefix, os_size_t size)
     if ((OS_FALSE == is_null_str) && (OS_FALSE == is_complete_path))
     {
         min_length = 0;
-        name_ptr   = OS_NULL;
+        name_ptr = OS_NULL;
 
         /* Checks in internal command */
         sh_get_cmd_table(&syscall_begin, &syscall_end);
-    
+
         for (syscall_tmp = syscall_begin; syscall_tmp < syscall_end; SH_NEXT_CMD_ENTRY(syscall_tmp))
         {
             /* Skip shell function */
@@ -543,7 +543,7 @@ void sh_auto_complete(char *prefix, os_size_t size)
             {
                 continue;
             }
-            
+
             cmd_name = &syscall_tmp->name[6];
             if (!strncmp(prefix, cmd_name, strlen(prefix)))
             {
@@ -551,7 +551,7 @@ void sh_auto_complete(char *prefix, os_size_t size)
                 {
                     /* Set name_ptr */
                     name_ptr = cmd_name;
-                    
+
                     /* Set initial length */
                     min_length = strlen(name_ptr);
 
@@ -565,7 +565,7 @@ void sh_auto_complete(char *prefix, os_size_t size)
                     {
                         min_length = length;
                     }
-                    
+
                     os_kprintf("%s\r\n", cmd_name);
                 }
             }
@@ -578,10 +578,9 @@ void sh_auto_complete(char *prefix, os_size_t size)
             strncpy(prefix, name_ptr, min_length);
         }
     }
-    
+
     os_kprintf("%s%s", sh_get_prompt(), prefix);
-    
+
     return;
 }
 #endif /* OS_USING_SHELL */
-

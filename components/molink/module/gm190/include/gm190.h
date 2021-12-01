@@ -69,15 +69,15 @@ typedef struct mo_gm190
     mo_object_t parent;
 #ifdef GM190_USING_NETCONN_OPS
     mo_netconn_t netconn[GM190_NETCONN_NUM];
-	os_int32_t curr_connect;
+    os_int32_t curr_connect;
     os_event_t netconn_evt;
     os_mutex_t netconn_lock;
-    void      *netconn_data;
+    void *netconn_data;
 #endif /* GM190_USING_NETCONN_OPS */
 } mo_gm190_t;
 
 mo_object_t *module_gm190_create(const char *name, void *parser_config);
-os_err_t     module_gm190_destroy(mo_object_t *self);
+os_err_t module_gm190_destroy(mo_object_t *self);
 
 #endif /* MOLINK_USING_GM190 */
 
@@ -86,4 +86,3 @@ os_err_t     module_gm190_destroy(mo_object_t *self);
 #endif /* __cplusplus */
 
 #endif /* __GM190_H__ */
-

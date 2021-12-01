@@ -36,25 +36,25 @@
 
 #ifdef A7600X_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test   = a7600x_at_test,
-    .get_imei  = a7600x_get_imei,
-    .get_imsi  = a7600x_get_imsi,
+    .at_test = a7600x_at_test,
+    .get_imei = a7600x_get_imei,
+    .get_imsi = a7600x_get_imsi,
     .get_iccid = a7600x_get_iccid,
-    .get_cfun  = a7600x_get_cfun,
-    .set_cfun  = a7600x_set_cfun,
+    .get_cfun = a7600x_get_cfun,
+    .set_cfun = a7600x_set_cfun,
 };
 #endif /* A7600X_USING_GENERAL_OPS */
 
 #ifdef A7600X_USING_NETSERV_OPS
 static const struct mo_netserv_ops gs_netserv_ops = {
-    .set_attach     = a7600x_set_attach,
-    .get_attach     = a7600x_get_attach,
-    .set_reg        = a7600x_set_reg,
-    .get_reg        = a7600x_get_reg,
-    .set_cgact      = a7600x_set_cgact,
-    .get_cgact      = a7600x_get_cgact,
-    .get_csq        = a7600x_get_csq,
-    .get_cell_info  = a7600x_get_cell_info,
+    .set_attach = a7600x_set_attach,
+    .get_attach = a7600x_get_attach,
+    .set_reg = a7600x_set_reg,
+    .get_reg = a7600x_get_reg,
+    .set_cgact = a7600x_set_cgact,
+    .get_cgact = a7600x_get_cgact,
+    .get_csq = a7600x_get_csq,
+    .get_cell_info = a7600x_get_cell_info,
 };
 
 #endif /* A7600X_USING_NETSERV_OPS */
@@ -67,7 +67,7 @@ static const struct mo_ping_ops gs_ping_ops = {
 
 #ifdef A7600X_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig   = a7600x_ifconfig,
+    .ifconfig = a7600x_ifconfig,
     .get_ipaddr = a7600x_get_ipaddr,
 };
 #endif /* A7600X_USING_IFCONFIG_OPS */
@@ -76,14 +76,14 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern void a7600x_netconn_init(mo_a7600x_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create        = a7600x_netconn_create,
-    .destroy       = a7600x_netconn_destroy,
+    .create = a7600x_netconn_create,
+    .destroy = a7600x_netconn_destroy,
 #ifdef A7600X_USING_DNS
     .gethostbyname = a7600x_netconn_gethostbyname,
 #endif
-    .connect       = a7600x_netconn_connect,
-    .send          = a7600x_netconn_send,
-    .get_info      = a7600x_netconn_get_info,
+    .connect = a7600x_netconn_connect,
+    .send = a7600x_netconn_send,
+    .get_info = a7600x_netconn_get_info,
 };
 #endif /* A7600X_USING_NETCONN_OPS */
 
@@ -100,9 +100,7 @@ static os_err_t a7600x_at_init(mo_object_t *self)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 2 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 2 * OS_TICK_PER_SECOND};
 
     return at_parser_exec_cmd(parser, &resp, "ATE0");
 }
@@ -203,7 +201,7 @@ int a7600x_auto_create(void)
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = A7600X_NAME,
+    mo_parser_config_t parser_config = {.parser_name = A7600X_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = A7600X_RECV_BUFF_LEN};
 

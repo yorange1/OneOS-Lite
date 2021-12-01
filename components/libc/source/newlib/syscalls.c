@@ -2,18 +2,18 @@
  ***********************************************************************************************************************
  * Copyright (c) 2020, China Mobile Communications Group Co.,Ltd.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on 
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
  * @file        syscalls.c
  *
- * @brief       This file provides system call related adaptation, including file system, memory management, time 
+ * @brief       This file provides system call related adaptation, including file system, memory management, time
  *              management,etc.
  *
  * @revision
@@ -59,18 +59,18 @@ int _close_r(struct _reent *ptr, int fd)
 {
 #ifndef OS_USING_VFS
     ptr->_errno = ENOTSUP;
-    errno       = ENOTSUP;
+    errno = ENOTSUP;
     return -1;
 #else
     return vfs_close(fd);
 #endif
 }
 
-int _execve_r(struct _reent *ptr, const char * name, char *const *argv, char *const *env)
+int _execve_r(struct _reent *ptr, const char *name, char *const *argv, char *const *env)
 {
     /* Return "not supported". */
     ptr->_errno = ENOTSUP;
-    errno       = ENOTSUP;
+    errno = ENOTSUP;
     return -1;
 }
 
@@ -79,7 +79,7 @@ int _fcntl_r(struct _reent *ptr, int fd, int cmd, int arg)
 #ifndef OS_USING_VFS
     /* Return "not supported". */
     ptr->_errno = ENOTSUP;
-    errno       = ENOTSUP;
+    errno = ENOTSUP;
     return -1;
 #else
     int rc;
@@ -93,7 +93,7 @@ int _fork_r(struct _reent *ptr)
 {
     /* Return "not supported". */
     ptr->_errno = ENOTSUP;
-    errno       = ENOTSUP;
+    errno = ENOTSUP;
     return -1;
 }
 
@@ -101,7 +101,7 @@ int _fstat_r(struct _reent *ptr, int fd, struct stat *pstat)
 {
 #ifndef OS_USING_VFS
     ptr->_errno = ENOTSUP;
-    errno       = ENOTSUP;
+    errno = ENOTSUP;
     return -1;
 #else
     int rc;
@@ -114,7 +114,7 @@ int _fstat_r(struct _reent *ptr, int fd, struct stat *pstat)
 int _getpid_r(struct _reent *ptr)
 {
     ptr->_errno = ENOTSUP;
-    errno       = ENOTSUP;
+    errno = ENOTSUP;
     return -1;
 }
 
@@ -127,7 +127,7 @@ int _isatty_r(struct _reent *ptr, int fd)
 
     /* Return "not supported". */
     ptr->_errno = ENOTSUP;
-    errno       = ENOTSUP;
+    errno = ENOTSUP;
     return -1;
 }
 
@@ -135,7 +135,7 @@ int _kill_r(struct _reent *ptr, int pid, int sig)
 {
     /* Return "not supported". */
     ptr->_errno = ENOTSUP;
-    errno       = ENOTSUP;
+    errno = ENOTSUP;
     return -1;
 }
 
@@ -143,7 +143,7 @@ int _link_r(struct _reent *ptr, const char *old, const char *new)
 {
     /* Return "not supported". */
     ptr->_errno = ENOTSUP;
-    errno       = ENOTSUP;
+    errno = ENOTSUP;
     return -1;
 }
 
@@ -151,7 +151,7 @@ _off_t _lseek_r(struct _reent *ptr, int fd, _off_t pos, int whence)
 {
 #ifndef OS_USING_VFS
     ptr->_errno = ENOTSUP;
-    errno       = ENOTSUP;
+    errno = ENOTSUP;
     return -1;
 #else
     _off_t rc;
@@ -165,7 +165,7 @@ int _mkdir_r(struct _reent *ptr, const char *name, int mode)
 {
 #ifndef OS_USING_VFS
     ptr->_errno = ENOTSUP;
-    errno       = ENOTSUP;
+    errno = ENOTSUP;
     return -1;
 #else
     int rc;
@@ -179,7 +179,7 @@ int _open_r(struct _reent *ptr, const char *file, int flags, int mode)
 {
 #ifndef OS_USING_VFS
     ptr->_errno = ENOTSUP;
-    errno       = ENOTSUP;
+    errno = ENOTSUP;
     return -1;
 #else
     int rc;
@@ -193,7 +193,7 @@ _ssize_t _read_r(struct _reent *ptr, int fd, void *buf, size_t nbytes)
 {
 #ifndef OS_USING_VFS
     ptr->_errno = ENOTSUP;
-    errno       = ENOTSUP;
+    errno = ENOTSUP;
     return -1;
 #else
     _ssize_t rc;
@@ -207,7 +207,7 @@ int _rename_r(struct _reent *ptr, const char *old, const char *new)
 {
 #ifndef OS_USING_VFS
     ptr->_errno = ENOTSUP;
-    errno       = ENOTSUP;
+    errno = ENOTSUP;
     return -1;
 #else
     int rc;
@@ -227,7 +227,7 @@ int _stat_r(struct _reent *ptr, const char *file, struct stat *pstat)
 {
 #ifndef OS_USING_VFS
     ptr->_errno = ENOTSUP;
-    errno       = ENOTSUP;
+    errno = ENOTSUP;
     return -1;
 #else
     int rc;
@@ -241,7 +241,7 @@ _CLOCK_T_ _times_r(struct _reent *ptr, struct tms *ptms)
 {
     /* Return "not supported". */
     ptr->_errno = ENOTSUP;
-    errno       = ENOTSUP;
+    errno = ENOTSUP;
     return -1;
 }
 
@@ -249,7 +249,7 @@ int _unlink_r(struct _reent *ptr, const char *file)
 {
 #ifndef OS_USING_VFS
     ptr->_errno = ENOTSUP;
-    errno       = ENOTSUP;
+    errno = ENOTSUP;
     return -1;
 #else
     int rc;
@@ -263,11 +263,11 @@ int _wait_r(struct _reent *ptr, int *status)
 {
     /* Return "not supported". */
     ptr->_errno = ENOTSUP;
-    errno       = ENOTSUP;
+    errno = ENOTSUP;
     return -1;
 }
 
-#if defined(OS_USING_DEVICE) /* && defined(OS_USING_CONSOLE) */ // TODO: need check
+#if defined(OS_USING_DEVICE) /* && defined(OS_USING_CONSOLE) */    // TODO: need check
 _ssize_t _write_r(struct _reent *ptr, int fd, const void *buf, size_t nbytes)
 {
 #ifndef OS_USING_VFS
@@ -275,18 +275,18 @@ _ssize_t _write_r(struct _reent *ptr, int fd, const void *buf, size_t nbytes)
     {
         os_device_t *console;
 
-    #ifdef OS_USING_CONSOLE
+#ifdef OS_USING_CONSOLE
         console = os_console_get_device();
-    #else
+#else
         console = OS_NULL;
-    #endif
+#endif
         if (console)
         {
-        #ifdef OS_USING_DEVICE_BLOCK
+#ifdef OS_USING_DEVICE_BLOCK
             return os_device_write_block(console, -1, buf, nbytes);
-        #else
+#else
             return os_device_write_nonblock(console, -1, buf, nbytes);
-        #endif
+#endif
         }
     }
 
@@ -300,20 +300,20 @@ _ssize_t _write_r(struct _reent *ptr, int fd, const void *buf, size_t nbytes)
 }
 #endif
 
-#define MILLISECOND_PER_SECOND  1000UL
-#define MICROSECOND_PER_SECOND  1000000UL
-#define NANOSECOND_PER_SECOND   1000000000UL
+#define MILLISECOND_PER_SECOND 1000UL
+#define MICROSECOND_PER_SECOND 1000000UL
+#define NANOSECOND_PER_SECOND  1000000000UL
 
-#define MILLISECOND_PER_TICK    (MILLISECOND_PER_SECOND / OS_TICK_PER_SECOND)
-#define MICROSECOND_PER_TICK    (MICROSECOND_PER_SECOND / OS_TICK_PER_SECOND)
-#define NANOSECOND_PER_TICK     (NANOSECOND_PER_SECOND  / OS_TICK_PER_SECOND)
+#define MILLISECOND_PER_TICK (MILLISECOND_PER_SECOND / OS_TICK_PER_SECOND)
+#define MICROSECOND_PER_TICK (MICROSECOND_PER_SECOND / OS_TICK_PER_SECOND)
+#define NANOSECOND_PER_TICK  (NANOSECOND_PER_SECOND / OS_TICK_PER_SECOND)
 
 struct timeval _timevalue = {0};
 #ifdef OS_USING_DEVICE
 static void libc_system_time_init(void)
 {
-    time_t       time;
-    os_tick_t    tick;
+    time_t time;
+    os_tick_t tick;
     os_device_t *device;
 
     time = 0;
@@ -321,16 +321,16 @@ static void libc_system_time_init(void)
     if (device != OS_NULL)
     {
         /* Get realtime seconds. */
-    #if defined(OS_USING_RTC)
+#if defined(OS_USING_RTC)
         os_device_control(device, OS_DEVICE_CTRL_RTC_GET_TIME, &time);
-    #endif
+#endif
     }
 
     /* Get tick. */
     tick = os_tick_get();
 
     _timevalue.tv_usec = MICROSECOND_PER_SECOND - (tick % OS_TICK_PER_SECOND) * MICROSECOND_PER_TICK;
-    _timevalue.tv_sec  = time - tick / OS_TICK_PER_SECOND - 1;
+    _timevalue.tv_sec = time - tick / OS_TICK_PER_SECOND - 1;
 }
 #endif
 
@@ -351,7 +351,7 @@ int libc_get_time(struct timespec *time)
     /* Get tick. */
     tick = os_tick_get();
 
-    time->tv_sec  = _timevalue.tv_sec + tick / OS_TICK_PER_SECOND;
+    time->tv_sec = _timevalue.tv_sec + tick / OS_TICK_PER_SECOND;
     time->tv_nsec = (_timevalue.tv_usec + (tick % OS_TICK_PER_SECOND) * MICROSECOND_PER_TICK) * 1000;
 
     return 0;
@@ -365,7 +365,7 @@ int _gettimeofday_r(struct _reent *ptr, struct timeval *__tp, void *__tzp)
     {
         if (__tp != OS_NULL)
         {
-            __tp->tv_sec  = tp.tv_sec;
+            __tp->tv_sec = tp.tv_sec;
             __tp->tv_usec = tp.tv_nsec / 1000UL;
         }
 
@@ -374,23 +374,22 @@ int _gettimeofday_r(struct _reent *ptr, struct timeval *__tp, void *__tzp)
 
     /* Return "not supported". */
     ptr->_errno = ENOTSUP;
-    errno       = ENOTSUP;
+    errno = ENOTSUP;
     return -1;
 }
 
-
 void *_malloc_r(struct _reent *ptr, size_t size)
 {
-    void* result;
+    void *result;
 #if defined(OS_USING_SYS_HEAP)
-    result = (void*)os_malloc(size);
+    result = (void *)os_malloc(size);
 #else
     result = OS_NULL;
 #endif
     if (result == OS_NULL)
     {
         ptr->_errno = ENOMEM;
-        errno       = ENOMEM;
+        errno = ENOMEM;
     }
 
     return result;
@@ -398,17 +397,17 @@ void *_malloc_r(struct _reent *ptr, size_t size)
 
 void *_realloc_r(struct _reent *ptr, void *old, size_t newlen)
 {
-    void* result;
+    void *result;
 
 #if defined(OS_USING_SYS_HEAP)
-    result = (void*)os_realloc(old, newlen);
+    result = (void *)os_realloc(old, newlen);
 #else
     result = OS_NULL;
 #endif
     if (result == OS_NULL)
     {
         ptr->_errno = ENOMEM;
-        errno       = ENOMEM;
+        errno = ENOMEM;
     }
 
     return result;
@@ -416,17 +415,17 @@ void *_realloc_r(struct _reent *ptr, void *old, size_t newlen)
 
 void *_calloc_r(struct _reent *ptr, size_t size, size_t len)
 {
-    void* result;
+    void *result;
 
 #if defined(OS_USING_SYS_HEAP)
-    result = (void*)os_calloc(size, len);
+    result = (void *)os_calloc(size, len);
 #else
     result = OS_NULL;
 #endif
     if (result == OS_NULL)
     {
         ptr->_errno = ENOMEM;
-        errno       = ENOMEM;
+        errno = ENOMEM;
     }
 
     return result;
@@ -447,7 +446,8 @@ void exit(int status)
     os_kprintf("task:%s exit with %d\n", os_task_name(os_task_self()), status);
     OS_ASSERT(0);
 
-    while (1);
+    while (1)
+        ;
 }
 
 void _system(const char *s)
@@ -483,5 +483,6 @@ void abort(void)
         os_task_suspend(self);
     }
 
-    while (1);
+    while (1)
+        ;
 }

@@ -38,12 +38,12 @@
 os_err_t mb26_ifconfig(mo_object_t *self)
 {
     char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
-    char imei[MO_IMEI_LEN + 1]          = {0};
-    char iccid[MO_ICCID_LEN + 1]        = {0};
+    char imei[MO_IMEI_LEN + 1] = {0};
+    char iccid[MO_ICCID_LEN + 1] = {0};
 
     os_uint8_t rssi = 0;
-    os_uint8_t ber  = 0;
-    os_int32_t i    = 0;
+    os_uint8_t ber = 0;
+    os_int32_t i = 0;
 
     if (mb26_get_ipaddr(self, ipaddr) != OS_EOK)
     {
@@ -63,7 +63,7 @@ os_err_t mb26_ifconfig(mo_object_t *self)
     if (mb26_get_csq(self, &rssi, &ber) != OS_EOK)
     {
         rssi = 0;
-        ber  = 0;
+        ber = 0;
     }
 
     os_kprintf("\nLIST AT MODULE INFORMATION\n");
@@ -91,8 +91,8 @@ os_err_t mb26_ifconfig(mo_object_t *self)
 os_err_t mb26_get_ipaddr(mo_object_t *self, char ip[])
 {
     at_parser_t *parser = &self->parser;
-    os_int8_t    ucid   = -1;
-    os_int8_t    len    = -1;
+    os_int8_t ucid = -1;
+    os_int8_t len = -1;
 
     char addr[IPADDR_MAX_STR_LEN + 1] = {0};
 

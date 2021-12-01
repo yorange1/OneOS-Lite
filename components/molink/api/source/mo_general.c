@@ -25,7 +25,7 @@
 #include <stdlib.h>
 
 #define MO_LOG_TAG "molink.general"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef MOLINK_USING_GENERAL_OPS
@@ -48,7 +48,7 @@ static mo_general_ops_t *get_general_ops(mo_object_t *self)
  *
  * @param[in]       self            The descriptor of molink module instance
  *
- * @return          On success, return OS_EOK; on error, return a error code. 
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          AT test successfully
  * @retval          OS_ERROR        AT test error
  * @retval          OS_ETIMEOUT     AT test timeout
@@ -81,8 +81,8 @@ os_err_t mo_at_test(mo_object_t *self)
  * @param[in]       self            The descriptor of molink module instance
  * @param[out]      value           The buffer to store imei
  * @param[in]       len             The buffer length
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Get imei successfully
  * @retval          OS_ERROR        Get imei error
  * @retval          OS_ETIMEOUT     Get imei timeout
@@ -116,8 +116,8 @@ os_err_t mo_get_imei(mo_object_t *self, char *value, os_size_t len)
  * @param[in]       self            The descriptor of molink module instance
  * @param[out]      value           The buffer to store imsi
  * @param[in]       len             The buffer length
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Get imsi successfully
  * @retval          OS_ERROR        Get imsi error
  * @retval          OS_ETIMEOUT     Get imsi timeout
@@ -151,8 +151,8 @@ os_err_t mo_get_imsi(mo_object_t *self, char *value, os_size_t len)
  * @param[in]       self            The descriptor of molink module instance
  * @param[out]      value           The buffer to store iccid
  * @param[in]       len             The buffer length
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Get iccid successfully
  * @retval          OS_ERROR        Get iccid error
  * @retval          OS_ETIMEOUT     Get iccid timeout
@@ -185,8 +185,8 @@ os_err_t mo_get_iccid(mo_object_t *self, char *value, os_size_t len)
  *
  * @param[in]       self            The descriptor of molink module instance
  * @param[out]      fun_lvl         The buffer to store module functionality level
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Get module functionality level successfully
  * @retval          OS_ERROR        Get module functionality level error
  * @retval          OS_ETIMEOUT     Get module functionality level timeout
@@ -219,8 +219,8 @@ os_err_t mo_get_cfun(mo_object_t *self, os_uint8_t *fun_lvl)
  *
  * @param[in]       self            The descriptor of molink module instance
  * @param[in]       fun_lvl         The functionality level
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Set module functionality level successfully
  * @retval          OS_ERROR        Set module functionality level error
  * @retval          OS_ETIMEOUT     Set module functionality level timeout
@@ -253,8 +253,8 @@ os_err_t mo_set_cfun(mo_object_t *self, os_uint8_t fun_lvl)
  * @param[in]       self            The descriptor of molink module instance
  * @param[in]       value           The buffer to store app version
  * @param[in]       len             The buffer length
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Get module firmware app version successfully
  * @retval          OS_ERROR        Get module firmware app version error
  * @retval          OS_ETIMEOUT     Get module firmware app version timeout
@@ -322,12 +322,12 @@ void mo_get_firmware_version_free(mo_firmware_version_t *version)
  ***********************************************************************************************************************
  * @brief           Execute the AT command to get module eID
  *                  Without spec for eID len, current api design for all typical cases
- * 
+ *
  * @param[in]       self            The descriptor of molink module instance
  * @param[in]       eid             The buffer to store eID
  * @param[in]       len             The buffer length
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Get module eID successfully
  * @retval          OS_ERROR        Get module eID error
  * @retval          OS_ETIMEOUT     Get module eID timeout
@@ -357,11 +357,11 @@ os_err_t mo_get_eid(mo_object_t *self, char *eid, os_size_t len)
 /**
  ***********************************************************************************************************************
  * @brief           Execute the AT command to get current broken-down time
- * 
+ *
  * @param[in]       self            The descriptor of molink module instance
  * @param[in]       l_tm            The user buffer to store tm struct
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Get module gmtime successfully
  * @retval          OS_ERROR        Get module gmtime error
  * @retval          OS_ETIMEOUT     Get module gmtime timeout
@@ -391,11 +391,11 @@ os_err_t mo_gm_time(mo_object_t *self, struct tm *l_tm)
 /**
  ***********************************************************************************************************************
  * @brief           Execute the command to get current time
- * 
+ *
  * @param[in]       self            The descriptor of molink module instance
  * @param[in]       timep           The user buffer to store current time
- * 
- * @return          On success, return OS_EOK; on error, return a error code. 
+ *
+ * @return          On success, return OS_EOK; on error, return a error code.
  * @retval          OS_EOK          Get module current time successfully
  * @retval          OS_ERROR        Get module current time error
  * @retval          OS_ETIMEOUT     Get module current time timeout
@@ -408,7 +408,7 @@ os_err_t mo_time(mo_object_t *self, time_t *timep)
     OS_ASSERT(OS_NULL != self);
     OS_ASSERT(OS_NULL != timep);
 
-    struct tm l_tm  = {0};
+    struct tm l_tm = {0};
     os_err_t result = OS_EOK;
     mo_general_ops_t *ops = get_general_ops(self);
 
@@ -424,7 +424,7 @@ os_err_t mo_time(mo_object_t *self, time_t *timep)
     }
 
     result = ops->gm_time(self, &l_tm);
-    
+
     if (OS_EOK == result)
     {
         time_t time = mktime(&l_tm);
@@ -432,7 +432,7 @@ os_err_t mo_time(mo_object_t *self, time_t *timep)
         {
             memcpy(timep, &time, sizeof(time_t));
         }
-        else 
+        else
         {
             ERROR("Module %s %s maketime error", self->name, __func__);
             return OS_ERROR;

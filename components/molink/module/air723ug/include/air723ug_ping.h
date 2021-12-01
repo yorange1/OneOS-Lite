@@ -31,7 +31,8 @@ extern "C" {
 
 #ifdef AIR723UG_USING_PING_OPS
 
-os_err_t air723ug_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp);
+os_err_t
+air723ug_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp);
 
 #endif /* AIR723UG_USING_PING_OPS */
 

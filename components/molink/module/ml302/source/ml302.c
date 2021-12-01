@@ -26,7 +26,7 @@
 #include <os_task.h>
 
 #define MO_LOG_TAG "ml302"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef MOLINK_USING_ML302
@@ -35,39 +35,39 @@
 
 #ifdef ML302_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test              = ml302_at_test,
-    .get_imei             = ml302_get_imei,
-    .get_imsi             = ml302_get_imsi,
-    .get_iccid            = ml302_get_iccid,
-    .get_cfun             = ml302_get_cfun,
-    .set_cfun             = ml302_set_cfun,
+    .at_test = ml302_at_test,
+    .get_imei = ml302_get_imei,
+    .get_imsi = ml302_get_imsi,
+    .get_iccid = ml302_get_iccid,
+    .get_cfun = ml302_get_cfun,
+    .set_cfun = ml302_set_cfun,
     .get_firmware_version = ml302_get_firmware_version,
 };
 #endif /* ML302_USING_GENERAL_OPS */
 
 #ifdef ML302_USING_NETSERV_OPS
 static const struct mo_netserv_ops gs_netserv_ops = {
-    .set_attach           = ml302_set_attach,
-    .get_attach           = ml302_get_attach,
-    .set_reg              = ml302_set_reg,
-    .get_reg              = ml302_get_reg,
-    .set_cgact            = ml302_set_cgact,
-    .get_cgact            = ml302_get_cgact,
-    .get_csq              = ml302_get_csq,
-    .get_cell_info        = ml302_get_cell_info,
+    .set_attach = ml302_set_attach,
+    .get_attach = ml302_get_attach,
+    .set_reg = ml302_set_reg,
+    .get_reg = ml302_get_reg,
+    .set_cgact = ml302_set_cgact,
+    .get_cgact = ml302_get_cgact,
+    .get_csq = ml302_get_csq,
+    .get_cell_info = ml302_get_cell_info,
 };
 #endif /* ML302_USING_NETSERV_OPS */
 
 #ifdef ML302_USING_PING_OPS
 static const struct mo_ping_ops gs_ping_ops = {
-    .ping                 = ml302_ping,
+    .ping = ml302_ping,
 };
 #endif /* ML302_USING_PING_OPS */
 
 #ifdef ML302_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig             = ml302_ifconfig,
-    .get_ipaddr           = ml302_get_ipaddr,
+    .ifconfig = ml302_ifconfig,
+    .get_ipaddr = ml302_get_ipaddr,
 };
 #endif /* ML302_USING_IFCONFIG_OPS */
 
@@ -75,14 +75,14 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern void ml302_netconn_init(mo_ml302_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create               = ml302_netconn_create,
-    .destroy              = ml302_netconn_destroy,
+    .create = ml302_netconn_create,
+    .destroy = ml302_netconn_destroy,
 #ifdef ML302_USING_DNS
-    .gethostbyname        = ml302_netconn_gethostbyname,
+    .gethostbyname = ml302_netconn_gethostbyname,
 #endif
-    .connect              = ml302_netconn_connect,
-    .send                 = ml302_netconn_send,
-    .get_info             = ml302_netconn_get_info,
+    .connect = ml302_netconn_connect,
+    .send = ml302_netconn_send,
+    .get_info = ml302_netconn_get_info,
 };
 #endif /* ML302_USING_NETCONN_OPS */
 
@@ -90,13 +90,13 @@ static const struct mo_netconn_ops gs_netconn_ops = {
 extern void ml302_mqttc_init(mo_ml302_t *module);
 
 static const struct mo_mqttc_ops gs_mqttc_ops = {
-    .create               = ml302_mqttc_create,
-    .connect              = ml302_mqttc_connect,
-    .publish              = ml302_mqttc_publish,
-    .subscribe            = ml302_mqttc_subscribe,
-    .unsubscribe          = ml302_mqttc_unsubscribe,
-    .disconnect           = ml302_mqttc_disconnect,
-    .destroy              = ml302_mqttc_destroy,
+    .create = ml302_mqttc_create,
+    .connect = ml302_mqttc_connect,
+    .publish = ml302_mqttc_publish,
+    .subscribe = ml302_mqttc_subscribe,
+    .unsubscribe = ml302_mqttc_unsubscribe,
+    .disconnect = ml302_mqttc_disconnect,
+    .destroy = ml302_mqttc_destroy,
 };
 #endif /* ML302_USING_MQTTC_OPS */
 
@@ -131,12 +131,10 @@ static void ml302_gernel_at_init(mo_object_t *self)
 static void ml302_netserv_at_init(mo_object_t *self)
 {
     at_parser_t *parser = &self->parser;
-    
+
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff, 
-                      .buff_size = sizeof(resp_buff), 
-                      .timeout   = 5 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 5 * OS_TICK_PER_SECOND};
 
     os_int32_t verctrl_data1 = -1;
     os_int32_t verctrl_data2 = -1;
@@ -201,9 +199,7 @@ static os_err_t ml302_at_init(mo_object_t *self)
 
     char resp_buff[32] = {0};
 
-    at_resp_t resp = {.buff = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     result = at_parser_exec_cmd(parser, &resp, "ATE0");
     if (result != OS_EOK)
@@ -258,7 +254,7 @@ mo_object_t *module_ml302_create(const char *name, void *parser_config)
         ERROR("Create %s module instance failed, no enough memory.", name);
         return OS_NULL;
     }
-    
+
     os_task_msleep(5000);
     /* make sure ml302 power on and be ready */
     os_err_t result = mo_object_init(&(module->parent), name, parser_config);
@@ -347,7 +343,7 @@ int ml302_auto_create(void)
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = ML302_NAME,
+    mo_parser_config_t parser_config = {.parser_name = ML302_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = ML302_RECV_BUFF_LEN};
 

@@ -29,7 +29,6 @@
 #define MO_LOG_LVL MO_LOG_INFO
 #include <mo_log.h>
 
-
 #ifdef SIM7600CE_USING_GENERAL_OPS
 
 os_err_t sim7600ce_at_test(mo_object_t *self)

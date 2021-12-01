@@ -31,7 +31,7 @@
 #include "sim7070x_ifconfig.h"
 
 #define MO_LOG_TAG "sim7070x_ifconfid"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef SIM7070X_USING_IFCONFIG_OPS
@@ -39,13 +39,13 @@
 os_err_t sim7070x_ifconfig(mo_object_t *self)
 {
     char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
-    char imei[MO_IMEI_LEN + 1]          = {0};
-    char iccid[MO_ICCID_LEN + 1]        = {0};
+    char imei[MO_IMEI_LEN + 1] = {0};
+    char iccid[MO_ICCID_LEN + 1] = {0};
 
-    os_err_t   ret  = OS_EOK;
+    os_err_t ret = OS_EOK;
     os_uint8_t rssi = 0;
-    os_uint8_t ber  = 0;
-    os_int32_t i    = 0;
+    os_uint8_t ber = 0;
+    os_int32_t i = 0;
 
     if (sim7070x_get_ipaddr(self, ipaddr) != OS_EOK)
     {
@@ -68,7 +68,7 @@ os_err_t sim7070x_ifconfig(mo_object_t *self)
     if (sim7070x_get_csq(self, &rssi, &ber) != OS_EOK)
     {
         rssi = 0;
-        ber  = 0;
+        ber = 0;
         ret = OS_ERROR;
     }
 
@@ -97,7 +97,7 @@ os_err_t sim7070x_ifconfig(mo_object_t *self)
 os_err_t sim7070x_get_ipaddr(mo_object_t *self, char ip[])
 {
     at_parser_t *parser = &self->parser;
-    os_int8_t    len    = -1;
+    os_int8_t len = -1;
 
     char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
 

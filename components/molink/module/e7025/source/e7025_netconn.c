@@ -33,7 +33,7 @@
 #define DBG_EXT_LVL DBG_EXT_INFO
 #include <os_dbg_ext.h>
 
-#define SEND_DATA_MAX_SIZE    (1358)
+#define SEND_DATA_MAX_SIZE (1358)
 
 #ifndef E7025_DATA_QUEUE_SIZE
 #define E7025_DATA_QUEUE_SIZE (5)
@@ -96,17 +96,17 @@ os_err_t e7025_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
     mo_e7025_t *e7025 = os_container_of(module, mo_e7025_t, parent);
 
     info->netconn_array = e7025->netconn;
-    info->netconn_nums  = sizeof(e7025->netconn) / sizeof(e7025->netconn[0]);
+    info->netconn_nums = sizeof(e7025->netconn) / sizeof(e7025->netconn[0]);
 
     return OS_EOK;
 }
 
 mo_netconn_t *e7025_netconn_create(mo_object_t *module, mo_netconn_type_t type)
 {
-    mo_e7025_t   *e7025   = os_container_of(module, mo_e7025_t, parent);
-    at_parser_t  *parser  = &module->parser;
-    os_err_t      result  = OS_EOK;
-    os_int32_t    conn_id = -1;
+    mo_e7025_t *e7025 = os_container_of(module, mo_e7025_t, parent);
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    os_int32_t conn_id = -1;
 
     e7025_lock(&e7025->netconn_lock);
 
@@ -177,7 +177,7 @@ mo_netconn_t *e7025_netconn_create(mo_object_t *module, mo_netconn_type_t type)
 os_err_t e7025_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 {
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_ERROR;
+    os_err_t result = OS_ERROR;
 
     LOG_EXT_I("Module %s in %d netconn status", module->name, netconn->stat);
 
@@ -210,9 +210,9 @@ os_err_t e7025_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 
     LOG_EXT_I("Module %s netconn_id: %d destroyed", module->name, netconn->connect_id);
 
-    netconn->connect_id  = -1;
-    netconn->stat        = NETCONN_STAT_NULL;
-    netconn->type        = NETCONN_TYPE_NULL;
+    netconn->connect_id = -1;
+    netconn->stat = NETCONN_STAT_NULL;
+    netconn->type = NETCONN_TYPE_NULL;
     netconn->remote_port = 0;
     inet_aton("0.0.0.0", &netconn->remote_ip);
 
@@ -224,13 +224,11 @@ os_err_t e7025_netconn_gethostbyname(mo_object_t *self, const char *domain_name,
 {
     at_parser_t *parser = &self->parser;
 
-	char recvip[IPADDR_MAX_STR_LEN + 1] = {0};
+    char recvip[IPADDR_MAX_STR_LEN + 1] = {0};
 
     char resp_buff[256] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 20 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 20 * OS_TICK_PER_SECOND};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+ECDNS=\"%s\"", domain_name);
     if (result < 0)
@@ -257,7 +255,11 @@ os_err_t e7025_netconn_gethostbyname(mo_object_t *self, const char *domain_name,
     }
     else
     {
-        LOG_EXT_D("Module %s domain resolve: \"%s\" domain ip is %s, addrlen %d", self->name, domain_name, recvip, strlen(recvip));
+        LOG_EXT_D("Module %s domain resolve: \"%s\" domain ip is %s, addrlen %d",
+                  self->name,
+                  domain_name,
+                  recvip,
+                  strlen(recvip));
         inet_aton(recvip, addr);
 
         if (IPADDR_ANY == addr->addr || IPADDR_LOOPBACK == addr->addr)
@@ -279,14 +281,12 @@ __exit:
 os_err_t e7025_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port)
 {
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_EOK;
+    os_err_t result = OS_EOK;
 
-    char resp_buff[AT_RESP_BUFF_SIZE_DEF]  = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
     char remote_ip[IPADDR_MAX_STR_LEN + 1] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 20 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 20 * OS_TICK_PER_SECOND};
 
     strncpy(remote_ip, inet_ntoa(addr), IPADDR_MAX_STR_LEN);
 
@@ -317,7 +317,7 @@ os_err_t e7025_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_ad
 
     ip_addr_copy(netconn->remote_ip, addr);
     netconn->remote_port = port;
-    netconn->stat        = NETCONN_STAT_CONNECT;
+    netconn->stat = NETCONN_STAT_CONNECT;
 
     LOG_EXT_D("Module %s connect to %s:%u successfully!", module->name, remote_ip, port);
 
@@ -326,17 +326,15 @@ os_err_t e7025_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_ad
 
 static os_size_t e7025_tcp_udp_send(at_parser_t *parser, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
-    os_err_t   result       = OS_EOK;
-    os_size_t  sent_size    = 0;
-    os_size_t  cur_pkt_size = 0;
+    os_err_t result = OS_EOK;
+    os_size_t sent_size = 0;
+    os_size_t cur_pkt_size = 0;
 
-    char resp_buff[AT_RESP_BUFF_SIZE_DEF]  = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
     char remote_ip[IPADDR_MAX_STR_LEN + 1] = {0};
-    char send_cmd[128]                     = {0};
+    char send_cmd[128] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 20 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 20 * OS_TICK_PER_SECOND};
 
     strncpy(remote_ip, inet_ntoa(netconn->remote_ip), IPADDR_MAX_STR_LEN);
 
@@ -372,7 +370,9 @@ static os_size_t e7025_tcp_udp_send(at_parser_t *parser, mo_netconn_t *netconn, 
 
 #ifdef E7025_USING_UDP
         case NETCONN_TYPE_UDP:
-            snprintf(send_cmd, sizeof(send_cmd), "AT+ECSOST=%d,\"%s\",%u,%d,",
+            snprintf(send_cmd,
+                     sizeof(send_cmd),
+                     "AT+ECSOST=%d,\"%s\",%u,%d,",
                      netconn->connect_id,
                      remote_ip,
                      netconn->remote_port,
@@ -416,10 +416,7 @@ __exit:
 
     if (result != OS_EOK)
     {
-        LOG_EXT_E("Module %s netconn %d send %d bytes data failed!",
-                  parser->name,
-                  netconn->connect_id,
-                  cur_pkt_size);
+        LOG_EXT_E("Module %s netconn %d send %d bytes data failed!", parser->name, netconn->connect_id, cur_pkt_size);
 
         return 0;
     }
@@ -429,8 +426,8 @@ __exit:
 
 os_size_t e7025_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
-    at_parser_t *parser    = &module->parser;
-    os_size_t    sent_size = 0;
+    at_parser_t *parser = &module->parser;
+    os_size_t sent_size = 0;
 
     char *hexstr = calloc(1, size * 2 + 1);
     if (OS_NULL == hexstr)
@@ -463,7 +460,7 @@ static void urc_close_func(struct at_parser *parser, const char *data, os_size_t
     OS_ASSERT(OS_NULL != data);
 
     os_int32_t connect_id = 0;
-    os_int32_t err_code   = 0;
+    os_int32_t err_code = 0;
 
     sscanf(data, "+ECSOCLI: %d,%d", &connect_id, &err_code);
 
@@ -489,7 +486,7 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != data);
 
     os_int32_t connect_id = 0;
-    os_int32_t data_size  = 0;
+    os_int32_t data_size = 0;
 
     /* For ex: +ECSONMI: 1,10,"30313233343536373839" -- the actual data is "0-9"*/
     sscanf(data, "+ECSONMI: %d,%d,", &connect_id, &data_size);
@@ -507,29 +504,28 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
 
     if (netconn->stat == NETCONN_STAT_CONNECT)
     {
-        char *recv_buff = calloc(1, data_size * 2 + 1);
-        if (recv_buff == OS_NULL)
-        {
-            LOG_EXT_E("Calloc recv buff %d bytes fail, no enough memory", data_size * 2 + 1);
-            return;
-        }
 
         /* Get receive data to receive buffer */
-        /* Alert! if using sscanf stores strings, be rember allocating enouth memory! */
-        sscanf(data, "+ECSONMI: %d,%d,\"%[^\"]", &connect_id, &data_size, recv_buff);
+        /* sscanf(data, "+ECSONMI: %d,%d,\"%[^\"]", &connect_id, &data_size, recv_buff); */
+        for (int comma_num = 0; comma_num < 2; data++)
+        {
+            if (*data == ',')
+            {
+                comma_num++;
+            }
+        }
+        /*quote shifting*/
+        data++;
 
         char *recv_str = calloc(1, data_size + 1);
         if (recv_str == OS_NULL)
         {
             LOG_EXT_E("Calloc recv str %d bytes fail, no enough memory", data_size + 1);
-            free(recv_buff);
             return;
         }
 
-        hexstr_to_bytes(recv_buff, recv_str, data_size * 2);
+        hexstr_to_bytes(data, recv_str, data_size * 2);
         mo_netconn_data_recv_notice(netconn, recv_str, data_size);
-
-        free(recv_buff);
     }
 }
 

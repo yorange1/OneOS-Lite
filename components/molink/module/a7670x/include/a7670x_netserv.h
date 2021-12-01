@@ -40,7 +40,7 @@ os_err_t a7670x_set_cgact(mo_object_t *self, os_uint8_t cid, os_uint8_t act_stat
 os_err_t a7670x_get_cgact(mo_object_t *self, os_uint8_t *cid, os_uint8_t *act_stat);
 os_err_t a7670x_get_csq(mo_object_t *self, os_uint8_t *rssi, os_uint8_t *ber);
 os_err_t a7670x_get_radio(mo_object_t *self, radio_info_t *radio_info);
-os_err_t a7670x_get_cell_info(mo_object_t *self, onepos_cell_info_t* onepos_cell_info);
+os_err_t a7670x_get_cell_info(mo_object_t *self, onepos_cell_info_t *onepos_cell_info);
 #endif /* A7670X_USING_NETSERV_OPS */
 
 #ifdef __cplusplus

@@ -37,11 +37,11 @@
 os_err_t n58_ifconfig(mo_object_t *self)
 {
     char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
-    char imsi[MO_IMSI_LEN + 1]          = {0};
+    char imsi[MO_IMSI_LEN + 1] = {0};
 
-    os_err_t   ret  = OS_EOK;
+    os_err_t ret = OS_EOK;
     os_uint8_t rssi = 0;
-    os_uint8_t ber  = 0;
+    os_uint8_t ber = 0;
 
     if (n58_get_ipaddr(self, ipaddr) != OS_EOK)
     {
@@ -72,7 +72,7 @@ os_err_t n58_ifconfig(mo_object_t *self)
     if (n58_get_csq(self, &rssi, &ber) != OS_EOK)
     {
         rssi = 0;
-        ber  = 0;
+        ber = 0;
         ret = OS_ERROR;
     }
 
@@ -103,7 +103,7 @@ os_err_t n58_get_ipaddr(mo_object_t *self, char ip[])
 {
     at_parser_t *parser = &self->parser;
 
-    char ipaddr[IPADDR_MAX_STR_LEN + 1]   = {0};
+    char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
     char resp_buff[AT_RESP_BUFF_SIZE_256] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};

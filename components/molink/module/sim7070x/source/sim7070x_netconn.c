@@ -29,11 +29,11 @@
 #include <stdlib.h>
 
 #define MO_LOG_TAG "sim7070x_netconn"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
-#define SEND_DATA_MAX_SIZE        (1316)
-#define SEND_DATA_MIN_SIZE        (1)
+#define SEND_DATA_MAX_SIZE (1316)
+#define SEND_DATA_MIN_SIZE (1)
 
 #define SIM7070X_NETCONN_MQ_NAME "sim7070x_nc_mq"
 
@@ -42,7 +42,7 @@
 #endif
 
 #ifndef SIM7070X_NETCONN_MQ_MSG_MAX
-#define SIM7070X_NETCONN_MQ_MSG_MAX  (5)
+#define SIM7070X_NETCONN_MQ_MSG_MAX (5)
 #endif
 
 #ifdef SIM7070X_USING_NETCONN_OPS
@@ -50,13 +50,13 @@
 enum pdpid0_init_status
 {
     PDPIDX0_DISABLE = 0,
-    PDPIDX0_ENABLE  = 1,
+    PDPIDX0_ENABLE = 1,
 };
 
 enum link_close_reason
 {
     LINK_CLOSED_BY_REMOTE_OR_INTERNAL_ERR = 0,
-    LINK_CONNECT_OK                       = 1,
+    LINK_CONNECT_OK = 1,
     LINK_STATE_UNKNOWN,
 };
 
@@ -116,7 +116,7 @@ os_err_t sim7070x_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
     mo_sim7070x_t *sim7070x = os_container_of(module, mo_sim7070x_t, parent);
 
     info->netconn_array = sim7070x->netconn;
-    info->netconn_nums  = sizeof(sim7070x->netconn) / sizeof(sim7070x->netconn[0]);
+    info->netconn_nums = sizeof(sim7070x->netconn) / sizeof(sim7070x->netconn[0]);
 
     return OS_EOK;
 }
@@ -124,7 +124,7 @@ os_err_t sim7070x_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
 mo_netconn_t *sim7070x_netconn_create(mo_object_t *module, mo_netconn_type_t type)
 {
     mo_sim7070x_t *sim7070x = os_container_of(module, mo_sim7070x_t, parent);
-//    os_err_t       result   = OS_EOK;
+    //    os_err_t       result   = OS_EOK;
 
     sim7070x_lock(&sim7070x->netconn_lock);
 
@@ -136,9 +136,7 @@ mo_netconn_t *sim7070x_netconn_create(mo_object_t *module, mo_netconn_type_t typ
         return OS_NULL;
     }
 
-    netconn->mq = os_mq_create(SIM7070X_NETCONN_MQ_NAME,
-                               SIM7070X_NETCONN_MQ_MSG_SIZE,
-                               SIM7070X_NETCONN_MQ_MSG_MAX);
+    netconn->mq = os_mq_create(SIM7070X_NETCONN_MQ_NAME, SIM7070X_NETCONN_MQ_MSG_SIZE, SIM7070X_NETCONN_MQ_MSG_MAX);
     if (OS_NULL == netconn->mq)
     {
         ERROR("%s data queue create failed, no enough memory.", module->name);
@@ -156,7 +154,7 @@ mo_netconn_t *sim7070x_netconn_create(mo_object_t *module, mo_netconn_type_t typ
 os_err_t sim7070x_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 {
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_ERROR;
+    os_err_t result = OS_ERROR;
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
@@ -176,8 +174,8 @@ os_err_t sim7070x_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
         if (result != OS_EOK)
         {
             ERROR("Module %s destroy %s netconn failed",
-                      module->name,
-                      (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
+                  module->name,
+                  (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
             return result;
         }
         break;
@@ -195,11 +193,11 @@ os_err_t sim7070x_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 
     INFO("Module %s netconn_id: %d destroyed", module->name, netconn->connect_id);
 
-    netconn->connect_id  = -1;
-    netconn->stat        = NETCONN_STAT_NULL;
-    netconn->type        = NETCONN_TYPE_NULL;
+    netconn->connect_id = -1;
+    netconn->stat = NETCONN_STAT_NULL;
+    netconn->type = NETCONN_TYPE_NULL;
     netconn->remote_port = 0;
-    netconn->local_port  = 0;
+    netconn->local_port = 0;
     inet_aton("0.0.0.0", &netconn->remote_ip);
 
     return result;
@@ -210,14 +208,14 @@ os_err_t sim7070x_netconn_gethostbyname(mo_object_t *self, const char *domain_na
 {
     at_parser_t *parser = &self->parser;
 
-	char recvip[IPADDR_MAX_STR_LEN + 1] = {0};
+    char recvip[IPADDR_MAX_STR_LEN + 1] = {0};
 
     char resp_buff[128] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
+    at_resp_t resp = {.buff = resp_buff,
                       .buff_size = sizeof(resp_buff),
-                      .line_num  = 2,
-                      .timeout   = 40 * OS_TICK_PER_SECOND};
+                      .line_num = 2,
+                      .timeout = 40 * OS_TICK_PER_SECOND};
 
     /* Activate the app network 0th PDP first */
     os_err_t result = module_sim7070x_app_network_pdpidx0_init(self);
@@ -264,15 +262,13 @@ os_err_t sim7070x_netconn_gethostbyname(mo_object_t *self, const char *domain_na
 
 os_err_t sim7070x_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port)
 {
-    mo_sim7070x_t *sim7070x     = os_container_of(module, mo_sim7070x_t, parent);
-    at_parser_t   *parser       = &module->parser;
-    os_int32_t    connect_id    = netconn->connect_id;
-    os_err_t      result        = OS_ERROR;
-    char          resp_buff[64] = {0};
+    mo_sim7070x_t *sim7070x = os_container_of(module, mo_sim7070x_t, parent);
+    at_parser_t *parser = &module->parser;
+    os_int32_t connect_id = netconn->connect_id;
+    os_err_t result = OS_ERROR;
+    char resp_buff[64] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 30 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 30 * OS_TICK_PER_SECOND};
 
     char remote_ip[IPADDR_MAX_STR_LEN + 1] = {0};
 
@@ -311,7 +307,7 @@ os_err_t sim7070x_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip
 
     ip_addr_copy(netconn->remote_ip, addr);
     netconn->remote_port = port;
-    netconn->stat        = NETCONN_STAT_CONNECT;
+    netconn->stat = NETCONN_STAT_CONNECT;
 
     DEBUG("Module %s connect to %s:%u successfully!", module->name, remote_ip, port);
 
@@ -327,23 +323,20 @@ __exit:
     return result;
 }
 
-
 os_size_t sim7070x_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
-    at_parser_t *parser    = &module->parser;
+    at_parser_t *parser = &module->parser;
 
-    os_err_t   result       = OS_EOK;
+    os_err_t result = OS_EOK;
 
-    char resp_buff[AT_RESP_BUFF_SIZE_DEF]  = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
     char remote_ip[IPADDR_MAX_STR_LEN + 1] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 15 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 15 * OS_TICK_PER_SECOND};
 
     strncpy(remote_ip, inet_ntoa(netconn->remote_ip), IPADDR_MAX_STR_LEN);
 
-    //mo_sim7070x_t *sim7070x = os_container_of(module, mo_sim7070x_t, parent);
+    // mo_sim7070x_t *sim7070x = os_container_of(module, mo_sim7070x_t, parent);
 
     /* Protect the data sending process, prevent other threads to send AT commands */
     at_parser_exec_lock(parser);
@@ -356,12 +349,12 @@ os_size_t sim7070x_netconn_send(mo_object_t *module, mo_netconn_t *netconn, cons
         result = OS_ERROR;
         goto __exit;
     }
-    
-    if (size > SEND_DATA_MAX_SIZE  || size < SEND_DATA_MIN_SIZE)
+
+    if (size > SEND_DATA_MAX_SIZE || size < SEND_DATA_MIN_SIZE)
     {
         ERROR("Module %s send data len out of range [1,1316], send data fail", parser->name);
         result = OS_ERROR;
-        goto __exit;      
+        goto __exit;
     }
 
     result = at_parser_exec_cmd(parser, &resp, "AT+CASEND=%d,%d,10000", netconn->connect_id, size);
@@ -369,7 +362,7 @@ os_size_t sim7070x_netconn_send(mo_object_t *module, mo_netconn_t *netconn, cons
     {
         ERROR("Send data cmd exec fail: AT+CASEND=%d,%d,10000", netconn->connect_id, size);
         goto __exit;
-    }   
+    }
 
     /* Sending the specified length of data context */
     if (at_parser_send(parser, data, size) != size)
@@ -377,7 +370,7 @@ os_size_t sim7070x_netconn_send(mo_object_t *module, mo_netconn_t *netconn, cons
         result = OS_ERROR;
         ERROR("Drv or hardware send data fail, some data is missing.\r\n");
         goto __exit;
-    }    
+    }
 
 __exit:
 
@@ -387,10 +380,7 @@ __exit:
     at_parser_exec_unlock(parser);
     if (result != OS_EOK)
     {
-        ERROR("Module %s netconn %d send %d bytes data failed!",
-              parser->name,
-              netconn->connect_id,
-              size);
+        ERROR("Module %s netconn %d send %d bytes data failed!", parser->name, netconn->connect_id, size);
         return 0;
     }
 
@@ -403,28 +393,24 @@ static void urc_close_func(struct at_parser *parser, const char *data, os_size_t
     OS_ASSERT(OS_NULL != data);
 
     os_int32_t connect_id = -1;
-    os_int32_t state      = -1;
+    os_int32_t state = -1;
 
     /* +CASTATE: <cid>,<state> */
     sscanf(data, "+CASTATE: %d,%d", &connect_id, &state);
 
-    mo_object_t  *module  = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
     mo_netconn_t *netconn = sim7070x_get_netconn_by_id(module, connect_id);
 
     if (OS_NULL == netconn)
     {
-        ERROR("Module %s recv link state urc msg of connect %d, but netconn is not exist",
-                  module->name,
-                  connect_id);
+        ERROR("Module %s recv link state urc msg of connect %d, but netconn is not exist", module->name, connect_id);
         return;
     }
 
     switch (state)
     {
     case LINK_CLOSED_BY_REMOTE_OR_INTERNAL_ERR:
-        DEBUG("Module %s connect %d is closed by remote server or internal error",
-                  module->name,
-                  connect_id);
+        DEBUG("Module %s connect %d is closed by remote server or internal error", module->name, connect_id);
         mo_netconn_pasv_close_notice(netconn);
         break;
 
@@ -433,9 +419,7 @@ static void urc_close_func(struct at_parser *parser, const char *data, os_size_t
         break;
 
     default:
-        ERROR("Module %s recv link state urc msg of connect %d, but state is unkonwn",
-                  module->name,
-                  connect_id);
+        ERROR("Module %s recv link state urc msg of connect %d, but state is unkonwn", module->name, connect_id);
         break;
     }
 
@@ -448,14 +432,14 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != data);
 
     os_int32_t connect_id = 0;
-    os_int32_t data_size  = 0;
-    os_int32_t timeout    = data_size > 10 ? data_size : 10;
+    os_int32_t data_size = 0;
+    os_int32_t timeout = data_size > 10 ? data_size : 10;
 
     /* For ex: +CAURC: "recv",0,10\r\n 0123456789 */
     sscanf(data, "+CAURC: \"recv\",%d,%d", &connect_id, &data_size);
     DEBUG("Moudle %s netconn %d receive %d bytes data", parser->name, connect_id, data_size);
 
-    mo_object_t  *module  = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
     mo_netconn_t *netconn = sim7070x_get_netconn_by_id(module, connect_id);
     if (OS_NULL == netconn)
     {
@@ -465,8 +449,8 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
 
     if (netconn->stat == NETCONN_STAT_CONNECT)
     {
-        char *recv_buff    = os_calloc(1, data_size + 1);
-        char  temp_buff[8] = {0};
+        char *recv_buff = os_calloc(1, data_size + 1);
+        char temp_buff[8] = {0};
 
         if (recv_buff == OS_NULL)
         {
@@ -510,8 +494,8 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
 }
 
 static at_urc_t gs_urc_table[] = {
-    {.prefix = "+CASTATE:",         .suffix = "\r\n", .func = urc_close_func},
-    {.prefix = "+CAURC: \"recv\"",  .suffix = "\r\n", .func = urc_recv_func},
+    {.prefix = "+CASTATE:", .suffix = "\r\n", .func = urc_close_func},
+    {.prefix = "+CAURC: \"recv\"", .suffix = "\r\n", .func = urc_recv_func},
 };
 
 void sim7070x_netconn_init(mo_sim7070x_t *module)

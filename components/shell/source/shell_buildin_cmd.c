@@ -2,13 +2,13 @@
  ***********************************************************************************************************************
  * Copyright (c) 2020, China Mobile Communications Group Co.,Ltd.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on 
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
  * @file        shell_buildin_cmd.c
@@ -42,7 +42,7 @@ static os_err_t sh_set_prompt(os_int32_t argc, char **argv)
     {
         os_kprintf("Wrong parameter, usage:\r\n");
         os_kprintf("set_prompt <prompt string>\r\n");
-        
+
         ret = OS_EINVAL;
     }
     else
@@ -100,4 +100,3 @@ static os_err_t sh_help(os_int32_t argc, char **argv)
 SH_CMD_EXPORT(help, sh_help, "Obtain help of commands");
 
 #endif /* OS_USING_SHELL */
-

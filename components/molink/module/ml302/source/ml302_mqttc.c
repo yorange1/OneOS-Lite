@@ -30,7 +30,7 @@
 #include <string.h>
 
 #define MO_LOG_TAG "ml302.mqttc"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #define ML302_MQTTC_ADDRESS_LEN_MAX   (128)
@@ -53,11 +53,10 @@ static os_bool_t ml302_check_create_opts(mqttc_create_opts_t *create_opts)
     }
     else if (create_opts->address.len > ML302_MQTTC_ADDRESS_LEN_MAX)
     {
-        ERROR("The host address or IP string is too long and the longest length is %d.",
-                  ML302_MQTTC_ADDRESS_LEN_MAX);
+        ERROR("The host address or IP string is too long and the longest length is %d.", ML302_MQTTC_ADDRESS_LEN_MAX);
         return OS_FALSE;
     }
-    
+
     return OS_TRUE;
 }
 
@@ -67,9 +66,7 @@ static os_bool_t ml302_mqttc_check_state(mo_object_t *module)
 
     char resp_buff[128] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff, 
-                      .buff_size = sizeof(resp_buff), 
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     if (at_parser_exec_cmd(parser, &resp, "AT+MQTTCFG?") != OS_EOK)
     {
@@ -80,7 +77,7 @@ static os_bool_t ml302_mqttc_check_state(mo_object_t *module)
     if (OS_NULL == at_resp_get_line_by_kw(&resp, "+MQTTCFG:\"(null)\""))
     {
         ERROR("The MQTT client in the %s module has not been released, please reset the module and try again",
-                  module->name);
+              module->name);
         return OS_FALSE;
     }
 
@@ -103,7 +100,7 @@ static mo_mqttc_t *ml302_mqttc_alloc(mo_object_t *module)
         ml302->mqttc[0].mqttc_id = 0;
         return &ml302->mqttc[0];
     }
-    
+
     return OS_NULL;
 }
 
@@ -144,7 +141,7 @@ mo_mqttc_t *ml302_mqttc_create(mo_object_t *module, mqttc_create_opts_t *create_
         ERROR("Module %s create options is not valid", module->name);
         return OS_NULL;
     }
-    
+
     mo_ml302_t *ml302 = os_container_of(module, mo_ml302_t, parent);
 
     os_mutex_lock(&ml302->mqttc_lock, OS_IPC_WAITING_FOREVER);
@@ -161,10 +158,11 @@ mo_mqttc_t *ml302_mqttc_create(mo_object_t *module, mqttc_create_opts_t *create_
     {
         memset(client, 0, sizeof(mo_mqttc_t));
         client = OS_NULL;
-    }else
+    }
+    else
     {
         client->module = module;
-        client->stat   = MQTTC_STAT_INIT;
+        client->stat = MQTTC_STAT_INIT;
     }
 
     os_mutex_unlock(&ml302->mqttc_lock);
@@ -208,14 +206,14 @@ static os_bool_t ml302_check_conn_opts(mqttc_conn_opts_t *conn_opts)
             return OS_FALSE;
         }
     }
-    
+
     return OS_TRUE;
 }
 
 os_err_t ml302_mqttc_connect(mo_mqttc_t *client, mqttc_conn_opts_t *conn_opts)
 {
     mo_object_t *module = client->module;
-    
+
     if (!ml302_check_conn_opts(conn_opts))
     {
         ERROR("Module %s connect options is not valid", module->name);
@@ -226,9 +224,7 @@ os_err_t ml302_mqttc_connect(mo_mqttc_t *client, mqttc_conn_opts_t *conn_opts)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 1 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 1 * OS_TICK_PER_SECOND};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+MQTTTO=%d", client->command_timeout / 1000);
     if (result != OS_EOK)
@@ -257,14 +253,14 @@ os_err_t ml302_mqttc_connect(mo_mqttc_t *client, mqttc_conn_opts_t *conn_opts)
     }
 
     os_uint8_t user_falg = conn_opts->username.len > 0 ? 1 : 0;
-    os_uint8_t pwd_flag  = conn_opts->password.len > 0 ? 1 : 0;
+    os_uint8_t pwd_flag = conn_opts->password.len > 0 ? 1 : 0;
 
     mqttc_will_opts_t *will_opts = &conn_opts->will_opts;
 
     resp.line_num = 4;
 
     /* AT+MQTTOPEN=<usrFlag>,<pwdFlag>,<willFlag>,<willRetain>,<willQos>,<will-topic>,<will-mesg> */
-    result = at_parser_exec_cmd(parser,\
+    result = at_parser_exec_cmd(parser,
                                 &resp,
                                 "AT+MQTTOPEN=%d,%d,%d,%d,%d,\"%s\",\"%s\"",
                                 user_falg,
@@ -301,7 +297,7 @@ os_err_t ml302_mqttc_publish(mo_mqttc_t *client, const char *topic_filter, mqttc
         ERROR("Module %s publish topic string length %d is not valid", module->name, strlen(topic_filter));
         return OS_ERROR;
     }
-    
+
     if (msg->payload_len > ML302_MQTTC_MSG_LEN_MAX)
     {
         ERROR("Module %s publish message length %d is not valid", module->name, msg->payload_len);
@@ -312,10 +308,10 @@ os_err_t ml302_mqttc_publish(mo_mqttc_t *client, const char *topic_filter, mqttc
 
     char resp_buff[128] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
+    at_resp_t resp = {.buff = resp_buff,
                       .buff_size = sizeof(resp_buff),
-                      .line_num  = 2,
-                      .timeout   = 5 * OS_TICK_PER_SECOND};
+                      .line_num = 2,
+                      .timeout = 5 * OS_TICK_PER_SECOND};
 
     at_parser_exec_lock(parser);
 
@@ -371,9 +367,7 @@ os_err_t ml302_mqttc_subscribe(mo_mqttc_t *client, const char *topic_filter, mqt
 
     char resp_buff[128] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 5 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 5 * OS_TICK_PER_SECOND};
 
     /* AT+MQTTSUB=<topic>,<qos> */
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+MQTTSUB=\"%s\",%d", topic_filter, qos);
@@ -399,9 +393,7 @@ os_err_t ml302_mqttc_unsubscribe(mo_mqttc_t *client, const char *topic_filter)
 
     char resp_buff[128] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff, 
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 5 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 5 * OS_TICK_PER_SECOND};
 
     /* AT+MQTTUNSUB=<topic> */
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+MQTTUNSUB=\"%s\"", topic_filter);
@@ -420,9 +412,7 @@ static os_err_t ml302_mqttc_do_disconnect(mo_mqttc_t *client)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff, 
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 10 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 10 * OS_TICK_PER_SECOND};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+MQTTDISC");
     if (result != OS_EOK)
@@ -451,9 +441,7 @@ static os_err_t ml302_mqttc_do_destroy(mo_mqttc_t *client)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     return at_parser_exec_cmd(parser, &resp, "AT+MQTTDEL");
 }
@@ -520,12 +508,12 @@ static void urc_disconnect_func(struct at_parser *parser, const char *data, os_s
 {
     OS_ASSERT(OS_NULL != parser);
     OS_ASSERT(OS_NULL != data);
-    
+
     /* +MQTTDISC: OK */
     if (strstr(data, "OK") != OS_NULL)
     {
         mo_object_t *module = os_container_of(parser, mo_object_t, parser);
-        mo_ml302_t * ml302  = os_container_of(module, mo_ml302_t, parent);
+        mo_ml302_t *ml302 = os_container_of(module, mo_ml302_t, parent);
 
         mo_mqttc_t *client = &ml302->mqttc[0];
 
@@ -606,8 +594,8 @@ static void urc_publish_func(struct at_parser *parser, const char *data, os_size
     }
 
     mo_object_t *module = os_container_of(parser, mo_object_t, parser);
-    mo_ml302_t  *ml302  = os_container_of(module, mo_ml302_t, parent);
-    mo_mqttc_t  *client = &ml302->mqttc[0];
+    mo_ml302_t *ml302 = os_container_of(module, mo_ml302_t, parent);
+    mo_mqttc_t *client = &ml302->mqttc[0];
 
     os_err_t result = mo_mqttc_data_queue_push_notice(client, msg);
     if (result != OS_EOK)
@@ -619,8 +607,8 @@ static void urc_publish_func(struct at_parser *parser, const char *data, os_size
 
 static at_urc_t gs_urc_table[] = {
     {.prefix = "+MQTTPINGRSP:", .suffix = "\r\n", .func = urc_ping_func},
-    {.prefix = "+MQTTREC:",     .suffix = "\r\n", .func = urc_reconnect_func},
-    {.prefix = "+MQTTDISC:",    .suffix = "\r\n", .func = urc_disconnect_func},
+    {.prefix = "+MQTTREC:", .suffix = "\r\n", .func = urc_reconnect_func},
+    {.prefix = "+MQTTDISC:", .suffix = "\r\n", .func = urc_disconnect_func},
     {.prefix = "+MQTTPUBLISH:", .suffix = "\r\n", .func = urc_publish_func},
 };
 

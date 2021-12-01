@@ -77,13 +77,13 @@ typedef struct mo_a7600x
     mo_object_t parent;
 #ifdef A7600X_USING_NETCONN_OPS
     mo_netconn_t netconn[A7600X_NETCONN_NUM];
-    os_event_t   netconn_evt;
-    os_mutex_t   netconn_lock;
+    os_event_t netconn_evt;
+    os_mutex_t netconn_lock;
 #endif /* A7600X_USING_NETCONN_OPS */
 } mo_a7600x_t;
 
 mo_object_t *module_a7600x_create(const char *name, void *parser_config);
-os_err_t     module_a7600x_destroy(mo_object_t *self);
+os_err_t module_a7600x_destroy(mo_object_t *self);
 
 #endif /* MOLINK_USING_A7600X */
 

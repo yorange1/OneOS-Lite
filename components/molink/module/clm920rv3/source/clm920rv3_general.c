@@ -28,7 +28,7 @@
 #ifdef CLM920RV3_USING_GENERAL_OPS
 
 #define MO_LOG_TAG "clm920rv3.general"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 os_err_t clm920rv3_at_test(mo_object_t *module)
@@ -176,9 +176,7 @@ os_err_t clm920rv3_get_firmware_version(mo_object_t *module, mo_firmware_version
 
     char resp_buff[4 * AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout = OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = OS_TICK_PER_SECOND};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+CGMR");
     if (result != OS_EOK)
@@ -193,8 +191,8 @@ os_err_t clm920rv3_get_firmware_version(mo_object_t *module, mo_firmware_version
     }
 
     const char *source_line = at_resp_get_line(&resp, 1);
-    os_size_t   line_length = strlen(source_line);
-    char      **dest_line   = &version->ver_info[0];
+    os_size_t line_length = strlen(source_line);
+    char **dest_line = &version->ver_info[0];
 
     *dest_line = os_calloc(1, line_length + 1);
     if (OS_NULL == *dest_line)

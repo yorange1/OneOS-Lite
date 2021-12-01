@@ -36,16 +36,17 @@ extern "C" {
 
 typedef struct ping_resp
 {
-    ip_addr_t   ip_addr;   /* response IP address */
-    os_uint16_t data_len;  /* response data length */
-    os_uint16_t ttl;       /* time to live */
-    os_uint32_t time;      /* response time, unit ms */
-    void       *user_data; /* user-specific data */
+    ip_addr_t ip_addr;    /* response IP address */
+    os_uint16_t data_len; /* response data length */
+    os_uint16_t ttl;      /* time to live */
+    os_uint32_t time;     /* response time, unit ms */
+    void *user_data;      /* user-specific data */
 } ping_resp_t;
 
 typedef struct mo_ping_ops
 {
-    os_err_t (*ping)(mo_object_t *self, const char *host, os_uint16_t len, os_uint32_t timeout_ms, struct ping_resp *resp);
+    os_err_t (
+        *ping)(mo_object_t *self, const char *host, os_uint16_t len, os_uint32_t timeout_ms, struct ping_resp *resp);
 } mo_ping_ops_t;
 
 os_err_t mo_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint32_t timeout_ms, struct ping_resp *resp);

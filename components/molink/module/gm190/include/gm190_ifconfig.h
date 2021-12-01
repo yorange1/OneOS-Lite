@@ -41,4 +41,3 @@ os_err_t gm190_get_ipaddr(mo_object_t *self, char ip[]);
 #endif /* __cplusplus */
 
 #endif /* __GM190_IFCONFIG_H__ */
-

@@ -40,16 +40,16 @@ typedef enum a7600x_ping_ret_tpye
     PING_TIMEOUT,
     PING_SUMMARY,
     PING_UNKNOWN_RET
-}a7600x_ping_ret_tpye_t;
+} a7600x_ping_ret_tpye_t;
 
 os_err_t a7600x_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp)
 {
-    at_parser_t *parser    = &self->parser;
-    os_err_t     result    = OS_EOK;
-    os_int16_t   req_time  = -1;
-    os_int16_t   ttl       = -1;
-    os_int16_t   req_len   = -1;
-    os_uint8_t   ping_stat = 0;
+    at_parser_t *parser = &self->parser;
+    os_err_t result = OS_EOK;
+    os_int16_t req_time = -1;
+    os_int16_t ttl = -1;
+    os_int16_t req_len = -1;
+    os_uint8_t ping_stat = 0;
 
     char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
 
@@ -62,20 +62,20 @@ os_err_t a7600x_ping(mo_object_t *self, const char *host, os_uint16_t len, os_ui
     if ((len > A7600X_MAX_PING_PKG_LEN) || (len < A7600X_MIN_PING_PKG_LEN))
     {
         ERROR("%s ping: ping package len[%d] is out of range[%d, %d].",
-               self->name,
-               len,
-               A7600X_MIN_PING_PKG_LEN,
-               A7600X_MAX_PING_PKG_LEN);
+              self->name,
+              len,
+              A7600X_MIN_PING_PKG_LEN,
+              A7600X_MAX_PING_PKG_LEN);
         return OS_ERROR;
     }
 
     if (timeout > A7600X_MAX_PING_TIMEOUT)
     {
         ERROR("%s ping: user set ping timeout value %ums is out of range[%dms, %dms].",
-               self->name,
-               timeout,
-               A7600X_MIN_PING_TIMEOUT,
-               A7600X_MAX_PING_TIMEOUT);
+              self->name,
+              timeout,
+              A7600X_MIN_PING_TIMEOUT,
+              A7600X_MAX_PING_TIMEOUT);
         return OS_ERROR;
     }
 
@@ -83,10 +83,10 @@ os_err_t a7600x_ping(mo_object_t *self, const char *host, os_uint16_t len, os_ui
     if (timeout < A7600X_MIN_PING_TIMEOUT)
     {
         DEBUG("%s ping: config timeout %ums is less than the min effective value %dms, set timeout to %d.",
-               self->name,
-               timeout,
-               A7600X_MIN_PING_TIMEOUT,
-               A7600X_MIN_PING_TIMEOUT);
+              self->name,
+              timeout,
+              A7600X_MIN_PING_TIMEOUT,
+              A7600X_MIN_PING_TIMEOUT);
 
         timeout = A7600X_MIN_PING_TIMEOUT;
     }
@@ -95,10 +95,10 @@ os_err_t a7600x_ping(mo_object_t *self, const char *host, os_uint16_t len, os_ui
 
     char resp_buff[AT_RESP_BUFF_SIZE_256] = {0};
     /* Need to wait for 6 lines response msg */
-    at_resp_t at_resp = {.buff      = resp_buff,
+    at_resp_t at_resp = {.buff = resp_buff,
                          .buff_size = sizeof(resp_buff),
-                         .line_num  = 3,
-                         .timeout   = (5 + timeout / 1000) * OS_TICK_PER_SECOND};
+                         .line_num = 3,
+                         .timeout = (5 + timeout / 1000) * OS_TICK_PER_SECOND};
 
     /* Exec AT+CPING="www.baidu.com",1,1,64,,10000; */
     /* Def ping timeout: OK\r\n  +CPING: 2\r\n +CPING: 3,1,0,1,0,0,0\r\n */
@@ -117,7 +117,7 @@ os_err_t a7600x_ping(mo_object_t *self, const char *host, os_uint16_t len, os_ui
         goto __exit;
     }
 
-    switch(ping_stat)
+    switch (ping_stat)
     {
     case PING_OK:
         if (at_resp_get_data_by_line(&at_resp, 2, "+CPING: 1,%[^,],%d,%d,%d", ipaddr, &req_len, &req_time, &ttl) < 0)
@@ -131,9 +131,9 @@ os_err_t a7600x_ping(mo_object_t *self, const char *host, os_uint16_t len, os_ui
             DEBUG("%s ping: resp parse ip[%s], req_time[%d], ttl[%d]", self->name, ipaddr, req_time, ttl);
             inet_aton(ipaddr, &(resp->ip_addr));
             resp->data_len = len;
-            resp->ttl      = ttl;
-            resp->time     = req_time;
-            result         = OS_EOK;
+            resp->ttl = ttl;
+            resp->time = req_time;
+            result = OS_EOK;
         }
         break;
 

@@ -57,7 +57,7 @@ extern "C" {
 #endif
 
 #ifndef CLM920RV3_DEVICE_NAME
-#define CLM920RV3_DEVICE_NAME   "uart2"
+#define CLM920RV3_DEVICE_NAME "uart2"
 #endif
 
 #ifndef CLM920RV3_RECV_BUFF_LEN
@@ -65,7 +65,7 @@ extern "C" {
 #endif
 
 #ifndef CLM920RV3_NETCONN_NUM
-#define CLM920RV3_NETCONN_NUM   (6)
+#define CLM920RV3_NETCONN_NUM (6)
 #endif
 
 typedef struct mo_clm920rv3
@@ -76,12 +76,12 @@ typedef struct mo_clm920rv3
 
     os_event_t netconn_evt;
     os_mutex_t netconn_lock;
-    void      *netconn_data;
+    void *netconn_data;
 #endif /* CLM920RV3_USING_NETCONN_OPS */
 } mo_clm920rv3_t;
 
 mo_object_t *module_clm920rv3_create(const char *name, void *parser_config);
-os_err_t     module_clm920rv3_destroy(mo_object_t *self);
+os_err_t module_clm920rv3_destroy(mo_object_t *self);
 
 #endif /* MOLINK_USING_CLM920RV3 */
 

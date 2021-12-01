@@ -27,7 +27,7 @@
 #include <stdio.h>
 
 #define MO_LOG_TAG "bc20.ping"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef BC20_USING_PING_OPS
@@ -39,21 +39,21 @@
 #define BC20_PING_INVALID_DEF     (-1)
 #define BC20_PING_BUFFER_SIZE     (4 * AT_RESP_BUFF_SIZE_DEF)
 
-#define BC20_EVENT_PING_OK       (1L << 0)
-#define BC20_EVENT_PING_FAIL     (1L << 1)
+#define BC20_EVENT_PING_OK   (1L << 0)
+#define BC20_EVENT_PING_FAIL (1L << 1)
 
 os_err_t bc20_ping(mo_object_t *module, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp)
 {
-    at_parser_t *parser    = &module->parser;
-    os_err_t     result    = OS_EOK;
-    os_int16_t   ttl       = BC20_PING_INVALID_DEF;
-    os_uint32_t  timeout_s = timeout / 1000;
-    os_uint32_t  req_time  = 0;
-    os_uint32_t  event     = 0;
-    mo_bc20_t   *bc20      = os_container_of(module, mo_bc20_t, parent);
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    os_int16_t ttl = BC20_PING_INVALID_DEF;
+    os_uint32_t timeout_s = timeout / 1000;
+    os_uint32_t req_time = 0;
+    os_uint32_t event = 0;
+    mo_bc20_t *bc20 = os_container_of(module, mo_bc20_t, parent);
 
-    char ip_recv[IPADDR_MAX_STR_LEN + 1]        = {0};
-    char resp_buff[4 * AT_RESP_BUFF_SIZE_DEF]   = {0};
+    char ip_recv[IPADDR_MAX_STR_LEN + 1] = {0};
+    char resp_buff[4 * AT_RESP_BUFF_SIZE_DEF] = {0};
     char ping_result[BC20_PING_BUFFER_SIZE + 1] = {0};
 
     memset(resp, 0, sizeof(ping_resp_t));
@@ -67,14 +67,18 @@ os_err_t bc20_ping(mo_object_t *module, const char *host, os_uint16_t len, os_ui
     if ((len < BC20_MIN_PING_PKG_LEN) || (len > BC20_MAX_PING_PKG_LEN))
     {
         ERROR("BC20 ping: ping package len[%d] is out of rang[%d, %d].",
-                  len, BC20_MIN_PING_PKG_LEN, BC20_MAX_PING_PKG_LEN);
+              len,
+              BC20_MIN_PING_PKG_LEN,
+              BC20_MAX_PING_PKG_LEN);
         return OS_ERROR;
     }
 
     if ((timeout_s < BC20_MIN_PING_TIMEOUT_SEC) || (timeout_s > BC20_MAX_PING_TIMEOUT_SEC))
     {
         ERROR("BC20 ping: user set ping timeout_s value %u s is out of rang[%d, %d]s.",
-                  timeout_s, BC20_MIN_PING_TIMEOUT_SEC, BC20_MAX_PING_TIMEOUT_SEC);
+              timeout_s,
+              BC20_MIN_PING_TIMEOUT_SEC,
+              BC20_MAX_PING_TIMEOUT_SEC);
         return OS_ERROR;
     }
 
@@ -89,9 +93,9 @@ os_err_t bc20_ping(mo_object_t *module, const char *host, os_uint16_t len, os_ui
      * +QPING: <finresult>[,<sent>,<rcvd>,<lost>,<min>,<max>,<avg>]
      * Because unable to synchronize time between board & module, 5 seconds reserved
      *  **/
-    at_resp_t at_resp = {.buff      = resp_buff,
+    at_resp_t at_resp = {.buff = resp_buff,
                          .buff_size = sizeof(resp_buff),
-                         .timeout   = (10 + timeout_s) * OS_TICK_PER_SECOND};
+                         .timeout = (10 + timeout_s) * OS_TICK_PER_SECOND};
 
     os_event_clear(&bc20->ping_evt, BC20_EVENT_PING_OK | BC20_EVENT_PING_FAIL);
 
@@ -103,9 +107,9 @@ os_err_t bc20_ping(mo_object_t *module, const char *host, os_uint16_t len, os_ui
     }
 
     result = os_event_recv(&bc20->ping_evt,
-                            BC20_EVENT_PING_OK | BC20_EVENT_PING_FAIL,
-                            OS_EVENT_OPTION_OR | OS_EVENT_OPTION_CLEAR,
-                            at_resp.timeout,
+                           BC20_EVENT_PING_OK | BC20_EVENT_PING_FAIL,
+                           OS_EVENT_OPTION_OR | OS_EVENT_OPTION_CLEAR,
+                           at_resp.timeout,
                            &event);
     if (result != OS_EOK)
     {
@@ -139,9 +143,9 @@ os_err_t bc20_ping(mo_object_t *module, const char *host, os_uint16_t len, os_ui
         {
             inet_aton(ip_recv, &(resp->ip_addr));
             resp->data_len = len;
-            resp->ttl      = ttl;
-            resp->time     = req_time;
-            result         = OS_EOK;
+            resp->ttl = ttl;
+            resp->time = req_time;
+            result = OS_EOK;
         }
     }
 
@@ -159,12 +163,12 @@ static void urc_ping_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != parser);
     OS_ASSERT(OS_NULL != data);
 
-    os_err_t     result = OS_EOK;
-    os_int32_t   ret    = 0;
+    os_err_t result = OS_EOK;
+    os_int32_t ret = 0;
     mo_object_t *module = os_container_of(parser, mo_object_t, parser);
-    mo_bc20_t   *bc20   = os_container_of(module, mo_bc20_t, parent);
-    os_int32_t   ping_result = BC20_PING_INVALID_DEF;
-    char         ping_sign   = 0;
+    mo_bc20_t *bc20 = os_container_of(module, mo_bc20_t, parent);
+    os_int32_t ping_result = BC20_PING_INVALID_DEF;
+    char ping_sign = 0;
 
     if (OS_NULL == bc20->ping_data)
     {
@@ -203,7 +207,7 @@ static void urc_ping_func(struct at_parser *parser, const char *data, os_size_t 
     }
 
 __exit:
-    
+
     if (OS_EOK == result && 0 == ping_result)
     {
         memcpy(bc20->ping_data, data, size);

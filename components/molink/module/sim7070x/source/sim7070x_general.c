@@ -26,7 +26,7 @@
 #include <stdlib.h>
 
 #define MO_LOG_TAG "sim7070x_general"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef SIM7070X_USING_GENERAL_OPS
@@ -169,9 +169,7 @@ os_err_t sim7070x_get_firmware_version(mo_object_t *self, mo_firmware_version_t 
 
     char resp_buff[256] = {0};
 
-    at_resp_t resp = {.buff = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+CGMR");
     if (result != OS_EOK)
@@ -186,7 +184,7 @@ os_err_t sim7070x_get_firmware_version(mo_object_t *self, mo_firmware_version_t 
     }
 
     const char *source_line = at_resp_get_line(&resp, 1);
-    os_size_t   line_length = strlen(source_line);
+    os_size_t line_length = strlen(source_line);
 
     /* TODO test return line or set to dynamic dump */
     char **dest_line = &version->ver_info[0];

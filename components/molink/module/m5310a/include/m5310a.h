@@ -77,12 +77,12 @@ typedef struct mo_m5310a
     mo_object_t parent;
 #ifdef M5310A_USING_NETCONN_OPS
     mo_netconn_t netconn[M5310A_NETCONN_NUM];
-    os_mutex_t   netconn_lock;
+    os_mutex_t netconn_lock;
 #endif /* M5310A_USING_NETCONN_OPS */
 } mo_m5310a_t;
 
 mo_object_t *module_m5310a_create(const char *name, void *parser_config);
-os_err_t     module_m5310a_destroy(mo_object_t *self);
+os_err_t module_m5310a_destroy(mo_object_t *self);
 
 #endif /* MOLINK_USING_M5310A */
 

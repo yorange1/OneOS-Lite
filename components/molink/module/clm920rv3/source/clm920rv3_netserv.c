@@ -33,7 +33,7 @@
 #ifdef CLM920RV3_USING_NETSERV_OPS
 
 #define MO_LOG_TAG "clm920rv3.netserv"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 os_err_t clm920rv3_set_attach(mo_object_t *module, os_uint8_t attach_stat)
@@ -61,12 +61,12 @@ os_err_t clm920rv3_get_attach(mo_object_t *module, os_uint8_t *attach_stat)
         return OS_ERROR;
     }
 
-    if(at_resp_get_data_by_kw(&resp, "+CGATT:", "+CGATT: %hhu", attach_stat) <= 0)
+    if (at_resp_get_data_by_kw(&resp, "+CGATT:", "+CGATT: %hhu", attach_stat) <= 0)
     {
         ERROR("Get %s module attach state failed", module->name);
         return OS_ERROR;
     }
-    
+
     return OS_EOK;
 }
 

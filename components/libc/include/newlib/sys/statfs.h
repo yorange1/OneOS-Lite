@@ -25,12 +25,11 @@
 
 struct statfs
 {
-    unsigned long f_bsize;      /* Block size. */
-    unsigned long f_blocks;     /* Total data blocks in file system. */
-    unsigned long f_bfree;      /* Free blocks in file system. */
+    unsigned long f_bsize;  /* Block size. */
+    unsigned long f_blocks; /* Total data blocks in file system. */
+    unsigned long f_bfree;  /* Free blocks in file system. */
 };
 
 extern int statfs(const char *path, struct statfs *buf);
 
 #endif /* __SYS_STATFS_H__ */
-

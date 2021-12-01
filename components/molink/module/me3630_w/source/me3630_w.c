@@ -1,31 +1,31 @@
- /**
- ***********************************************************************************************************************
- * Copyright (c) 2020, China Mobile Communications Group Co.,Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
- *
- * @file        me3630_w.c
- *
- * @brief       me3630_w.c module api
- *
- * @revision
- * Date         Author          Notes
- * 2020-12-1   OneOS Team      First Version
- ***********************************************************************************************************************
- */
+/**
+***********************************************************************************************************************
+* Copyright (c) 2020, China Mobile Communications Group Co.,Ltd.
+*
+* Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+* the License. You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+* an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+* specific language governing permissions and limitations under the License.
+*
+* @file        me3630_w.c
+*
+* @brief       me3630_w.c module api
+*
+* @revision
+* Date         Author          Notes
+* 2020-12-1   OneOS Team      First Version
+***********************************************************************************************************************
+*/
 
 #include "me3630_w.h"
 #include <stdlib.h>
 
 #define MO_LOG_TAG "me3630_w"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef MOLINK_USING_ME3630_W
@@ -34,33 +34,33 @@
 
 #ifdef ME3630_W_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test   = me3630_w_at_test,
-    .get_imei  = me3630_w_get_imei,
-    .get_imsi  = me3630_w_get_imsi,
+    .at_test = me3630_w_at_test,
+    .get_imei = me3630_w_get_imei,
+    .get_imsi = me3630_w_get_imsi,
     .get_iccid = me3630_w_get_iccid,
-    .get_cfun  = me3630_w_get_cfun,
-    .set_cfun  = me3630_w_set_cfun,
+    .get_cfun = me3630_w_get_cfun,
+    .set_cfun = me3630_w_set_cfun,
     .get_firmware_version = me3630_w_get_firmware_version,
 };
 #endif /* ME3630_W_USING_GENERAL_OPS */
 
 #ifdef ME3630_W_USING_NETSERV_OPS
 static const struct mo_netserv_ops gs_netserv_ops = {
-    .set_attach    = me3630_w_set_attach,
-    .get_attach    = me3630_w_get_attach,
-    .set_reg       = me3630_w_set_reg,
-    .get_reg       = me3630_w_get_reg,
-    .set_cgact     = me3630_w_set_cgact,
-    .get_cgact     = me3630_w_get_cgact,
-    .get_csq       = me3630_w_get_csq,
+    .set_attach = me3630_w_set_attach,
+    .get_attach = me3630_w_get_attach,
+    .set_reg = me3630_w_set_reg,
+    .get_reg = me3630_w_get_reg,
+    .set_cgact = me3630_w_set_cgact,
+    .get_cgact = me3630_w_get_cgact,
+    .get_csq = me3630_w_get_csq,
     .get_cell_info = me3630_w_get_cell_info,
 };
 #endif /* ME3630_W_USING_NETSERV_OPS */
 
 #ifdef ME3630_W_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig             = me3630_w_ifconfig,
-    .get_ipaddr           = me3630_w_get_ipaddr,
+    .ifconfig = me3630_w_ifconfig,
+    .get_ipaddr = me3630_w_get_ipaddr,
 };
 #endif /* ME3630_W_USING_IFCONFIG_OPS */
 
@@ -68,18 +68,16 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern void me3630_w_netconn_init(mo_me3630_w_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create        = me3630_w_netconn_create,
-    .destroy       = me3630_w_netconn_destroy,
-    .connect       = me3630_w_netconn_connect,
-    .send          = me3630_w_netconn_send,
+    .create = me3630_w_netconn_create,
+    .destroy = me3630_w_netconn_destroy,
+    .connect = me3630_w_netconn_connect,
+    .send = me3630_w_netconn_send,
 #ifdef ME3630_W_USING_DNS
     .gethostbyname = me3630_w_netconn_gethostbyname,
 #endif
-    .get_info      = me3630_w_netconn_get_info,
+    .get_info = me3630_w_netconn_get_info,
 };
 #endif /* ME3630_W_USING_NETCONN_OPS */
-
-
 
 static os_err_t me3630_w_at_init(mo_object_t *self)
 {
@@ -94,9 +92,7 @@ static os_err_t me3630_w_at_init(mo_object_t *self)
 
     char resp_buff[32] = {0};
 
-    at_resp_t resp = {.buff = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     return at_parser_exec_cmd(parser, &resp, "ATE0");
 }
@@ -109,7 +105,7 @@ mo_object_t *module_me3630_w_create(const char *name, void *parser_config)
         ERROR("Create %s module instance failed, no enough memory.", name);
         return OS_NULL;
     }
-    
+
     os_task_msleep(5000);
     /* make sure me3630_w power on and be ready */
     os_err_t result = mo_object_init(&(module->parent), name, parser_config);
@@ -132,11 +128,11 @@ mo_object_t *module_me3630_w_create(const char *name, void *parser_config)
 #ifdef ME3630_W_USING_NETSERV_OPS
     module->parent.ops_table[MODULE_OPS_NETSERV] = &gs_netserv_ops;
 #endif /* ME3630_W_USING_NETSERV_OPS */
-        
+
 #ifdef ME3630_W_USING_IFCONFIG_OPS
     module->parent.ops_table[MODULE_OPS_IFCONFIG] = &gs_ifconfig_ops;
 #endif /* ME3630_W_USING_IFCONFIG_OPS */
-        
+
 #ifdef ME3630_W_USING_NETCONN_OPS
     module->parent.ops_table[MODULE_OPS_NETCONN] = &gs_netconn_ops;
 
@@ -172,13 +168,13 @@ os_err_t module_me3630_w_destroy(mo_object_t *self)
     mo_me3630_w_t *module = os_container_of(self, mo_me3630_w_t, parent);
 
     mo_object_deinit(self);
-    
+
 #ifdef ME3630_W_USING_NETCONN_OPS
 
     os_event_deinit(&module->netconn_evt);
 
     os_mutex_deinit(&module->netconn_lock);
-    
+
 #endif /* ME3630_W_USING_NETCONN_OPS */
 
     os_free(module);
@@ -204,7 +200,7 @@ int me3630_w_auto_create(void)
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = ME3630_W_NAME,
+    mo_parser_config_t parser_config = {.parser_name = ME3630_W_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = ME3630_W_RECV_BUFF_LEN};
 
@@ -223,4 +219,3 @@ OS_CMPOENT_INIT(me3630_w_auto_create, OS_INIT_SUBLEVEL_MIDDLE);
 
 #endif /* ME3630_W_AUTO_CREATE */
 #endif /* MOLINK_USING_ME3630_W */
-

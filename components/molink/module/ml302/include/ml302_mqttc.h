@@ -33,12 +33,12 @@ extern "C" {
 #ifdef ML302_USING_MQTTC_OPS
 
 mo_mqttc_t *ml302_mqttc_create(mo_object_t *module, mqttc_create_opts_t *create_opts);
-os_err_t    ml302_mqttc_connect(mo_mqttc_t *client, mqttc_conn_opts_t *conn_opts);
-os_err_t    ml302_mqttc_publish(mo_mqttc_t *client, const char *topic_filter, mqttc_msg_t *msg);
-os_err_t    ml302_mqttc_subscribe(mo_mqttc_t *client, const char *topic_filter, mqttc_qos_t qos);
-os_err_t    ml302_mqttc_unsubscribe(mo_mqttc_t *client, const char *topic_filter);
-os_err_t    ml302_mqttc_disconnect(mo_mqttc_t *client);
-os_err_t    ml302_mqttc_destroy(mo_mqttc_t *client);
+os_err_t ml302_mqttc_connect(mo_mqttc_t *client, mqttc_conn_opts_t *conn_opts);
+os_err_t ml302_mqttc_publish(mo_mqttc_t *client, const char *topic_filter, mqttc_msg_t *msg);
+os_err_t ml302_mqttc_subscribe(mo_mqttc_t *client, const char *topic_filter, mqttc_qos_t qos);
+os_err_t ml302_mqttc_unsubscribe(mo_mqttc_t *client, const char *topic_filter);
+os_err_t ml302_mqttc_disconnect(mo_mqttc_t *client);
+os_err_t ml302_mqttc_destroy(mo_mqttc_t *client);
 
 #endif /* ML302_USING_MQTTC_OPS */
 

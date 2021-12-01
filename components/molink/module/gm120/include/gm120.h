@@ -73,16 +73,16 @@ typedef struct mo_gm120
     mo_object_t parent;
 #ifdef GM120_USING_NETCONN_OPS
     mo_netconn_t netconn[GM120_NETCONN_NUM];
-	
-	os_int32_t curr_connect;
+
+    os_int32_t curr_connect;
     os_event_t netconn_evt;
     os_mutex_t netconn_lock;
-    void      *netconn_data;
+    void *netconn_data;
 #endif /* GM120_USING_NETCONN_OPS */
 } mo_gm120_t;
 
 mo_object_t *module_gm120_create(const char *name, void *parser_config);
-os_err_t     module_gm120_destroy(mo_object_t *self);
+os_err_t module_gm120_destroy(mo_object_t *self);
 
 #endif /* MOLINK_USING_GM120 */
 
@@ -91,4 +91,3 @@ os_err_t     module_gm120_destroy(mo_object_t *self);
 #endif /* __cplusplus */
 
 #endif /* __GM120_H__ */
-

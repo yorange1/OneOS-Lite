@@ -27,7 +27,7 @@
 #include <string.h>
 
 #define MO_LOG_TAG "at.resp"
-#define MO_LOG_LVL  MO_LOG_EMERG
+#define MO_LOG_LVL MO_LOG_EMERG
 #include "mo_log.h"
 
 /**
@@ -111,7 +111,7 @@ const char *at_resp_get_line_by_kw(at_resp_t *resp, const char *keyword)
  * @param[in]       resp_line       The line number of response data, , start from '1
  * @param[in]       resp_expr       The data parser expression
  * @param[in]       ...             The data parser arguments
- * 
+ *
  * @return          Return get data nums
  ***********************************************************************************************************************
  */
@@ -146,7 +146,7 @@ os_int32_t at_resp_get_data_by_line(at_resp_t *resp, os_size_t resp_line, const 
  * @param[in]       keyword         The keyword of response data
  * @param[in]       resp_expr       The data parser expression
  * @param[in]       ...             The data parser arguments
- * 
+ *
  * @return          Return get data nums
  ***********************************************************************************************************************
  */

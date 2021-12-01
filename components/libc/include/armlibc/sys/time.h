@@ -36,8 +36,8 @@ extern "C" {
 /* Structure returned by gettimeofday(2) system call, and used in other calls. */
 struct timeval
 {
-    long tv_sec;        /* Seconds. */
-    long tv_usec;       /* Microseconds. */
+    long tv_sec;  /* Seconds. */
+    long tv_usec; /* Microseconds. */
 };
 #endif /* _TIMEVAL_DEFINED */
 
@@ -47,10 +47,10 @@ struct timeval
 /* Structure defined by POSIX.1b to be like a timeval. */
 struct timespec
 {
-    time_t  tv_sec;     /* Seconds. */
-    long    tv_nsec;    /* Nanoseconds. */
+    time_t tv_sec; /* Seconds. */
+    long tv_nsec;  /* Nanoseconds. */
 };
-#endif /* _TIMESPEC_DEFINED */ 
+#endif /* _TIMESPEC_DEFINED */
 
 struct timezone
 {
@@ -58,7 +58,7 @@ struct timezone
     int tz_dsttime;     /* Type of dst correction. */
 };
 
-extern int        gettimeofday(struct timeval *tp, void *ignore);
+extern int gettimeofday(struct timeval *tp, void *ignore);
 extern struct tm *gmtime_r(const time_t *timep, struct tm *r);
 
 #ifdef __cplusplus
@@ -66,4 +66,3 @@ extern struct tm *gmtime_r(const time_t *timep, struct tm *r);
 #endif
 
 #endif /* __SYS_TIME_H__ */
-

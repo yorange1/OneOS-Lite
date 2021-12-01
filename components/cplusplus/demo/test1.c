@@ -13,4 +13,3 @@ void test_task(void *parameter)
 #ifdef __cplusplus
 }
 #endif
-

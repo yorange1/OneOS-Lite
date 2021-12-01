@@ -30,7 +30,7 @@
 #include <string.h>
 
 #define MO_LOG_TAG "gm120_ifconfig"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef GM120_USING_IFCONFIG_OPS
@@ -56,12 +56,12 @@ os_err_t gm120_ifconfig(mo_object_t *self)
     }
 
     os_uint8_t rssi = 0;
-    os_uint8_t ber  = 0;
+    os_uint8_t ber = 0;
 
     if (gm120_get_csq(self, &rssi, &ber) != OS_EOK)
     {
         rssi = 0;
-        ber  = 0;
+        ber = 0;
     }
 
     os_kprintf("\r\nLIST AT MODULE INFORMATIONS\r\n");
@@ -89,9 +89,9 @@ os_err_t gm120_ifconfig(mo_object_t *self)
 os_err_t gm120_get_ipaddr(mo_object_t *self, char ip[])
 {
     at_parser_t *parser = &self->parser;
-    os_int8_t    ucid   = -1;
-    os_int8_t    len    = -1;
-    int          i      = 1;
+    os_int8_t ucid = -1;
+    os_int8_t len = -1;
+    int i = 1;
     char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
 
     char resp_buff[512] = {0};
@@ -104,21 +104,20 @@ os_err_t gm120_get_ipaddr(mo_object_t *self, char ip[])
         ERROR("Get ip address fail: AT+CGPADDR cmd exec fail.");
         goto __exit;
     }
-    
-    /* Response for ex: +CGPADDR:0,100.113.120.235 */   
+
+    /* Response for ex: +CGPADDR:0,100.113.120.235 */
     do
     {
-        if (at_resp_get_data_by_line(&resp, i , "+CGPADDR:%d, \"%[^\"]", &ucid, ipaddr) <= 0)
+        if (at_resp_get_data_by_line(&resp, i, "+CGPADDR:%d, \"%[^\"]", &ucid, ipaddr) <= 0)
         {
             ERROR("Get ip address: parse resp fail.");
             result = OS_ERROR;
             goto __exit;
-        } 
-        i = i + 1;        
-        len = strlen(ipaddr);        
-    }
-    while(len == 0);
-		
+        }
+        i = i + 1;
+        len = strlen(ipaddr);
+    } while (len == 0);
+
     if ((len < IPADDR_MIN_STR_LEN) || (len > IPADDR_MAX_STR_LEN))
     {
         ERROR("IP address size [%d] error.", len);
@@ -137,4 +136,3 @@ __exit:
 }
 
 #endif /* GM120_USING_IFCONFIG_OPS */
-

@@ -27,9 +27,8 @@
 #include <stdlib.h>
 
 #define MO_LOG_TAG "n21"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
-
 
 #ifdef MOLINK_USING_N21
 
@@ -37,36 +36,36 @@
 
 #ifdef N21_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test              = n21_at_test,
-    .get_imei             = n21_get_imei,
-    .get_imsi             = n21_get_imsi,
-    .get_iccid            = n21_get_iccid,
-    .get_cfun             = n21_get_cfun,
-    .set_cfun             = n21_set_cfun,
+    .at_test = n21_at_test,
+    .get_imei = n21_get_imei,
+    .get_imsi = n21_get_imsi,
+    .get_iccid = n21_get_iccid,
+    .get_cfun = n21_get_cfun,
+    .set_cfun = n21_set_cfun,
     .get_firmware_version = n21_get_firmware_version,
 };
 #endif /* N21_USING_GENERAL_OPS */
 
 #ifdef N21_USING_NETSERV_OPS
 static const struct mo_netserv_ops gs_netserv_ops = {
-    .set_attach           = n21_set_attach,
-    .get_attach           = n21_get_attach,
-    .set_reg              = n21_set_reg,
-    .get_reg              = n21_get_reg,
-    .get_csq              = n21_get_csq,
+    .set_attach = n21_set_attach,
+    .get_attach = n21_get_attach,
+    .set_reg = n21_set_reg,
+    .get_reg = n21_get_reg,
+    .get_csq = n21_get_csq,
 };
 #endif /* N21_USING_NETSERV_OPS */
 
 #ifdef N21_USING_PING_OPS
 static const struct mo_ping_ops gs_ping_ops = {
-    .ping                 = n21_ping,
+    .ping = n21_ping,
 };
 #endif /* N21_USING_PING_OPS */
 
 #ifdef N21_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig             = n21_ifconfig,
-    .get_ipaddr           = n21_get_ipaddr,
+    .ifconfig = n21_ifconfig,
+    .get_ipaddr = n21_get_ipaddr,
 };
 #endif /* N21_USING_IFCONFIG_OPS */
 
@@ -74,14 +73,14 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern void n21_netconn_init(mo_n21_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create               = n21_netconn_create,
-    .destroy              = n21_netconn_destroy,
+    .create = n21_netconn_create,
+    .destroy = n21_netconn_destroy,
 #ifdef N21_USING_DNS
-    .gethostbyname        = n21_netconn_gethostbyname,
+    .gethostbyname = n21_netconn_gethostbyname,
 #endif
-    .connect              = n21_netconn_connect,
-    .send                 = n21_netconn_send,
-    .get_info             = n21_netconn_get_info,
+    .connect = n21_netconn_connect,
+    .send = n21_netconn_send,
+    .get_info = n21_netconn_get_info,
 };
 #endif /* N21_USING_NETCONN_OPS */
 
@@ -121,9 +120,7 @@ static void n21_netserv_open(mo_object_t *self)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff), 
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     if (at_parser_exec_cmd(parser, &resp, "AT+XIIC=1") != OS_EOK)
     {
@@ -137,9 +134,7 @@ static void n21_netserv_at_init(mo_object_t *self)
 
     char resp_buff[256] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = OS_TICK_PER_SECOND};
 
     eps_reg_info_t reg_info = {0};
 
@@ -193,16 +188,14 @@ static os_err_t n21_at_init(mo_object_t *self)
 
     char resp_buff[32] = {0};
 
-    at_resp_t resp = {.buff = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     result = at_parser_exec_cmd(parser, &resp, "ATE0");
     if (result != OS_EOK)
     {
         return result;
     }
-    
+
     /* Try to initialize the module */
 #ifdef N21_USING_GENERAL_OPS
     n21_gernel_at_init(self);
@@ -325,7 +318,7 @@ int n21_auto_create(void)
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = N21_NAME,
+    mo_parser_config_t parser_config = {.parser_name = N21_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = N21_RECV_BUFF_LEN};
 

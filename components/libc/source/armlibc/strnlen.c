@@ -11,4 +11,3 @@ size_t strnlen(const char *s, size_t maxlen)
 
     return (str_tmp - s);
 }
-

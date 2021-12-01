@@ -36,12 +36,12 @@
 
 #ifdef SIM7020_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test   = sim7020_at_test,
-    .get_imei  = sim7020_get_imei,
-    .get_imsi  = sim7020_get_imsi,
+    .at_test = sim7020_at_test,
+    .get_imei = sim7020_get_imei,
+    .get_imsi = sim7020_get_imsi,
     .get_iccid = sim7020_get_iccid,
-    .get_cfun  = sim7020_get_cfun,
-    .set_cfun  = sim7020_set_cfun,
+    .get_cfun = sim7020_get_cfun,
+    .set_cfun = sim7020_set_cfun,
 };
 #endif /* SIM7020_USING_GENERAL_OPS */
 
@@ -49,11 +49,11 @@ static const struct mo_general_ops gs_general_ops = {
 static const struct mo_netserv_ops gs_netserv_ops = {
     .set_attach = sim7020_set_attach,
     .get_attach = sim7020_get_attach,
-    .set_reg    = sim7020_set_reg,
-    .get_reg    = sim7020_get_reg,
-    .set_cgact  = sim7020_set_cgact,
-    .get_cgact  = sim7020_get_cgact,
-    .get_csq    = sim7020_get_csq,
+    .set_reg = sim7020_set_reg,
+    .get_reg = sim7020_get_reg,
+    .set_cgact = sim7020_set_cgact,
+    .get_cgact = sim7020_get_cgact,
+    .get_csq = sim7020_get_csq,
 };
 #endif /* SIM7020_USING_NETSERV_OPS */
 
@@ -65,7 +65,7 @@ static const struct mo_ping_ops gs_ping_ops = {
 
 #ifdef SIM7020_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig   = sim7020_ifconfig,
+    .ifconfig = sim7020_ifconfig,
     .get_ipaddr = sim7020_get_ipaddr,
 };
 #endif /* SIM7020_USING_IFCONFIG_OPS */
@@ -74,14 +74,14 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern void sim7020_netconn_init(mo_sim7020_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create        = sim7020_netconn_create,
-    .destroy       = sim7020_netconn_destroy,
+    .create = sim7020_netconn_create,
+    .destroy = sim7020_netconn_destroy,
 #ifdef SIM7020_USING_DNS
     .gethostbyname = sim7020_netconn_gethostbyname,
 #endif
-    .connect       = sim7020_netconn_connect,
-    .send          = sim7020_netconn_send,
-    .get_info      = sim7020_netconn_get_info,
+    .connect = sim7020_netconn_connect,
+    .send = sim7020_netconn_send,
+    .get_info = sim7020_netconn_get_info,
 };
 #endif /* SIM7020_USING_NETCONN_OPS */
 
@@ -98,9 +98,7 @@ static os_err_t sim7020_at_init(mo_object_t *self)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     return at_parser_exec_cmd(parser, &resp, "ATE0");
 }
@@ -198,7 +196,7 @@ int sim7020_auto_create(void)
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = SIM7020_NAME,
+    mo_parser_config_t parser_config = {.parser_name = SIM7020_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = SIM7020_RECV_BUFF_LEN};
 

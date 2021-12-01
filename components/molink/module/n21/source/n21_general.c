@@ -26,9 +26,8 @@
 #include <string.h>
 
 #define MO_LOG_TAG "n21_general"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
-
 
 #define N21_VERSION_INFO_LEN (30)
 
@@ -40,9 +39,7 @@ os_err_t n21_at_test(mo_object_t *self)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     return at_parser_exec_cmd(parser, &resp, "AT");
 }
@@ -55,11 +52,9 @@ os_err_t n21_get_imei(mo_object_t *self, char *value, os_size_t len)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
-    if(OS_EOK != at_parser_exec_cmd(parser, &resp, "AT+CGSN"))
+    if (OS_EOK != at_parser_exec_cmd(parser, &resp, "AT+CGSN"))
     {
         return OS_ERROR;
     }
@@ -85,9 +80,7 @@ os_err_t n21_get_imsi(mo_object_t *self, char *value, os_size_t len)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     if (OS_EOK != at_parser_exec_cmd(parser, &resp, "AT+CIMI"))
     {
@@ -115,9 +108,7 @@ os_err_t n21_get_iccid(mo_object_t *self, char *value, os_size_t len)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     if (OS_EOK != at_parser_exec_cmd(parser, &resp, "AT+CCID"))
     {
@@ -141,9 +132,7 @@ os_err_t n21_get_cfun(mo_object_t *self, os_uint8_t *fun_lvl)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     if (OS_EOK != at_parser_exec_cmd(parser, &resp, "AT+CFUN?"))
     {
@@ -165,9 +154,7 @@ os_err_t n21_set_cfun(mo_object_t *self, os_uint8_t fun_lvl)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 5 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 5 * OS_TICK_PER_SECOND};
 
     return at_parser_exec_cmd(parser, &resp, "AT+CFUN=%hhu", fun_lvl);
 }
@@ -178,9 +165,7 @@ os_err_t n21_get_firmware_version(mo_object_t *self, mo_firmware_version_t *vers
 
     char resp_buff[256] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+CGMR");
     if (result != OS_EOK)
@@ -221,4 +206,3 @@ os_err_t n21_get_firmware_version(mo_object_t *self, mo_firmware_version_t *vers
 }
 
 #endif /* N21_USING_GENERAL_OPS */
-

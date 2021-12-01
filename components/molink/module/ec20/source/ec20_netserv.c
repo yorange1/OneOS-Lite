@@ -32,7 +32,7 @@
 #endif /* MOLINK_USING_IP */
 
 #define MO_LOG_TAG "ec20_netserv"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #ifdef EC20_USING_NETSERV_OPS
@@ -62,12 +62,12 @@ os_err_t ec20_get_attach(mo_object_t *self, os_uint8_t *attach_stat)
         return OS_ERROR;
     }
 
-    if(at_resp_get_data_by_kw(&resp, "+CGATT:", "+CGATT: %hhu", attach_stat) <= 0)
+    if (at_resp_get_data_by_kw(&resp, "+CGATT:", "+CGATT: %hhu", attach_stat) <= 0)
     {
         ERROR("Get %s module attach state failed", self->name);
         return OS_ERROR;
     }
-    
+
     return OS_EOK;
 }
 
@@ -121,10 +121,10 @@ os_err_t ec20_get_cgact(mo_object_t *self, os_uint8_t *cid, os_uint8_t *act_stat
     at_parser_t *parser = &self->parser;
 
     char resp_buff[128] = {0};
-    char tem_cgact[20]  = {0};
+    char tem_cgact[20] = {0};
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 150 * AT_RESP_TIMEOUT_DEF};
 
-    if (*cid < 1  || *cid > 5)
+    if (*cid < 1 || *cid > 5)
     {
         ERROR("%s module cgact cid range is [1,5], input out of range", self->name);
         return OS_ERROR;

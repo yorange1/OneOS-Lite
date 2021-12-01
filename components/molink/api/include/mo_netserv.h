@@ -33,12 +33,12 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#define CELL_ID_MAX_LEN             (28)
+#define CELL_ID_MAX_LEN (28)
 
-#define PSM_TIMER_MAX_STR_LEN       (9)             /* 3GPP timer len 8 plus 1 byte for character array's '\0' */
-#define REG_TAC_MAX_STR_LEN         (5)             /* 2 bytes hex plus 1 byte for character array's '\0' */
-#define REG_CELL_ID_MAX_STR_LEN     (9)             /* 4 bytes hex plus 1 byte for character array's '\0' */
-#define DRX_EXTEND_MAX_STR_LEN      (5)             /* Extended DRX parameters information element string len */
+#define PSM_TIMER_MAX_STR_LEN   (9) /* 3GPP timer len 8 plus 1 byte for character array's '\0' */
+#define REG_TAC_MAX_STR_LEN     (5) /* 2 bytes hex plus 1 byte for character array's '\0' */
+#define REG_CELL_ID_MAX_STR_LEN (9) /* 4 bytes hex plus 1 byte for character array's '\0' */
+#define DRX_EXTEND_MAX_STR_LEN  (5) /* Extended DRX parameters information element string len */
 
 /**
  ***********************************************************************************************************************
@@ -78,14 +78,14 @@ typedef enum pdp_context_state
 typedef struct eps_registration_info
 {
     os_uint8_t reg_n;
-    os_uint8_t reg_stat;                            /* EPS registration status                              */
-    char       tac[REG_TAC_MAX_STR_LEN];            /* tracking area code, HEX string                       */
-    char       cell_id[REG_CELL_ID_MAX_STR_LEN];    /* cell ID, HEX string                                  */
-    os_uint8_t act;                                 /* Access technology of the registered network          */
-    os_uint8_t cause_type;                          /* indicates the type of <reject_cause>                 */
-    os_uint8_t reject_cause;                        /* contains the cause of the failed registration        */
-    char       active_time[PSM_TIMER_MAX_STR_LEN];  /* GPRS Timer 2 IE in 3GPP TS 24.008 Table 10.5.163     */
-    char       periodic_tau[PSM_TIMER_MAX_STR_LEN]; /* GPRS Timer 3 IE in 3GPP TS 24.008 Table 10.5.163a    */
+    os_uint8_t reg_stat;                      /* EPS registration status                              */
+    char tac[REG_TAC_MAX_STR_LEN];            /* tracking area code, HEX string                       */
+    char cell_id[REG_CELL_ID_MAX_STR_LEN];    /* cell ID, HEX string                                  */
+    os_uint8_t act;                           /* Access technology of the registered network          */
+    os_uint8_t cause_type;                    /* indicates the type of <reject_cause>                 */
+    os_uint8_t reject_cause;                  /* contains the cause of the failed registration        */
+    char active_time[PSM_TIMER_MAX_STR_LEN];  /* GPRS Timer 2 IE in 3GPP TS 24.008 Table 10.5.163     */
+    char periodic_tau[PSM_TIMER_MAX_STR_LEN]; /* GPRS Timer 3 IE in 3GPP TS 24.008 Table 10.5.163a    */
 } eps_reg_info_t;
 
 /**
@@ -115,12 +115,13 @@ typedef struct radio_info
  * @brief       struct that holds molink module cell information, belongs to onepos_cell_info_t
  ***********************************************************************************************************************
  */
-typedef struct{
+typedef struct
+{
     os_uint32_t mnc;
     os_uint32_t mcc;
     os_uint32_t lac;
     os_uint32_t cid;
-    os_int32_t  ss;
+    os_int32_t ss;
     // os_uint32_t ta;
 } cell_info_t;
 
@@ -131,12 +132,12 @@ typedef struct{
  * @brief       struct that holds molink module mo_get_cell_info return information
  ***********************************************************************************************************************
  */
-typedef struct{
-    os_uint32_t  cell_num;
-    os_uint8_t   net_type;
+typedef struct
+{
+    os_uint32_t cell_num;
+    os_uint8_t net_type;
     cell_info_t *cell_info;
 } onepos_cell_info_t;
-
 
 /**
  ***********************************************************************************************************************
@@ -147,10 +148,10 @@ typedef struct{
  */
 typedef enum mo_psm_mode
 {
-    MO_PSM_DISABLE = 0,                             /* Disable the use of PSM. */
-    MO_PSM_ENABLE,                                  /* Enable  the use of PSM. */
-    MO_PSM_DISABLE_RESET,                           /* Disable the use of PSM &
-                                                       reset to the manufacturer specific default values. */
+    MO_PSM_DISABLE = 0,   /* Disable the use of PSM. */
+    MO_PSM_ENABLE,        /* Enable  the use of PSM. */
+    MO_PSM_DISABLE_RESET, /* Disable the use of PSM &
+                             reset to the manufacturer specific default values. */
 } mo_psm_mode_t;
 
 /**
@@ -162,11 +163,11 @@ typedef enum mo_psm_mode
  */
 typedef struct mo_psm_info
 {
-    mo_psm_mode_t psm_mode;                         /* See mo_psm_mode_t */
-    char periodic_rau[PSM_TIMER_MAX_STR_LEN];       /* Reserved */
-    char gprs_ready_timer[PSM_TIMER_MAX_STR_LEN];   /* Reserved */
-    char periodic_tau[PSM_TIMER_MAX_STR_LEN];       /* See GPRS Timer (3GPP TS 24.008) */
-    char active_time[PSM_TIMER_MAX_STR_LEN];        /* See GPRS Timer (3GPP TS 24.008) */
+    mo_psm_mode_t psm_mode;                       /* See mo_psm_mode_t */
+    char periodic_rau[PSM_TIMER_MAX_STR_LEN];     /* Reserved */
+    char gprs_ready_timer[PSM_TIMER_MAX_STR_LEN]; /* Reserved */
+    char periodic_tau[PSM_TIMER_MAX_STR_LEN];     /* See GPRS Timer (3GPP TS 24.008) */
+    char active_time[PSM_TIMER_MAX_STR_LEN];      /* See GPRS Timer (3GPP TS 24.008) */
 } mo_psm_info_t;
 
 /**
@@ -178,11 +179,11 @@ typedef struct mo_psm_info
  */
 typedef enum edrx_mode
 {
-    MO_EDRX_DISABLE = 0,                            /* Disable the use of eDRX */
-    MO_EDRX_ENABLE,                                 /* Enable the use of eDRX */
-    MO_EDRX_ENABLE_WITH_URC,                        /* Enable the use of eDRX and enable the unsolicited result code */
-    MO_EDRX_RESET,                                  /* Disable the use of eDRX and discard all parameters for eDRX or,
-                                                       if available,reset to the manufacturer specific default values */
+    MO_EDRX_DISABLE = 0,     /* Disable the use of eDRX */
+    MO_EDRX_ENABLE,          /* Enable the use of eDRX */
+    MO_EDRX_ENABLE_WITH_URC, /* Enable the use of eDRX and enable the unsolicited result code */
+    MO_EDRX_RESET,           /* Disable the use of eDRX and discard all parameters for eDRX or,
+                                if available,reset to the manufacturer specific default values */
 } edrx_mode_t;
 
 /**
@@ -194,12 +195,12 @@ typedef enum edrx_mode
  */
 typedef enum edrx_act_type
 {
-    MO_EDRX_NOT_USING = 0,                          /* Access technology is not using eDRX. Only use in URC. */
-    MO_EDRX_EC_GSM_IOT,                             /* EC-GSM-IoT (A/Gb mode) */
-    MO_EDRX_GSM,                                    /* GSM (A/Gb mode) */
-    MO_EDRX_UTRAN,                                  /* UTRAN (Iu mode) */
-    MO_EDRX_E_UTRAN_WB_S1,                          /* E-UTRAN (WB-S1 mode) */
-    MO_EDRX_E_UTRAN_NB_S1,                          /* E-UTRAN (NB-S1 mode) */
+    MO_EDRX_NOT_USING = 0, /* Access technology is not using eDRX. Only use in URC. */
+    MO_EDRX_EC_GSM_IOT,    /* EC-GSM-IoT (A/Gb mode) */
+    MO_EDRX_GSM,           /* GSM (A/Gb mode) */
+    MO_EDRX_UTRAN,         /* UTRAN (Iu mode) */
+    MO_EDRX_E_UTRAN_WB_S1, /* E-UTRAN (WB-S1 mode) */
+    MO_EDRX_E_UTRAN_NB_S1, /* E-UTRAN (NB-S1 mode) */
 } edrx_act_type_t;
 
 /**
@@ -211,10 +212,11 @@ typedef enum edrx_act_type
  */
 typedef struct mo_edrx
 {
-    edrx_act_type_t act_type;                       /* Access technology type */
-    char req_edrx_value[DRX_EXTEND_MAX_STR_LEN];    /* Requested eDRX value, sub-clause 10.5.5.32 of 3GPP TS 24.008   */
-    char nw_edrx_value[DRX_EXTEND_MAX_STR_LEN];     /* NW provided eDRX value, sub-clause 10.5.5.32 of 3GPP TS 24.008 */
-    char paging_time_window[DRX_EXTEND_MAX_STR_LEN];/* Paging time window, see sub-clause 10.5.5.32 of 3GPP TS 24.008 */
+    edrx_act_type_t act_type;                    /* Access technology type */
+    char req_edrx_value[DRX_EXTEND_MAX_STR_LEN]; /* Requested eDRX value, sub-clause 10.5.5.32 of 3GPP TS 24.008   */
+    char nw_edrx_value[DRX_EXTEND_MAX_STR_LEN];  /* NW provided eDRX value, sub-clause 10.5.5.32 of 3GPP TS 24.008 */
+    char
+        paging_time_window[DRX_EXTEND_MAX_STR_LEN]; /* Paging time window, see sub-clause 10.5.5.32 of 3GPP TS 24.008 */
 } mo_edrx_t;
 
 /**
@@ -226,8 +228,8 @@ typedef struct mo_edrx
  */
 typedef struct mo_edrx_cfg
 {
-    edrx_mode_t mode;                               /* mode that the use of eDRX in the UE */
-    mo_edrx_t  edrx;
+    edrx_mode_t mode; /* mode that the use of eDRX in the UE */
+    mo_edrx_t edrx;
 } mo_edrx_cfg_t;
 
 /**
@@ -239,10 +241,10 @@ typedef struct mo_edrx_cfg
  */
 typedef struct mo_earfcn
 {
-    os_uint8_t  mode;                               /* Search(lock) mode */
-    os_uint32_t earfcn;                             /* On witch EARFCN to lock; range:Quectel[1-65535] OneMo[0-262143] */
-    os_uint16_t pci;                                /* Physical cell ID; range[0-503]/[0x00-0x1F7] */
-    os_uint8_t  earfcn_offset;                      /* Requested EARFCN offset; Only valid on OneMo */
+    os_uint8_t mode;          /* Search(lock) mode */
+    os_uint32_t earfcn;       /* On witch EARFCN to lock; range:Quectel[1-65535] OneMo[0-262143] */
+    os_uint16_t pci;          /* Physical cell ID; range[0-503]/[0x00-0x1F7] */
+    os_uint8_t earfcn_offset; /* Requested EARFCN offset; Only valid on OneMo */
 } mo_earfcn_t;
 
 /**
@@ -284,7 +286,7 @@ os_err_t mo_set_cgact(mo_object_t *self, os_uint8_t cid, os_uint8_t act_stat);
 os_err_t mo_get_cgact(mo_object_t *self, os_uint8_t *cid, os_uint8_t *act_stat);
 os_err_t mo_get_csq(mo_object_t *self, os_uint8_t *rssi, os_uint8_t *ber);
 os_err_t mo_get_radio(mo_object_t *self, radio_info_t *radio_info);
-os_err_t mo_get_cell_info(mo_object_t *self, onepos_cell_info_t* onepos_cell_info);
+os_err_t mo_get_cell_info(mo_object_t *self, onepos_cell_info_t *onepos_cell_info);
 os_err_t mo_set_psm(mo_object_t *self, mo_psm_info_t info);
 os_err_t mo_get_psm(mo_object_t *self, mo_psm_info_t *info);
 os_err_t mo_set_edrx_cfg(mo_object_t *self, mo_edrx_cfg_t cfg);

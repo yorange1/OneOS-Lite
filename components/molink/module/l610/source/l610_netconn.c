@@ -41,7 +41,7 @@
 #endif
 
 #ifndef L610_NETCONN_MQ_MSG_MAX
-#define L610_NETCONN_MQ_MSG_MAX  (10)
+#define L610_NETCONN_MQ_MSG_MAX (10)
 #endif
 
 #define SET_EVENT(socket, event) (((socket + 1) << 16) | (event))
@@ -114,7 +114,7 @@ os_err_t l610_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
     mo_l610_t *l610 = os_container_of(module, mo_l610_t, parent);
 
     info->netconn_array = l610->netconn;
-    info->netconn_nums  = sizeof(l610->netconn) / sizeof(l610->netconn[0]);
+    info->netconn_nums = sizeof(l610->netconn) / sizeof(l610->netconn[0]);
 
     return OS_EOK;
 }
@@ -138,7 +138,7 @@ static os_err_t l610_netconn_set_format(mo_object_t *module)
 
 mo_netconn_t *l610_netconn_create(mo_object_t *module, mo_netconn_type_t type)
 {
-    mo_l610_t    *l610 = os_container_of(module, mo_l610_t, parent);
+    mo_l610_t *l610 = os_container_of(module, mo_l610_t, parent);
     mo_netconn_t *netconn = l610_netconn_alloc(module);
 
     if (OS_NULL == netconn)
@@ -171,7 +171,7 @@ mo_netconn_t *l610_netconn_create(mo_object_t *module, mo_netconn_type_t type)
 
 static os_err_t l610_netconn_do_destroy(mo_object_t *module, mo_netconn_t *netconn)
 {
-    mo_l610_t   *l610   = os_container_of(module, mo_l610_t, parent);
+    mo_l610_t *l610 = os_container_of(module, mo_l610_t, parent);
     at_parser_t *parser = &module->parser;
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
@@ -191,9 +191,7 @@ static os_err_t l610_netconn_do_destroy(mo_object_t *module, mo_netconn_t *netco
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+MIPCLOSE=%d", netconn->connect_id);
     if (result != OS_EOK)
     {
-        ERROR("Module %s destroy %s netconn failed",
-              module->name,
-              (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
+        ERROR("Module %s destroy %s netconn failed", module->name, (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
         return result;
     }
 
@@ -205,9 +203,7 @@ static os_err_t l610_netconn_do_destroy(mo_object_t *module, mo_netconn_t *netco
 
     if (result != OS_EOK)
     {
-        ERROR("Module %s destroy %s netconn failed",
-              module->name,
-              (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
+        ERROR("Module %s destroy %s netconn failed", module->name, (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
     }
 
     return result;
@@ -215,8 +211,8 @@ static os_err_t l610_netconn_do_destroy(mo_object_t *module, mo_netconn_t *netco
 
 os_err_t l610_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 {
-    mo_l610_t *l610  = os_container_of(module, mo_l610_t, parent);
-    os_err_t  result = OS_EOK;
+    mo_l610_t *l610 = os_container_of(module, mo_l610_t, parent);
+    os_err_t result = OS_EOK;
 
     if (l610 == OS_NULL)
     {
@@ -254,9 +250,9 @@ os_err_t l610_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 
     INFO("Module %s netconn id %d destroyed", module->name, netconn->connect_id);
 
-    netconn->connect_id  = -1;
-    netconn->stat        = NETCONN_STAT_NULL;
-    netconn->type        = NETCONN_TYPE_NULL;
+    netconn->connect_id = -1;
+    netconn->stat = NETCONN_STAT_NULL;
+    netconn->type = NETCONN_TYPE_NULL;
     netconn->remote_port = 0;
 
     inet_aton("0.0.0.0", &netconn->remote_ip);
@@ -269,10 +265,10 @@ os_err_t l610_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 os_err_t l610_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port)
 {
     at_parser_t *parser = &module->parser;
-    mo_l610_t   *l610   = os_container_of(module, mo_l610_t, parent);
-    os_uint32_t event   = SET_EVENT(netconn->connect_id, L610_EVENT_CONN_OK | L610_EVENT_CONN_FAIL);
+    mo_l610_t *l610 = os_container_of(module, mo_l610_t, parent);
+    os_uint32_t event = SET_EVENT(netconn->connect_id, L610_EVENT_CONN_OK | L610_EVENT_CONN_FAIL);
 
-    char resp_buff[AT_RESP_BUFF_SIZE_DEF]  = {0};
+    char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
     char remote_ip[IPADDR_MAX_STR_LEN + 1] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 60 * OS_TICK_PER_SECOND};
@@ -334,7 +330,7 @@ __exit:
     {
         ip_addr_copy(netconn->remote_ip, addr);
         netconn->remote_port = port;
-        netconn->stat        = NETCONN_STAT_CONNECT;
+        netconn->stat = NETCONN_STAT_CONNECT;
         DEBUG("Module %s connect to %s:%d successfully!", module->name, remote_ip, port);
     }
     else
@@ -347,16 +343,16 @@ __exit:
 
 os_size_t l610_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
-    at_parser_t *parser    = &module->parser;
-    os_err_t     result    = OS_EOK;
-    os_size_t    sent_size = 0;
-    os_size_t    curr_size = 0;
-    os_uint32_t  event     = 0;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    os_size_t sent_size = 0;
+    os_size_t curr_size = 0;
+    os_uint32_t event = 0;
 
     char resp_buff[AT_RESP_BUFF_SIZE_128] = {0};
 
     mo_l610_t *l610 = os_container_of(module, mo_l610_t, parent);
-    at_resp_t resp  = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout   = 12 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 12 * OS_TICK_PER_SECOND};
 
     at_parser_exec_lock(parser);
 
@@ -448,10 +444,10 @@ os_err_t l610_netconn_gethostbyname(mo_object_t *self, const char *domain_name, 
     OS_ASSERT(OS_NULL != addr);
 
     at_parser_t *parser = &self->parser;
-    os_err_t     result = OS_EOK;
+    os_err_t result = OS_EOK;
 
     char resp_buff[AT_RESP_BUFF_SIZE_128] = {0};
-    char recvip[IPADDR_MAX_STR_LEN + 1]   = {0};
+    char recvip[IPADDR_MAX_STR_LEN + 1] = {0};
 
     at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 15 * OS_TICK_PER_SECOND};
 
@@ -499,7 +495,7 @@ static void urc_close_func(struct at_parser *parser, const char *data, os_size_t
     OS_ASSERT(OS_NULL != data);
 
     mo_object_t *module = os_container_of(parser, mo_object_t, parser);
-    mo_l610_t   *l610   = os_container_of(module, mo_l610_t, parent);
+    mo_l610_t *l610 = os_container_of(module, mo_l610_t, parent);
 
     os_int32_t connect_id = 0;
 
@@ -518,10 +514,10 @@ static void urc_connect_func(struct at_parser *parser, const char *data, os_size
     OS_ASSERT(OS_NULL != data);
 
     mo_object_t *module = os_container_of(parser, mo_object_t, parser);
-    mo_l610_t   *l610   = os_container_of(module, mo_l610_t, parent);
+    mo_l610_t *l610 = os_container_of(module, mo_l610_t, parent);
 
     os_int32_t connect_id = 0;
-    os_int32_t stat       = 0;
+    os_int32_t stat = 0;
 
     sscanf(data, "+MIPOPEN: %d,%d", &connect_id, &stat);
 
@@ -546,10 +542,10 @@ static void urc_send_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != data);
 
     mo_object_t *module = os_container_of(parser, mo_object_t, parser);
-    mo_l610_t   *l610   = os_container_of(module, mo_l610_t, parent);
+    mo_l610_t *l610 = os_container_of(module, mo_l610_t, parent);
 
     os_int32_t connect_id = 0;
-    os_int32_t stat       = 0;
+    os_int32_t stat = 0;
 
     sscanf(data, "+MIPSEND: %d,%d,%*d", &connect_id, &stat);
 
@@ -582,7 +578,7 @@ static void urc_state_func(struct at_parser *parser, const char *data, os_size_t
     sscanf(data, "+MIPSTAT: %d,&*d", &connect_id);
 
     mo_object_t *module = os_container_of(parser, mo_object_t, parser);
-    mo_l610_t   *l610   = os_container_of(module, mo_l610_t, parent);
+    mo_l610_t *l610 = os_container_of(module, mo_l610_t, parent);
 
     mo_netconn_t *netconn = l610_get_netconn_by_id(module, connect_id);
     if (OS_NULL == netconn)
@@ -607,9 +603,9 @@ static void urc_state_func(struct at_parser *parser, const char *data, os_size_t
 static void urc_recv_func(struct at_parser *parser, mo_netconn_t *netconn, os_size_t data_size)
 {
     mo_object_t *module = os_container_of(parser, mo_object_t, parser);
-    os_int32_t  timeout = data_size > 10 ? data_size : 10;
+    os_int32_t timeout = data_size > 10 ? data_size : 10;
 
-    char  temp_buff[8] = {0};
+    char temp_buff[8] = {0};
 
     INFO("Moudle %s netconn %d receive %d bytes data", parser->name, netconn->connect_id, data_size);
 
@@ -667,7 +663,7 @@ static void urc_tcprecv_func(struct at_parser *parser, const char *data, os_size
 
     os_int32_t connect_id = atoi(&tmp_ch);
 
-    mo_object_t  *module  = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
     mo_netconn_t *netconn = l610_get_netconn_by_id(module, connect_id);
     if (OS_NULL == netconn)
     {
@@ -721,7 +717,7 @@ static void urc_udprecv_func(struct at_parser *parser, const char *data, os_size
 
     os_int32_t connect_id = atoi(&tmp_ch);
 
-    mo_object_t  *module  = os_container_of(parser, mo_object_t, parser);
+    mo_object_t *module = os_container_of(parser, mo_object_t, parser);
     mo_netconn_t *netconn = l610_get_netconn_by_id(module, connect_id);
     if (OS_NULL == netconn)
     {
@@ -754,12 +750,12 @@ static void urc_udprecv_func(struct at_parser *parser, const char *data, os_size
 }
 
 static at_urc_t gs_urc_table[] = {
-    {.prefix = "+MIPSEND:",   .suffix = "\r\n",      .func = urc_send_func},
-    {.prefix = "+MIPOPEN:",   .suffix = "\r\n",      .func = urc_connect_func},
-    {.prefix = "+MIPSTAT:",   .suffix = "\r\n",      .func = urc_state_func},
-    {.prefix = "+MIPCLOSE:",  .suffix = "\r\n",      .func = urc_close_func},
-    {.prefix = "",            .suffix = "+MIPRTCP:", .func = urc_tcprecv_func},
-    {.prefix = "",            .suffix = "+MIPRUDP:", .func = urc_udprecv_func},
+    {.prefix = "+MIPSEND:", .suffix = "\r\n", .func = urc_send_func},
+    {.prefix = "+MIPOPEN:", .suffix = "\r\n", .func = urc_connect_func},
+    {.prefix = "+MIPSTAT:", .suffix = "\r\n", .func = urc_state_func},
+    {.prefix = "+MIPCLOSE:", .suffix = "\r\n", .func = urc_close_func},
+    {.prefix = "", .suffix = "+MIPRTCP:", .func = urc_tcprecv_func},
+    {.prefix = "", .suffix = "+MIPRUDP:", .func = urc_udprecv_func},
 };
 
 void l610_netconn_init(mo_l610_t *module)

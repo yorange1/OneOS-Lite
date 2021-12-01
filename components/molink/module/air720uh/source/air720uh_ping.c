@@ -24,7 +24,7 @@
 #include "air720uh_ping.h"
 
 #define MO_LOG_TAG "air720uh_ping"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #define AIR720UH_MIN_PING_PKG_LEN (0)
@@ -34,13 +34,14 @@
 
 #ifdef AIR720UH_USING_PING_OPS
 
-os_err_t air720uh_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp)
+os_err_t
+air720uh_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp)
 {
-    at_parser_t *parser          = &self->parser;
-    os_err_t     result          = OS_EOK;
-    os_int16_t   req_time        = -1;
-    os_int16_t   replyid         = -1;
-    os_int16_t   ttl             = -1;
+    at_parser_t *parser = &self->parser;
+    os_err_t result = OS_EOK;
+    os_int16_t req_time = -1;
+    os_int16_t replyid = -1;
+    os_int16_t ttl = -1;
 
     char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
 
@@ -53,10 +54,10 @@ os_err_t air720uh_ping(mo_object_t *self, const char *host, os_uint16_t len, os_
     if (len > AIR720UH_MAX_PING_PKG_LEN)
     {
         ERROR("%s ping: ping package len[%d] is out of rang[%d, %d].",
-                  self->name,
-                  len,
-                  AIR720UH_MIN_PING_PKG_LEN,
-                  AIR720UH_MAX_PING_PKG_LEN);
+              self->name,
+              len,
+              AIR720UH_MIN_PING_PKG_LEN,
+              AIR720UH_MAX_PING_PKG_LEN);
         return OS_ERROR;
     }
 
@@ -65,10 +66,10 @@ os_err_t air720uh_ping(mo_object_t *self, const char *host, os_uint16_t len, os_
     if ((timeout < AIR720UH_MIN_PING_TIMEOUT) || (timeout > AIR720UH_MAX_PING_TIMEOUT))
     {
         ERROR("%s ping: user set ping timeout value %ums is out of rang[%dms, %dms].",
-                  self->name,
-                  timeout * 100,
-                  AIR720UH_MIN_PING_TIMEOUT * 100,
-                  AIR720UH_MAX_PING_TIMEOUT * 100);
+              self->name,
+              timeout * 100,
+              AIR720UH_MIN_PING_TIMEOUT * 100,
+              AIR720UH_MAX_PING_TIMEOUT * 100);
         return OS_ERROR;
     }
 
@@ -76,10 +77,10 @@ os_err_t air720uh_ping(mo_object_t *self, const char *host, os_uint16_t len, os_
 
     char resp_buff[256] = {0};
     /* Need to wait for 3 lines response msg */
-    at_resp_t at_resp = {.buff      = resp_buff,
-                        .buff_size = sizeof(resp_buff),
-                        .line_num  = 2,
-                        .timeout   =(5 + timeout / 10) * OS_TICK_PER_SECOND};
+    at_resp_t at_resp = {.buff = resp_buff,
+                         .buff_size = sizeof(resp_buff),
+                         .line_num = 2,
+                         .timeout = (5 + timeout / 10) * OS_TICK_PER_SECOND};
 
     /* Exec AT+CIPPING="www.baidu.com",4,64,50; def ping timeout: +CIPPING: 1,39.156.66.14,50,0 */
     /* Success: +CIPPING: 1,39.156.66.14,84,52 */
@@ -90,7 +91,8 @@ os_err_t air720uh_ping(mo_object_t *self, const char *host, os_uint16_t len, os_
         goto __exit;
     }
 
-    if (at_resp_get_data_by_kw(&at_resp, "+CIPPING", "+CIPPING: %d,%[^,],%d,%d", &replyid, ipaddr, &req_time, &ttl) <= 0)
+    if (at_resp_get_data_by_kw(&at_resp, "+CIPPING", "+CIPPING: %d,%[^,],%d,%d", &replyid, ipaddr, &req_time, &ttl) <=
+        0)
     {
         ERROR("%s ping %s fail: check network status and try to set a longer timeout.", self->name, host);
         result = OS_ERROR;
@@ -113,8 +115,8 @@ os_err_t air720uh_ping(mo_object_t *self, const char *host, os_uint16_t len, os_
     {
         inet_aton(ipaddr, &(resp->ip_addr));
         resp->data_len = len;
-        resp->ttl      = ttl;
-        resp->time     = (req_time * 100);
+        resp->ttl = ttl;
+        resp->time = (req_time * 100);
     }
 
 __exit:

@@ -53,7 +53,7 @@ extern "C" {
  */
 typedef enum resp_stat
 {
-    RESP_STAT_NULL = 0,      /* Parser response end is NULL */
+    RESP_STAT_NULL = 0,  /* Parser response end is NULL */
     RESP_STAT_OK,        /* Parser response end is OK */
     RESP_STAT_ERROR,     /* Parser response end is ERROR */
     RESP_STAT_TIMEOUT,   /* Parser response is timeout */
@@ -69,21 +69,21 @@ typedef enum resp_stat
  */
 typedef struct at_resp
 {
-    resp_stat_t stat;          /* the status of current response */
+    resp_stat_t stat; /* the status of current response */
 
-    os_size_t   line_num;      /* the number of setting response lines */
-    os_size_t   line_counts;   /* the count of received response lines */
-    os_int32_t  timeout;       /* the maximum response time */
+    os_size_t line_num;    /* the number of setting response lines */
+    os_size_t line_counts; /* the count of received response lines */
+    os_int32_t timeout;    /* the maximum response time */
 
-    os_size_t   curr_buff_len; /* the length of current response buffer */
-    os_size_t   buff_size;     /* the maximum response buffer size */
-    char       *buff;          /* response buffer */
+    os_size_t curr_buff_len; /* the length of current response buffer */
+    os_size_t buff_size;     /* the maximum response buffer size */
+    char *buff;              /* response buffer */
 } at_resp_t;
 
 const char *at_resp_get_line(at_resp_t *resp, os_size_t resp_line);
 const char *at_resp_get_line_by_kw(at_resp_t *resp, const char *keyword);
-os_int32_t  at_resp_get_data_by_line(at_resp_t *resp, os_size_t resp_line, const char *resp_expr, ...);
-os_int32_t  at_resp_get_data_by_kw(at_resp_t *resp, const char *keyword, const char *resp_expr, ...);
+os_int32_t at_resp_get_data_by_line(at_resp_t *resp, os_size_t resp_line, const char *resp_expr, ...);
+os_int32_t at_resp_get_data_by_kw(at_resp_t *resp, const char *keyword, const char *resp_expr, ...);
 
 #ifdef __cplusplus
 }

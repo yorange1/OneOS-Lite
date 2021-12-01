@@ -32,16 +32,16 @@ extern "C" {
 
 typedef struct
 {
-    cmiot_char   type[32];
+    cmiot_char type[32];
     cmiot_uint16 content_len;
-    cmiot_char * content;
+    cmiot_char *content;
 } CMIOT_ALIGN(1) cmiot_http_parameter_t;
 
-cmiot_char * cmiot_make_http_data(cmiot_uint8 state);
-cmiot_bool   cmiot_parse_http_data(cmiot_char *data, cmiot_http_parameter_t *http_parameter, cmiot_uint16 count);
-cmiot_char * cmiot_is_http_data(cmiot_char *data, cmiot_uint16 len);
+cmiot_char *cmiot_make_http_data(cmiot_uint8 state);
+cmiot_bool cmiot_parse_http_data(cmiot_char *data, cmiot_http_parameter_t *http_parameter, cmiot_uint16 count);
+cmiot_char *cmiot_is_http_data(cmiot_char *data, cmiot_uint16 len);
 cmiot_uint32 cmiot_http_callback(cmiot_uint8 state, cmiot_char *data);
-cmiot_char * cmiot_get_http_server_host(void);
+cmiot_char *cmiot_get_http_server_host(void);
 
 #ifdef __cplusplus
 }

@@ -2,13 +2,13 @@
  ***********************************************************************************************************************
  * Copyright (c) 2020, China Mobile Communications Group Co.,Ltd.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on 
- * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  *
  * @file        stubs.c
@@ -43,12 +43,12 @@ __asm(".global __use_no_semihosting\n\t");
 #endif
 
 /* Standard IO device handles. */
-#define STDIN       0
-#define STDOUT      1
-#define STDERR      2
+#define STDIN  0
+#define STDOUT 1
+#define STDERR 2
 
 /* Standard IO device name defines. */
-const char __stdin_name[]  = "STDIN";
+const char __stdin_name[] = "STDIN";
 const char __stdout_name[] = "STDOUT";
 const char __stderr_name[] = "STDERR";
 
@@ -74,12 +74,12 @@ FILEHANDLE _sys_open(const char *name, int openmode)
     {
         return (STDIN);
     }
-    
+
     if (strcmp(name, __stdout_name) == 0)
     {
         return (STDOUT);
     }
-    
+
     if (strcmp(name, __stderr_name) == 0)
     {
         return (STDERR);
@@ -157,15 +157,15 @@ int _sys_close(FILEHANDLE fh)
  ***********************************************************************************************************************
  * @brief           Reads the contents of a file into a buffer.
  *
- * @attention       It is also legal to signal EOF by returning no data but signalling no error (i.e. the top-bit-set 
+ * @attention       It is also legal to signal EOF by returning no data but signalling no error (i.e. the top-bit-set
  *                  mechanism need never be used).
- *                  So if (for example) the user is trying to read 8 bytes at a time from a file in which only 5 remain, 
+ *                  So if (for example) the user is trying to read 8 bytes at a time from a file in which only 5 remain,
  *                  this routine can do three equally valid things:
  *                  - it can return 0x80000003 (3 bytes not read due to EOF).
- *                  - OR it can return 3 (3 bytes not read), and then return 0x80000008 (8 bytes not read due to EOF) 
+ *                  - OR it can return 3 (3 bytes not read), and then return 0x80000008 (8 bytes not read due to EOF)
  *                    on the next attempt.
- *                  - OR it can return 3 (3 bytes not read), and then return 8 (8 bytes not read, meaning 0 read, meaning 
- *                    EOF) on the next attempt.
+ *                  - OR it can return 3 (3 bytes not read), and then return 8 (8 bytes not read, meaning 0 read,
+ *meaning EOF) on the next attempt.
  *
  * @param[in]       fh        File handle.
  * @param[in]       len       Buffer length.
@@ -175,7 +175,7 @@ int _sys_close(FILEHANDLE fh)
  * @return          Can return:
  *                  - zero if the read was completely successful.
  *                  - the number of bytes _not_ read, if the read was partially successful.
- *                  - the number of bytes not read, plus the top bit set (0x80000000), if the read was partially 
+ *                  - the number of bytes not read, plus the top bit set (0x80000000), if the read was partially
  *                    successful due to end of file.
  *                  - -1 if some error other than EOF occurred.
  ***********************************************************************************************************************
@@ -389,7 +389,8 @@ char *_sys_command_string(char *cmd, int len)
 OS_WEAK void _sys_exit(int return_code)
 {
     /* TODO: perhaps exit the task which is invoking this function. */
-    while (1);
+    while (1)
+        ;
 }
 
 /* Use system(const char *string) implementation in the msh. */
@@ -419,7 +420,7 @@ volatile int *__aeabi_errno_addr(void)
 #ifdef __MICROLIB
 #include <stdio.h>
 
-int fputc(int c, FILE *f) 
+int fputc(int c, FILE *f)
 {
     char ch[2] = {0};
 
@@ -428,7 +429,7 @@ int fputc(int c, FILE *f)
     return 1;
 }
 
-int fgetc(FILE *f) 
+int fgetc(FILE *f)
 {
 #ifdef OS_USING_VFS_DEVFS
     char ch;

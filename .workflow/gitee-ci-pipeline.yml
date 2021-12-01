@@ -1,0 +1,44 @@
+version: '1.0'
+name: shell-code-style-check
+displayName: 代码格式审查
+stages:
+  - stage: ''
+    name: shell-code-style-heck
+    displayName: 代码格式审查
+    steps:
+      - step: shell@agent
+        name: shell-code-style-check
+        displayName: 代码格式审查
+        hostGroupID: backend-server
+        script: |
+          echo '====Get git code===='
+          pwd
+          ls
+          if [ ! -d "code" ];then
+              echo "folder not exist, new it"
+              mkdir code
+          else
+              echo "folder exist"
+          fi
+          cd code
+          ls
+          if [ ! -d "OneOS-Lite" ];then
+              echo "folder not exist, start clone"
+              git clone https://gitee.com/jixiaowei_cmiot/OneOS-Lite.git
+              cd OneOS-Lite
+              git checkout -b dev
+              git pull origin dev
+          else
+              echo "folder exist, start pull"
+              cd OneOS-Lite
+              git pull origin dev
+          fi
+          echo "====Start code style check===="
+          python .workflow/ci/format_check/run-clang-format.py --clang-format-executable /usr/bin/clang-format-12 -r components/
+triggers:
+  push:
+    branches:
+      include:
+        - ^feature.*
+        - dev
+

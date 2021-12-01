@@ -7,7 +7,7 @@
 
 int fcntl(int fd, int flag, ...)
 {
-    int ret   = -1;
+    int ret = -1;
 #ifdef OS_USING_VFS
     va_list va;
     void *arg = OS_NULL;
@@ -21,4 +21,3 @@ int fcntl(int fd, int flag, ...)
 #endif
     return ret;
 }
-

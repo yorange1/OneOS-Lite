@@ -26,9 +26,8 @@
 #include <string.h>
 
 #define MO_LOG_TAG "n21_ping"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
-
 
 #define N21_MIN_PING_PKG_LEN (36)
 #define N21_MAX_PING_PKG_LEN (1500)
@@ -41,8 +40,10 @@ os_err_t n21_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint3
 {
     if (len > N21_MAX_PING_PKG_LEN)
     {
-        ERROR("N21 ping: ping package len[%d] is out of range[%d, %d].", 
-                  len, N21_MIN_PING_PKG_LEN, N21_MAX_PING_PKG_LEN);
+        ERROR("N21 ping: ping package len[%d] is out of range[%d, %d].",
+              len,
+              N21_MIN_PING_PKG_LEN,
+              N21_MAX_PING_PKG_LEN);
         return OS_ERROR;
     }
 
@@ -50,8 +51,10 @@ os_err_t n21_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint3
 
     if (timeout_s > N21_MAX_PING_TIMEOUT)
     {
-        ERROR("N21 ping: ping timeout %us is out of range[%ds, %ds].", 
-                  timeout_s, N21_MIN_PING_TIMEOUT, N21_MAX_PING_TIMEOUT);
+        ERROR("N21 ping: ping timeout %us is out of range[%ds, %ds].",
+              timeout_s,
+              N21_MIN_PING_TIMEOUT,
+              N21_MAX_PING_TIMEOUT);
         return OS_ERROR;
     }
 
@@ -61,11 +64,12 @@ os_err_t n21_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint3
 
     char resp_buff[256] = {0};
 
-    at_resp_t at_resp = {.buff      = resp_buff,
-                         .buff_size = sizeof(resp_buff),
-                         .line_num  = 4,
-                         .timeout   = os_tick_from_ms(1000 + timeout),
-                        };
+    at_resp_t at_resp = {
+        .buff = resp_buff,
+        .buff_size = sizeof(resp_buff),
+        .line_num = 4,
+        .timeout = os_tick_from_ms(1000 + timeout),
+    };
 
     at_parser_exec_lock(parser);
 
@@ -77,7 +81,7 @@ os_err_t n21_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint3
     }
 
     char ip_addr[IPADDR_MAX_STR_LEN + 1] = {0};
-    os_int16_t   ttl       = -1;
+    os_int16_t ttl = -1;
     os_uint32_t req_time = 0;
 
     /* Reply from 58.60.184.213: bytes= 64 time = 873(ms), TTL = 255 */
@@ -110,8 +114,8 @@ os_err_t n21_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint3
     {
         inet_aton(ip_addr, &(resp->ip_addr));
         resp->data_len = len;
-        resp->ttl      = 255;
-        resp->time     = req_time;
+        resp->ttl = 255;
+        resp->time = req_time;
     }
 
     at_parser_exec_unlock(parser);

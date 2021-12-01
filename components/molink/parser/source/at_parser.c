@@ -36,19 +36,18 @@
 #include <os_event.h>
 
 #define MO_LOG_TAG "at.parser"
-#define MO_LOG_LVL  MO_LOG_EMERG
+#define MO_LOG_LVL MO_LOG_EMERG
 #include "mo_log.h"
 
-#define AT_PARSER_PROTECT               os_schedule_lock()
-#define AT_PARSER_UNPROTECT             os_schedule_unlock()
+#define AT_PARSER_PROTECT   os_schedule_lock()
+#define AT_PARSER_UNPROTECT os_schedule_unlock()
 
-#define AT_PARSER_RX_ARRIVE            (1UL)
+#define AT_PARSER_RX_ARRIVE (1UL)
 
 #ifdef MOLINK_USING_MULTI_MODULES
 /* AT Parser manage list */
 static os_slist_node_t gs_parser_list = {0};
 #endif
-
 
 #ifdef MOLINK_USING_MULTI_MODULES
 static void at_parser_list_add(at_parser_t *parser)
@@ -69,8 +68,8 @@ static void at_parser_list_del(at_parser_t *parser)
 {
     OS_ASSERT(parser != OS_NULL);
 
-    os_slist_node_t *node  = OS_NULL;
-    at_parser_t     *entry = OS_NULL;
+    os_slist_node_t *node = OS_NULL;
+    at_parser_t *entry = OS_NULL;
 
     AT_PARSER_PROTECT;
 
@@ -228,11 +227,11 @@ os_err_t at_parser_exec_cmd_valist(at_parser_t *parser, at_resp_t *resp, const c
     at_parser_exec_lock(parser);
 
     memset(resp->buff, 0, resp->buff_size);
-    resp->stat          = RESP_STAT_NULL;
+    resp->stat = RESP_STAT_NULL;
     resp->curr_buff_len = 0;
-    resp->line_counts   = 0;
+    resp->line_counts = 0;
 
-    parser->resp        = resp;
+    parser->resp = resp;
 
     /* Send at command to module */
     at_parser_vasprintfln(parser, cmd_expr, args);
@@ -241,13 +240,13 @@ os_err_t at_parser_exec_cmd_valist(at_parser_t *parser, at_resp_t *resp, const c
     {
         ERROR("execute command (%s) timeout (%d ticks)!", parser->at_cmd_buff, resp->timeout);
         resp->stat = RESP_STAT_TIMEOUT;
-        result     = OS_ETIMEOUT;
+        result = OS_ETIMEOUT;
         goto __exit;
     }
 
     if (resp->stat != RESP_STAT_OK)
     {
-        ERROR("execute command (%s) failed, parser->resp_status:%d",parser->at_cmd_buff, resp->stat);
+        ERROR("execute command (%s) failed, parser->resp_status:%d", parser->at_cmd_buff, resp->stat);
         result = OS_ERROR;
         goto __exit;
     }
@@ -290,9 +289,8 @@ os_err_t at_parser_exec_cmd(at_parser_t *parser, at_resp_t *resp, const char *cm
     OS_ASSERT(resp->buff != OS_NULL);
     OS_ASSERT(cmd_expr != OS_NULL);
 
-
     os_err_t result = OS_EOK;
-    va_list  args   = {0};
+    va_list args = {0};
 
     va_start(args, cmd_expr);
     result = at_parser_exec_cmd_valist(parser, resp, cmd_expr, args);
@@ -349,10 +347,10 @@ static os_err_t at_parser_getchar(at_parser_t *parser, char *ch, os_int32_t time
         os_event_clear(&parser->rx_notice_evt, AT_PARSER_RX_ARRIVE);
 
         result = os_event_recv(&parser->rx_notice_evt,
-                                AT_PARSER_RX_ARRIVE,
-                                OS_EVENT_OPTION_OR | OS_EVENT_OPTION_CLEAR,
-                                timeout,
-                                OS_NULL);
+                               AT_PARSER_RX_ARRIVE,
+                               OS_EVENT_OPTION_OR | OS_EVENT_OPTION_CLEAR,
+                               timeout,
+                               OS_NULL);
 
         if (OS_EOK != result)
         {
@@ -382,9 +380,9 @@ os_size_t at_parser_recv(at_parser_t *parser, char *buf, os_size_t size, os_int3
     OS_ASSERT(parser != OS_NULL);
     OS_ASSERT(buf != OS_NULL);
 
-    char      ch       = 0;
+    char ch = 0;
     os_size_t read_idx = 0;
-    os_err_t  result   = OS_EOK;
+    os_err_t result = OS_EOK;
 
     while (1)
     {
@@ -431,8 +429,7 @@ os_err_t at_parser_connect(at_parser_t *parser, os_uint8_t retry_times)
 
     char resp_buff[32] = {0};
 
-    at_resp_t resp = {.buff = resp_buff,
-                      .buff_size = sizeof(resp_buff)};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff)};
 
     at_parser_exec_lock(parser);
 
@@ -492,9 +489,9 @@ static at_urc_t *at_parser_get_urc(at_parser_t *parser)
         return OS_NULL;
     }
 
-    char     *buffer  = parser->recv_buff;
+    char *buffer = parser->recv_buff;
     os_size_t buff_sz = parser->curr_recv_len;
-    at_urc_t *urc     = OS_NULL;
+    at_urc_t *urc = OS_NULL;
 
     AT_PARSER_PROTECT;
 
@@ -564,10 +561,10 @@ os_err_t at_parser_set_end_mark(at_parser_t *parser, const char *end_mark_str, o
 
 static int at_parser_readline(at_parser_t *parser)
 {
-    os_size_t read_len       = 0;
-    os_bool_t is_full        = OS_FALSE;
-    char      prev_read_char = 0;
-    char      curr_read_char = 0;
+    os_size_t read_len = 0;
+    os_bool_t is_full = OS_FALSE;
+    char prev_read_char = 0;
+    char curr_read_char = 0;
 
     memset(parser->recv_buff, 0x00, parser->recv_buff_len);
     parser->curr_recv_len = 0;
@@ -579,7 +576,7 @@ static int at_parser_readline(at_parser_t *parser)
         if (read_len < parser->recv_buff_len)
         {
             parser->recv_buff[read_len++] = curr_read_char;
-            parser->curr_recv_len         = read_len;
+            parser->curr_recv_len = read_len;
         }
         else
         {
@@ -635,7 +632,8 @@ static void at_parser_resp_handle(at_parser_t *parser)
     if ('\n' == parser->recv_buff[parser->curr_recv_len - 1])
     {
         /* skip the empty line */
-        if (2 >= parser->curr_recv_len) return;
+        if (2 >= parser->curr_recv_len)
+            return;
 
         /* line end with "/r/n" */
         parser->recv_buff[parser->curr_recv_len - 1] = '\0';
@@ -663,7 +661,8 @@ static void at_parser_resp_handle(at_parser_t *parser)
     }
 
     /* check response result */
-    if (memcmp(parser->recv_buff, AT_RESP_OK, strlen(AT_RESP_OK)) == 0 && resp->line_num == 0 && parser->end_mark_len == 0)
+    if (memcmp(parser->recv_buff, AT_RESP_OK, strlen(AT_RESP_OK)) == 0 && resp->line_num == 0 &&
+        parser->end_mark_len == 0)
     {
         /* get the end data by response result, return response state END_OK. */
         resp->stat = RESP_STAT_OK;
@@ -677,10 +676,9 @@ static void at_parser_resp_handle(at_parser_t *parser)
         /* get the end data by response line, return response state END_OK.*/
         resp->stat = RESP_STAT_OK;
     }
-    else if (0 != parser->end_mark_len &&
-             !memcmp(parser->recv_buff + parser->curr_recv_len - parser->end_mark_len - 1,
-                    parser->end_mark,
-                    parser->end_mark_len))
+    else if (0 != parser->end_mark_len && !memcmp(parser->recv_buff + parser->curr_recv_len - parser->end_mark_len - 1,
+                                                  parser->end_mark,
+                                                  parser->end_mark_len))
     {
         /* when process the end mark line, return response state END_OK. */
         resp->stat = RESP_STAT_OK;
@@ -732,7 +730,7 @@ static os_err_t at_parser_rx_indicate(os_device_t *dev, struct os_device_cb_info
 
 static os_err_t at_parser_device_open(at_parser_t *parser, os_device_t *device)
 {
-    os_err_t   result = OS_EOK;
+    os_err_t result = OS_EOK;
 
     result = os_device_open(device);
     if (result != OS_EOK)
@@ -746,7 +744,7 @@ static os_err_t at_parser_device_open(at_parser_t *parser, os_device_t *device)
     struct os_device_cb_info cb_info = {
         .type = OS_DEVICE_CB_TYPE_RX,
         .data = parser, /* The AT Parser operator is passed through a callback structure */
-        .cb   = at_parser_rx_indicate,
+        .cb = at_parser_rx_indicate,
     };
 
     result = os_device_control(parser->device, OS_DEVICE_CTRL_SET_CB, &cb_info);
@@ -930,7 +928,7 @@ os_err_t at_parser_deinit(at_parser_t *parser)
     at_parser_list_del(parser);
 #endif
 
-    if(parser->task != OS_NULL)
+    if (parser->task != OS_NULL)
     {
         os_task_destroy(parser->task);
     }

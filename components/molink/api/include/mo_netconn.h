@@ -71,15 +71,15 @@ typedef enum mo_netconn_type
 /**
  ***********************************************************************************************************************
  * Used to inform the callback function about changes
- * 
- * RCVPLUS events say: Safe to perform a potentially blocking call call once more. 
+ *
+ * RCVPLUS events say: Safe to perform a potentially blocking call call once more.
  * They are counted in sockets - three RCVPLUS events for accept mbox means you are safe
  * to call netconn_accept 3 times without being blocked.
  * Same thing for receive mbox.
- * 
+ *
  * RCVMINUS events say: Your call to to a possibly blocking function is "acknowledged".
  * Socket implementation decrements the counter.
- * 
+ *
  * For TX, there is no need to count, its merely a flag. SENDPLUS means you may send something.
  * SENDPLUS occurs when enough data was delivered to peer so netconn_send() can be called again.
  * A SENDMINUS event occurs when the next call to a netconn_send() would be blocking.
@@ -117,12 +117,12 @@ typedef struct mo_netconn
 
     mo_netconn_stat_t stat;
     mo_netconn_type_t type;
-    
-    ip_addr_t   remote_ip;
+
+    ip_addr_t remote_ip;
     os_uint16_t remote_port;
     os_uint16_t local_port;
-    
-    os_mq_t     *mq;
+
+    os_mq_t *mq;
 
 } mo_netconn_t;
 
@@ -135,7 +135,7 @@ typedef struct mo_netconn
  */
 typedef struct mo_netconn_info
 {
-    os_uint32_t         netconn_nums;
+    os_uint32_t netconn_nums;
     const mo_netconn_t *netconn_array;
 } mo_netconn_info_t;
 
@@ -148,9 +148,9 @@ typedef struct mo_netconn_info
  */
 typedef struct mo_notconn_msg
 {
-    ip_addr_t   addr;
+    ip_addr_t addr;
     os_uint16_t port;
-    char       *data;
+    char *data;
     os_uint32_t data_len;
 } mo_notconn_msg_t;
 
@@ -164,36 +164,46 @@ typedef struct mo_notconn_msg
 typedef struct mo_netconn_ops
 {
     mo_netconn_t *(*create)(mo_object_t *module, mo_netconn_type_t type);
-    os_err_t      (*destroy)(mo_object_t *module, mo_netconn_t *netconn);
-    os_err_t      (*connect)(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port);
-    os_err_t      (*bind)(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port);
-    os_size_t     (*sendto)(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t remote_ip, os_uint16_t remote_port, const char *data, os_size_t size);
-    os_size_t     (*send)(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size);
-    os_err_t      (*gethostbyname)(mo_object_t *module, const char *domain_name, ip_addr_t *addr);
-    os_err_t      (*get_info)(mo_object_t *module, mo_netconn_info_t *info);
+    os_err_t (*destroy)(mo_object_t *module, mo_netconn_t *netconn);
+    os_err_t (*connect)(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port);
+    os_err_t (*bind)(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port);
+    os_size_t (*sendto)(mo_object_t *module,
+                        mo_netconn_t *netconn,
+                        ip_addr_t remote_ip,
+                        os_uint16_t remote_port,
+                        const char *data,
+                        os_size_t size);
+    os_size_t (*send)(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size);
+    os_err_t (*gethostbyname)(mo_object_t *module, const char *domain_name, ip_addr_t *addr);
+    os_err_t (*get_info)(mo_object_t *module, mo_netconn_info_t *info);
 } mo_netconn_ops_t;
 
 mo_netconn_t *mo_netconn_create(mo_object_t *module, mo_netconn_type_t type);
-os_err_t      mo_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn);
+os_err_t mo_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn);
 #ifdef MOLINK_USING_SERVER_MODE
-os_err_t      mo_netconn_bind(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port);
+os_err_t mo_netconn_bind(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port);
 #endif /* MOLINK_USING_SERVER_MODE */
-os_err_t      mo_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port);
+os_err_t mo_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port);
 #ifdef MOLINK_USING_UDP
-os_size_t     mo_netconn_sendto(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t remote_ip, os_uint16_t remote_port, const char *data, os_size_t size);
+os_size_t mo_netconn_sendto(mo_object_t *module,
+                            mo_netconn_t *netconn,
+                            ip_addr_t remote_ip,
+                            os_uint16_t remote_port,
+                            const char *data,
+                            os_size_t size);
 #endif /* MOLINK_USING_UDP */
 #ifdef MOLINK_USING_TCP
-os_size_t     mo_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size);
+os_size_t mo_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size);
 #endif /* MOLINK_USING_TCP */
-os_err_t       mo_netconn_recvfrom(mo_object_t *module,
-                              mo_netconn_t *netconn,
-                              void **data,
-                              os_size_t *size, 
-                              ip_addr_t *addr, 
-                              os_uint16_t *port,
-                              os_tick_t timeout);
+os_err_t mo_netconn_recvfrom(mo_object_t *module,
+                             mo_netconn_t *netconn,
+                             void **data,
+                             os_size_t *size,
+                             ip_addr_t *addr,
+                             os_uint16_t *port,
+                             os_tick_t timeout);
 #ifdef MOLINK_USING_DNS
-os_err_t      mo_netconn_gethostbyname(mo_object_t *module, const char *domain_name, ip_addr_t *addr);
+os_err_t mo_netconn_gethostbyname(mo_object_t *module, const char *domain_name, ip_addr_t *addr);
 #endif
 
 /**
@@ -201,12 +211,15 @@ os_err_t      mo_netconn_gethostbyname(mo_object_t *module, const char *domain_n
  * @note These functions are called by the molink component
  ***********************************************************************************************************************
  */
-os_err_t      mo_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info);
-void          mo_netconn_pasv_close_notice(mo_netconn_t *netconn);
-void          mo_wifi_netconn_data_recv_notice(mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port, char *data, os_size_t size);
-void          mo_netconn_data_recv_notice(mo_netconn_t *netconn, char *data, os_size_t size);
-void          mo_netconn_mq_destroy(os_mq_t *mq);
-
+os_err_t mo_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info);
+void mo_netconn_pasv_close_notice(mo_netconn_t *netconn);
+void mo_wifi_netconn_data_recv_notice(mo_netconn_t *netconn,
+                                      ip_addr_t addr,
+                                      os_uint16_t port,
+                                      char *data,
+                                      os_size_t size);
+void mo_netconn_data_recv_notice(mo_netconn_t *netconn, char *data, os_size_t size);
+void mo_netconn_mq_destroy(os_mq_t *mq);
 
 #ifdef __cplusplus
 }

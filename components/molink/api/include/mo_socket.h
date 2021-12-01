@@ -50,7 +50,7 @@ extern "C" {
 #define MOLINK_NUM_SOCKETS 6
 #endif
 
-#define MOLINK_SOCKETS_FD_MAX   MOLINK_NUM_SOCKETS
+#define MOLINK_SOCKETS_FD_MAX MOLINK_NUM_SOCKETS
 
 #ifndef MOLINK_DNS_MAX_NAME_LEN
 #define MOLINK_DNS_MAX_NAME_LEN 56
@@ -105,33 +105,33 @@ extern "C" {
 /* Level number for (get/set)sockopt() to apply to socket itself */
 #define SOL_SOCKET 0xfff /* options for socket level */
 
-#define AF_UNSPEC       0
-#define AF_INET         2
+#define AF_UNSPEC 0
+#define AF_INET   2
 #ifdef MOLINK_USING_IPV6
-#define AF_INET6        10
+#define AF_INET6 10
 #else /* MOLINK_USING_IPV6 */
-#define AF_INET6        AF_UNSPEC
+#define AF_INET6 AF_UNSPEC
 #endif /* MOLINK_USING_IPV6 */
-#define PF_INET         AF_INET
-#define PF_INET6        AF_INET6
-#define PF_UNSPEC       AF_UNSPEC
+#define PF_INET   AF_INET
+#define PF_INET6  AF_INET6
+#define PF_UNSPEC AF_UNSPEC
 
-#define IPPROTO_IP      0
-#define IPPROTO_ICMP    1
-#define IPPROTO_TCP     6
-#define IPPROTO_UDP     17
+#define IPPROTO_IP   0
+#define IPPROTO_ICMP 1
+#define IPPROTO_TCP  6
+#define IPPROTO_UDP  17
 #ifdef MOLINK_USING_IPV6
-#define IPPROTO_IPV6    41
-#define IPPROTO_ICMPV6  58
+#define IPPROTO_IPV6   41
+#define IPPROTO_ICMPV6 58
 #endif /* MOLINK_USING_IPV6 */
 #define IPPROTO_UDPLITE 136
 #define IPPROTO_RAW     255
 
 /* Flags we can use with send and recv */
-#define MSG_PEEK     0x01 /* Peeks at an incoming message */
-#define MSG_WAITALL  0x02 /* Unimplemented: Requests that the function block until the full */
+#define MSG_PEEK    0x01  /* Peeks at an incoming message */
+#define MSG_WAITALL 0x02  /* Unimplemented: Requests that the function block until the full */
                           /* amount of data requested can be returned */
-#define MSG_OOB      0x04 /* Unimplemented: Requests out-of-band data. The significance and semantics */
+#define MSG_OOB 0x04      /* Unimplemented: Requests out-of-band data. The significance and semantics */
                           /* of out-of-band data are protocol-specific */
 #define MSG_DONTWAIT 0x08 /* Nonblocking i/o for this operation only */
 #define MSG_MORE     0x10 /* Sender will send more */
@@ -198,11 +198,11 @@ typedef uint16_t in_port_t;
 
 struct hostent
 {
-    char  *h_name;            /* Official name of the host. */
+    char *h_name;             /* Official name of the host. */
     char **h_aliases;         /* A pointer to an array of pointers to alternative host names, */
                               /* terminated by a null pointer. */
-    int    h_addrtype;        /* Address type. */
-    int    h_length;          /* The length, in bytes, of the address. */
+    int h_addrtype;           /* Address type. */
+    int h_length;             /* The length, in bytes, of the address. */
     char **h_addr_list;       /* A pointer to an array of pointers to network addresses */
                               /* (in network byte order) for the host,terminated by a null pointer */
 #define h_addr h_addr_list[0] /* for backward compatibility */
@@ -210,50 +210,51 @@ struct hostent
 
 struct sockaddr
 {
-    uint8_t     sa_len;
+    uint8_t sa_len;
     sa_family_t sa_family;
-    char        sa_data[14];
+    char sa_data[14];
 };
 
 struct sockaddr_in
 {
-    uint8_t        sin_len;
-    sa_family_t    sin_family;
-    in_port_t      sin_port;
+    uint8_t sin_len;
+    sa_family_t sin_family;
+    in_port_t sin_port;
     struct in_addr sin_addr;
 #define SIN_ZERO_LEN 8
-    char           sin_zero[SIN_ZERO_LEN];
+    char sin_zero[SIN_ZERO_LEN];
 };
 
 #ifdef MOLINK_USING_IPV6
-struct sockaddr_in6 {
-  uint8_t         sin6_len;      /* length of this structure    */
-  sa_family_t     sin6_family;   /* AF_INET6                    */
-  in_port_t       sin6_port;     /* Transport layer port #      */
-  uint32_t        sin6_flowinfo; /* IPv6 flow information       */
-  struct in6_addr sin6_addr;     /* IPv6 address                */
-  uint32_t        sin6_scope_id; /* Set of interfaces for scope */
+struct sockaddr_in6
+{
+    uint8_t sin6_len;          /* length of this structure    */
+    sa_family_t sin6_family;   /* AF_INET6                    */
+    in_port_t sin6_port;       /* Transport layer port #      */
+    uint32_t sin6_flowinfo;    /* IPv6 flow information       */
+    struct in6_addr sin6_addr; /* IPv6 address                */
+    uint32_t sin6_scope_id;    /* Set of interfaces for scope */
 };
 #endif
 
 struct addrinfo
 {
-    int              ai_flags;     /* Input flags. */
-    int              ai_family;    /* Address family of socket. */
-    int              ai_socktype;  /* Socket type. */
-    int              ai_protocol;  /* Protocol of socket. */
-    socklen_t        ai_addrlen;   /* Length of socket address. */
-    struct sockaddr *ai_addr;      /* Socket address of socket. */
-    char            *ai_canonname; /* Canonical name of service location. */
-    struct addrinfo *ai_next;      /* Pointer to next in list. */
+    int ai_flags;             /* Input flags. */
+    int ai_family;            /* Address family of socket. */
+    int ai_socktype;          /* Socket type. */
+    int ai_protocol;          /* Protocol of socket. */
+    socklen_t ai_addrlen;     /* Length of socket address. */
+    struct sockaddr *ai_addr; /* Socket address of socket. */
+    char *ai_canonname;       /* Canonical name of service location. */
+    struct addrinfo *ai_next; /* Pointer to next in list. */
 };
 
 struct sockaddr_storage
 {
-    uint8_t     s2_len;
+    uint8_t s2_len;
     sa_family_t ss_family;
-    char        s2_data1[2];
-    uint32_t    s2_data2[3];
+    char s2_data1[2];
+    uint32_t s2_data2[3];
 };
 
 typedef struct ip_mreq
@@ -266,7 +267,7 @@ typedef struct ip_mreq
 typedef struct poll_req
 {
     struct vfs_pollfd *req;
-    os_slist_node_t    req_list;
+    os_slist_node_t req_list;
 } poll_req_t;
 #endif /* OS_USING_IO_MULTIPLEXING */
 
@@ -274,16 +275,16 @@ typedef struct mo_sock
 {
     mo_netconn_t *netconn;
 
-    void       *lastdata;       /* data that was left from the previous read */
-    os_size_t   lastlen;        /* data length that was left from the previous read */
-    os_uint16_t lastoffset;     /* offset in the data that was left from the previous read */
-    os_int32_t  recv_timeout;   /* timeout to wait for received data in milliseconds */
+    void *lastdata;          /* data that was left from the previous read */
+    os_size_t lastlen;       /* data length that was left from the previous read */
+    os_uint16_t lastoffset;  /* offset in the data that was left from the previous read */
+    os_int32_t recv_timeout; /* timeout to wait for received data in milliseconds */
 
-    os_int8_t   rcvevent;       /* number of times data was received, set by event_callback(), 
+    os_int8_t rcvevent;         /* number of times data was received, set by event_callback(),
                                    tested by the receive and select functions */
-    os_uint8_t  sendevent;      /* number of times data was ACKed (free send buffer), 
+    os_uint8_t sendevent;       /* number of times data was ACKed (free send buffer),
                                    set by event_callback(),tested by select */
-    os_uint8_t  errevent;       /* error happened for this socket, set by event_callback(), tested by select */
+    os_uint8_t errevent;        /* error happened for this socket, set by event_callback(), tested by select */
     os_uint32_t select_waiting; /* counter of how many threads are waiting for this socket using select */
 #ifdef OS_USING_IO_MULTIPLEXING
     os_slist_node_t req_slist_head;
@@ -293,26 +294,33 @@ typedef struct mo_sock
 #if 0
 /* FD_SET used for mo_select */
 #ifndef FD_SET
-#undef  FD_SETSIZE
+#undef FD_SETSIZE
 /* Make FD_SETSIZE match NUM_SOCKETS in socket.c */
-#define FD_SETSIZE    MOLINK_SOCKETS_FD_MAX
+#define FD_SETSIZE   MOLINK_SOCKETS_FD_MAX
 
 typedef unsigned long       fd_mask;
-#define NBBY                (8) /* number of bits in a byte */
-#define NFDBITS             (sizeof(fd_mask) * NBBY) /* bits per mask */
-#define __FD_MASK(n)        ((fd_mask)(1UL << ((n) % NFDBITS)))
+#define NBBY         (8)                      /* number of bits in a byte */
+#define NFDBITS      (sizeof(fd_mask) * NBBY) /* bits per mask */
+#define __FD_MASK(n) ((fd_mask)(1UL << ((n) % NFDBITS)))
 
 #ifndef HOWMANY
-#define HOWMANY(x,y)        (((x)+((y)-1))/(y))
+#define HOWMANY(x, y) (((x) + ((y)-1)) / (y))
 #endif /* HOWMANY */
 
-#define FDSAFESET(n, code)  do {if (((n) < MOLINK_SOCKETS_FD_MAX) && (((int)(n)) >= 0)) { code; }} while(0)
-#define FDSAFEGET(n, code)  (((n) < MOLINK_SOCKETS_FD_MAX) && (((int)(n)) >= 0) ? (code) : 0)
+#define FDSAFESET(n, code)                                                                                             \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (((n) < MOLINK_SOCKETS_FD_MAX) && (((int)(n)) >= 0))                                                        \
+        {                                                                                                              \
+            code;                                                                                                      \
+        }                                                                                                              \
+    } while (0)
+#define FDSAFEGET(n, code) (((n) < MOLINK_SOCKETS_FD_MAX) && (((int)(n)) >= 0) ? (code) : 0)
 
-#define FD_SET(n, p)  FDSAFESET(n, (p)->fd_bits[(n)/NFDBITS] |=  __FD_MASK(n))
-#define FD_CLR(n, p)  FDSAFESET(n, (p)->fd_bits[(n)/NFDBITS] &= ~__FD_MASK(n))
-#define FD_ISSET(n,p) FDSAFEGET(n, (p)->fd_bits[(n)/NFDBITS] &   __FD_MASK(n))
-#define FD_ZERO(p)    memset((void*)(p), 0, sizeof(*(p)))
+#define FD_SET(n, p)   FDSAFESET(n, (p)->fd_bits[(n) / NFDBITS] |= __FD_MASK(n))
+#define FD_CLR(n, p)   FDSAFESET(n, (p)->fd_bits[(n) / NFDBITS] &= ~__FD_MASK(n))
+#define FD_ISSET(n, p) FDSAFEGET(n, (p)->fd_bits[(n) / NFDBITS] & __FD_MASK(n))
+#define FD_ZERO(p)     memset((void *)(p), 0, sizeof(*(p)))
 
 typedef struct fd_set
 {
@@ -333,7 +341,7 @@ typedef struct fd_set
 /*
  * If defined MOLINK_USING_SINGLE_MODULE, mo socket api is like bsd socket,
  * can also use bsd socket by define MOLINK_USING_BSD_SOCKET.
- * If defined MOLINK_USING_MULTI_MODULES, mo socket api need mo_object point 
+ * If defined MOLINK_USING_MULTI_MODULES, mo socket api need mo_object point
  * as first parameter, if need use bsd socket, you need menu config Socket Kit.
  */
 #if defined(MOLINK_USING_SINGLE_MODULE)
@@ -345,18 +353,8 @@ int mo_bind_with_cb(int socket, const struct sockaddr *name, socklen_t namelen, 
 #endif /* MOLINK_USING_SERVER_MODE */
 int mo_connect(int socket, const struct sockaddr *name, socklen_t namelen);
 #ifdef MOLINK_USING_UDP
-int mo_sendto(int                    socket,
-              const void            *data,
-              size_t                 size,
-              int                    flags,
-              const struct sockaddr *to,
-              socklen_t              tolen);
-int mo_recvfrom(int              socket,
-                void            *mem,
-                size_t           len,
-                int              flags,
-                struct sockaddr *from,
-                socklen_t       *fromlen);
+int mo_sendto(int socket, const void *data, size_t size, int flags, const struct sockaddr *to, socklen_t tolen);
+int mo_recvfrom(int socket, void *mem, size_t len, int flags, struct sockaddr *from, socklen_t *fromlen);
 #endif /* MOLINK_USING_UDP */
 #ifdef MOLINK_USING_TCP
 int mo_send(int socket, const void *data, size_t size, int flags);
@@ -372,24 +370,28 @@ int mo_socket(mo_object_t *module, int domain, int type, int protocol);
 int mo_closesocket(mo_object_t *module, int socket);
 #ifdef MOLINK_USING_SERVER_MODE
 int mo_bind(mo_object_t *module, int socket, const struct sockaddr *name, socklen_t namelen);
-int mo_bind_with_cb(mo_object_t *module, int socket, const struct sockaddr *name, socklen_t namelen, mo_netconn_data_callback cb);
+int mo_bind_with_cb(mo_object_t *module,
+                    int socket,
+                    const struct sockaddr *name,
+                    socklen_t namelen,
+                    mo_netconn_data_callback cb);
 #endif /* MOLINK_USING_SERVER_MODE */
 int mo_connect(mo_object_t *module, int socket, const struct sockaddr *name, socklen_t namelen);
 #ifdef MOLINK_USING_UDP
-int mo_sendto(mo_object_t           *module,
-              int                    socket,
-              const void            *data,
-              size_t                 size,
-              int                    flags,
+int mo_sendto(mo_object_t *module,
+              int socket,
+              const void *data,
+              size_t size,
+              int flags,
               const struct sockaddr *to,
-              socklen_t              tolen);
-int mo_recvfrom(mo_object_t     *module,
-                int              socket,
-                void            *mem,
-                size_t           len,
-                int              flags,
+              socklen_t tolen);
+int mo_recvfrom(mo_object_t *module,
+                int socket,
+                void *mem,
+                size_t len,
+                int flags,
                 struct sockaddr *from,
-                socklen_t       *fromlen);
+                socklen_t *fromlen);
 #endif /* MOLINK_USING_UDP */
 #ifdef MOLINK_USING_TCP
 int mo_send(mo_object_t *module, int socket, const void *data, size_t size, int flags);
@@ -403,11 +405,11 @@ struct hostent *mo_gethostbyname(mo_object_t *module, const char *name);
 #endif /*  MOLINK_USING_SINGLE_MODULE */
 
 #ifdef MOLINK_USING_SELECT
-int  mo_select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset, struct timeval *timeout);
+int mo_select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset, struct timeval *timeout);
 #endif /* MOLINK_USING_SELECT */
 
 #if defined(MOLINK_USING_ADDRINFO) && defined(MOLINK_USING_DNS)
-int  mo_getaddrinfo(const char *nodename, const char *servname, const struct addrinfo *hints, struct addrinfo **res);
+int mo_getaddrinfo(const char *nodename, const char *servname, const struct addrinfo *hints, struct addrinfo **res);
 void mo_freeaddrinfo(struct addrinfo *ai);
 #endif /* MOLINK_USING_ADDRINFO && MOLINK_USING_DNS */
 
@@ -417,42 +419,44 @@ int mo_poll(int socket, struct vfs_pollfd *req, os_bool_t poll_setup);
 /* End of Mo Socket API */
 
 /* BSD Socket API */
-#define MOLINK_COMPAT_BSD_SOCKET
+//#define MOLINK_COMPAT_BSD_SOCKET
 
 #if defined(MOLINK_USING_SINGLE_MODULE) && defined(MOLINK_COMPAT_BSD_SOCKET)
 #if defined(NET_USING_BSD)
 #error "Only one Module, molink can support bsd socket, do not config Socket Kit in menu"
 #endif /* NET_USING_BSD */
-#define socket(domain,type,protocol)                        mo_socket(domain,type,protocol)
-#define closesocket(s)                                      mo_closesocket(s)
+#define socket(domain, type, protocol) mo_socket(domain, type, protocol)
+#define closesocket(s)                 mo_closesocket(s)
 #ifdef MOLINK_USING_SERVER_MODE
-#define bind(s, name, namelen)                              mo_bind(s, name, namelen)
+#define bind(s, name, namelen) mo_bind(s, name, namelen)
 #endif /* MOLINK_USING_SERVER_MODE */
-#define connect(s,name,namelen)                             mo_connect(s,name,namelen)
+#define connect(s, name, namelen) mo_connect(s, name, namelen)
 #ifdef MOLINK_USING_UDP
-#define sendto(s,dataptr,size,flags,to,tolen)               mo_sendto(s,dataptr,size,flags,to,tolen)
-#define recvfrom(s,mem,len,flags,from,fromlen)              mo_recvfrom(s,mem,len,flags,from,fromlen)
+#define sendto(s, dataptr, size, flags, to, tolen)  mo_sendto(s, dataptr, size, flags, to, tolen)
+#define recvfrom(s, mem, len, flags, from, fromlen) mo_recvfrom(s, mem, len, flags, from, fromlen)
 #endif /* MOLINK_USING_UDP */
 #ifdef MOLINK_USING_TCP
-#define send(s,dataptr,size,flags)                          mo_send(s,dataptr,size,flags)
-#define recv(s,mem,len,flags)                               mo_recv(s,mem,len,flags)
+#define send(s, dataptr, size, flags) mo_send(s, dataptr, size, flags)
+#define recv(s, mem, len, flags)      mo_recv(s, mem, len, flags)
 #endif /* MOLINK_USING_TCP */
-#define getsockopt(s,level,optname,optval,optlen)           mo_getsockopt(s,level,optname,optval,optlen)
-#define setsockopt(s,level,optname,optval,optlen)           mo_setsockopt(s,level,optname,optval,optlen)
+#define getsockopt(s, level, optname, optval, optlen) mo_getsockopt(s, level, optname, optval, optlen)
+#define setsockopt(s, level, optname, optval, optlen) mo_setsockopt(s, level, optname, optval, optlen)
 #ifdef MOLINK_USING_DNS
-#define gethostbyname(name)                                 mo_gethostbyname(name)
+#define gethostbyname(name) mo_gethostbyname(name)
 #ifdef MOLINK_USING_ADDRINFO
-#define getaddrinfo(nodename,servname,hints,res)            mo_getaddrinfo(nodename,servname,hints,res)
-#define freeaddrinfo(addrinfo)                              mo_freeaddrinfo(addrinfo)
+#define getaddrinfo(nodename, servname, hints, res) mo_getaddrinfo(nodename, servname, hints, res)
+#define freeaddrinfo(addrinfo)                      mo_freeaddrinfo(addrinfo)
 #endif /* MOLINK_USING_ADDRINFO */
 #endif /* MOLINK_USING_DNS */
 
 #ifdef MOLINK_USING_SELECT
-#define select(maxfdp1,readset,writeset,exceptset,timeout)  mo_select(maxfdp1,readset,writeset,exceptset,timeout)
+#define select(maxfdp1, readset, writeset, exceptset, timeout) mo_select(maxfdp1, readset, writeset, exceptset, timeout)
 #endif /* MOLINK_USING_SELECT */
 
 #ifdef OS_USING_IO_MULTIPLEXING
-#define poll(s,req,pollsetup);  mo_poll(s,req,pollsetup);
+#define poll(s, req, pollsetup)                                                                                        \
+    ;                                                                                                                  \
+    mo_poll(s, req, pollsetup);
 #endif /* OS_USING_IO_MULTIPLEXING */
 
 #endif /* MOLINK_USING_SINGLE_MODULE && MOLINK_COMPAT_BSD_SOCKET */

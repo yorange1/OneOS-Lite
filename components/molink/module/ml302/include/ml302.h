@@ -74,18 +74,18 @@ extern "C" {
 #define ML302_NETCONN_NUM 6
 #endif
 
-#define ML302_MQTTC_NUM 1   /* The ML302 supports only one MQTT client */
+#define ML302_MQTTC_NUM 1 /* The ML302 supports only one MQTT client */
 
 typedef struct mo_ml302
 {
     mo_object_t parent;
 #ifdef ML302_USING_NETCONN_OPS
     mo_netconn_t netconn[ML302_NETCONN_NUM];
-	
-	os_int32_t curr_connect;
+
+    os_int32_t curr_connect;
     os_event_t netconn_evt;
     os_mutex_t netconn_lock;
-    void      *netconn_data;
+    void *netconn_data;
 #endif /* ML302_USING_NETCONN_OPS */
 #ifdef ML302_USING_MQTTC_OPS
     mo_mqttc_t mqttc[ML302_MQTTC_NUM];
@@ -94,7 +94,7 @@ typedef struct mo_ml302
 } mo_ml302_t;
 
 mo_object_t *module_ml302_create(const char *name, void *parser_config);
-os_err_t     module_ml302_destroy(mo_object_t *self);
+os_err_t module_ml302_destroy(mo_object_t *self);
 
 #endif /* MOLINK_USING_ML302 */
 
@@ -103,4 +103,3 @@ os_err_t     module_ml302_destroy(mo_object_t *self);
 #endif /* __cplusplus */
 
 #endif /* __ML302_H__ */
-

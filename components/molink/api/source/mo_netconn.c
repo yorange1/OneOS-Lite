@@ -28,7 +28,7 @@
 #include <os_stddef.h>
 
 #define MO_LOG_TAG "molink.netconn"
-#define MO_LOG_LVL  MO_LOG_EMERG
+#define MO_LOG_LVL MO_LOG_EMERG
 #include "mo_log.h"
 
 #ifdef MOLINK_USING_NETCONN_OPS
@@ -45,7 +45,11 @@ static mo_netconn_ops_t *get_netconn_ops(mo_object_t *module)
     return ops;
 }
 
-void mo_wifi_netconn_data_recv_notice(mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port, char *data, os_size_t size)
+void mo_wifi_netconn_data_recv_notice(mo_netconn_t *netconn,
+                                      ip_addr_t addr,
+                                      os_uint16_t port,
+                                      char *data,
+                                      os_size_t size)
 {
     OS_ASSERT(OS_NULL != netconn);
     OS_ASSERT(OS_NULL != data);
@@ -54,25 +58,25 @@ void mo_wifi_netconn_data_recv_notice(mo_netconn_t *netconn, ip_addr_t addr, os_
     {
         mo_notconn_msg_t msg = {0};
 
-        msg.addr     = addr;
-        msg.port     = port;
-        msg.data     = data;
+        msg.addr = addr;
+        msg.port = port;
+        msg.data = data;
         msg.data_len = size;
 
 #ifdef MOLINK_USING_SOCKETS_OPS
-    if (OS_NULL != netconn->data_func)
-    {
-        netconn->data_func(OS_NULL, addr, port, data, size);
-        free(data);
-    }
-    else
-    {
-        os_mq_send(netconn->mq, (void *)&msg, sizeof(mo_notconn_msg_t), OS_WAIT_FOREVER);
-        if (OS_NULL != netconn->evt_func)
+        if (OS_NULL != netconn->data_func)
         {
-            netconn->evt_func(netconn, MO_NETCONN_EVT_RCVPLUS, size);
+            netconn->data_func(OS_NULL, addr, port, data, size);
+            free(data);
         }
-    }
+        else
+        {
+            os_mq_send(netconn->mq, (void *)&msg, sizeof(mo_notconn_msg_t), OS_WAIT_FOREVER);
+            if (OS_NULL != netconn->evt_func)
+            {
+                netconn->evt_func(netconn, MO_NETCONN_EVT_RCVPLUS, size);
+            }
+        }
 #else
         os_mq_send(netconn->mq, (void *)&msg, sizeof(mo_notconn_msg_t), OS_WAIT_FOREVER);
 #endif
@@ -95,7 +99,7 @@ void mo_netconn_data_recv_notice(mo_netconn_t *netconn, char *data, os_size_t si
     {
         mo_notconn_msg_t msg = {0};
 
-        msg.data     = data;
+        msg.data = data;
         msg.data_len = size;
 
         result = os_mq_send(netconn->mq, (void *)&msg, sizeof(mo_notconn_msg_t), OS_WAIT_FOREVER);
@@ -185,7 +189,7 @@ void mo_netconn_mq_destroy(os_mq_t *mq)
 {
     OS_ASSERT(OS_NULL != mq);
 
-    os_err_t  result    = OS_EOK;
+    os_err_t result = OS_EOK;
     os_size_t data_size = 0;
 
     mo_notconn_msg_t msg = {0};
@@ -258,7 +262,7 @@ os_err_t mo_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
     OS_ASSERT(OS_NULL != module);
     OS_ASSERT(OS_NULL != netconn);
 
-    if (NETCONN_STAT_NULL ==  netconn->stat)
+    if (NETCONN_STAT_NULL == netconn->stat)
     {
         ERROR("Module %s netconn id %d connect state %d error!", module->name, netconn->connect_id, netconn->stat);
         return OS_ERROR;
@@ -424,7 +428,12 @@ os_err_t mo_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_
  * @return          The length of data successfully sent
  ***********************************************************************************************************************
  */
-os_size_t mo_netconn_sendto(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t remote_ip, os_uint16_t remote_port, const char *data, os_size_t size)
+os_size_t mo_netconn_sendto(mo_object_t *module,
+                            mo_netconn_t *netconn,
+                            ip_addr_t remote_ip,
+                            os_uint16_t remote_port,
+                            const char *data,
+                            os_size_t size)
 {
     OS_ASSERT(OS_NULL != module);
     OS_ASSERT(OS_NULL != netconn);
@@ -442,7 +451,7 @@ os_size_t mo_netconn_sendto(mo_object_t *module, mo_netconn_t *netconn, ip_addr_
     {
         return 0;
     }
-    
+
     /* now just module esp8266 has support udp socket server & udp sendto func */
 #ifdef MOLINK_USING_ESP8266
     if (module->type == MODULE_TYPE_ESP8266)
@@ -536,15 +545,21 @@ os_size_t mo_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char
  * @retval          OS_EOK          Receive data successfully
  ***********************************************************************************************************************
  */
-os_err_t  mo_netconn_recvfrom(mo_object_t *module, mo_netconn_t *netconn, void **data, os_size_t *size, ip_addr_t *addr, os_uint16_t *port, os_tick_t timeout)
+os_err_t mo_netconn_recvfrom(mo_object_t *module,
+                             mo_netconn_t *netconn,
+                             void **data,
+                             os_size_t *size,
+                             ip_addr_t *addr,
+                             os_uint16_t *port,
+                             os_tick_t timeout)
 {
     OS_ASSERT(OS_NULL != module);
     OS_ASSERT(OS_NULL != netconn);
     OS_ASSERT(OS_NULL != data);
     OS_ASSERT(OS_NULL != size);
 
-    mo_notconn_msg_t msg      = {0};
-    os_size_t        msg_size =  0;
+    mo_notconn_msg_t msg = {0};
+    os_size_t msg_size = 0;
 
     os_err_t result = os_mq_recv(netconn->mq, (void *)&msg, sizeof(mo_notconn_msg_t), timeout, &msg_size);
 
@@ -588,9 +603,9 @@ os_err_t  mo_netconn_recvfrom(mo_object_t *module, mo_netconn_t *netconn, void *
         {
             *port = msg.port;
         }
-    
+
 #ifdef MOLINK_USING_SOCKETS_OPS
-        if (OS_NULL!= netconn->evt_func)
+        if (OS_NULL != netconn->evt_func)
         {
             netconn->evt_func(netconn, MO_NETCONN_EVT_RCVMINUS, *size);
         }

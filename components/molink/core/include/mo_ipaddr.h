@@ -34,12 +34,12 @@ extern "C" {
 #endif
 
 #ifdef MOLINK_USING_IPV6
-#define IPADDR_MAX_STR_LEN (45)         /* without '\0' */
+#define IPADDR_MAX_STR_LEN (45) /* without '\0' */
 #else
-#define IPADDR_MAX_STR_LEN (15)         /* without '\0' */
+#define IPADDR_MAX_STR_LEN (15) /* without '\0' */
 #endif
 
-#define IPADDR_MIN_STR_LEN (7)          /* without '\0' */
+#define IPADDR_MIN_STR_LEN (7) /* without '\0' */
 
 /*
  * Definitions of bits in internet address integers.
@@ -155,9 +155,9 @@ typedef struct ip4_addr
 #define ip4_addr_isany(ipaddr)     ((ipaddr) == NULL || ip4_addr_isany_val(*(ipaddr)))
 
 in_addr_t net_ipaddr_addr(const char *cp);
-int       net_ip4addr_aton(const char *cp, ip4_addr_t *addr);
-char *    net_ip4addr_ntoa(const ip4_addr_t *addr);
-char *    net_ip4addr_ntoa_r(const ip4_addr_t *addr, char *buf, int buflen);
+int net_ip4addr_aton(const char *cp, ip4_addr_t *addr);
+char *net_ip4addr_ntoa(const ip4_addr_t *addr);
+char *net_ip4addr_ntoa_r(const ip4_addr_t *addr, char *buf, int buflen);
 #endif /* MOLINK_USING_IPV4 */
 
 struct in6_addr
@@ -165,7 +165,7 @@ struct in6_addr
     union
     {
         uint32_t u32_addr[4];
-        uint8_t  u8_addr[16];
+        uint8_t u8_addr[16];
     } un;
 #define s6_addr un.u8_addr
 };
@@ -174,12 +174,12 @@ struct in6_addr
 
 enum molink_ipv6_scope_type
 {
-  /** Unknown */
-  IP6_UNKNOWN   = 0,
-  /** Unicast */
-  IP6_UNICAST   = 1,
-  /** Multicast */
-  IP6_MULTICAST = 2
+    /** Unknown */
+    IP6_UNKNOWN = 0,
+    /** Unicast */
+    IP6_UNICAST = 1,
+    /** Multicast */
+    IP6_MULTICAST = 2
 };
 
 typedef struct ip6_addr
@@ -191,13 +191,13 @@ typedef struct ip6_addr
 } ip6_addr_t;
 
 #ifdef MOLINK_USING_IPV6_SCOPES
-#define ip6_addr_clear_zone(ip6addr)    ((ip6addr)->zone = 0)
-#define ip6_addr_zone(ip6addr)          ((ip6addr)->zone)
+#define ip6_addr_clear_zone(ip6addr) ((ip6addr)->zone = 0)
+#define ip6_addr_zone(ip6addr)       ((ip6addr)->zone)
 #else
 #define ip6_addr_clear_zone(ip6addr)
-#define ip6_addr_zone(ip6addr)              0
+#define ip6_addr_zone(ip6addr) 0
 #endif
-#define ip6_addr_has_scope(ip6addr, type)   0
+#define ip6_addr_has_scope(ip6addr, type) 0
 
 /** This macro can be used to initialize a variable of type struct in6_addr
     to the IPv6 wildcard address. */
@@ -260,7 +260,7 @@ extern const struct in6_addr in6addr_any;
     (((ip6addr).addr[0] == 0) && ((ip6addr).addr[1] == 0) && ((ip6addr).addr[2] == 0) && ((ip6addr).addr[3] == 0))
 #define ip6_addr_isany(ip6addr) (((ip6addr) == NULL) || ip6_addr_isany_val(*(ip6addr)))
 
-int   net_ip6addr_aton(const char *cp, ip6_addr_t *addr);
+int net_ip6addr_aton(const char *cp, ip6_addr_t *addr);
 char *net_ip6addr_ntoa(const ip6_addr_t *addr);
 char *net_ip6addr_ntoa_r(const ip6_addr_t *addr, char *buf, int buflen);
 #endif /* MOLINK_USING_IPV6 */
@@ -292,7 +292,7 @@ typedef struct _ip_addr
     } while (0)
 #define IP_GET_TYPE(ipaddr) ((ipaddr)->type)
 
-#define IP_IS_ANY_TYPE_VAL(ipaddr)    (IP_GET_TYPE(&ipaddr) == IPADDR_TYPE_ANY)
+#define IP_IS_ANY_TYPE_VAL(ipaddr) (IP_GET_TYPE(&ipaddr) == IPADDR_TYPE_ANY)
 
 #define IP_IS_V4_VAL(ipaddr) (IP_GET_TYPE(&ipaddr) == IPADDR_TYPE_V4)
 #define IP_IS_V6_VAL(ipaddr) (IP_GET_TYPE(&ipaddr) == IPADDR_TYPE_V6)
@@ -373,7 +373,7 @@ typedef struct _ip_addr
 
 typedef ip4_addr_t ip_addr_t;
 
-#define IP_IS_ANY_TYPE_VAL(ipaddr)              0
+#define IP_IS_ANY_TYPE_VAL(ipaddr) 0
 
 #define IP_SET_TYPE_VAL(ipaddr, iptype)
 #define IP_SET_TYPE(ipaddr, iptype)
@@ -398,7 +398,7 @@ typedef ip4_addr_t ip_addr_t;
 
 typedef ip6_addr_t ip_addr_t;
 
-#define IP_IS_ANY_TYPE_VAL(ipaddr)              0
+#define IP_IS_ANY_TYPE_VAL(ipaddr) 0
 
 #define IP_SET_TYPE_VAL(ipaddr, iptype)
 #define IP_SET_TYPE(ipaddr, iptype)
@@ -421,7 +421,7 @@ typedef ip6_addr_t ip_addr_t;
 #endif /* MOLINK_USING_IPV4 && MOLINK_USING_IPV6 */
 
 const char *net_inet_ntop(int af, const void *src, char *dst, int32_t size);
-int         net_inet_pton(int af, const char *src, void *dst);
+int net_inet_pton(int af, const char *src, void *dst);
 
 #define inet_ntop(af, src, dst, size) net_inet_ntop(af, src, dst, size)
 #define inet_pton(af, src, dst)       net_inet_pton(af, src, dst)
@@ -432,46 +432,65 @@ int         net_inet_pton(int af, const char *src, void *dst);
 #endif
 
 #ifdef MOLINK_USING_IPV6
-#define inet6_addr_from_ip6addr(target_in6addr, source_ip6addr) {(target_in6addr)->un.u32_addr[0] = (source_ip6addr)->addr[0]; \
-                                                                 (target_in6addr)->un.u32_addr[1] = (source_ip6addr)->addr[1]; \
-                                                                 (target_in6addr)->un.u32_addr[2] = (source_ip6addr)->addr[2]; \
-                                                                 (target_in6addr)->un.u32_addr[3] = (source_ip6addr)->addr[3];}
-#define inet6_addr_to_ip6addr(target_ip6addr, source_in6addr)   {(target_ip6addr)->addr[0] = (source_in6addr)->un.u32_addr[0]; \
-                                                                 (target_ip6addr)->addr[1] = (source_in6addr)->un.u32_addr[1]; \
-                                                                 (target_ip6addr)->addr[2] = (source_in6addr)->un.u32_addr[2]; \
-                                                                 (target_ip6addr)->addr[3] = (source_in6addr)->un.u32_addr[3]; \
-                                                                 ip6_addr_clear_zone(target_ip6addr);}
-#endif                                                                 
+#define inet6_addr_from_ip6addr(target_in6addr, source_ip6addr)                                                        \
+    {                                                                                                                  \
+        (target_in6addr)->un.u32_addr[0] = (source_ip6addr)->addr[0];                                                  \
+        (target_in6addr)->un.u32_addr[1] = (source_ip6addr)->addr[1];                                                  \
+        (target_in6addr)->un.u32_addr[2] = (source_ip6addr)->addr[2];                                                  \
+        (target_in6addr)->un.u32_addr[3] = (source_ip6addr)->addr[3];                                                  \
+    }
+#define inet6_addr_to_ip6addr(target_ip6addr, source_in6addr)                                                          \
+    {                                                                                                                  \
+        (target_ip6addr)->addr[0] = (source_in6addr)->un.u32_addr[0];                                                  \
+        (target_ip6addr)->addr[1] = (source_in6addr)->un.u32_addr[1];                                                  \
+        (target_ip6addr)->addr[2] = (source_in6addr)->un.u32_addr[2];                                                  \
+        (target_ip6addr)->addr[3] = (source_in6addr)->un.u32_addr[3];                                                  \
+        ip6_addr_clear_zone(target_ip6addr);                                                                           \
+    }
+#endif
 
 #ifdef MOLINK_USING_IPV4
-#define IP4ADDR_PORT_TO_SOCKADDR(sin, ipaddr, port) do { \
-      (sin)->sin_len = sizeof(struct sockaddr_in); \
-      (sin)->sin_family = AF_INET; \
-      (sin)->sin_port = htons(*(port)); \
-      inet_addr_from_ip4addr(&(sin)->sin_addr, ipaddr); \
-      memset((sin)->sin_zero, 0, SIN_ZERO_LEN); }while(0)
-#define SOCKADDR4_TO_IP4ADDR_PORT(sin, ipaddr, port) do { \
-    inet_addr_to_ip4addr(ip_2_ip4(ipaddr), &((sin)->sin_addr)); \
-    *(port) = ntohs((sin)->sin_port); }while(0)
+#define IP4ADDR_PORT_TO_SOCKADDR(sin, ipaddr, port)                                                                    \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        (sin)->sin_len = sizeof(struct sockaddr_in);                                                                   \
+        (sin)->sin_family = AF_INET;                                                                                   \
+        (sin)->sin_port = htons(*(port));                                                                              \
+        inet_addr_from_ip4addr(&(sin)->sin_addr, ipaddr);                                                              \
+        memset((sin)->sin_zero, 0, SIN_ZERO_LEN);                                                                      \
+    } while (0)
+#define SOCKADDR4_TO_IP4ADDR_PORT(sin, ipaddr, port)                                                                   \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        inet_addr_to_ip4addr(ip_2_ip4(ipaddr), &((sin)->sin_addr));                                                    \
+        *(port) = ntohs((sin)->sin_port);                                                                              \
+    } while (0)
 #endif /* MOLINK_USING_IPV4 */
 
 #ifdef MOLINK_USING_IPV6
 
 #define ip6_addr_set_zone(ip6addr, zone_idx)
 
-#define IP6ADDR_PORT_TO_SOCKADDR(sin6, ipaddr, port) do { \
-      (sin6)->sin6_len = sizeof(struct sockaddr_in6); \
-      (sin6)->sin6_family = AF_INET6; \
-      (sin6)->sin6_port = htons(*(port)); \
-      (sin6)->sin6_flowinfo = 0; \
-      inet6_addr_from_ip6addr(&(sin6)->sin6_addr, ipaddr); \
-      (sin6)->sin6_scope_id = ip6_addr_zone(ipaddr); }while(0)
-#define SOCKADDR6_TO_IP6ADDR_PORT(sin6, ipaddr, port) do { \
-    inet6_addr_to_ip6addr(ip_2_ip6(ipaddr), &((sin6)->sin6_addr)); \
-    if (ip6_addr_has_scope(ip_2_ip6(ipaddr), IP6_UNKNOWN)) { \
-      ip6_addr_set_zone(ip_2_ip6(ipaddr), (uint8_t)((sin6)->sin6_scope_id)); \
-    } \
-    *(port) = ntohs((sin6)->sin6_port); }while(0)
+#define IP6ADDR_PORT_TO_SOCKADDR(sin6, ipaddr, port)                                                                   \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        (sin6)->sin6_len = sizeof(struct sockaddr_in6);                                                                \
+        (sin6)->sin6_family = AF_INET6;                                                                                \
+        (sin6)->sin6_port = htons(*(port));                                                                            \
+        (sin6)->sin6_flowinfo = 0;                                                                                     \
+        inet6_addr_from_ip6addr(&(sin6)->sin6_addr, ipaddr);                                                           \
+        (sin6)->sin6_scope_id = ip6_addr_zone(ipaddr);                                                                 \
+    } while (0)
+#define SOCKADDR6_TO_IP6ADDR_PORT(sin6, ipaddr, port)                                                                  \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        inet6_addr_to_ip6addr(ip_2_ip6(ipaddr), &((sin6)->sin6_addr));                                                 \
+        if (ip6_addr_has_scope(ip_2_ip6(ipaddr), IP6_UNKNOWN))                                                         \
+        {                                                                                                              \
+            ip6_addr_set_zone(ip_2_ip6(ipaddr), (uint8_t)((sin6)->sin6_scope_id));                                     \
+        }                                                                                                              \
+        *(port) = ntohs((sin6)->sin6_port);                                                                            \
+    } while (0)
 #endif /* MOLINK_USING_IPV6 */
 
 #if defined(MOLINK_USING_IPV4) && defined(MOLINK_USING_IPV6)
@@ -480,32 +499,41 @@ static void sockaddr_to_ipaddr_port(const struct sockaddr *sockaddr, ip_addr_t *
 {
 #define AF_INET  2
 #define AF_INET6 10
-  if (AF_INET6 == sockaddr->sa_family) {
-    SOCKADDR6_TO_IP6ADDR_PORT((const struct sockaddr_in6 *)(const void *)(sockaddr), ipaddr, port);
-    ipaddr->type = IPADDR_TYPE_V6;
-  } else {
-    SOCKADDR4_TO_IP4ADDR_PORT((const struct sockaddr_in *)(const void *)(sockaddr), ipaddr, port);
-    ipaddr->type = IPADDR_TYPE_V4;
-  }
+    if (AF_INET6 == sockaddr->sa_family)
+    {
+        SOCKADDR6_TO_IP6ADDR_PORT((const struct sockaddr_in6 *)(const void *)(sockaddr), ipaddr, port);
+        ipaddr->type = IPADDR_TYPE_V6;
+    }
+    else
+    {
+        SOCKADDR4_TO_IP4ADDR_PORT((const struct sockaddr_in *)(const void *)(sockaddr), ipaddr, port);
+        ipaddr->type = IPADDR_TYPE_V4;
+    }
 }
 
-#define IPADDR_PORT_TO_SOCKADDR(sockaddr, ipaddr, port) do { \
-    if (IP_IS_ANY_TYPE_VAL(*ipaddr) || IP_IS_V6_VAL(*ipaddr)) { \
-      IP6ADDR_PORT_TO_SOCKADDR((struct sockaddr_in6*)(void*)(sockaddr), ip_2_ip6(ipaddr), port); \
-    } else { \
-      IP4ADDR_PORT_TO_SOCKADDR((struct sockaddr_in*)(void*)(sockaddr), ip_2_ip4(ipaddr), port); \
-    } } while(0)
+#define IPADDR_PORT_TO_SOCKADDR(sockaddr, ipaddr, port)                                                                \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (IP_IS_ANY_TYPE_VAL(*ipaddr) || IP_IS_V6_VAL(*ipaddr))                                                      \
+        {                                                                                                              \
+            IP6ADDR_PORT_TO_SOCKADDR((struct sockaddr_in6 *)(void *)(sockaddr), ip_2_ip6(ipaddr), port);               \
+        }                                                                                                              \
+        else                                                                                                           \
+        {                                                                                                              \
+            IP4ADDR_PORT_TO_SOCKADDR((struct sockaddr_in *)(void *)(sockaddr), ip_2_ip4(ipaddr), port);                \
+        }                                                                                                              \
+    } while (0)
 #define SOCKADDR_TO_IPADDR_PORT(sockaddr, ipaddr, port) sockaddr_to_ipaddr_port(sockaddr, ipaddr, port)
-#elif defined (MOLINK_USING_IPV6)
-#define IPADDR_PORT_TO_SOCKADDR(sockaddr, ipaddr, port) \
-        IP6ADDR_PORT_TO_SOCKADDR((struct sockaddr_in6*)(void*)(sockaddr), ip_2_ip6(ipaddr), port)
-#define SOCKADDR_TO_IPADDR_PORT(sockaddr, ipaddr, port) \
-        SOCKADDR6_TO_IP6ADDR_PORT((const struct sockaddr_in6*)(const void*)(sockaddr), ipaddr, port)
+#elif defined(MOLINK_USING_IPV6)
+#define IPADDR_PORT_TO_SOCKADDR(sockaddr, ipaddr, port)                                                                \
+    IP6ADDR_PORT_TO_SOCKADDR((struct sockaddr_in6 *)(void *)(sockaddr), ip_2_ip6(ipaddr), port)
+#define SOCKADDR_TO_IPADDR_PORT(sockaddr, ipaddr, port)                                                                \
+    SOCKADDR6_TO_IP6ADDR_PORT((const struct sockaddr_in6 *)(const void *)(sockaddr), ipaddr, port)
 #else
-#define IPADDR_PORT_TO_SOCKADDR(sockaddr, ipaddr, port) \
-        IP4ADDR_PORT_TO_SOCKADDR((struct sockaddr_in*)(void*)(sockaddr), ip_2_ip4(ipaddr), port)
-#define SOCKADDR_TO_IPADDR_PORT(sockaddr, ipaddr, port) \
-        SOCKADDR4_TO_IP4ADDR_PORT((const struct sockaddr_in*)(const void*)(sockaddr), ipaddr, port)
+#define IPADDR_PORT_TO_SOCKADDR(sockaddr, ipaddr, port)                                                                \
+    IP4ADDR_PORT_TO_SOCKADDR((struct sockaddr_in *)(void *)(sockaddr), ip_2_ip4(ipaddr), port)
+#define SOCKADDR_TO_IPADDR_PORT(sockaddr, ipaddr, port)                                                                \
+    SOCKADDR4_TO_IP4ADDR_PORT((const struct sockaddr_in *)(const void *)(sockaddr), ipaddr, port)
 #endif
 
 #ifdef __cplusplus

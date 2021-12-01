@@ -81,7 +81,7 @@ static const struct dev_file_ops gs_sockfs_fops = {
         return OS_ERROR;                                                                                               \
     }                                                                                                                  \
     struct socket_private *sock_private = FILE->private;                                                               \
-    SOCKET                              = sock_private->socket_id;
+    SOCKET = sock_private->socket_id;
 
 #define GET_SOCKETID_SHUTDOWN_FROM_FILE(SOCKET, SHUTDOWN, FILE)                                                        \
     if (FILE->private == NULL)                                                                                         \
@@ -89,8 +89,8 @@ static const struct dev_file_ops gs_sockfs_fops = {
         return OS_ERROR;                                                                                               \
     }                                                                                                                  \
     struct socket_private *sock_private = FILE->private;                                                               \
-    SOCKET                              = sock_private->socket_id;                                                     \
-    SHUTDOWN                            = sock_private->shutdown_how;
+    SOCKET = sock_private->socket_id;                                                                                  \
+    SHUTDOWN = sock_private->shutdown_how;
 
 #define SET_SOCKETID_TO_FILE(SOCKET, FILE)                                                                             \
     if (FILE->private == NULL)                                                                                         \
@@ -98,7 +98,7 @@ static const struct dev_file_ops gs_sockfs_fops = {
         return OS_ERROR;                                                                                               \
     }                                                                                                                  \
     struct socket_private *sock_private = FILE->private;                                                               \
-    sock_private->socket_id             = SOCKET;
+    sock_private->socket_id = SOCKET;
 
 #define SET_SHUTDOWN_TO_FILE(SHUTDOWN, FILE)                                                                           \
     if (FILE->private == NULL)                                                                                         \
@@ -106,7 +106,7 @@ static const struct dev_file_ops gs_sockfs_fops = {
         return OS_ERROR;                                                                                               \
     }                                                                                                                  \
     struct socket_private *sock_private = FILE->private;                                                               \
-    sock_private->shutdown_how          = SHUTDOWN;
+    sock_private->shutdown_how = SHUTDOWN;
 
 #define GET_SOCKETID_FROM_FD(SOCKET, FD)                                                                               \
     struct vfs_file *file = fd_to_fp(FD);                                                                              \
@@ -274,7 +274,7 @@ int select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset, st
     {
         memcpy(&exceptset_bak, exceptset, sizeof(fd_set));
     }
-    int fd     = 0;
+    int fd = 0;
     int socket = 0;
     // tansfor to socket id
     for (fd = 0; fd < maxfdp1; fd++)
@@ -324,6 +324,193 @@ int select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset, st
 }
 #endif
 
+#if defined(MOLINK_USING_SINGLE_MODULE)
+int socket(int domain, int type, int protocol)
+{
+    int socket;
+
+    socket = mo_socket(domain, type, protocol);
+    if (socket < 0)
+    {
+        os_set_errno(-ENOMEM);
+        return OS_ERROR;
+    }
+
+#ifdef OS_USING_VFS_DEVFS
+    int fd;
+
+    fd = open(SOCKET_DEV_PATH_NAME, O_RDWR);
+    if (fd < 0)
+    {
+        mo_closesocket(socket);
+        os_set_errno(-ENOMEM);
+        return OS_ERROR;
+    }
+    ioctl(fd, SET_SOCKET_ID, socket);
+
+    return fd;
+#else
+    return socket;
+#endif
+}
+
+int closesocket(int fd)
+{
+    int ret;
+
+#ifdef OS_USING_VFS_DEVFS
+    ret = close(fd);
+#else
+    ret = mo_closesocket(fd);
+#endif
+
+    return ret;
+}
+
+int shutdown(int fd, int how)
+{
+    LOG_E(BSD_SOCKET_TAG, "OneOS module is not support shutdown");
+    return -1;
+}
+
+int bind(int fd, const struct sockaddr *name, socklen_t namelen)
+{
+    LOG_E(BSD_SOCKET_TAG, "OneOS module is not support bind");
+    return -1;
+}
+
+int listen(int fd, int backlog)
+{
+    LOG_E(BSD_SOCKET_TAG, "OneOS module is not support listen");
+    return -1;
+}
+
+int accept(int fd, struct sockaddr *addr, socklen_t *addrlen)
+{
+    LOG_E(BSD_SOCKET_TAG, "OneOS module is not support accept");
+    return -1;
+}
+
+int connect(int fd, const struct sockaddr *name, socklen_t namelen)
+{
+    int socket;
+
+#ifdef OS_USING_VFS_DEVFS
+    GET_SOCKETID_FROM_FD(socket, fd)
+#else
+    socket = fd;
+#endif
+
+    return mo_connect(socket, name, namelen);
+}
+
+int sendto(int fd, const void *data, size_t size, int flags, const struct sockaddr *to, socklen_t tolen)
+{
+#ifdef MOLINK_USING_UDP
+    int socket;
+
+#ifdef OS_USING_VFS_DEVFS
+    GET_SOCKETID_FROM_FD(socket, fd)
+#else
+    socket = fd;
+#endif
+
+    return mo_sendto(socket, data, size, flags, to, tolen);
+
+#else
+    return -1;
+#endif
+}
+
+int send(int fd, const void *data, size_t size, int flags)
+{
+#ifdef MOLINK_USING_TCP
+    int socket;
+
+#ifdef OS_USING_VFS_DEVFS
+    GET_SOCKETID_FROM_FD(socket, fd)
+#else
+    socket = fd;
+#endif
+
+    return mo_send(socket, data, size, flags);
+
+#else
+    return -1;
+#endif
+}
+
+int recvfrom(int fd, void *mem, size_t len, int flags, struct sockaddr *from, socklen_t *fromlen)
+{
+#ifdef MOLINK_USING_UDP
+    int socket;
+
+#ifdef OS_USING_VFS_DEVFS
+    GET_SOCKETID_FROM_FD(socket, fd)
+#else
+    socket = fd;
+#endif
+
+    return mo_recvfrom(socket, mem, len, flags, from, fromlen);
+
+#else
+    return -1;
+#endif
+}
+
+int recv(int fd, void *mem, size_t len, int flags)
+{
+#ifdef MOLINK_USING_TCP
+    int socket;
+
+#ifdef OS_USING_VFS_DEVFS
+    GET_SOCKETID_FROM_FD(socket, fd)
+#else
+    socket = fd;
+#endif
+
+    return mo_recv(socket, mem, len, flags);
+
+#else
+    return -1;
+#endif
+}
+
+int getsockopt(int fd, int level, int optname, void *optval, socklen_t *optlen)
+{
+    int socket;
+
+#ifdef OS_USING_VFS_DEVFS
+    GET_SOCKETID_FROM_FD(socket, fd)
+#else
+    socket = fd;
+#endif
+
+    return mo_getsockopt(socket, level, optname, optval, optlen);
+}
+
+int setsockopt(int fd, int level, int optname, const void *optval, socklen_t optlen)
+{
+    int socket;
+
+#ifdef OS_USING_VFS_DEVFS
+    GET_SOCKETID_FROM_FD(socket, fd)
+#else
+    socket = fd;
+#endif
+
+    return mo_setsockopt(socket, level, optname, optval, optlen);
+}
+
+struct hostent *gethostbyname(const char *name)
+{
+#ifdef MOLINK_USING_DNS
+    return mo_gethostbyname(name);
+#else
+    return OS_NULL;
+#endif
+}
+#elif defined(MOLINK_USING_MULTI_MODULES)
 int socket(int domain, int type, int protocol)
 {
     int socket;
@@ -571,6 +758,7 @@ struct hostent *gethostbyname(const char *name)
     return OS_NULL;
 #endif
 }
+#endif /* MOLINK_USING_SINGLE_MODULE*/
 
 int getaddrinfo(const char *nodename, const char *servname, const struct addrinfo *hints, struct addrinfo **res)
 {
@@ -624,8 +812,8 @@ static int sockfs_adapter_close(struct vfs_file *file)
     OS_ASSERT(file != OS_NULL);
     OS_ASSERT(file->type == FT_DEVICE);
 
-    int ret          = OS_ERROR;
-    int socket       = -1;
+    int ret = OS_ERROR;
+    int socket = -1;
     int shutdown_how = 0;
     GET_SOCKETID_SHUTDOWN_FROM_FILE(socket, shutdown_how, file)
     if (shutdown_how)
@@ -739,7 +927,7 @@ int select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset, st
     {
         memcpy(&exceptset_bak, exceptset, sizeof(fd_set));
     }
-    int fd     = 0;
+    int fd = 0;
     int socket = 0;
     // tansfor to socket id
     for (fd = 0; fd < maxfdp1; fd++)

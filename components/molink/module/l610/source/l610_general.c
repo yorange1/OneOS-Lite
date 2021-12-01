@@ -37,7 +37,7 @@ os_err_t l610_at_test(mo_object_t *self)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout   = 1 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 1 * OS_TICK_PER_SECOND};
 
     return at_parser_exec_cmd(parser, &resp, "AT");
 }
@@ -50,9 +50,9 @@ os_err_t l610_get_imei(mo_object_t *self, char *value, os_size_t len)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout   = 1 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 1 * OS_TICK_PER_SECOND};
 
-    if(OS_EOK != at_parser_exec_cmd(parser, &resp, "AT+CGSN=1"))
+    if (OS_EOK != at_parser_exec_cmd(parser, &resp, "AT+CGSN=1"))
     {
         return OS_ERROR;
     }
@@ -78,7 +78,7 @@ os_err_t l610_get_imsi(mo_object_t *self, char *value, os_size_t len)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout   = 1 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 1 * OS_TICK_PER_SECOND};
 
     if (OS_EOK != at_parser_exec_cmd(parser, &resp, "AT+CIMI?"))
     {
@@ -106,7 +106,7 @@ os_err_t l610_get_iccid(mo_object_t *self, char *value, os_size_t len)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout   = 1 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 1 * OS_TICK_PER_SECOND};
 
     if (OS_EOK != at_parser_exec_cmd(parser, &resp, "AT+CCID?"))
     {
@@ -160,7 +160,7 @@ static os_err_t l610_set_apn(mo_object_t *self)
     }
 
     resp.line_num = 2;
-    resp.timeout  = 150 * OS_TICK_PER_SECOND;
+    resp.timeout = 150 * OS_TICK_PER_SECOND;
 
     if (at_parser_exec_cmd(parser, &resp, "AT+MIPCALL=1,\"%s\"", apn) != OS_EOK)
     {
@@ -186,7 +186,7 @@ os_err_t l610_get_cfun(mo_object_t *self, os_uint8_t *fun_lvl)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout   = 1 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 1 * OS_TICK_PER_SECOND};
 
     if (OS_EOK != at_parser_exec_cmd(parser, &resp, "AT+CFUN?"))
     {
@@ -238,7 +238,7 @@ os_err_t l610_get_firmware_version(mo_object_t *self, mo_firmware_version_t *ver
 
     char resp_buff[AT_RESP_BUFF_SIZE_256] = {0};
 
-    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout   = 2 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 2 * OS_TICK_PER_SECOND};
 
     os_err_t result = at_parser_exec_cmd(parser, &resp, "AT+GMR");
     if (result != OS_EOK)
@@ -254,7 +254,7 @@ os_err_t l610_get_firmware_version(mo_object_t *self, mo_firmware_version_t *ver
     }
 
     const char *source_line = at_resp_get_line(&resp, 1);
-    os_size_t   line_length = strlen(source_line);
+    os_size_t line_length = strlen(source_line);
 
     char **dest_line = &version->ver_info[0];
 
@@ -273,4 +273,3 @@ os_err_t l610_get_firmware_version(mo_object_t *self, mo_firmware_version_t *ver
 }
 
 #endif /* L610_USING_GENERAL_OPS */
-

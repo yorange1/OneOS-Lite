@@ -32,7 +32,7 @@
 #ifdef BC26_USING_IFCONFIG_OPS
 
 #define MO_LOG_TAG "bc26.ifconfig"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #define BC26_IFCONFIG_INVALID_DFT (-1)
@@ -58,12 +58,12 @@ os_err_t bc26_ifconfig(mo_object_t *module)
     }
 
     os_uint8_t rssi = 0;
-    os_uint8_t ber  = 0;
+    os_uint8_t ber = 0;
 
     if (bc26_get_csq(module, &rssi, &ber) != OS_EOK)
     {
         rssi = 0;
-        ber  = 0;
+        ber = 0;
     }
 
     os_kprintf("\r\nLIST AT MODULE INFORMATION\r\n");
@@ -91,7 +91,7 @@ os_err_t bc26_ifconfig(mo_object_t *module)
 os_err_t bc26_set_dnsserver(mo_object_t *module, dns_server_t dns)
 {
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_EOK;
+    os_err_t result = OS_EOK;
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
@@ -118,14 +118,14 @@ os_err_t bc26_set_dnsserver(mo_object_t *module, dns_server_t dns)
     {
         result = at_parser_exec_cmd(parser, &resp, "AT+QIDNSCFG=1,\"%s\",\"%s\"", dns.primary_dns, dns.secondary_dns);
     }
-    
+
     return result;
 }
 
 os_err_t bc26_get_dnsserver(mo_object_t *module, dns_server_t *dns)
 {
-    at_parser_t *parser         = &module->parser;
-    os_err_t     result         = OS_EOK;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
 
     char primary_dns[IPADDR_MAX_STR_LEN + 1] = {0};
 
@@ -143,13 +143,15 @@ os_err_t bc26_get_dnsserver(mo_object_t *module, dns_server_t *dns)
 
     char resp_buff[4 * AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t at_resp = {.buff      = resp_buff,
-                         .buff_size = sizeof(resp_buff),
-                         .timeout   = OS_TICK_PER_SECOND};
+    at_resp_t at_resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = OS_TICK_PER_SECOND};
 
     result = at_parser_exec_cmd(parser, &at_resp, "AT+QIDNSCFG=1");
 
-    if (at_resp_get_data_by_kw(&at_resp, "+QIDNSCFG:", "+QIDNSCFG: 1,%[^,],\"%[^\"]", primary_dns, dns->secondary_dns) <= 0)
+    if (at_resp_get_data_by_kw(&at_resp,
+                               "+QIDNSCFG:",
+                               "+QIDNSCFG: 1,%[^,],\"%[^\"]",
+                               primary_dns,
+                               dns->secondary_dns) <= 0)
     {
         ERROR("BC26 %s: get dns failed.", __FUNCTION__);
         result = OS_ERROR;
@@ -167,8 +169,8 @@ __exit:
 os_err_t bc26_get_ipaddr(mo_object_t *module, char ip[])
 {
     at_parser_t *parser = &module->parser;
-    os_int8_t    ucid   = BC26_IFCONFIG_INVALID_DFT;
-    os_int8_t    len    = BC26_IFCONFIG_INVALID_DFT;
+    os_int8_t ucid = BC26_IFCONFIG_INVALID_DFT;
+    os_int8_t len = BC26_IFCONFIG_INVALID_DFT;
 
     char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
 
@@ -205,7 +207,7 @@ os_err_t bc26_get_ipaddr(mo_object_t *module, char ip[])
     }
 
 __exit:
-    
+
     return result;
 }
 

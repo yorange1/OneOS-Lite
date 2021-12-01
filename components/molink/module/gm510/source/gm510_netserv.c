@@ -29,11 +29,10 @@
 #include <stdio.h>
 
 #define MO_LOG_TAG "gm510_netserv"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #define IP_SIZE 16
-
 
 #ifdef GM510_USING_NETSERV_OPS
 
@@ -163,4 +162,3 @@ os_err_t gm510_get_csq(mo_object_t *self, os_uint8_t *rssi, os_uint8_t *ber)
 }
 
 #endif /* gm510_USING_NETSERV_OPS */
-

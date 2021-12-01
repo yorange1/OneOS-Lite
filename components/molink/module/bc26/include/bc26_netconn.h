@@ -33,13 +33,13 @@ extern "C" {
 #ifdef BC26_USING_NETCONN_OPS
 
 mo_netconn_t *bc26_netconn_create(mo_object_t *module, mo_netconn_type_t type);
-os_err_t      bc26_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn);
-os_err_t      bc26_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port);
-os_size_t     bc26_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size);
+os_err_t bc26_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn);
+os_err_t bc26_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip_addr_t addr, os_uint16_t port);
+os_size_t bc26_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size);
 #ifdef BC26_USING_DNS
-os_err_t      bc26_netconn_gethostbyname(mo_object_t *module, const char *domain_name, ip_addr_t *addr);
+os_err_t bc26_netconn_gethostbyname(mo_object_t *module, const char *domain_name, ip_addr_t *addr);
 #endif
-os_err_t      bc26_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info);
+os_err_t bc26_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info);
 #endif /* BC26_USING_NETCONN_OPS */
 
 #ifdef __cplusplus

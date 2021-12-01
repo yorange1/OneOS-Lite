@@ -29,18 +29,18 @@
 #include <stdlib.h>
 
 #define MO_LOG_TAG "bc26.netconn"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #define BC26_CONN_ID_NULL  (-1)
 #define SEND_DATA_MAX_SIZE (1024)
 
-#define BC26_NETCONN_MQ_NAME     "bc26_nc_mq"
+#define BC26_NETCONN_MQ_NAME "bc26_nc_mq"
 #ifndef BC26_NETCONN_MQ_MSG_SIZE
 #define BC26_NETCONN_MQ_MSG_SIZE (sizeof(mo_notconn_msg_t))
 #endif /* BC26_NETCONN_MQ_MSG_SIZE */
 #ifndef BC26_NETCONN_MQ_MSG_MAX
-#define BC26_NETCONN_MQ_MSG_MAX  (5)
+#define BC26_NETCONN_MQ_MSG_MAX (5)
 #endif /* BC26_NETCONN_MQ_MSG_MAX */
 
 #define SET_EVENT(socket, event) (((socket + 1) << 16) | (event))
@@ -146,7 +146,7 @@ os_err_t bc26_netconn_get_info(mo_object_t *module, mo_netconn_info_t *info)
     mo_bc26_t *bc26 = os_container_of(module, mo_bc26_t, parent);
 
     info->netconn_array = bc26->netconn;
-    info->netconn_nums  = sizeof(bc26->netconn) / sizeof(bc26->netconn[0]);
+    info->netconn_nums = sizeof(bc26->netconn) / sizeof(bc26->netconn[0]);
 
     return OS_EOK;
 }
@@ -165,9 +165,7 @@ mo_netconn_t *bc26_netconn_create(mo_object_t *module, mo_netconn_type_t type)
         return OS_NULL;
     }
 
-    netconn->mq = os_mq_create(BC26_NETCONN_MQ_NAME,
-                               BC26_NETCONN_MQ_MSG_SIZE,
-                               BC26_NETCONN_MQ_MSG_MAX);
+    netconn->mq = os_mq_create(BC26_NETCONN_MQ_NAME, BC26_NETCONN_MQ_MSG_SIZE, BC26_NETCONN_MQ_MSG_MAX);
     if (OS_NULL == netconn->mq)
     {
         ERROR("%s message queue create failed, no enough memory.", module->name);
@@ -186,8 +184,8 @@ mo_netconn_t *bc26_netconn_create(mo_object_t *module, mo_netconn_type_t type)
 os_err_t bc26_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 {
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_ERROR;
-    mo_bc26_t     *bc26 = os_container_of(module, mo_bc26_t, parent);
+    os_err_t result = OS_ERROR;
+    mo_bc26_t *bc26 = os_container_of(module, mo_bc26_t, parent);
 
     bc26_lock(&bc26->netconn_lock);
 
@@ -203,28 +201,28 @@ os_err_t bc26_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
     case NETCONN_STAT_CONNECT:
 
         os_event_recv(&bc26->netconn_evt,
-                  BC26_EVNET_CLOSE_OK,
-                  OS_EVENT_OPTION_OR | OS_EVENT_OPTION_CLEAR,
-                  OS_NO_WAIT,
-                  OS_NULL);
+                      BC26_EVNET_CLOSE_OK,
+                      OS_EVENT_OPTION_OR | OS_EVENT_OPTION_CLEAR,
+                      OS_NO_WAIT,
+                      OS_NULL);
 
         result = at_parser_exec_cmd(parser, &resp, "AT+QICLOSE=%d", netconn->connect_id);
         if (result != OS_EOK)
         {
             ERROR("Module %s destroy %s netconn failed",
-                       module->name,
-                      (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
+                  module->name,
+                  (netconn->type == NETCONN_TYPE_TCP) ? "TCP" : "UDP");
             goto __exit;
         }
 
         /* get async close info */
         result = os_event_recv(&bc26->netconn_evt,
-                            BC26_EVNET_CLOSE_OK,
-                            OS_EVENT_OPTION_OR | OS_EVENT_OPTION_CLEAR,
-                            4 * OS_TICK_PER_SECOND,
-                            OS_NULL);
+                               BC26_EVNET_CLOSE_OK,
+                               OS_EVENT_OPTION_OR | OS_EVENT_OPTION_CLEAR,
+                               4 * OS_TICK_PER_SECOND,
+                               OS_NULL);
 
-        if(OS_EOK != result)
+        if (OS_EOK != result)
         {
             ERROR("%s destroy netconn:%d failed", __func__, netconn->connect_id);
             goto __exit;
@@ -243,12 +241,11 @@ os_err_t bc26_netconn_destroy(mo_object_t *module, mo_netconn_t *netconn)
 
     INFO("Module %s netconn id %d destroyed", module->name, netconn->connect_id);
 
-    netconn->connect_id  = BC26_CONN_ID_NULL;
-    netconn->stat        = NETCONN_STAT_NULL;
-    netconn->type        = NETCONN_TYPE_NULL;
+    netconn->connect_id = BC26_CONN_ID_NULL;
+    netconn->stat = NETCONN_STAT_NULL;
+    netconn->type = NETCONN_TYPE_NULL;
     netconn->remote_port = 0;
     inet_aton("0.0.0.0", &netconn->remote_ip);
-
 
 __exit:
     bc26_unlock(&bc26->netconn_lock);
@@ -346,7 +343,7 @@ __exit:
     {
         ip_addr_copy(netconn->remote_ip, addr);
         netconn->remote_port = port;
-        netconn->stat        = NETCONN_STAT_CONNECT;
+        netconn->stat = NETCONN_STAT_CONNECT;
 
         DEBUG("Module %s connect to %s:%d successfully!", module->name, remote_ip, port);
     }
@@ -360,11 +357,11 @@ __exit:
 
 os_size_t bc26_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const char *data, os_size_t size)
 {
-    at_parser_t *parser    = &module->parser;
-    os_err_t     result    = OS_EOK;
-    os_size_t    sent_size = 0;
-    os_size_t    curr_size = 0;
-    os_uint32_t  event     = 0;
+    at_parser_t *parser = &module->parser;
+    os_err_t result = OS_EOK;
+    os_size_t sent_size = 0;
+    os_size_t curr_size = 0;
+    os_uint32_t event = 0;
 
     mo_bc26_t *bc26 = os_container_of(module, mo_bc26_t, parent);
 
@@ -374,9 +371,7 @@ os_size_t bc26_netconn_send(mo_object_t *module, mo_netconn_t *netconn, const ch
 
     char resp_buff[2 * AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = 10 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 10 * OS_TICK_PER_SECOND};
 
     at_parser_set_end_mark(parser, ">", 1);
 
@@ -462,7 +457,7 @@ __exit:
 os_err_t bc26_netconn_gethostbyname(mo_object_t *module, const char *domain_name, ip_addr_t *addr)
 {
     at_parser_t *parser = &module->parser;
-    os_err_t     result = OS_EOK;
+    os_err_t result = OS_EOK;
 
     char resp_buff[2 * AT_RESP_BUFF_SIZE_DEF] = {0};
 
@@ -515,9 +510,9 @@ static void urc_connect_func(struct at_parser *parser, const char *data, os_size
     mo_bc26_t *bc26 = os_container_of(module, mo_bc26_t, parent);
 
     os_int32_t connect_id = 0;
-    os_int32_t result     = 0;
+    os_int32_t result = 0;
 
-    sscanf(data, "+QIOPEN: %d,%d", &connect_id , &result);
+    sscanf(data, "+QIOPEN: %d,%d", &connect_id, &result);
 
     if (0 == result)
     {
@@ -595,7 +590,7 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
     OS_ASSERT(OS_NULL != data);
 
     os_int32_t connect_id = 0;
-    os_int32_t data_size  = 0;
+    os_int32_t data_size = 0;
 
     sscanf(data, "+QIURC: \"recv\",%d,%d", &connect_id, &data_size);
 
@@ -612,13 +607,13 @@ static void urc_recv_func(struct at_parser *parser, const char *data, os_size_t 
         return;
     }
 
-    char *recv_buff    = os_calloc(1, data_size);
-    char  temp_buff[8] = {0};
+    char *recv_buff = os_calloc(1, data_size);
+    char temp_buff[8] = {0};
     if (recv_buff == OS_NULL)
     {
         /* read and clean the coming data */
         ERROR("alloc recv buff %d bytes fail, no enough memory", data_size);
-        os_size_t temp_size    = 0;
+        os_size_t temp_size = 0;
         while (temp_size < data_size)
         {
             if (data_size - temp_size > sizeof(temp_buff))
@@ -732,9 +727,9 @@ static void urc_qiurc_func(struct at_parser *parser, const char *data, os_size_t
 }
 
 static at_urc_t gs_urc_table[] = {
-    {.prefix = "SEND",     .suffix = "\r\n", .func = urc_send_func},
+    {.prefix = "SEND", .suffix = "\r\n", .func = urc_send_func},
     {.prefix = "+QIOPEN:", .suffix = "\r\n", .func = urc_connect_func},
-    {.prefix = "+QIURC:",  .suffix = "\r\n", .func = urc_qiurc_func},
+    {.prefix = "+QIURC:", .suffix = "\r\n", .func = urc_qiurc_func},
     {.prefix = "CLOSE OK", .suffix = "\r\n", .func = urc_close_result_func},
 };
 

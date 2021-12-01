@@ -32,7 +32,7 @@ extern "C" {
 
 /* These defines is server for printf system interface     */
 extern int libc_system_init(void);
-extern int libc_stdio_set_console(const char* device_name, int mode);
+extern int libc_stdio_set_console(const char *device_name, int mode);
 extern int libc_stdio_get_console(void);
 
 /* These define is define for extending printf under ARMCC or ARMCLANG */
@@ -46,4 +46,3 @@ extern int libc_stdio_write(const void *buffer, size_t size);
 #endif
 
 #endif /* __STDIO_EXT_H__ */
-

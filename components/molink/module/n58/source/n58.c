@@ -36,37 +36,37 @@
 
 #ifdef N58_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test              = n58_at_test,
-    .get_imei             = n58_get_imei,
-    .get_imsi             = n58_get_imsi,
-    .get_iccid            = n58_get_iccid,
-    .get_cfun             = n58_get_cfun,
-    .set_cfun             = n58_set_cfun,
+    .at_test = n58_at_test,
+    .get_imei = n58_get_imei,
+    .get_imsi = n58_get_imsi,
+    .get_iccid = n58_get_iccid,
+    .get_cfun = n58_get_cfun,
+    .set_cfun = n58_set_cfun,
     .get_firmware_version = n58_get_firmware_version,
 };
 #endif /* N58_USING_GENERAL_OPS */
 
 #ifdef N58_USING_NETSERV_OPS
 static const struct mo_netserv_ops gs_netserv_ops = {
-    .set_attach           = n58_set_attach,
-    .get_attach           = n58_get_attach,
-    .set_reg              = n58_set_reg,
-    .get_reg              = n58_get_reg,
-    .get_csq              = n58_get_csq,
-    .get_cell_info        = n58_get_cell_info,
+    .set_attach = n58_set_attach,
+    .get_attach = n58_get_attach,
+    .set_reg = n58_set_reg,
+    .get_reg = n58_get_reg,
+    .get_csq = n58_get_csq,
+    .get_cell_info = n58_get_cell_info,
 };
 #endif /* N58_USING_NETSERV_OPS */
 
 #ifdef N58_USING_PING_OPS
 static const struct mo_ping_ops gs_ping_ops = {
-    .ping                 = n58_ping,
+    .ping = n58_ping,
 };
 #endif /* N58_USING_PING_OPS */
 
 #ifdef N58_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig             = n58_ifconfig,
-    .get_ipaddr           = n58_get_ipaddr,
+    .ifconfig = n58_ifconfig,
+    .get_ipaddr = n58_get_ipaddr,
 };
 #endif /* N58_USING_IFCONFIG_OPS */
 
@@ -74,11 +74,11 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern void n58_netconn_init(mo_n58_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create               = n58_netconn_create,
-    .destroy              = n58_netconn_destroy,
-    .connect              = n58_netconn_connect,
-    .send                 = n58_netconn_send,
-    .get_info             = n58_netconn_get_info,
+    .create = n58_netconn_create,
+    .destroy = n58_netconn_destroy,
+    .connect = n58_netconn_connect,
+    .send = n58_netconn_send,
+    .get_info = n58_netconn_get_info,
     /* The N58 module does not support domain name resolution */
 };
 #endif /* N58_USING_NETCONN_OPS */
@@ -96,7 +96,7 @@ static void n58_gernel_at_init(mo_object_t *self)
 {
     char imsi[MO_IMSI_LEN + 1] = {0};
 
-     os_uint8_t fun_lvl = 0;
+    os_uint8_t fun_lvl = 0;
 
     if (n58_get_imsi(self, imsi, sizeof(imsi)) != OS_EOK)
     {
@@ -144,12 +144,12 @@ static void n58_netserv_open(mo_object_t *self)
 
 static void n58_netserv_at_init(mo_object_t *self)
 {
-    at_parser_t   *parser   = &self->parser;
+    at_parser_t *parser = &self->parser;
     eps_reg_info_t reg_info = {0};
 
     char resp_buff[AT_RESP_BUFF_SIZE_256] = {0};
 
-    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout   = 2 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 2 * OS_TICK_PER_SECOND};
 
     for (int i = 0; i < N58_RETRY_TIMES; i++)
     {
@@ -333,7 +333,7 @@ int n58_auto_create(void)
 
     os_device_control(device, OS_DEVICE_CTRL_CONFIG, &uart_config);
 
-    mo_parser_config_t parser_config = {.parser_name   = N58_NAME,
+    mo_parser_config_t parser_config = {.parser_name = N58_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = N58_RECV_BUFF_LEN};
 

@@ -39,16 +39,17 @@ typedef enum sim7600ce_ping_ret_tpye
     PING_TIMEOUT,
     PING_SUMMARY,
     PING_UNKNOWN_RET
-}sim7600ce_ping_ret_tpye_t;
+} sim7600ce_ping_ret_tpye_t;
 
-os_err_t sim7600ce_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp)
+os_err_t
+sim7600ce_ping(mo_object_t *self, const char *host, os_uint16_t len, os_uint32_t timeout, struct ping_resp *resp)
 {
-    at_parser_t *parser    = &self->parser;
-    os_err_t     result    = OS_EOK;
-    os_int16_t   req_time  = -1;
-    os_int16_t   ttl       = -1;
-    os_int16_t   req_len   = -1;
-    os_uint8_t   ping_stat = 0;
+    at_parser_t *parser = &self->parser;
+    os_err_t result = OS_EOK;
+    os_int16_t req_time = -1;
+    os_int16_t ttl = -1;
+    os_int16_t req_len = -1;
+    os_uint8_t ping_stat = 0;
 
     char ipaddr[IPADDR_MAX_STR_LEN + 1] = {0};
 
@@ -94,10 +95,10 @@ os_err_t sim7600ce_ping(mo_object_t *self, const char *host, os_uint16_t len, os
 
     char resp_buff[AT_RESP_BUFF_SIZE_256] = {0};
     /* Need to wait for 6 lines response msg */
-    at_resp_t at_resp = {.buff      = resp_buff,
+    at_resp_t at_resp = {.buff = resp_buff,
                          .buff_size = sizeof(resp_buff),
-                         .line_num  = 3,
-                         .timeout   = (5 + timeout / 1000) * OS_TICK_PER_SECOND};
+                         .line_num = 3,
+                         .timeout = (5 + timeout / 1000) * OS_TICK_PER_SECOND};
 
     /* Exec AT+CPING="www.baidu.com",1,1,64,,10000; */
     /* Def ping timeout: OK\r\n\r\n +CPING: 2\r\n\r\n +CPING: 3,1,0,1,0,0,0\r\n */
@@ -116,7 +117,7 @@ os_err_t sim7600ce_ping(mo_object_t *self, const char *host, os_uint16_t len, os
         goto __exit;
     }
 
-    switch(ping_stat)
+    switch (ping_stat)
     {
     case PING_OK:
         if (at_resp_get_data_by_line(&at_resp, 2, "+CPING: 1,%[^,],%d,%d,%d", ipaddr, &req_len, &req_time, &ttl) < 0)
@@ -130,9 +131,9 @@ os_err_t sim7600ce_ping(mo_object_t *self, const char *host, os_uint16_t len, os
             DEBUG("%s ping: resp parse ip[%s], req_time[%d], ttl[%d]", self->name, ipaddr, req_time, ttl);
             inet_aton(ipaddr, &(resp->ip_addr));
             resp->data_len = len;
-            resp->ttl      = ttl;
-            resp->time     = req_time;
-            result         = OS_EOK;
+            resp->ttl = ttl;
+            resp->time = req_time;
+            result = OS_EOK;
         }
         break;
 

@@ -45,23 +45,23 @@
 
 #ifdef ESP8266_USING_GENERAL_OPS
 static const struct mo_general_ops gs_general_ops = {
-    .at_test              = esp8266_at_test,
+    .at_test = esp8266_at_test,
     .get_firmware_version = esp8266_get_firmware_version,
 };
 #endif /* ESP8266_USING_GENERAL_OPS */
 
 #ifdef ESP8266_USING_PING_OPS
 static const struct mo_ping_ops gs_ping_ops = {
-    .ping                 = esp8266_ping,
+    .ping = esp8266_ping,
 };
 #endif /* ESP8266_USING_PING_OPS */
 
 #ifdef ESP8266_USING_IFCONFIG_OPS
 static const struct mo_ifconfig_ops gs_ifconfig_ops = {
-    .ifconfig             = esp8266_ifconfig,
-    .get_ipaddr           = esp8266_get_ipaddr,
-    .set_dnsserver        = esp8266_set_dnsserver,
-    .get_dnsserver        = esp8266_get_dnsserver,
+    .ifconfig = esp8266_ifconfig,
+    .get_ipaddr = esp8266_get_ipaddr,
+    .set_dnsserver = esp8266_set_dnsserver,
+    .get_dnsserver = esp8266_get_dnsserver,
 };
 #endif /* ESP8266_USING_IFCONFIG_OPS */
 
@@ -69,22 +69,22 @@ static const struct mo_ifconfig_ops gs_ifconfig_ops = {
 extern os_err_t esp8266_netconn_init(mo_esp8266_t *module);
 
 static const struct mo_netconn_ops gs_netconn_ops = {
-    .create               = esp8266_netconn_create,
-    .destroy              = esp8266_netconn_destroy,
+    .create = esp8266_netconn_create,
+    .destroy = esp8266_netconn_destroy,
 #ifdef ESP8266_USING_DNS
-    .gethostbyname        = esp8266_netconn_gethostbyname,
+    .gethostbyname = esp8266_netconn_gethostbyname,
 #endif
 #ifdef ESP8266_USING_SERVER_MODE
-    .bind                 = esp8266_netconn_bind,
+    .bind = esp8266_netconn_bind,
 #endif
-    .connect              = esp8266_netconn_connect,
+    .connect = esp8266_netconn_connect,
 #ifdef ESP8266_USING_UDP
-    .sendto               = esp8266_netconn_sendto,
+    .sendto = esp8266_netconn_sendto,
 #endif
 #ifdef ESP8266_USING_TCP
-    .send                 = esp8266_netconn_send,
+    .send = esp8266_netconn_send,
 #endif
-    .get_info             = esp8266_netconn_get_info,
+    .get_info = esp8266_netconn_get_info,
 };
 #endif /* ESP8266_USING_NETCONN_OPS */
 
@@ -92,19 +92,19 @@ static const struct mo_netconn_ops gs_netconn_ops = {
 extern os_err_t esp8266_wifi_init(mo_object_t *module);
 
 static const struct mo_wifi_ops gs_wifi_ops = {
-    .set_mode             = esp8266_wifi_set_mode,
-    .get_mode             = esp8266_wifi_get_mode,
-    .get_stat             = esp8266_wifi_get_stat,
-    .get_sta_cip          = esp8266_wifi_get_sta_cip,
-    .set_ap_cip           = esp8266_wifi_set_ap_cip,
-    .get_ap_cip           = esp8266_wifi_get_ap_cip,
-    .get_sta_mac          = esp8266_wifi_get_sta_mac,
-    .get_ap_mac           = esp8266_wifi_get_ap_mac,
-    .connect_ap           = esp8266_wifi_connect_ap,
-    .scan_info            = esp8266_wifi_scan_info,
-    .disconnect_ap        = esp8266_wifi_disconnect_ap,
-    .start_ap             = esp8266_wifi_start_ap,
-    .stop_ap              = esp8266_wifi_stop_ap,
+    .set_mode = esp8266_wifi_set_mode,
+    .get_mode = esp8266_wifi_get_mode,
+    .get_stat = esp8266_wifi_get_stat,
+    .get_sta_cip = esp8266_wifi_get_sta_cip,
+    .set_ap_cip = esp8266_wifi_set_ap_cip,
+    .get_ap_cip = esp8266_wifi_get_ap_cip,
+    .get_sta_mac = esp8266_wifi_get_sta_mac,
+    .get_ap_mac = esp8266_wifi_get_ap_mac,
+    .connect_ap = esp8266_wifi_connect_ap,
+    .scan_info = esp8266_wifi_scan_info,
+    .disconnect_ap = esp8266_wifi_disconnect_ap,
+    .start_ap = esp8266_wifi_start_ap,
+    .stop_ap = esp8266_wifi_stop_ap,
 };
 #endif /* ESP8266_USING_WIFI_OPS */
 
@@ -124,11 +124,10 @@ static void urc_busy_s_func(struct at_parser *parser, const char *data, os_size_
 }
 
 static at_urc_t gs_urc_table[] = {
-    {.prefix = "ready",  .suffix = "\r\n", .func = urc_ready_func},
+    {.prefix = "ready", .suffix = "\r\n", .func = urc_ready_func},
     {.prefix = "busy p", .suffix = "\r\n", .func = urc_busy_p_func},
     {.prefix = "busy s", .suffix = "\r\n", .func = urc_busy_s_func},
 };
-
 
 #ifdef ESP8266_USING_HW_CONTROL
 
@@ -169,9 +168,7 @@ static os_err_t esp8266_at_init(mo_object_t *self)
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff      = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout   = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     return at_parser_exec_cmd(parser, &resp, "ATE0");
 }
@@ -186,7 +183,7 @@ mo_object_t *module_esp8266_create(const char *name, void *parser_config)
     }
 
     os_err_t result = mo_object_init(&(module->parent), name, parser_config);
-	if (result != OS_EOK)
+    if (result != OS_EOK)
     {
         os_free(module);
         return OS_NULL;
@@ -227,23 +224,23 @@ mo_object_t *module_esp8266_create(const char *name, void *parser_config)
         mo_get_firmware_version_free(&version);
     }
 #endif /* ESP8266_USING_GENERAL_OPS */
-    
+
 #ifdef ESP8266_USING_WIFI_OPS
 
-    //os_task_msleep(2000);
+    // os_task_msleep(2000);
     result = esp8266_wifi_init(&module->parent);
     if (result != OS_EOK)
     {
         goto __exit;
     }
 
-    //os_task_msleep(1000);
+    // os_task_msleep(1000);
     result = esp8266_wifi_set_mode(&module->parent, MO_WIFI_MODE_AP_STA);
     if (result != OS_EOK)
     {
         goto __exit;
     }
-		
+
     /* not all esp8266 soft version support IPV6 */
 #ifdef ESP8266_USING_IPV6
     result = esp8266_wifi_set_ipv6(&module->parent, MO_WIFI_CIPV6_ENABLE);
@@ -251,8 +248,8 @@ mo_object_t *module_esp8266_create(const char *name, void *parser_config)
     {
         INFO("module no support ipv6");
     }
-#endif   
-		
+#endif
+
     result = esp8266_wifi_set_ipdinofo(&module->parent, MO_WIFI_CIPINFO_SHOW_IP_PORT);
     if (result != OS_EOK)
     {
@@ -332,7 +329,7 @@ int esp8266_auto_create(void)
     esp8266_hw_rst(ESP8266_RST_PIN_NUM);
 #endif
 
-    mo_parser_config_t parser_config = {.parser_name   = ESP8266_NAME,
+    mo_parser_config_t parser_config = {.parser_name = ESP8266_NAME,
                                         .parser_device = device,
                                         .recv_buff_len = ESP8266_RECV_BUFF_LEN};
 

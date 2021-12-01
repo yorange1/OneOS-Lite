@@ -29,11 +29,10 @@
 #include <stdlib.h>
 
 #define MO_LOG_TAG "air723ug_netconn"
-#define MO_LOG_LVL  MO_LOG_INFO
+#define MO_LOG_LVL MO_LOG_INFO
 #include "mo_log.h"
 
 #define SEND_DATA_MAX_SIZE (1460)
-
 
 #define AIR723_NETCONN_MQ_NAME "air723_nc_mq"
 
@@ -42,23 +41,23 @@
 #endif
 
 #ifndef AIR723_NETCONN_MQ_MSG_MAX
-#define AIR723_NETCONN_MQ_MSG_MAX  (5)
+#define AIR723_NETCONN_MQ_MSG_MAX (5)
 #endif
 
 #define SET_EVENT(socket, event) (((socket + 1) << 16) | (event))
 
-#define AIR723UG_EVENT_SEND_OK (1L << 0)
-#define AIR723UG_EVENT_SEND_FAIL (1L << 1)
-#define AIR723UG_EVENT_RECV_OK (1L << 2)
-#define AIR723UG_EVENT_CONN_OK (1L << 3)
-#define AIR723UG_EVENT_CONN_FAIL (1L << 4)
-#define AIR723UG_EVENT_CLOSE_OK (1L << 5)
+#define AIR723UG_EVENT_SEND_OK    (1L << 0)
+#define AIR723UG_EVENT_SEND_FAIL  (1L << 1)
+#define AIR723UG_EVENT_RECV_OK    (1L << 2)
+#define AIR723UG_EVENT_CONN_OK    (1L << 3)
+#define AIR723UG_EVENT_CONN_FAIL  (1L << 4)
+#define AIR723UG_EVENT_CLOSE_OK   (1L << 5)
 #define AIR723UG_EVENT_CLOSE_FAIL (1L << 6)
-#define AIR723UG_EVENT_DOMAIN_OK (1L << 7)
-#define AIR723UG_EVENT_LINK_OK (1L << 8)
-#define AIR723UG_EVENT_LINK_FAIL (1L << 9)
+#define AIR723UG_EVENT_DOMAIN_OK  (1L << 7)
+#define AIR723UG_EVENT_LINK_OK    (1L << 8)
+#define AIR723UG_EVENT_LINK_FAIL  (1L << 9)
 
-#define AIR723UG_MULTI_CONN_ENABLE (1)
+#define AIR723UG_MULTI_CONN_ENABLE  (1)
 #define AIR723UG_MULTI_CONN_DISABLE (0)
 
 #ifdef AIR723UG_USING_NETCONN_OPS
@@ -129,9 +128,7 @@ mo_netconn_t *air723ug_netconn_create(mo_object_t *module, mo_netconn_type_t typ
         return OS_NULL;
     }
 
-    netconn->mq = os_mq_create(AIR723_NETCONN_MQ_NAME,
-                               AIR723_NETCONN_MQ_MSG_SIZE,
-                               AIR723_NETCONN_MQ_MSG_MAX);
+    netconn->mq = os_mq_create(AIR723_NETCONN_MQ_NAME, AIR723_NETCONN_MQ_MSG_SIZE, AIR723_NETCONN_MQ_MSG_MAX);
     if (OS_NULL == netconn->mq)
     {
         ERROR("%s data queue create failed, no enough memory.", module->name);
@@ -154,7 +151,10 @@ static os_err_t air723ug_netconn_close(mo_object_t *module, mo_netconn_t *netcon
     at_parser_t *parser;
     char at_cmd[20] = {0};
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
-    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .line_num = 1, .timeout = 10 * AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff,
+                      .buff_size = sizeof(resp_buff),
+                      .line_num = 1,
+                      .timeout = 10 * AT_RESP_TIMEOUT_DEF};
     os_err_t result = OS_ERROR;
 
     event = SET_EVENT(netconn->connect_id, AIR723UG_EVENT_CLOSE_OK | AIR723UG_EVENT_CLOSE_FAIL);
@@ -162,7 +162,7 @@ static os_err_t air723ug_netconn_close(mo_object_t *module, mo_netconn_t *netcon
     os_event_recv(&air723ug->netconn_evt, event, OS_EVENT_OPTION_OR | OS_EVENT_OPTION_CLEAR, OS_NO_WAIT, OS_NULL);
 
     parser = &module->parser;
-    sprintf(at_cmd,"AT+CIPCLOSE=%d\r\n", netconn->connect_id);
+    sprintf(at_cmd, "AT+CIPCLOSE=%d\r\n", netconn->connect_id);
     result = at_parser_send(parser, at_cmd, 15);
     if (result < 0)
     {
@@ -239,9 +239,7 @@ os_err_t air723ug_netconn_gethostbyname(mo_object_t *self, const char *domain_na
 
     at_parser_t *parser = &self->parser;
     char resp_buff[256] = {0};
-    at_resp_t resp = {.buff = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout = 20 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 20 * OS_TICK_PER_SECOND};
 
     mo_air723ug_t *air723ug = os_container_of(self, mo_air723ug_t, parent);
 
@@ -279,9 +277,7 @@ os_err_t air723ug_check_link_status(mo_object_t *module, mo_netconn_t *netconn)
     os_err_t result;
     os_int32_t mode;
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
-    at_resp_t resp = {.buff = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout = AT_RESP_TIMEOUT_DEF};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = AT_RESP_TIMEOUT_DEF};
 
     mo_air723ug_t *air723ug = os_container_of(module, mo_air723ug_t, parent);
 
@@ -371,23 +367,15 @@ os_err_t air723ug_netconn_connect(mo_object_t *module, mo_netconn_t *netconn, ip
     {
 #ifdef AIR723UG_USING_TCP
     case NETCONN_TYPE_TCP:
-        result = at_parser_exec_cmd(parser,
-                                    &resp,
-                                    "AT+CIPSTART=%d,\"TCP\",\"%s\",%d",
-                                    netconn->connect_id,
-                                    remote_ip,
-                                    port);
+        result =
+            at_parser_exec_cmd(parser, &resp, "AT+CIPSTART=%d,\"TCP\",\"%s\",%d", netconn->connect_id, remote_ip, port);
         break;
 #endif
 
 #ifdef AIR723UG_USING_UDP
     case NETCONN_TYPE_UDP:
-        result = at_parser_exec_cmd(parser,
-                                    &resp,
-                                    "AT+CIPSTART=%d,\"UDP\",\"%s\",%d",
-                                    netconn->connect_id,
-                                    remote_ip,
-                                    port);
+        result =
+            at_parser_exec_cmd(parser, &resp, "AT+CIPSTART=%d,\"UDP\",\"%s\",%d", netconn->connect_id, remote_ip, port);
         break;
 #endif
 
@@ -462,9 +450,7 @@ os_size_t air723ug_netconn_send(mo_object_t *module, mo_netconn_t *netconn, cons
 
     char resp_buff[AT_RESP_BUFF_SIZE_DEF] = {0};
 
-    at_resp_t resp = {.buff = resp_buff,
-                      .buff_size = sizeof(resp_buff),
-                      .timeout = 5 * OS_TICK_PER_SECOND};
+    at_resp_t resp = {.buff = resp_buff, .buff_size = sizeof(resp_buff), .timeout = 5 * OS_TICK_PER_SECOND};
 
     at_parser_set_end_mark(parser, ">", 1);
 

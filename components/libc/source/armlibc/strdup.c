@@ -4,11 +4,11 @@
 
 char *strdup(const char *s)
 {
-    size_t  len;
-    char    *str_tmp;
+    size_t len;
+    char *str_tmp;
 
     len = strlen(s) + 1;
-#if defined (OS_USING_SYS_HEAP)
+#if defined(OS_USING_SYS_HEAP)
     str_tmp = (char *)os_malloc(len);
 #else
     str_tmp = OS_NULL;
@@ -22,4 +22,3 @@ char *strdup(const char *s)
 
     return str_tmp;
 }
-

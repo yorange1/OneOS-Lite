@@ -1,0 +1,20 @@
+:name: STM32F4 Discovery
+:description: This script runs Contiki on STM32F4 Discovery.
+
+using sysbus
+$name?="STM32F103rc"
+mach create $name
+machine LoadPlatformDescription @platforms/cpus/stm32f103.repl
+
+cpu PerformanceInMips 125
+
+showAnalyzer sysbus.usart1
+
+macro reset
+"""
+    sysbus LoadELF @D:\gitee\OneOS-Lite\out\stm32f103zet6-atk-elite\oneos.elf
+
+"""
+
+runMacro $reset
+

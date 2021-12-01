@@ -30,14 +30,14 @@
 extern "C" {
 #endif
 
-cmiot_char * cmiot_get_network_type(void);
+cmiot_char *cmiot_get_network_type(void);
 cmiot_uint32 cmiot_get_try_time(void);
-cmiot_uint8  cmiot_get_try_count(void);
+cmiot_uint8 cmiot_get_try_count(void);
 cmiot_uint32 cmiot_get_utc_time(void);
-void         cmiot_get_uniqueid(cmiot_char *uid);
-cmiot_char * cmiot_app_name(void);
-cmiot_char * cmiot_download_name(void);
-void         cmiot_msleep(cmiot_uint32 time);
+void cmiot_get_uniqueid(cmiot_char *uid);
+cmiot_char *cmiot_app_name(void);
+cmiot_char *cmiot_download_name(void);
+void cmiot_msleep(cmiot_uint32 time);
 
 cmiot_int8 cmiot_upgrade(void);
 cmiot_int8 cmiot_report_upgrade(void);

@@ -62,11 +62,11 @@ struct mo_select_cb
     os_sem_t sem;
 };
 
-static os_slist_node_t gs_mo_select_cb_slist          = {OS_NULL};
-static volatile int    gs_mo_select_cb_ctr;
+static os_slist_node_t gs_mo_select_cb_slist = {OS_NULL};
+static volatile int gs_mo_select_cb_ctr;
 #endif /* MOLINK_USING_SELECT */
 
-static mo_sock_t       gs_sockets[MOLINK_NUM_SOCKETS] = {0};
+static mo_sock_t gs_sockets[MOLINK_NUM_SOCKETS] = {0};
 
 static mo_sock_t *mo_get_socket(int socket)
 {
@@ -108,17 +108,17 @@ static mo_sock_t *mo_tryget_socket(int socket)
  */
 static void mo_event_callback(mo_netconn_t *netconn, mo_netconn_evt_t evt, os_uint16_t len)
 {
-    os_bool_t            do_check_waiter;
+    os_bool_t do_check_waiter;
     struct mo_select_cb *scb;
-    os_slist_node_t *    node;
-    int                  last_select_cb_ctr;
-    int                  do_signal;
-    os_int32_t           s;
-    mo_sock_t *          sock;
+    os_slist_node_t *node;
+    int last_select_cb_ctr;
+    int do_signal;
+    os_int32_t s;
+    mo_sock_t *sock;
 #ifdef OS_USING_IO_MULTIPLEXING
-    os_uint16_t          evt_key = 0;
-    os_slist_node_t     *poll_node;
-    poll_req_t          *poll_req;
+    os_uint16_t evt_key = 0;
+    os_slist_node_t *poll_node;
+    poll_req_t *poll_req;
 #endif
 
     // Get socket
@@ -147,7 +147,7 @@ static void mo_event_callback(mo_netconn_t *netconn, mo_netconn_evt_t evt, os_ui
 
     case MO_NETCONN_EVT_ERROR:
         do_check_waiter = OS_TRUE;
-        sock->errevent  = 1;
+        sock->errevent = 1;
         break;
 
     case MO_NETCONN_EVT_RCVMINUS:
@@ -288,11 +288,11 @@ static int alloc_socket(mo_netconn_t *netconn)
             if (!gs_sockets[i].select_waiting)
             {
                 netconn->socket_id = i;
-				#ifdef MOLINK_USING_SELECT
-                netconn->evt_func  = mo_event_callback;
-				#else
-				netconn->evt_func = OS_NULL;
-				#endif
+#ifdef MOLINK_USING_SELECT
+                netconn->evt_func = mo_event_callback;
+#else
+                netconn->evt_func = OS_NULL;
+#endif
                 MO_SYS_ARCH_UNPROTECT;
 
                 return i;
@@ -340,32 +340,32 @@ int mo_socket(mo_object_t *module, int domain, int type, int protocol)
 
     switch (type)
     {
-    #ifdef MOLINK_USING_UDP
+#ifdef MOLINK_USING_UDP
     case SOCK_DGRAM:
         if (PF_INET6 == domain)
         {
             ntc_type = NETCONN_TYPE_UDP_V6;
-        }   
+        }
         else
         {
             ntc_type = NETCONN_TYPE_UDP;
         }
         netconn = mo_netconn_create(module, ntc_type);
         break;
-	#endif
-	#ifdef MOLINK_USING_TCP
+#endif
+#ifdef MOLINK_USING_TCP
     case SOCK_STREAM:
         if (PF_INET6 == domain)
         {
             ntc_type = NETCONN_TYPE_TCP_V6;
-        }   
+        }
         else
         {
             ntc_type = NETCONN_TYPE_TCP;
         }
         netconn = mo_netconn_create(module, ntc_type);
         break;
-	#endif
+#endif
     default:
         WARN("Module %s Don't support socket type %d", module->name, type);
         break;
@@ -384,15 +384,15 @@ int mo_socket(mo_object_t *module, int domain, int type, int protocol)
         return -1;
     }
 
-    gs_sockets[socket_id].netconn      = netconn;
-    gs_sockets[socket_id].lastdata     = OS_NULL;
-    gs_sockets[socket_id].lastoffset   = 0;
+    gs_sockets[socket_id].netconn = netconn;
+    gs_sockets[socket_id].lastdata = OS_NULL;
+    gs_sockets[socket_id].lastoffset = 0;
     gs_sockets[socket_id].recv_timeout = 0;
 
     gs_sockets[socket_id].rcvevent = 0;
     // when sock create successful, sock can write
-    gs_sockets[socket_id].sendevent      = 1;
-    gs_sockets[socket_id].errevent       = 0;
+    gs_sockets[socket_id].sendevent = 1;
+    gs_sockets[socket_id].errevent = 0;
     gs_sockets[socket_id].select_waiting = 0;
 #ifdef OS_USING_IO_MULTIPLEXING
     os_slist_init(&gs_sockets[socket_id].req_slist_head);
@@ -422,7 +422,7 @@ int mo_closesocket(int socket)
 int mo_closesocket(mo_object_t *module, int socket)
 {
 #endif
-    OS_ASSERT(module != OS_NULL);   
+    OS_ASSERT(module != OS_NULL);
 
     int ret;
     mo_sock_t *sock = mo_get_socket(socket);
@@ -444,7 +444,7 @@ int mo_closesocket(mo_object_t *module, int socket)
 
     MO_SYS_ARCH_PROTECT;
     mo_netconn_t *netconn = sock->netconn;
-    sock->netconn         = OS_NULL;
+    sock->netconn = OS_NULL;
     MO_SYS_ARCH_UNPROTECT;
 
     if (OS_NULL != sock->lastdata)
@@ -460,10 +460,10 @@ int mo_closesocket(mo_object_t *module, int socket)
     if (OS_NULL != netconn)
     {
         ret = mo_netconn_destroy(module, netconn);
-        if(ret != OS_EOK)
+        if (ret != OS_EOK)
         {
             ERROR("Module %s close socket %d failed!", module->name, socket);
-            return ret;          
+            return ret;
         }
     }
 
@@ -503,10 +503,10 @@ int mo_bind(mo_object_t *module, int socket, const struct sockaddr *name, sockle
         return -1;
     }
 
-    ip_addr_t   remote_ip   = {0};
+    ip_addr_t remote_ip = {0};
     os_uint16_t remote_port = 0;
 
-    //socketaddr_to_ipaddr_port(name, &remote_ip, &remote_port);
+    // socketaddr_to_ipaddr_port(name, &remote_ip, &remote_port);
     SOCKADDR_TO_IPADDR_PORT(name, &remote_ip, &remote_port);
 
     os_err_t result = mo_netconn_bind(module, sock->netconn, remote_ip, remote_port);
@@ -538,7 +538,11 @@ int mo_bind_with_cb(int socket, const struct sockaddr *name, socklen_t namelen, 
 {
     mo_object_t *module = mo_object_get();
 #elif defined(MOLINK_USING_MULTI_MODULES)
-int mo_bind_with_cb(mo_object_t *module, int socket, const struct sockaddr *name, socklen_t namelen, mo_netconn_data_callback cb)
+int mo_bind_with_cb(mo_object_t *module,
+                    int socket,
+                    const struct sockaddr *name,
+                    socklen_t namelen,
+                    mo_netconn_data_callback cb)
 {
 #endif
     OS_ASSERT(module != OS_NULL);
@@ -551,10 +555,10 @@ int mo_bind_with_cb(mo_object_t *module, int socket, const struct sockaddr *name
         return -1;
     }
 
-    ip_addr_t   remote_ip   = {0};
+    ip_addr_t remote_ip = {0};
     os_uint16_t remote_port = 0;
 
-    //socketaddr_to_ipaddr_port(name, &remote_ip, &remote_port);
+    // socketaddr_to_ipaddr_port(name, &remote_ip, &remote_port);
     SOCKADDR_TO_IPADDR_PORT(name, &remote_ip, &remote_port);
 
     os_err_t result = mo_netconn_bind(module, sock->netconn, remote_ip, remote_port);
@@ -566,7 +570,7 @@ int mo_bind_with_cb(mo_object_t *module, int socket, const struct sockaddr *name
 #ifdef MOLINK_USING_SOCKETS_OPS
     sock->netconn->data_func = cb;
 #endif
-    
+
     return 0;
 }
 #endif /* MOLINK_USING_SERVER_MODE */
@@ -603,10 +607,10 @@ int mo_connect(mo_object_t *module, int socket, const struct sockaddr *name, soc
         return -1;
     }
 
-    ip_addr_t   remote_ip   = {0};
+    ip_addr_t remote_ip = {0};
     os_uint16_t remote_port = 0;
 
-    //socketaddr_to_ipaddr_port(name, &remote_ip, &remote_port);
+    // socketaddr_to_ipaddr_port(name, &remote_ip, &remote_port);
     SOCKADDR_TO_IPADDR_PORT(name, &remote_ip, &remote_port);
 
     os_err_t result = mo_netconn_connect(module, sock->netconn, remote_ip, remote_port);
@@ -638,17 +642,17 @@ static int module_tcp_send(mo_object_t *module, mo_netconn_t *netconn, const cha
 #endif
 
 #ifdef MOLINK_USING_UDP
-static int module_udp_sendto(mo_object_t *          module,
-                             mo_netconn_t *         netconn,
-                             const char *           data,
-                             os_size_t              size,
+static int module_udp_sendto(mo_object_t *module,
+                             mo_netconn_t *netconn,
+                             const char *data,
+                             os_size_t size,
                              const struct sockaddr *to,
-                             socklen_t              tolen)
+                             socklen_t tolen)
 {
-    ip_addr_t   remote_ip   = {0};
+    ip_addr_t remote_ip = {0};
     os_uint16_t remote_port = 0;
 
-    //socketaddr_to_ipaddr_port(to, &remote_ip, &remote_port);
+    // socketaddr_to_ipaddr_port(to, &remote_ip, &remote_port);
     SOCKADDR_TO_IPADDR_PORT(to, &remote_ip, &remote_port);
 
     if (netconn->stat != NETCONN_STAT_CONNECT)
@@ -660,7 +664,7 @@ static int module_udp_sendto(mo_object_t *          module,
             return -1;
         }
     }
- 
+
     os_size_t sent_size = mo_netconn_sendto(module, netconn, remote_ip, remote_port, data, size);
     if (sent_size <= 0)
     {
@@ -689,22 +693,17 @@ static int module_udp_sendto(mo_object_t *          module,
  ***********************************************************************************************************************
  */
 #if defined(MOLINK_USING_SINGLE_MODULE)
-int mo_sendto(int                    socket,
-              const void *           data,
-              size_t                 size,
-              int                    flags,
-              const struct sockaddr *to,
-              socklen_t              tolen)
+int mo_sendto(int socket, const void *data, size_t size, int flags, const struct sockaddr *to, socklen_t tolen)
 {
     mo_object_t *module = mo_object_get();
 #elif defined(MOLINK_USING_MULTI_MODULES)
-int mo_sendto(mo_object_t *          module,
-              int                    socket,
-              const void *           data,
-              size_t                 size,
-              int                    flags,
+int mo_sendto(mo_object_t *module,
+              int socket,
+              const void *data,
+              size_t size,
+              int flags,
               const struct sockaddr *to,
-              socklen_t              tolen)
+              socklen_t tolen)
 {
 #endif
     OS_ASSERT(module != OS_NULL);
@@ -720,17 +719,17 @@ int mo_sendto(mo_object_t *          module,
     int result = -1;
     switch (sock->netconn->type)
     {
-    #ifdef MOLINK_USING_TCP
+#ifdef MOLINK_USING_TCP
     case NETCONN_TYPE_TCP:
         result = module_tcp_send(module, sock->netconn, (const char *)data, size);
         break;
-	#endif
-	#ifdef MOLINK_USING_UDP
+#endif
+#ifdef MOLINK_USING_UDP
     case NETCONN_TYPE_UDP:
     case NETCONN_TYPE_UDP_V6:
         result = module_udp_sendto(module, sock->netconn, (const char *)data, size, to, tolen);
-        break;     
-	#endif
+        break;
+#endif
     default:
         break;
     }
@@ -781,11 +780,11 @@ int mo_send(mo_object_t *module, int socket, const void *data, size_t size, int 
 #ifdef MOLINK_USING_TCP
 static int module_recv_tcp(mo_object_t *module, mo_sock_t *sock, void *mem, size_t len, int flags)
 {
-    os_size_t   recvd    = 0;
-    void *      data_ptr = OS_NULL;
-    os_size_t   data_len = 0;
-    os_err_t    result   = OS_EOK;
-    os_uint16_t copylen  = 0;
+    os_size_t recvd = 0;
+    void *data_ptr = OS_NULL;
+    os_size_t data_len = 0;
+    os_err_t result = OS_EOK;
+    os_uint16_t copylen = 0;
 
     os_size_t recv_left = (len <= OS_UINT32_MAX) ? (ssize_t)len : OS_UINT32_MAX;
 
@@ -804,7 +803,7 @@ static int module_recv_tcp(mo_object_t *module, mo_sock_t *sock, void *mem, size
         {
             MO_SYS_ARCH_UNPROTECT;
             /* No data was left from the previous operation, so we try to get some from the network. */
-            result =  mo_netconn_recvfrom(module, sock->netconn, &data_ptr, &data_len, OS_NULL, OS_NULL, timeout);
+            result = mo_netconn_recvfrom(module, sock->netconn, &data_ptr, &data_len, OS_NULL, OS_NULL, timeout);
             if (result != OS_EOK)
             {
                 if (recvd > 0)
@@ -823,9 +822,9 @@ static int module_recv_tcp(mo_object_t *module, mo_sock_t *sock, void *mem, size
                 else if (OS_ETIMEOUT == result || OS_EEMPTY == result)
                 {
                     DEBUG("Module %s socket %d receive (%d ticks) timeout",
-                         module->name,
-                         sock->netconn->socket_id,
-                         os_tick_from_ms(sock->recv_timeout));
+                          module->name,
+                          sock->netconn->socket_id,
+                          os_tick_from_ms(sock->recv_timeout));
 
                     errno = EAGAIN;
                     return -1;
@@ -833,8 +832,8 @@ static int module_recv_tcp(mo_object_t *module, mo_sock_t *sock, void *mem, size
             }
 
             MO_SYS_ARCH_PROTECT;
-            sock->lastdata   = data_ptr;
-            sock->lastlen    = data_len;
+            sock->lastdata = data_ptr;
+            sock->lastlen = data_len;
             sock->lastoffset = 0;
         }
 
@@ -866,8 +865,8 @@ static int module_recv_tcp(mo_object_t *module, mo_sock_t *sock, void *mem, size
         }
         else
         {
-            sock->lastdata   = OS_NULL;
-            sock->lastlen    = 0;
+            sock->lastdata = OS_NULL;
+            sock->lastlen = 0;
             sock->lastoffset = 0;
             MO_SYS_ARCH_UNPROTECT;
 
@@ -884,15 +883,27 @@ static int module_recv_tcp(mo_object_t *module, mo_sock_t *sock, void *mem, size
 #endif
 
 #ifdef MOLINK_USING_UDP
-static int module_recvfrom_udp(mo_object_t *module, mo_sock_t *sock, void *mem, size_t len, int flags, struct sockaddr *from, socklen_t *fromlen)
+static int module_recvfrom_udp(mo_object_t *module,
+                               mo_sock_t *sock,
+                               void *mem,
+                               size_t len,
+                               int flags,
+                               struct sockaddr *from,
+                               socklen_t *fromlen)
 {
     os_size_t data_len = 0;
-    void *    data_tmp = OS_NULL;
-    os_err_t  result   = OS_EOK;
+    void *data_tmp = OS_NULL;
+    os_err_t result = OS_EOK;
     ip_addr_t addr;
     os_uint16_t port;
-    
-    result =  mo_netconn_recvfrom(module, sock->netconn, &data_tmp, &data_len, &addr, &port, os_tick_from_ms(sock->recv_timeout));
+
+    result = mo_netconn_recvfrom(module,
+                                 sock->netconn,
+                                 &data_tmp,
+                                 &data_len,
+                                 &addr,
+                                 &port,
+                                 os_tick_from_ms(sock->recv_timeout));
     if (OS_ERROR == result)
     {
         ERROR("Module %s receive error, socket %d state %d error",
@@ -908,7 +919,7 @@ static int module_recvfrom_udp(mo_object_t *module, mo_sock_t *sock, void *mem, 
               module->name,
               sock->netconn->socket_id,
               os_tick_from_ms(sock->recv_timeout));
-#endif              
+#endif
         errno = EAGAIN;
         return -1;
     }
@@ -923,9 +934,8 @@ static int module_recvfrom_udp(mo_object_t *module, mo_sock_t *sock, void *mem, 
 
     memcpy(mem, data_tmp, data_len);
     os_free(data_tmp);
-	//TODO: to check fromlen ?
-	IPADDR_PORT_TO_SOCKADDR(from, &addr, &port);
-    
+    // TODO: to check fromlen ?
+    IPADDR_PORT_TO_SOCKADDR(from, &addr, &port);
 
     if (data_len > 0)
     {
@@ -954,22 +964,17 @@ static int module_recvfrom_udp(mo_object_t *module, mo_sock_t *sock, void *mem, 
  ***********************************************************************************************************************
  */
 #if defined(MOLINK_USING_SINGLE_MODULE)
-int mo_recvfrom(int              socket,
-                void *           mem,
-                size_t           len,
-                int              flags,
-                struct sockaddr *from,
-                socklen_t *      fromlen)
+int mo_recvfrom(int socket, void *mem, size_t len, int flags, struct sockaddr *from, socklen_t *fromlen)
 {
     mo_object_t *module = mo_object_get();
 #elif defined(MOLINK_USING_MULTI_MODULES)
-int mo_recvfrom(mo_object_t *    module,
-                int              socket,
-                void *           mem,
-                size_t           len,
-                int              flags,
+int mo_recvfrom(mo_object_t *module,
+                int socket,
+                void *mem,
+                size_t len,
+                int flags,
                 struct sockaddr *from,
-                socklen_t *      fromlen)
+                socklen_t *fromlen)
 {
 #endif
     OS_ASSERT(module != OS_NULL);
@@ -985,17 +990,17 @@ int mo_recvfrom(mo_object_t *    module,
     int result = -1;
     if (NETCONN_TYPE_TCP == sock->netconn->type)
     {
-        #ifdef MOLINK_USING_TCP
+#ifdef MOLINK_USING_TCP
         result = module_recv_tcp(module, sock, mem, len, flags);
-        #endif
+#endif
     }
     else /* NETCONN_TYPE_UDP */
-    {   
-        #ifdef MOLINK_USING_UDP
+    {
+#ifdef MOLINK_USING_UDP
         result = module_recvfrom_udp(module, sock, mem, len, flags, from, fromlen);
-        #endif
+#endif
     }
-    
+
     return result;
 }
 
@@ -1074,8 +1079,8 @@ int mo_getsockopt(mo_object_t *module, int socket, int level, int optname, void 
         switch (optname)
         {
         case SO_RCVTIMEO:
-            timeout                               = sock->recv_timeout;
-            ((struct timeval *)(optval))->tv_sec  = (timeout) / 1000U;
+            timeout = sock->recv_timeout;
+            ((struct timeval *)(optval))->tv_sec = (timeout) / 1000U;
             ((struct timeval *)(optval))->tv_usec = (timeout % 1000U) * 1000U;
             break;
         default:
@@ -1175,10 +1180,10 @@ struct hostent *mo_gethostbyname(mo_object_t *module, const char *name)
 
     /* buffer variables for mo_gethostbyname() */
     static struct hostent s_hostent;
-    static char *         s_aliases;
-    static ip_addr_t      s_hostent_addr;
-    static ip_addr_t *    s_phostent_addr[2];
-    static char           s_hostname[MOLINK_DNS_MAX_NAME_LEN + 1];
+    static char *s_aliases;
+    static ip_addr_t s_hostent_addr;
+    static ip_addr_t *s_phostent_addr[2];
+    static char s_hostname[MOLINK_DNS_MAX_NAME_LEN + 1];
 
     os_err_t result = mo_netconn_gethostbyname(module, name, &addr);
     if (result != OS_EOK)
@@ -1188,18 +1193,18 @@ struct hostent *mo_gethostbyname(mo_object_t *module, const char *name)
     }
 
     /* fill hostent */
-    s_hostent_addr     = addr;
+    s_hostent_addr = addr;
     s_phostent_addr[0] = &s_hostent_addr;
     s_phostent_addr[1] = OS_NULL;
 
     strncpy(s_hostname, name, MOLINK_DNS_MAX_NAME_LEN);
     s_hostname[MOLINK_DNS_MAX_NAME_LEN] = 0;
 
-    s_hostent.h_name      = s_hostname;
-    s_aliases             = OS_NULL;
-    s_hostent.h_aliases   = &s_aliases;
-    s_hostent.h_addrtype  = AF_INET;
-    s_hostent.h_length    = sizeof(ip_addr_t);
+    s_hostent.h_name = s_hostname;
+    s_aliases = OS_NULL;
+    s_hostent.h_aliases = &s_aliases;
+    s_hostent.h_addrtype = AF_INET;
+    s_hostent.h_length = sizeof(ip_addr_t);
     s_hostent.h_addr_list = (char **)&s_phostent_addr;
 
     return &s_hostent;
@@ -1296,7 +1301,7 @@ int mo_getaddrinfo(const char *nodename, const char *servname, const struct addr
     }
 
     os_size_t total_size = sizeof(struct addrinfo) + sizeof(struct sockaddr_storage);
-    os_size_t namelen    = 0;
+    os_size_t namelen = 0;
     if (nodename != OS_NULL)
     {
         namelen = strlen(nodename);
@@ -1317,21 +1322,21 @@ int mo_getaddrinfo(const char *nodename, const char *servname, const struct addr
     }
 
     /* cast through void* to get rid of alignment warnings */
-    struct sockaddr_storage *sa  = (struct sockaddr_storage *)(void *)((uint8_t *)ai + sizeof(struct addrinfo));
-    struct sockaddr_in *     sa4 = (struct sockaddr_in *)sa;
+    struct sockaddr_storage *sa = (struct sockaddr_storage *)(void *)((uint8_t *)ai + sizeof(struct addrinfo));
+    struct sockaddr_in *sa4 = (struct sockaddr_in *)sa;
     /* set up sockaddr */
 #if defined(MOLINK_USING_IPV4) && defined(MOLINK_USING_IPV6)
     sa4->sin_addr.s_addr = addr.u_addr.ip4.addr;
-    //sa4->type            = IPADDR_TYPE_V4;
+    // sa4->type            = IPADDR_TYPE_V4;
 #elif defined(MOLINK_USING_IPV4)
     sa4->sin_addr.s_addr = addr.addr;
 #elif defined(MOLINK_USING_IPV6)
 #error "Not support IPV6."
 #endif /* MOLINK_USING_IPV4 && MOLINK_USING_IPV6 */
     sa4->sin_family = AF_INET;
-    sa4->sin_len    = sizeof(struct sockaddr_in);
-    sa4->sin_port   = htons((os_uint16_t)port_nr);
-    ai->ai_family   = AF_INET;
+    sa4->sin_len = sizeof(struct sockaddr_in);
+    sa4->sin_port = htons((os_uint16_t)port_nr);
+    ai->ai_family = AF_INET;
 
     /* set up addrinfo */
     if (hints != OS_NULL)
@@ -1348,7 +1353,7 @@ int mo_getaddrinfo(const char *nodename, const char *servname, const struct addr
         ai->ai_canonname[namelen] = 0;
     }
     ai->ai_addrlen = sizeof(struct sockaddr_storage);
-    ai->ai_addr    = (struct sockaddr *)sa;
+    ai->ai_addr = (struct sockaddr *)sa;
 
     *res = ai;
 
@@ -1390,7 +1395,7 @@ void mo_freeaddrinfo(struct addrinfo *ai)
  * @param exceptset_out set os sockets that had error events
  * @return number of sockets that had events (read/write/exception) (>= 0)
  */
-static int mo_selscan(int     maxfdp1,
+static int mo_selscan(int maxfdp1,
                       fd_set *readset_in,
                       fd_set *writeset_in,
                       fd_set *exceptset_in,
@@ -1398,16 +1403,16 @@ static int mo_selscan(int     maxfdp1,
                       fd_set *writeset_out,
                       fd_set *exceptset_out)
 {
-    fd_set     lreadset;
-    fd_set     lwriteset;
-    fd_set     lexceptset;
+    fd_set lreadset;
+    fd_set lwriteset;
+    fd_set lexceptset;
     mo_sock_t *sock;
-    void *     lastdata;
-    os_int8_t  rcvevent;
+    void *lastdata;
+    os_int8_t rcvevent;
     os_uint8_t sendevent;
     os_uint8_t errevent;
-    int        nready;
-    int        index;
+    int nready;
+    int index;
 
     FD_ZERO(&lreadset);
     FD_ZERO(&lwriteset);
@@ -1428,10 +1433,10 @@ static int mo_selscan(int     maxfdp1,
         sock = mo_get_socket(index);
         if (NULL != sock)
         {
-            lastdata  = sock->lastdata;
-            rcvevent  = sock->rcvevent;
+            lastdata = sock->lastdata;
+            rcvevent = sock->rcvevent;
             sendevent = sock->sendevent;
-            errevent  = sock->errevent;
+            errevent = sock->errevent;
 
             MO_SYS_ARCH_UNPROTECT;
 
@@ -1462,8 +1467,8 @@ static int mo_selscan(int     maxfdp1,
     }
 
     // copy local sets to the ones provided as arguments
-    *readset_out   = lreadset;
-    *writeset_out  = lwriteset;
+    *readset_out = lreadset;
+    *writeset_out = lwriteset;
     *exceptset_out = lexceptset;
 
     return nready;
@@ -1471,7 +1476,7 @@ static int mo_selscan(int     maxfdp1,
 
 static os_err_t mo_do_sem_init(os_sem_t *sem, os_uint32_t value, os_uint32_t max_value)
 {
-    char       name[OS_NAME_MAX + 1];
+    char name[OS_NAME_MAX + 1];
     static int cnt = 0;
 
     snprintf(name, OS_NAME_MAX, "slt_sem_%d", cnt++);
@@ -1484,16 +1489,16 @@ static os_err_t mo_do_sem_init(os_sem_t *sem, os_uint32_t value, os_uint32_t max
  */
 int mo_select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset, struct timeval *timeout)
 {
-    fd_set              lreadset;
-    fd_set              lwriteset;
-    fd_set              lexceptset;
+    fd_set lreadset;
+    fd_set lwriteset;
+    fd_set lexceptset;
     struct mo_select_cb select_cb;
-    mo_sock_t *         sock;
-    os_err_t            op_err;
-    os_tick_t           timeout_tick;
-    int                 maxfdp2;
-    int                 nready;
-    int                 index;
+    mo_sock_t *sock;
+    os_err_t op_err;
+    os_tick_t timeout_tick;
+    int maxfdp2;
+    int nready;
+    int index;
 
     do
     {
@@ -1519,9 +1524,9 @@ int mo_select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset,
 
         // create select_cb wait event
         os_slist_init(&select_cb.slist);
-        select_cb.readset       = readset;
-        select_cb.writeset      = writeset;
-        select_cb.exceptset     = exceptset;
+        select_cb.readset = readset;
+        select_cb.writeset = writeset;
+        select_cb.exceptset = exceptset;
         select_cb.sem_signalled = 0;
         // init sem invalid, one sem for thread
         op_err = mo_do_sem_init(&select_cb.sem, 0, OS_SEM_MAX_VALUE);
@@ -1558,7 +1563,7 @@ int mo_select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset,
                 // Not a valid socket, socket may closed
                 if (OS_NULL == sock || OS_NULL == sock->netconn)
                 {
-                    nready  = -1;
+                    nready = -1;
                     maxfdp2 = index + 1;
                     MO_SYS_ARCH_UNPROTECT;
                     break;
@@ -1661,11 +1666,11 @@ int mo_select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset,
 #ifdef OS_USING_IO_MULTIPLEXING
 int mo_poll(int socket, struct vfs_pollfd *req, os_bool_t poll_setup)
 {
-    mo_sock_t       *sock;
-    int              mask = 0;
+    mo_sock_t *sock;
+    int mask = 0;
     os_slist_node_t *node;
     os_slist_node_t *tmp_node;
-    poll_req_t      *poll_req = OS_NULL;
+    poll_req_t *poll_req = OS_NULL;
 
     sock = mo_get_socket(socket);
 
@@ -1690,7 +1695,7 @@ int mo_poll(int socket, struct vfs_pollfd *req, os_bool_t poll_setup)
         os_slist_add_tail(&sock->req_slist_head, &poll_req->req_list);
         MO_SYS_ARCH_UNPROTECT;
     }
-    else // poll end
+    else    // poll end
     {
         os_slist_for_each_safe(node, tmp_node, &sock->req_slist_head)
         {
