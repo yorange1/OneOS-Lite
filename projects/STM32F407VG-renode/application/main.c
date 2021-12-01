@@ -40,18 +40,14 @@ static void user_task(void *parameter)
 
 }
 
-extern os_list_node_t gs_os_tickq_bucket[1];
+
 int main(void)
 {
-    //os_task_t *task;
+    os_task_t *task;
 
-    //task = os_task_create("user", user_task, NULL, 1024, 3);
-    //OS_ASSERT(task);
-    //os_task_startup(task);
-    //os_kprintf("Hello OneOS-Lite\r\n");
-	os_kprintf("gs_os_tickq_bucket:%p\r\n",gs_os_tickq_bucket);
-	os_kprintf("%x:%x\r\n",*(gs_os_tickq_bucket->prev),*(gs_os_tickq_bucket->next));
-	
+    task = os_task_create("user", user_task, NULL, 1024, 3);
+    OS_ASSERT(task);
+    os_task_startup(task);
 
     return 0;
 }
